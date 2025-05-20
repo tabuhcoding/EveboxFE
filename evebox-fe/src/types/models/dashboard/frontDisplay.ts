@@ -3,10 +3,10 @@ import { BaseApiResponse } from "types/baseApiResponse";
 export interface Event {
   id: number;
   title: string;
-  // startDate: string;
-  startTime: string;
+  startDate: string;
+  // startTime: string;
   status: string;
-  Images_Events_imgPosterIdToImages?: { imageUrl: string };
+  imgLogoUrl: string;
   minTicketPrice: number;
 }
 
