@@ -1,0 +1,262 @@
+/* Event box */
+.eve-image {
+    background-image: url(../../../../public/images/bg-mask.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 500px;
+    width: 90%;
+    border-radius: 10px;
+    display: flex;
+    /* Sử dụng flexbox */
+    flex-direction: column;
+    /* Các phần tử con xếp theo cột */
+    overflow: hidden;
+    /* Ngăn chặn nội dung vượt ra ngoài */
+    position: relative;
+    z-index: 0;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.eve-padding {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.row,
+.col-lg-7,
+.col-lg-5 {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.mask-img {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Để lớp mask ở dưới phần chữ và card */
+}
+
+.btn-buy-now {
+    width: 325px;
+    height: 52px;
+    background-color: #51DACF;
+    color: #0C4762;
+    border-radius: 5px;
+
+}
+
+.btn-buy-now:hover {
+    color: white;
+    background-color: #0C4762;
+}
+
+.btn-date {
+    border-radius: 5px;
+    padding: 2px 12px;
+}
+
+.txt-name-event-title {
+    margin-top: 2px;
+    color: white;
+    font-size: 34px;
+    font-weight: bold;
+    white-space: normal;
+    word-spacing: normal;
+    /* Cho phép chữ tự động xuống dòng */
+    word-wrap: break-word;
+    /* Ngắt từ dài nếu cần thiết */
+}
+
+.view-location {
+    color: white;
+    cursor: pointer;
+}
+
+#info-ticket,
+#event-location {
+    scroll-margin-top: 80px;
+}
+
+/* Nút "Quay lại" */
+.back-button-wrapper {
+    top: 10px;
+    /* Khoảng cách từ trên cùng */
+    left: 20px;
+    /* Khoảng cách từ lề trái */
+    z-index: 3;
+    /* Đảm bảo nút hiển thị trên cùng */
+    padding-left: 20px;
+}
+
+.btn-back {
+    background-color: transparent;
+    color: #0C4762;
+    width: 135px;
+    height: 42px;
+    background-color: #51DACF;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-back:hover {
+    color: white;
+    background-color: #0C4762;
+}
+
+.title-box {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.text-add {
+    color: #51DACF;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+/* Description */
+#more {
+    display: none;
+}
+
+.div-more {
+    border-radius: 0px 0px 10px 10px;
+    height: 35px;
+    text-align: center;
+    align-items: center;
+}
+
+.event-description h3 img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+/* Ticket details */
+.custom-col-left {
+    padding-right: 0px;
+    margin-right: 0px;
+}
+
+.text-ticket {
+    font-weight: 500;
+}
+
+.li-ticket {
+    background-color: #0C4762 !important;
+    color: white !important;
+    font-size: 16px !important;
+}
+
+.li-ticket-item {
+    background-color: #10648a !important;
+    color: white !important;
+    font-size: 16px !important;
+    padding: 10px 15px !important;
+    margin: 15px;
+}
+
+.ul-ticket-item {
+    margin-top: 5px;
+    padding-left: 0px;
+}
+
+.btn-buy {
+    width: 156px;
+    height: 34px;
+    background-color: #9EF5CF;
+    color: #0C4762;
+    border-radius: 5px;
+}
+
+.btn-buy:hover {
+    background-color: white;
+}
+
+.btn-sold-out {
+    width: 156px;
+    height: 34px;
+    background-color: #FFC9C9;
+    color: #FF0000;
+    border-radius: 5px;
+}
+
+.btn-disable {
+    width: 156px;
+    height: 34px;
+    background-color: #FFFFFF;
+    color: #999999;
+    border-radius: 5px;
+
+}
+
+.price-sold-out {
+    font-weight: 500;
+}
+
+.price {
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+/* Tags  */
+.txt-tags {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+/* Share with friends  */
+.row-app {
+    display: flex;
+    align-items: center;
+}
+
+.img-app {
+    width: 35px;
+    height: 35px;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+/* Comment  */
+.btn-post {
+    width: 156px;
+    height: 34px;
+    background-color: #0C4762;
+    color: white;
+    border-radius: 5px;
+}
+
+.btn-post:hover {
+    background-color: #10648a;
+}
+
+.btn-cancel {
+    color: #0C4762;
+    background-color: white;
+    border: 2px solid #0C4762;
+    border-radius: 5px;
+    height: 34px;
+    width: 100px;
+}
+
+.btn-cancel:hover {
+    background-color: #f1fafd;
+}
+
+.cmt-pad {
+    padding-left: 90px;
+    padding-right: 90px;
+}

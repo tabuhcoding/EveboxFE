@@ -1,0 +1,38 @@
+.container-custom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    text-align: center;
+    margin-top: 150;
+    margin-bottom: 150;
+}
+
+.txt-error {
+    font-weight: bold;
+    font-size: 36;
+}
+
+.txt-content {
+    font-size: 24;
+    color:darkgray;
+}
+
+.btn-back {
+    color: white;
+    border-radius: 30;
+    background-color: #51DACF;
+    font-weight: 500;
+    font-size: 18;
+    padding: 10px 20px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+

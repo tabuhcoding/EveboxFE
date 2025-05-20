@@ -1,0 +1,206 @@
+html,
+body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  width: 100%;
+  height: 100%;
+}
+
+/* Phần bên trái: nền hình ảnh và nội dung chào mừng */
+.left-register-pane {
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+  background-image: url(../../../../public/images/background_login.png);
+  background-size: cover;
+  background-position: center;
+}
+
+.left-register-pane h2 {
+  font-size: 40px;
+  margin-bottom: 50px;
+  color: #fff;
+}
+
+.left-register-pane p {
+  font-size: 16px;
+  margin-bottom: 39px;
+  color: #fff;
+}
+
+.left-register-pane .login-btn {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.left-register-pane .login-btn:hover {
+  background-color: #e6e6e6;
+  color: #000;
+}
+
+.font-style {
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+::placeholder {
+  color: #687C94;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 1;
+}
+
+input {
+  height: 46px;
+}
+
+/* Phần bên phải: Form đăng ký */
+.right-register-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%);
+}
+
+.register-form,
+.verify-form {
+  width: 100%;
+
+  .register-container,
+  .verify-container {
+    text-align: center;
+    margin-bottom: 15px;
+
+    .verify-msg-1,
+    .verify-msg-2 {
+      color: #fff;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .otp-nums {
+    justify-content: center;
+    margin: 20px auto;
+    display: flex;
+    gap: 10px;
+
+    .otp-input {
+      width: 50px;
+      padding: 10px;
+      outline: none;
+      text-align: center;
+      border-radius: 10.8px;
+
+      &:focus {
+        border: 2px solid #000;
+      }
+    }
+  }
+
+  .eye-btn {
+    position: absolute;
+    right: 8px;
+    top: 51%;
+    z-index: 1;
+    transform: translateY(-50%);
+  }
+
+  .resend-btn {
+    color: #1C0098;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .resend-btn.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .otp-timer {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+
+    span {
+      padding: 5px;
+      background-color: #9EF5CF;
+      border-radius: 4px;
+    }
+  }
+
+  .form-control {
+    margin-bottom: 15px;
+    padding: 10px 50px 10px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .form-control:focus {
+    border-color: #0070f3;
+    box-shadow: 0 0 5px rgba(0, 112, 243, 0.5);
+  }
+
+  .form-check {
+    text-align: left;
+    margin-bottom: 15px;
+  }
+
+  .btn {
+    width: 100%;
+    background-color: #0C4762;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:active,
+    &:hover {
+      background-color: #082b3b;
+      color: #fff;
+    }
+  }
+
+  .google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: #000;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .google-button:hover {
+    background-color: #f0f0f0;
+  }
+
+  .google-button svg {
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  .is-invalid {
+    border-color: #FF0000 !important;
+    background-image: none !important;
+  }
+}

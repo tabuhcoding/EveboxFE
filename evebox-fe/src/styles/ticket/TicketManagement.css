@@ -1,0 +1,12 @@
+.status-tab {
+  justify-content: space-between;
+}
+
+.status-tab .status-tab__item {
+  width: 280px;
+  border-radius: 36px;
+}
+
+.time-tab {
+  justify-content: center;
+}
