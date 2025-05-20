@@ -17,7 +17,6 @@ import { fetchEvents } from '../../libs/server/fetchData';
 
 const DashboardPage = async () => {
   const data = await fetchEvents();
-  console.log("🚀 ~ DashboardPage ~ data:", data)
   // const weekTime = 'week';
   // const monthTime = 'month';
   // const dataMonthlyRecommendedEvent = await fetchRecommendEvents(monthTime);
@@ -29,7 +28,6 @@ const DashboardPage = async () => {
     onlyOnEve: data.data.onlyOnEve || [],
     categorySpecial: data.data.categorySpecial as CategorySpecial[] || [],
   };
-  console.log("🚀 ~ DashboardPage ~ events:", events)
 
   // const sliderMontlyEvents = dataMonthlyRecommendedEvent.data || [];
   // const sliderEvents = dataImageSlider.data || [];
@@ -66,7 +64,7 @@ const DashboardPage = async () => {
 
             {events.categorySpecial?.map((category, index) => (
               <div key={index} className="mt-8">
-                {/* <EventSlider title={category.category.name} events={category.events} /> */}
+                <EventSlider title={category.category.name} events={category.events} />
               </div>
             ))}
           </div>
