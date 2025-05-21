@@ -1,16 +1,17 @@
 'use client';
 
 /* Package System */
-import { useRef, useEffect, useState } from 'react';
 import { Bell, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useTranslations } from "next-intl";
+import { useRef, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass } from 'swiper/types';
-import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
-import toast from 'react-hot-toast';
 
 /* Package Application */
 import { EventSliderProps } from 'types/models/dashboard/dashboard.interface';
@@ -22,7 +23,6 @@ type NavigationOptionsTyped = {
   prevEl?: HTMLElement | null;
   nextEl?: HTMLElement | null;
 };
-import { useTranslations } from "next-intl";
 
 const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -75,7 +75,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
         <h2 className="text-xl md:text-2xl font-bold">
-          {title == "" ? '' : t(`${title || ""}`)}  {subtitle && <span className="text-teal-400"> {t(`${subtitle || ""}`) ?? subtitle}</span>}
+          {title === "" ? '' : t(`${title || ""}`)}  {subtitle && <span className="text-teal-400"> {t(`${subtitle || ""}`) ?? subtitle}</span>}
         </h2>
       </div>
 

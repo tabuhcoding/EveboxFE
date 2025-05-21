@@ -1,15 +1,15 @@
 'use client';
 
 /* Package System */
-import { useState } from 'react';
-import Link from 'next/link';
 import { User, Ticket, Calendar, LogOut, Lock, Menu } from 'lucide-react';
+import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 /* Package Application */
-import { SidebarProps } from 'types/models/dashboard/dashboard.interface';
 import { gatewayService } from 'services/instance.service';
+import { SidebarProps } from 'types/models/dashboard/dashboard.interface';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
@@ -28,16 +28,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       await gatewayService.post('/api/user/logout', {
         refresh_token: session.user.refreshToken
       });
-      
-/*       // Clear cookies on client side
-      document.cookie.split(';').forEach(cookie => {
-        const [name] = cookie.trim().split('=');
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      }); */
+
+      /*       // Clear cookies on client side
+            document.cookie.split(';').forEach(cookie => {
+              const [name] = cookie.trim().split('=');
+              document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            }); */
 
       // Clear client session and redirect
       await signOut({ redirect: false });
-      window.location.href = "/"; 
+      window.location.href = "/";
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -57,8 +57,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     <>
       {isOpen && (
         <div
+          role="button"
+          tabIndex={0}
+          aria-label="Close overlay"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={onClose}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onClose();
+            }
+          }}
         />
       )}
 

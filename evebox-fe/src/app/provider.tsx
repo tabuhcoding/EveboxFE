@@ -1,13 +1,14 @@
 'use client';
 
 /* Package System */
-import { ReactNode } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
 import { SessionProvider } from 'next-auth/react';
+import { ReactNode } from 'react';
 
 /* Package Application */
-import I18nProvider from './providers/i18nProvider';
 import { AuthProvider } from 'contexts/auth.context';
+
+import I18nProvider from './providers/i18nProvider';
 import { SearchResultProvider } from './providers/searchResultProvider';
 
 export function Providers({ children }: { children: ReactNode }) {

@@ -1,8 +1,9 @@
 /* Package Application */
-import { eventService } from "./instance.service";
-import { END_POINT_LIST } from "./endpoint";
-// import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
+
+import { END_POINT_LIST } from "./endpoint";
+import { eventService } from "./instance.service";
+// import { BaseApiResponse } from "types/baseApiResponse";
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   // Kiểm tra: Nếu là server component thì dùng fetch ISR, còn lại dùng axios

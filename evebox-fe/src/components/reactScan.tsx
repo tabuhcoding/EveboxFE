@@ -1,9 +1,10 @@
+/* eslint-disable no-duplicate-imports */
 'use client';
 
 /* Package System */
-import { scan } from 'react-scan'
 import type { JSX } from 'react';
 import { useEffect } from 'react';
+import { scan } from 'react-scan'
 
 export function ReactScan(): JSX.Element {
   useEffect(() => {

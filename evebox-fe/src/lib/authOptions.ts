@@ -1,7 +1,7 @@
 /* Package System */
+import axios from "axios";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
 
 export const authOptions: AuthOptions = {
   cookies: {

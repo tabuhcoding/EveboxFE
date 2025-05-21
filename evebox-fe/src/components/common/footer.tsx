@@ -1,8 +1,8 @@
 'use client';
 
 /* Package System */
-import { useTranslations } from "next-intl";
 import { Icon } from '@iconify/react';
+import { useTranslations } from "next-intl";
 
 /* Package Application */
 import ToggleNotification from "./toggleNotification";

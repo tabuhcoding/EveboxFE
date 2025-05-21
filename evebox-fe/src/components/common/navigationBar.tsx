@@ -1,19 +1,20 @@
 'use client';
 
 /* Package System */
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { Menu, ChevronDown, User2Icon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
 
 /* Package Application */
-import Sidebar from "./sidebar";
-import LanguageSwitcher from "./languageSwitcher";
-import { UserInfo, UserInfoResponse } from "types/models/dashboard/user.interface";
 import { useI18n } from "app/providers/i18nProvider";
 import { gatewayService } from "services/instance.service";
+import { UserInfo, UserInfoResponse } from "types/models/dashboard/user.interface";
+
+import LanguageSwitcher from "./languageSwitcher";
+import Sidebar from "./sidebar";
 
 
 const NavigationBar = () => {

@@ -1,9 +1,9 @@
 'use client';
 
 /* Package System */
-import { useState, useEffect, createContext, useContext } from "react";
-import { NextIntlClientProvider } from "next-intl";
 import { Loader } from "lucide-react";
+import { NextIntlClientProvider } from "next-intl";
+import { useState, useEffect, createContext, useContext } from "react";
 
 interface I18nContextProps {
   locale: string;

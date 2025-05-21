@@ -1,19 +1,21 @@
 "use client";
 
 /* Package System */
-import { ChevronDown, Search } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
 import { CalendarDate } from "@internationalized/date";
-import Link from 'next/link';
 import { RangeValue } from "@react-types/shared";
+import { ChevronDown, Search } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from 'react';
 
 /* Package Application */
-import DatePicker from './datePicker';
-import { Category } from 'types/models/dashboard/frontDisplay';
 import mapCategoryName from 'app/(frontpage)/_components/libs/functions/mapCategoryName';
-import { fetchProvinces } from '../libs/server/fetchData';
 import { getAllCategories } from 'services/event.service';
+import { Category } from 'types/models/dashboard/frontDisplay';
+
+import { fetchProvinces } from '../libs/server/fetchData';
+
+import DatePicker from './datePicker';
 import '../../../../styles/global.css';
 // import 'tailwindcss/tailwind.css';
 
@@ -129,12 +131,21 @@ export default function SearchControls() {
               {isLocationOpen && (
                 <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] small-text max-h-64 overflow-y-auto">                                    {locations.map((location) => (
                   <div
+                    role="button"
+                    tabIndex={0}
                     key={location.code}
                     className="p-2 hover:bg-[#0C4762] hover:bg-opacity-[0.31] cursor-pointer"
                     onClick={() => {
                       setSelectedLocation(location.name);
                       setIsLocationOpen(false);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setSelectedLocation(location.name);
+                        setIsLocationOpen(false);
+                      }
+                    }}
+                    aria-pressed={selectedLocation === location.name}
                   >
                     {location.name}
                   </div>

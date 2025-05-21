@@ -6,13 +6,14 @@ import 'swiper/css/navigation';
 import '../../../../styles/admin/pages/Dashboard.css';
 import '../../../../styles/global.css';
 // import 'tailwindcss/tailwind.css';
+import { getFrontDisplayEvents } from 'services/event.service';
+import { CategorySpecial } from 'types/models/dashboard/frontDisplay';
+
 import EventSlider from './eventSlider';
 import SearchControls from './searchControl';
 // import ImageSlider from './imageSlider';
 // import TabSwitcher from './tabSwitcher';
-import { CategorySpecial } from 'types/models/dashboard/frontDisplay';
 // import { fetchEvents } from '../libs/server/fetchData';
-import { getFrontDisplayEvents } from 'services/event.service';
 // import { useFrontDisplayEvents } from '../../lib/swr/useFrontDisplayEvents';
 // import { useRecommendedEvents } from '../../lib/swr/useRecommendedEvents';
 

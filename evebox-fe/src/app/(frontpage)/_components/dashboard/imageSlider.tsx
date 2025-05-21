@@ -2,9 +2,9 @@
 
 /* Package System */
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 /* Package Applicatio */
 import { ImageSliderProps } from 'types/models/dashboard/dashboard.interface';

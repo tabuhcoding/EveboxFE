@@ -1,12 +1,13 @@
 "use client";
 
 /* Package System */
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 /* Package Application */
-import EventSlider from './eventSlider';
 import { TabSwitcherProps } from 'types/models/dashboard/dashboard.interface';
+
+import EventSlider from './eventSlider';
 import '../../../../styles/global.css';
 // import 'tailwindcss/tailwind.css';
 
