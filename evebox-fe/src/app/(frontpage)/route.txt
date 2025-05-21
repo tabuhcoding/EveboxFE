@@ -1,0 +1,6 @@
+search
+event detail
+tutorial
+term
+navigation search result
+...

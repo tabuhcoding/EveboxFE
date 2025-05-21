@@ -36,7 +36,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     // "src/pages/_app.tsx",
-    "src/app/(dashboard)/components/dashboard/datePicker.tsx",
+    "src/app/(frontpage)/_components/dashboard/datePicker.tsx",
     // "src/app/(organizer)/organizer/create-event/[id]/components/time-type/components/dialogs/createTicketsDailog.tsx"
   ],
   "exclude": [

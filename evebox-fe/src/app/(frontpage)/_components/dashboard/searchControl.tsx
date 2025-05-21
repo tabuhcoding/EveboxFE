@@ -11,8 +11,8 @@ import { useTranslations } from "next-intl";
 /* Package Application */
 import DatePicker from './datePicker';
 import { Category } from 'types/models/dashboard/frontDisplay';
-import mapCategoryName from 'app/(dashboard)/libs/functions/mapCategoryName';
-import { fetchProvinces } from '../../libs/server/fetchData';
+import mapCategoryName from 'app/(frontpage)/_components/libs/functions/mapCategoryName';
+import { fetchProvinces } from '../libs/server/fetchData';
 import { getAllCategories } from 'services/event.service';
 import '../../../../styles/global.css';
 // import 'tailwindcss/tailwind.css';

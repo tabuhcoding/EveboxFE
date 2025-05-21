@@ -3,8 +3,8 @@ import { ReactNode } from 'react';
 
 /* Package Application */
 import { Providers } from "./provider";
-import Footer from "./(dashboard)/components/common/footer";
-import NavigationBar from "./(dashboard)/components/common/navigationBar";
+import Footer from "../components/common/footer";
+import NavigationBar from "../components/common/navigationBar";
 // import "../styles/global.css";
 import "tailwindcss/tailwind.css";
 

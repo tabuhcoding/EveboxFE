@@ -2,7 +2,7 @@
 
 /* Package Application */
 import { ReactScan } from "components/reactScan";
-import DashboardPage from "./components/dashboard/dashboardPage";
+import DashboardPage from "./_components/dashboard/dashboardPage";
 
 export default function Page() {
   return (
