@@ -4,12 +4,22 @@ import { END_POINT_LIST } from "./endpoint";
 // import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 
-export const getFrontDisplayEvents = async (): Promise<FrontDisplayResponse> => {
-  const res = await eventService.get(END_POINT_LIST.EVENT.GET_FRONT_DISPLAY);
-
-  if (!res) throw new Error('Failed to fetch front display events');
-
-  return res.data;
+export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
+  // Kiểm tra: Nếu là server component thì dùng fetch ISR, còn lại dùng axios
+  if (typeof window === "undefined") {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/event/front-display`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch front display events");
+    return res.json();
+  } else {
+    const res = await eventService.get(END_POINT_LIST.EVENT.GET_FRONT_DISPLAY);
+    if (!res) throw new Error("Failed to fetch front display events");
+    return res.data;
+  }
 }
 
 export const getAllCategories = async (): Promise<Category[]> => {

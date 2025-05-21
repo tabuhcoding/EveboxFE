@@ -11,12 +11,13 @@ import SearchControls from './searchControl';
 // import ImageSlider from './imageSlider';
 // import TabSwitcher from './tabSwitcher';
 import { CategorySpecial } from 'types/models/dashboard/frontDisplay';
-import { fetchEvents } from '../libs/server/fetchData';
+// import { fetchEvents } from '../libs/server/fetchData';
+import { getFrontDisplayEvents } from 'services/event.service';
 // import { useFrontDisplayEvents } from '../../lib/swr/useFrontDisplayEvents';
 // import { useRecommendedEvents } from '../../lib/swr/useRecommendedEvents';
 
 const DashboardPage = async () => {
-  const data = await fetchEvents();
+  const data = await getFrontDisplayEvents();
   // const weekTime = 'week';
   // const monthTime = 'month';
   // const dataMonthlyRecommendedEvent = await fetchRecommendEvents(monthTime);
