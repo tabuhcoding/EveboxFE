@@ -31,7 +31,7 @@ jobs:
         run: docker build --no-cache -t evebox-frontend .
 
       - name: Tag image
-        run: docker tag evebox-frontend eveboxregistry.azurecr.io/frontend:latest
+        run: docker tag evebox-frontend eveboxregistry.azurecr.io/evebox-fe:latest
 
       - name: Push image
-        run: docker push eveboxregistry.azurecr.io/frontend:latest
+        run: docker push eveboxregistry.azurecr.io/evebox-fe:latest
