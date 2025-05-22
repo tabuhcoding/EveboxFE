@@ -30,6 +30,10 @@ jobs:
       - name: Run lint
         run: npm run lint
 
+      - name: Generate .env file
+        run: |
+          echo "${{ secrets.ENV_CONTENTS }}" > .env
+
       - name: Run build
         run: npm run build
 
