@@ -1,0 +1,81 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,         // Lint code chạy trên trình duyệt
+    "es2021": true,          // Hỗ trợ cú pháp ES2021
+    "node": true             // Lint code chạy trên môi trường Node.js (server)
+  },
+  "extends": [
+    "eslint:recommended",                    // Rule JS chuẩn của ESLint
+    "plugin:@typescript-eslint/recommended", // Rule khuyến nghị cho TypeScript
+    "plugin:react/recommended",              // Rule khuyến nghị cho React
+    "plugin:react-hooks/recommended",        // Rule khuyến nghị cho React Hook
+    "plugin:jsx-a11y/recommended",           // Rule khuyến nghị cho accessibility (SEO, người khuyết tật)
+    "next/core-web-vitals",                  // Rule Next.js chuẩn (SEO, hiệu năng, accessibility)
+    "prettier"                               // Tắt rule xung đột với Prettier (formatting)
+  ],
+  "parser": "@typescript-eslint/parser",      // Parser cho TypeScript
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true                            // Hỗ trợ JSX (React)
+    },
+    "ecmaVersion": 12,                       // Hỗ trợ ECMAScript 2021
+    "sourceType": "module"                   // Hỗ trợ ES Module (import/export)
+  },
+  "plugins": [
+    "react",               // Plugin rule cho React
+    "@typescript-eslint",  // Plugin rule cho TypeScript
+    "jsx-a11y",            // Plugin rule cho accessibility
+    "import"               // Plugin rule cho import
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"  // Tự động phát hiện version React
+    }
+  },
+  "rules": {
+    // Next.js Rules
+    "@next/next/no-html-link-for-pages": "error",    // Không dùng <a href=""> để link giữa các page Next.js
+    "@next/next/no-img-element": "warn",             // Cảnh báo dùng <img>, khuyến khích dùng <Image> của Next.js
+
+    // React Rules
+    "react/prop-types": "off",                       // Không bắt buộc dùng prop-types (dùng TypeScript rồi)
+    "react/react-in-jsx-scope": "off",               // Không cần import React ở từng file (Next.js >= 12)
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }], // Chỉ cho phép JSX trong file .tsx/.jsx
+    "react/jsx-props-no-spreading": "off",           // Cho phép spread props trong JSX
+    "react/no-unescaped-entities": "warn",           // Cảnh báo ký tự đặc biệt không escape trong JSX (như dấu nháy đơn)
+    "react/display-name": "off",                     // Không bắt buộc đặt displayName cho component
+
+    // TypeScript Rules
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }], // Báo lỗi biến/tham số không dùng (bỏ qua biến bắt đầu bằng "_")
+    "@typescript-eslint/explicit-module-boundary-types": "off", // Không bắt buộc khai báo kiểu trả về cho function xuất module
+    "@typescript-eslint/no-explicit-any": "warn",    // Cảnh báo khi dùng any (hạn chế dùng)
+    "@typescript-eslint/no-empty-function": "warn",  // Cảnh báo function rỗng
+    "@typescript-eslint/ban-ts-comment": "warn",     // Cảnh báo khi dùng // @ts-...
+
+    // Import Rules
+    "import/prefer-default-export": "off",           // Không bắt buộc export default nếu chỉ có 1 hàm export
+    "import/no-anonymous-default-export": "warn",    // Cảnh báo export default vô danh (giúp debug tốt hơn)
+    "import/order": [                                // Quy tắc import: group, cách dòng, sắp xếp alphabet
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc", "caseInsensitive": true }
+      }
+    ],
+
+    // JS/ES Rules
+    "no-console": ["warn", { "allow": ["warn", "error"] }],  // Cảnh báo dùng console.log (cho phép warn/error)
+    "prefer-const": "error",                                 // Bắt buộc dùng const nếu không reassigned
+    "no-var": "error",                                       // Không cho phép dùng var
+    "eqeqeq": ["error", "always"],                           // Bắt buộc dùng === thay vì ==
+    "no-unused-expressions": "warn",                         // Cảnh báo expression không có tác dụng (ví dụ: a && b)
+    "no-duplicate-imports": "error",                         // Báo lỗi import trùng lặp cùng một module
+    "camelcase": ["warn", { "properties": "never" }],        // Khuyến khích dùng camelCase, bỏ qua object property
+
+    // Accessibility (A11y) Rules
+    "jsx-a11y/anchor-is-valid": "warn",                      // Cảnh báo <a> không hợp lệ (ví dụ thiếu href)
+    "jsx-a11y/alt-text": "warn"                              // Cảnh báo thiếu alt cho hình ảnh
+  }
+}

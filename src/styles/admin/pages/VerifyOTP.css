@@ -1,0 +1,241 @@
+html,
+body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  width: 100%;
+  height: 100%;
+}
+
+/* Phần bên trái: nền hình ảnh và nội dung chào mừng */
+.left-register-pane {
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+  background-image: url(../../../../public/images/background_login.png);
+  background-size: cover;
+  background-position: center;
+
+  h2 {
+    font-size: 40px;
+    margin-bottom: 50px;
+    color: #fff;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 39px;
+    color: #fff;
+  }
+
+  .login-btn {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e6e6e6;
+      color: #000;
+    }
+  }
+}
+
+.font-style {
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+::placeholder {
+  color: #687C94;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 1;
+}
+
+input {
+  height: 46px;
+}
+
+/* Phần bên phải: Form đăng ký */
+.right-register-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%);
+}
+
+.verify-form {
+  width: 100%;
+
+  .verify-container {
+    text-align: center;
+    margin-bottom: 15px;
+
+    .verify-msg-1,
+    .verify-msg-2 {
+      color: #fff;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .otp-nums {
+    justify-content: center;
+    margin: 20px auto;
+    display: flex;
+    gap: 10px;
+
+    .otp-input {
+      width: 50px;
+      padding: 10px;
+      outline: none;
+      text-align: center;
+      border-radius: 10.8px;
+
+      &:focus {
+        border: 2px solid #000;
+      }
+    }
+  }
+
+  .resend-btn {
+    color: #1C0098;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .resend-btn.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .otp-timer {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+
+    span {
+      padding: 5px;
+      background-color: #9EF5CF;
+      border-radius: 4px;
+    }
+  }
+
+  .form-control {
+    margin-bottom: 15px;
+    padding: 10px 50px 10px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .form-control:focus {
+    border-color: #0070f3;
+    box-shadow: 0 0 5px rgba(0, 112, 243, 0.5);
+  }
+
+  .form-check {
+    text-align: left;
+    margin-bottom: 15px;
+  }
+
+  .btn {
+    width: 100%;
+    background-color: #0C4762;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:active,
+    &:hover {
+      background-color: #082b3b;
+      color: #fff;
+    }
+  }
+}
+
+.custom-dialog {
+  .MuiDialog-paper {
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+    /* padding: 20px; */
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    h2 {
+      padding: 0;
+    }
+  }
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0C4762; /* Màu xanh header */
+  color: #FFFFFF;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.close-button {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+
+  &:hover {
+    background-color: #ffffff !important;
+    color: #0C4762 !important;
+  }
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.dialog-content h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #000000;
+}
+
+.subtext {
+  font-size: 14px;
+  color: #6B7280; /* Màu xám cho subtext */
+}
+
+.action-button {
+  background-color: #0C4762 !important;
+  color: #FFFFFF !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  text-transform: none !important;
+  width: 60%;
+  border-radius: 8px !important;
+  padding: 10px !important;
+
+  &:hover {
+    background-color: #133646 !important;
+  }
+}

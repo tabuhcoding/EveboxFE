@@ -1,0 +1,25 @@
+/* src/styles/HomePage.module.css */
+
+.container {
+    text-align: center;
+    margin-top: 0px;
+  }
+  
+  .links {
+    margin-top: 20px;
+  }
+  
+  .link {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #0070f3;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    background-color: #005bb5;
+  }
+  
