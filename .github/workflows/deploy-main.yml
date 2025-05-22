@@ -1,0 +1,37 @@
+name: Docker Push on Promote from Dev
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  docker-push:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to Azure Container Registry
+        run: az acr login --name eveboxregistry
+
+      - name: Generate .env file
+        run: |
+          echo "${{ secrets.ENV_CONTENTS }}" > .env
+
+
+      - name: Build Docker image
+        run: docker build --no-cache -t evebox-frontend .
+
+      - name: Tag image
+        run: docker tag evebox-frontend eveboxregistry.azurecr.io/frontend:latest
+
+      - name: Push image
+        run: docker push eveboxregistry.azurecr.io/frontend:latest
