@@ -3,12 +3,10 @@ import { Suspense, ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 
 /* Package Application */
-import Footer from "components/common/footer";
-import NavigationBar from "components/common/navigationBar";
-
-import DashboardLoading from "./loading";
 import '../../styles/global.css';
 
+import Footer from "components/common/footer";
+import NavigationBar from "components/common/navigationBar";
 // import 'tailwindcss/tailwind.css';
 
 export default function DefaultLayout({
@@ -17,7 +15,7 @@ export default function DefaultLayout({
   children: ReactNode
 }) {
   return (
-    <Suspense fallback={<DashboardLoading />}>
+    <Suspense>
       <main>
         <NavigationBar />
         {children}
