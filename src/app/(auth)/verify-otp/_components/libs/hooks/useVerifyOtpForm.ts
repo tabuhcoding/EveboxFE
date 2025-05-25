@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import { OtpConstants } from '../constants/otpConstants';
@@ -27,6 +28,7 @@ export const useVerifyOTPForm = () => {
   const [requestToken, setRequestToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const t = useTranslations('common');
 
   useEffect(() => {
     const verifyData = JSON.parse(localStorage.getItem('verifyData') || '{}');
@@ -63,7 +65,7 @@ export const useVerifyOTPForm = () => {
   const formik = useFormik({
     initialValues: { otp: '' },
     validationSchema: Yup.object({
-      otp: Yup.string().required('Yêu cầu nhập mã OTP'),
+      otp: Yup.string().required(t('requiredOTP')),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -74,7 +76,7 @@ export const useVerifyOTPForm = () => {
           request_token: requestToken,
           type,
         });
-        
+
         if (result.statusCode === 200) {
           setIsVerified(true);
           setError('');
@@ -84,9 +86,9 @@ export const useVerifyOTPForm = () => {
         setIsLoading(false);
         if (axios.isAxiosError(err)) {
           const error = err as AxiosError<ErrorResponse>;
-          setError(error.response?.data?.message || 'Xác thực thất bại');
+          setError(error.response?.data?.message || t('authFailed'));
         } else {
-          setError('Xác thực thất bại');
+          setError(t('authFailed'));
         }
       } finally {
         setIsLoading(false);
@@ -101,21 +103,21 @@ export const useVerifyOTPForm = () => {
         e.preventDefault();
         newOtp[index - 1] = '';
         setOtp(newOtp);
-  
+
         const prevInput = (e.target as HTMLInputElement).previousSibling as HTMLInputElement | null;
         if (prevInput) prevInput.focus();
       }
     }
-  } 
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     if (isNaN(Number(e.target.value))) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = e.target.value;
     setOtp(newOtp);
     formik.setFieldValue('otp', newOtp.join(''));
-    
+
     if (e.target.value && e.target.nextElementSibling) {
       (e.target.nextElementSibling as HTMLElement).focus();
     }
@@ -142,47 +144,13 @@ export const useVerifyOTPForm = () => {
         setAttempts(result.data.remaining_attempts ?? ATTEMPTS);
         setError('');
       } else {
-        setError(`Gửi mã OTP thất bại: ${result.data.message}`);
+        setError(`${t('sendOTPFail')}: ${result.data.message}`);
         alert(result.data.message);
       }
     } catch (err) {
-      setError(`Gửi mã OTP thất bại, vui lòng thử lại sau: ${err}.`);
+      setError(`${t('sendOTPFailMessage')} ${err}.`);
     }
   };
-
-  // const handleResendOtp = async () => {
-  //   setError('');
-  //   setCntAttempts(cntAttempts + 1);
-
-  //   if (cntAttempts >= attempts) {
-  //     setIsResendAllowed(false);
-  //     return;
-  //   }
-
-  //   const verifyData = JSON.parse(localStorage.getItem('verifyData') || '{}');
-  //   const values = {
-  //     name: verifyData.name,
-  //     phone: verifyData.phone,
-  //     email: verifyData.email,
-  //     password: verifyData.password,
-  //     re_password: verifyData.re_password,
-  //     agree: verifyData.agree,
-  //     role_id: verifyData.role_id,
-  //     province_id: verifyData.province_id,
-  //   }
-
-  //   const result = await axios.post(`/api/user/register`, values);
-
-  //   if (result.status === 200 || result.status === 201) {
-  //     setTimeLeft(result.data.data.resend_allowed_in ?? TIMELEFT);
-  //     setAttempts(result.data.data.remaining_attempts ?? ATTEMPTS);
-  //     setError('');
-  //   }
-  //   else {
-  //     setError(`Gửi mã OTP thất bại: ${result.data.message}`);
-  //     alert(result.data.message);
-  //   }
-  // };
 
   const handleCloseDialog = () => {
     setIsOpen(false);
