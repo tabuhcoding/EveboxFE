@@ -34,7 +34,6 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
     retries: 2,
 
     retryDelay: (retryCount) => {
-      console.log(`🔁 Retry #${retryCount}, delay = ${currentRetryDelay}ms`);
       return currentRetryDelay;
     },
 

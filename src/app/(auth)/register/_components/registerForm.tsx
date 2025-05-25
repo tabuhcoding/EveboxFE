@@ -22,8 +22,7 @@ export const RegisterForm = () => {
         formik,
     } = useRegisterForm();
 
-      const locale = useLocale();
-      console.log("locale: ", locale);  
+      const locale = useLocale(); 
       const t = useTranslations('common');
 
     return (

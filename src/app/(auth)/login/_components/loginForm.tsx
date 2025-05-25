@@ -24,7 +24,6 @@ export const LoginForm = () => {
   } = useLoginForm();
 
   const locale = useLocale();
-  console.log("locale: ", locale);  
   const t = useTranslations('common');
 
   if (error) {

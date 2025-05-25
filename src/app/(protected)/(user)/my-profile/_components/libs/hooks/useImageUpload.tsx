@@ -88,7 +88,6 @@ export const useImageUpload = () => {
             }
 
             setGalleryImages(prev => [uploadResponse.data.data, ...prev]);
-            console.log("uploadResponse", uploadResponse.data.data);
             await changeAvatar(uploadResponse.data.data.imageUrl, uploadResponse.data.data.id);
 
             return uploadResponse.data.data.imageUrl;

@@ -18,7 +18,6 @@ export default function useAvatar({ avatar_id }: { avatar_id?: number }) {
     const fetchAvatar = async () => {
         try {
             const response = await gatewayService.get(`/api/images/${avatar_id}`);
-            console.log("Avatar response:", response);
             if (response.status !== 200) {
                 throw new Error("Failed to fetch images");
             }

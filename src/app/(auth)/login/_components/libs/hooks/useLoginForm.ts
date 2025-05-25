@@ -110,7 +110,7 @@ export const useLoginForm = () => {
           setError('Đăng nhập thất bại: ' + res?.error);
         }
       } catch (error) {
-        console.log(error);
+        console.error;
         setError("Đăng nhập thất bại, vui lòng thử lại.");
       } finally {
         setIsLoading(false);
