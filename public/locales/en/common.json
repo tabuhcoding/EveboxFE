@@ -101,5 +101,11 @@
     "backToHome": "Back to Homepage",
     "followUs": "Follow us on",
     "weekend": "This weekend",
-    "month": "This month"
+    "month": "This month",
+    "requiredEmail": "You haven’t entered your email!",
+    "invalidEmail": "Invalid email",
+    "sendOTPFail": "Failed to send OTP code",
+    "backLogin": "Back to Login",
+    "forgotPass": "Forgot password?",
+    "forgotPassMessage": "Don't worry, this happens to all of us. Enter your email below to recover your password."
 }

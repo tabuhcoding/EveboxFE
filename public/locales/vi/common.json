@@ -101,5 +101,11 @@
   "backToHome": "Trở về trang chủ",
   "followUs": "Theo dõi chúng tôi trên các nền tảng",
   "weekend": "Cuối tuần này",
-  "month": "Tháng này"
+  "month": "Tháng này",
+  "requiredEmail": "Bạn chưa nhập email!",
+  "invalidEmail": "Email không hợp lệ",
+  "sendOTPFail": "Gửi mã OTP thất bại",
+  "backLogin": "Quay lại Đăng nhập",
+  "forgotPass": "Quên mật khẩu?",
+  "forgotPassMessage": "Đừng lo, điều này xảy ra với tất cả chúng ta. Nhập email của bạn dưới đây để khôi phục mật khẩu."
 }
