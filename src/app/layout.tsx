@@ -2,8 +2,6 @@
 import { ReactNode } from 'react';
 
 /* Package Application */
-import Footer from "../components/common/footer";
-import NavigationBar from "../components/common/navigationBar";
 
 import { Providers } from "./provider";
 // import "../styles/global.css";

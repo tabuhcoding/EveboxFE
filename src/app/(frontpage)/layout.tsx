@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 /* Package Application */
 import NavigationBar from "components/common/navigationBar";
 import Footer from "components/common/footer";
+
 import DashboardLoading from "./loading";
 import '../../styles/global.css';
 
