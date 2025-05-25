@@ -133,5 +133,13 @@
   "titleResetPass": "Đặt lại mật khẩu",
   "promptNewPass": "Mật khẩu trước của bạn đã được thiết lập lại. Vui lòng đặt mật khẩu mới cho tài khoản của bạn!",
   "enterNewPass": "Nhập mật khẩu mới",
-  "enterAgainNewPass": "Nhập lại mật khẩu mới"
+  "enterAgainNewPass": "Nhập lại mật khẩu mới",
+  "confirmPassMismatch": "Mật khẩu xác nhận không khớp.",
+  "changePassSuccess": "Đổi mật khẩu thành công!",
+  "changePassError": "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại sau.",
+  "enterOldPass": "Nhập mật khẩu cũ",
+  "enterAgainOldPass": "Nhập lại mật khẩu cũ",
+  "confirmNewPass": "Xác nhận mật khẩu mới",
+  "titleChangePassBtn": "Đổi mật khẩu",
+  "loadingBtn": "Đang xử lý..."
 }

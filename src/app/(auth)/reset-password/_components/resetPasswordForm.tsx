@@ -29,7 +29,7 @@ export const ResetPasswordForm = () => {
             <div className="row">
                 <div className="col-md-7 d-flex align-items-center justify-content-center left-pane">
                     <Link href="/login" className="back-link">&lt; {t('backLogin')}</Link>
-                    <div className="w-75">
+                    <div className="w-75 mb-12 mt-12">
                         <div className="form">
                             <div className="container d-flex flex-column align-items-center">
                                 <Image
@@ -113,8 +113,10 @@ export const ResetPasswordForm = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-5 background">
-                    <div className="overlay"></div>
+                <div className="col-md-5 p-0">
+                    <div className="background">
+                        <div className="overlay"></div>
+                    </div>
                 </div>
             </div>
         </div>

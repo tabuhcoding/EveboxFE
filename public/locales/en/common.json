@@ -133,5 +133,13 @@
     "titleResetPass": "Reset Password",
     "promptNewPass": "Your previous password has been reset. Please set a new password for your account!",
     "enterNewPass": "Enter new password",
-    "enterAgainNewPass": "Re-enter new password"
+    "enterAgainNewPass": "Re-enter new password",
+    "confirmPassMismatch": "Confirmation password does not match.",
+    "changePassSuccess": "Password changed successfully!",
+    "changePassError": "An error occurred while changing the password. Please try again later.",
+    "enterOldPass": "Enter old password",
+    "enterAgainOldPass": "Re-enter old password",
+    "confirmNewPass": "Confirm new password",
+    "titleChangePassBtn": "Change Password",
+    "loadingBtn": "Loading..."
 }
