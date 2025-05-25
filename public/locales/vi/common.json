@@ -123,5 +123,15 @@
   "verifyOTP": "Xác minh OTP",
   "registerSuccess": "Đăng ký thành công",
   "registerFail": "Đăng ký thất bại",
-  "activateAccount": "Kích hoạt tài khoản"
+  "activateAccount": "Kích hoạt tài khoản",
+  "notRequestResetPass": "Không tìm thấy mã yêu cầu thay đổi mật khẩu.",
+  "requireDigitPass": "Mật khẩu tối thiểu 6 ký tự",
+  "requireEnterPass": "Yêu cầu nhập mật khẩu",
+  "passwordMismatch": "Mật khẩu không khớp",
+  "requireReEnterPass": "Yêu cầu nhập lại mật khẩu",
+  "resetPassFailed": "Đổi mật khẩu thất bại",
+  "titleResetPass": "Đặt lại mật khẩu",
+  "promptNewPass": "Mật khẩu trước của bạn đã được thiết lập lại. Vui lòng đặt mật khẩu mới cho tài khoản của bạn!",
+  "enterNewPass": "Nhập mật khẩu mới",
+  "enterAgainNewPass": "Nhập lại mật khẩu mới"
 }

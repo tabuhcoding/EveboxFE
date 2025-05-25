@@ -123,5 +123,15 @@
     "verifyOTP": "Verify OTP",
     "registerSuccess": "Registration Successful",
     "registerFail": "Registration Failed",
-    "activateAccount": "Activate Account"
+    "activateAccount": "Activate Account",
+    "notRequestResetPass": "Password change request code not found.",
+    "requireDigitPass": "Password minimum 6 characters",
+    "requireEnterPass": "Password is required",
+    "passwordMismatch": "Passwords do not match",
+    "requireReEnterPass": "Please re-enter password",
+    "resetPassFailed": "Password change failed",
+    "titleResetPass": "Reset Password",
+    "promptNewPass": "Your previous password has been reset. Please set a new password for your account!",
+    "enterNewPass": "Enter new password",
+    "enterAgainNewPass": "Re-enter new password"
 }
