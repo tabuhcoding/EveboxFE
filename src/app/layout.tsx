@@ -18,9 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Providers>
             <div className="tt-content relative">
               <div>
-                <NavigationBar />
                 {children}
-                <Footer />
               </div>
             </div>
           </Providers>
