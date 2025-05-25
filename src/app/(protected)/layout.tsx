@@ -4,8 +4,9 @@ import { Toaster } from "react-hot-toast";
 
 /* Package Application */
 import '../../styles/global.css';
-import NavigationBar from "components/common/navigationBar";
+
 import Footer from "components/common/footer";
+import NavigationBar from "components/common/navigationBar";
 // import 'tailwindcss/tailwind.css';
 
 export default function DefaultLayout({
