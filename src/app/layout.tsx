@@ -9,6 +9,13 @@ import { Providers } from "./provider";
 // import "../styles/global.css";
 import "tailwindcss/tailwind.css";
 
+export const metadata = {
+  title: 'Evebox',
+  description: 'evebox.vn',
+  icons: {
+    icon: '/images/logoweb.png', 
+  },
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

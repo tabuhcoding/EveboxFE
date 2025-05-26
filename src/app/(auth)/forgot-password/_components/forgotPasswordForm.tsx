@@ -72,8 +72,10 @@ export const ForgotPasswordForm = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-5 background">
-          <div className="overlay"></div>
+        <div className="col-md-5 p-0">
+          <div className="background">
+            <div className="overlay"></div>
+          </div>
         </div>
       </div>
     </div>
