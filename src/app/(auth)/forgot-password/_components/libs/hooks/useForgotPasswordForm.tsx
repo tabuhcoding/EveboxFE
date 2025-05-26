@@ -31,7 +31,7 @@ export const useForgotPasswordForm = () => {
       setIsLoading(true);
       try {
         const result = await forgotPassword(values.email);
-        if (result.status === 200) {
+        if (result.statusCode === 200) {
           setError('');
           localStorage.setItem('verifyData', JSON.stringify({
             ...values,
