@@ -7,7 +7,7 @@ export class END_POINT_LIST {
     FORGOT_PASSWORD: "/api/user/forgot-password",
     CHANGE_PASSWORD: "/api/user/reset-password",
     VERIFY_OTP: "/api/user/otps/verify-otp",
-    RESEND_OTP: "/api/user/otp/resend-otp",
+    RESEND_OTP: "/api/user/otps/resend-otp",
     GET_USER_INFO: "/api/user/me",
     GOOGLE: "/api/user/google",
     GOOGLE_CALLBACK: "/api/user/google/callback",

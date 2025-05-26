@@ -141,5 +141,8 @@
     "enterAgainOldPass": "Re-enter old password",
     "confirmNewPass": "Confirm new password",
     "titleChangePassBtn": "Change Password",
-    "loadingBtn": "Loading..."
+    "loadingBtn": "Loading...",
+    "successTitle": "Success",
+    "failTitle": "Failed",
+    "activeSucess": "successful"
 }

@@ -34,8 +34,7 @@ export const VerifyOTPForm = () => {
 
   return (
     <div className="verify-otp-page">
-      <div className='container-fluid vh-100 p-0'>
-        <div className='row h-100 m-0'>
+        <div className='row'>
           <div className={`col-md-5 d-flex align-items-center justify-content-center left-register-pane`}>
             <div className="text-center">
               <h2>{t('welcomeBack')}</h2>
@@ -46,7 +45,7 @@ export const VerifyOTPForm = () => {
             </div>
           </div>
           <div className="col-md-7 d-flex align-items-center justify-content-center right-register-pane">
-            <div className="w-75">
+            <div className="w-75 mb-12 mt-12">
               <div className='verify-form'>
                 <div className="verify-container d-flex flex-column align-items-center">
                   <Image
@@ -117,9 +116,9 @@ export const VerifyOTPForm = () => {
           <DialogContent>
             <div className="dialog-content">
               <Icon icon={isVerified ? 'ph:check-circle-fill' : 'fluent-color:error-circle-24'} width="48px" color="#22C55E" />
-              <h3>{isVerified ? 'Thành công' : 'Thất bại'}</h3>
+              <h3>{isVerified ? t('successTitle') : t('failTitle')}</h3>
               <br />
-              <p className="subtext">{t('activateAccount')} {isVerified ? 'thành công' : 'thất bại'}!</p>
+              <p className="subtext">{t('activateAccount')} {isVerified ? t('activeSucess') : t('failTitle').toLocaleLowerCase()}!</p>
             </div>
           </DialogContent>
           <DialogActions style={{ marginBottom: '30px' }} className='d-flex flex-column justify-content-center'>
@@ -132,6 +131,5 @@ export const VerifyOTPForm = () => {
           </DialogActions>
         </Dialog>
       </div>
-    </div>
   );
 };
