@@ -8,7 +8,9 @@ import {
   RegisterPayloadProps, 
   RegisterResponse, 
   VerifyOtpPayloadProps, 
-  VerifyOtpResponse} 
+  VerifyOtpResponse,
+  ResendOtpPayloadProps, 
+  ResendOtpResponse} 
 from "./interface/auth.interface";
 
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
@@ -25,3 +27,8 @@ export const verifyOtp = async (payload: VerifyOtpPayloadProps): Promise<BaseApi
   const result = await authService.post<BaseApiResponse<VerifyOtpResponse>>(END_POINT_LIST.USER.VERIFY_OTP, payload);
   return result.data;
 }
+
+export const resendOtp = async (payload: ResendOtpPayloadProps): Promise<BaseApiResponse<ResendOtpResponse>> => {
+  const result = await authService.post<BaseApiResponse<ResendOtpResponse>>(END_POINT_LIST.USER.RESEND_OTP, payload);
+  return result.data;
+};

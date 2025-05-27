@@ -31,3 +31,15 @@ export interface VerifyOtpPayloadProps {
 export interface VerifyOtpResponse {
   token: string;
 }
+
+export interface ResendOtpPayloadProps {
+  email: string;
+  type: string;
+  request_token: string;
+}
+
+export interface ResendOtpResponse {
+  resend_allowed_in: number;
+  remaining_attempts: number;
+  message?: string;
+}

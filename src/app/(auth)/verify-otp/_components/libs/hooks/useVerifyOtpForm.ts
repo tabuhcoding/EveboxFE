@@ -3,14 +3,14 @@ import axios, { AxiosError } from 'axios';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { 
-  useState, 
-  useEffect 
+import {
+  useState,
+  useEffect
 } from 'react';
 import * as Yup from 'yup';
 
 /* Package Application */
-import { verifyOtp } from 'services/auth.service';
+import { verifyOtp, resendOtp } from 'services/auth.service';
 import { ErrorResponse } from 'types/errorResponse';
 
 import { OtpConstants } from '../constants/otpConstants';
@@ -137,7 +137,7 @@ export const useVerifyOTPForm = () => {
     }
 
     try {
-      const result = await axios.post('/api/user/otps/resend-otp', {
+      const result = await resendOtp({
         email,
         type,
         request_token: requestToken,
