@@ -1,8 +1,15 @@
 /* Package Application */
-import { authService } from "./instance.service";
-import { END_POINT_LIST } from "./endpoint";
 import { BaseApiResponse } from "types/baseApiResponse";
-import { ForgotPasswordResponse, RegisterPayloadProps, RegisterResponse, VerifyOtpPayloadProps, VerifyOtpResponse} from "./interface/auth.interface"
+
+import { END_POINT_LIST } from "./endpoint";
+import { authService } from "./instance.service";
+import { 
+  ForgotPasswordResponse, 
+  RegisterPayloadProps, 
+  RegisterResponse, 
+  VerifyOtpPayloadProps, 
+  VerifyOtpResponse} 
+from "./interface/auth.interface";
 
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
   const result = await authService.post<BaseApiResponse<ForgotPasswordResponse>>(END_POINT_LIST.USER.FORGOT_PASSWORD, { email });

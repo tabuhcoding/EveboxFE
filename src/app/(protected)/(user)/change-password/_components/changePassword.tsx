@@ -2,11 +2,10 @@
 
 /* Package System */
 import 'tailwindcss/tailwind.css';
-import Image from 'next/image';
-import { useState, useRef } from 'react';
 import { Icon } from '@iconify/react';
-import { FormEvent } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { useState, useRef, FormEvent } from 'react';
 
 /* Package Application */
 import 'styles/admin/pages/ForgotPassword.css';

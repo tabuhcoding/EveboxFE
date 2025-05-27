@@ -1,6 +1,7 @@
 /* Package Application */
-import { ResetPasswordForm } from "./_components/resetPasswordForm";
 import { ReactScan } from "components/reactScan";
+
+import { ResetPasswordForm } from "./_components/resetPasswordForm";
 
 const ResetPasswordPage = () => {
   return (

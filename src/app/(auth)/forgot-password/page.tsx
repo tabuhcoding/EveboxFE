@@ -1,6 +1,7 @@
 /* Package Application */
-import { ForgotPasswordForm } from "./_components/forgotPasswordForm";
 import { ReactScan } from "components/reactScan";
+
+import { ForgotPasswordForm } from "./_components/forgotPasswordForm";
 
 const ForgotPasswordPage = () => {
   return (

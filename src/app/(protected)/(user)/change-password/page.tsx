@@ -1,6 +1,8 @@
 /* Package Application */
-import { ChangePasswordForm } from "./_components/changePassword";
 import { ReactScan } from "components/reactScan";
+
+import { ChangePasswordForm } from "./_components/changePassword";
+
 
 const ChangePasswordPage = () => {
   return (

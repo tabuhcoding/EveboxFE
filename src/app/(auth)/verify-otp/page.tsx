@@ -1,6 +1,7 @@
 /* Package Application */
-import { VerifyOTPForm } from "./_components/verifyOtpForm";
 import { ReactScan } from "components/reactScan";
+
+import { VerifyOTPForm } from "./_components/verifyOtpForm";
 
 const VerifyOTPPage = () => {
   return (
