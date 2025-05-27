@@ -88,20 +88,21 @@ export const VerifyOTPForm = () => {
                   <span style={{ fontSize: '12px', color: 'white' }}>{t('noteCheckEmail')}<br></br>{t('emailFolders')}</span>
                   <br></br>
                   <p style={{ color: 'white' }}>{t('notReceivedOTP')}
-                    <strong
+                    <span
                       role="button"
                       tabIndex={0}
+                      aria-pressed="false"
                       onClick={handleResendOtp}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           handleResendOtp();
                         }
                       }}
-                      className={`resend-btn ml-1 ${isResendAllowed ? '' : 'disabled'}`}
+                      className={`resend-btn ml-1 fw-bold ${isResendAllowed ? '' : 'disabled'}`}
                       style={{ cursor: isResendAllowed ? 'pointer' : 'not-allowed' }}
                     >
                       {t('resendCode')}
-                    </strong>
+                    </span>
                   </p>
                 </div>
                 <div className="otp-timer d-flex align-items-center justify-content-center">
