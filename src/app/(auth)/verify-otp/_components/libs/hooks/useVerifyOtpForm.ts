@@ -34,6 +34,12 @@ export const useVerifyOTPForm = () => {
   const router = useRouter();
   const t = useTranslations('common');
 
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   useEffect(() => {
     const verifyData = JSON.parse(localStorage.getItem('verifyData') || '{}');
     if (!verifyData) {
@@ -69,7 +75,7 @@ export const useVerifyOTPForm = () => {
   const formik = useFormik({
     initialValues: { otp: '' },
     validationSchema: Yup.object({
-      otp: Yup.string().required(t('requiredOTP')),
+      otp: Yup.string().required(transWithFallback('requiredOTP', 'Yêu cầu nhập mã OTP')),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -90,9 +96,9 @@ export const useVerifyOTPForm = () => {
         setIsLoading(false);
         if (axios.isAxiosError(err)) {
           const error = err as AxiosError<ErrorResponse>;
-          setError(error.response?.data?.message || t('authFailed'));
+          setError(error.response?.data?.message || transWithFallback('authFailed', 'Xác thực thất bại'));
         } else {
-          setError(t('authFailed'));
+          setError(transWithFallback('authFailed', 'Xác thực thất bại'));
         }
       } finally {
         setIsLoading(false);
@@ -148,11 +154,11 @@ export const useVerifyOTPForm = () => {
         setAttempts(result.data.remaining_attempts ?? ATTEMPTS);
         setError('');
       } else {
-        setError(`${t('sendOTPFail')}: ${result.data.message}`);
+        setError(`${transWithFallback('sendOTPFail', 'Gửi mã OTP thất bại')}: ${result.data.message}`);
         alert(result.data.message);
       }
     } catch (err) {
-      setError(`${t('sendOTPFailMessage')} ${err}.`);
+      setError(`${transWithFallback('sendOTPFailMessage', 'Gửi mã OTP thất bại, vui lòng thử lại sau:')} ${err}.`);
     }
   };
 

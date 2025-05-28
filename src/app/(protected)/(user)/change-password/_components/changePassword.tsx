@@ -26,6 +26,12 @@ export const ChangePasswordForm = () => {
 
     const t = useTranslations('common');
 
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
@@ -45,7 +51,7 @@ export const ChangePasswordForm = () => {
         let isValid = true;
 
         if (newPassword !== confirmPassword) {
-            setErrorConfirm(t('confirmPassMismatch'));
+            setErrorConfirm(transWithFallback('confirmPassMismatch', 'Mật khẩu xác nhận không khớp.'));
             isValid = false;
         }
 
@@ -72,14 +78,14 @@ export const ChangePasswordForm = () => {
                         setErrorMessage(data.message);
                     }
                 } else {
-                    setSuccessMessage(t('changePassSuccess'));
+                    setSuccessMessage(transWithFallback('changePassSuccess', 'Đổi mật khẩu thành công!'));
                     // Use the form reference instead of the event
                     if (formRef.current) {
                         formRef.current.reset();
                     }
                 }
             } catch (error) {
-                setErrorMessage(t('changePassError'));
+                setErrorMessage(transWithFallback('changePassError', 'Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại sau.'));
                 console.error("Change password error:", error);
             }
         }
@@ -101,7 +107,7 @@ export const ChangePasswordForm = () => {
                                 height={60}
                                 className="mb-4"
                             />
-                            <h3 className="text-xl font-bold text-center">{t('changePassword')}</h3>
+                            <h3 className="text-xl font-bold text-center">{transWithFallback('changePassword', 'Đổi mật khẩu mới')}</h3>
                         </div>
 
                         {successMessage && (
@@ -118,13 +124,13 @@ export const ChangePasswordForm = () => {
 
                         <form className="space-y-6" onSubmit={handleSubmit} ref={formRef}>
                             <div>
-                                <label htmlFor="oldPassword" className="block font-semibold mb-1">{t('enterOldPass')}</label>
+                                <label htmlFor="oldPassword" className="block font-semibold mb-1">{transWithFallback('enterOldPass', 'Nhập mật khẩu cũ')}</label>
                                 <div className="relative">
                                     <input
                                         name="oldPassword"
                                         type={showOld ? "text" : "password"}
                                         id="oldPassword"
-                                        placeholder={t('enterOldPass')}
+                                        placeholder={transWithFallback('enterOldPass', 'Nhập mật khẩu cũ')}
                                         className={`w-full px-4 py-2 border ${errorOld ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     />
                                     <button type="button" onClick={() => setShowOld(!showOld)} className="absolute right-3 top-2">
@@ -135,13 +141,13 @@ export const ChangePasswordForm = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="new-password" className="block font-semibold mb-1">{t('enterNewPass')}</label>
+                                <label htmlFor="new-password" className="block font-semibold mb-1">{transWithFallback('enterNewPass', 'Nhập mật khẩu mới')}</label>
                                 <div className="relative">
                                     <input
                                         name="newPassword"
                                         type={showNew ? "text" : "password"}
                                         id="newPassword"
-                                        placeholder={t('enterNewPass')}
+                                        placeholder={transWithFallback('enterNewPass', 'Nhập mật khẩu mới')}
                                         className={`w-full px-4 py-2 border ${errorNew ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     />
                                     <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-3 top-2">
@@ -152,13 +158,13 @@ export const ChangePasswordForm = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="confirm-password" className="block font-semibold mb-1">{t('confirmNewPass')}</label>
+                                <label htmlFor="confirm-password" className="block font-semibold mb-1">{transWithFallback('confirmNewPass', 'Xác nhận mật khẩu mới')}</label>
                                 <div className="relative">
                                     <input
                                         name="confirmPassword"
                                         type={showConfirm ? "text" : "password"}
                                         id="confirmPassword"
-                                        placeholder={t('confirmNewPass')}
+                                        placeholder={transWithFallback('confirmNewPass', 'Xác nhận mật khẩu mới')}
                                         className={`w-full px-4 py-2 border ${errorConfirm ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     />
                                     <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-2">
@@ -173,7 +179,7 @@ export const ChangePasswordForm = () => {
                                 className="w-full bg-[#0C4762] hover:bg-[#0C4762]-400 text-white font-semibold py-2 rounded-md transition duration-200 mt-6"
                                 disabled={loading}
                             >
-                                {loading ? t('loadingBtn') : t('titleChangePassBtn')}
+                                {loading ? transWithFallback('loadingBtn', 'Đang xử lý...') : transWithFallback('titleChangePassBtn', 'Đổi mật khẩu')}
                             </button>
                         </form>
                     </div>

@@ -17,12 +17,18 @@ export const useForgotPasswordForm = () => {
   const router = useRouter();
   const t = useTranslations('common');
 
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   const emailFormik = useFormik({
     initialValues: { email: '' },
     validationSchema: Yup.object({
       email: Yup.string()
-        .required(t('requiredEmail'))
-        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, t('invalidEmail'))
+        .required(transWithFallback('requiredEmail', 'Bạn chưa nhập email!'))
+        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, transWithFallback('invalidEmail', 'Email không hợp lệ'))
     }),
     validateOnChange: true,
     validateOnBlur: true,
@@ -45,9 +51,9 @@ export const useForgotPasswordForm = () => {
       } catch (err) {
         if (axios.isAxiosError(err)) {
           const error = err as AxiosError<ErrorResponse>;
-          setError(error.response?.data?.message || t('sendOTPFail'));
+          setError(error.response?.data?.message || transWithFallback('sendOTPFail', 'Gửi mã OTP thất bại'));
         } else {
-          setError(t('sendOTPFail'));
+          setError(transWithFallback('sendOTPFail', 'Gửi mã OTP thất bại'));
         }
       } finally {
         setIsLoading(false);

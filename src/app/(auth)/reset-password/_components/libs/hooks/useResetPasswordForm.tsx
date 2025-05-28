@@ -17,12 +17,19 @@ export const useResetPasswordForm = () => {
   const router = useRouter();
   const t = useTranslations('common');
 
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
+
   useEffect(() => {
     const token = sessionStorage.getItem('reset_token');
     if (token) {
       setResetToken(token);
     } else {
-      setError(t('notRequestResetPass'));
+      setError(transWithFallback('notRequestResetPass', 'Không tìm thấy mã yêu cầu thay đổi mật khẩu.'));
     }
   }, []);
 
@@ -32,14 +39,14 @@ export const useResetPasswordForm = () => {
       re_password: '',
     },
     validationSchema: Yup.object({
-      password: Yup.string().min(6, t('requireDigitPass')).required(t('requireEnterPass')),
+      password: Yup.string().min(6, transWithFallback('requireDigitPass', 'Mật khẩu tối thiểu 6 ký tự')).required(transWithFallback('requireEnterPass', 'Yêu cầu nhập mật khẩu')),
       re_password: Yup.string()
-        .oneOf([Yup.ref('password')], t('passwordMismatch'))
-        .required(t('requireReEnterPass')),
+        .oneOf([Yup.ref('password')], transWithFallback('passwordMismatch', 'Mật khẩu không khớp'))
+        .required(transWithFallback('requireReEnterPass', 'Yêu cầu nhập lại mật khẩu')),
     }),
     onSubmit: async (values) => {
       if (!resetToken) {
-        setError(t('notRequestResetPass'));
+        setError(transWithFallback('notRequestResetPass', 'Không tìm thấy mã yêu cầu thay đổi mật khẩu.'));
         return;
       }
 
@@ -56,9 +63,9 @@ export const useResetPasswordForm = () => {
       } catch (err) {
         if (axios.isAxiosError(err)) {
           const error = err as AxiosError<ErrorResponse>;
-          setError(error.response?.data?.message || t('resetPassFailed'));
+          setError(error.response?.data?.message || transWithFallback('resetPassFailed', 'Đổi mật khẩu thất bại'));
         } else {
-          setError(t('resetPassFailed'));
+          setError(transWithFallback('resetPassFailed', 'Đổi mật khẩu thất bại'));
         }
       }
     },

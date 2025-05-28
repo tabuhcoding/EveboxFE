@@ -19,12 +19,18 @@ export const ForgotPasswordForm = () => {
 
   const t = useTranslations('common');
 
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   return (
     <div className="forgot-password-page">
       <div className="row">
         <div className="col-md-7 d-flex align-items-center justify-content-center left-pane">
           <a href="/login" className="back-link">
-            &lt; {t('backLogin')}
+            &lt; {transWithFallback('backLogin', 'Quay lại Đăng nhập')}
           </a>
           <div className="w-75">
             <div className="form">
@@ -36,8 +42,8 @@ export const ForgotPasswordForm = () => {
                   height={50}
                   className="logo"
                 />
-                <h3 ><strong>{t('forgotPass')}</strong></h3>
-                <p className="subheading">{t('forgotPassMessage')}</p>
+                <h3 ><strong>{transWithFallback('forgotPass', 'Quên mật khẩu?')}</strong></h3>
+                <p className="subheading">{transWithFallback('forgotPassMessage', 'Đừng lo, điều này xảy ra với tất cả chúng ta. Nhập email của bạn dưới đây để khôi phục mật khẩu.')}</p>
               </div>
               <form onSubmit={emailFormik.handleSubmit}>
                 <div className="mb-3">
@@ -46,7 +52,7 @@ export const ForgotPasswordForm = () => {
                     type="email"
                     id="email"
                     className={`form-control ${emailFormik.touched.email && emailFormik.errors.email ? 'is-invalid' : ''}`}
-                    placeholder={t('emailHint')}
+                    placeholder={transWithFallback('emailHint', 'Nhập email của bạn')}
                     onChange={(e) => {
                       emailFormik.setFieldValue('email', e.target.value);
                       emailFormik.setFieldTouched('email', true, false);
@@ -65,7 +71,7 @@ export const ForgotPasswordForm = () => {
                   className="btn btn-primary w-100 mb-3"
                   disabled={!emailFormik.isValid || !emailFormik.dirty}
                 >
-                  {isLoading ? <CircularProgress size={24} color="inherit" /> : t('continue')}
+                  {isLoading ? <CircularProgress size={24} color="inherit" /> : transWithFallback('continue', 'Tiếp tục')}
                 </button>
 
               </form>
