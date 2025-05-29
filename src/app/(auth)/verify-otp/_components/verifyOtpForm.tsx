@@ -30,6 +30,7 @@ export const VerifyOTPForm = () => {
     isVerified,
     isOpen,
     isLoading,
+    isResending,
     formatTime,
     handleKeyDown,
     handleChange,
@@ -104,10 +105,18 @@ export const VerifyOTPForm = () => {
                           handleResendOtp();
                         }
                       }}
+                      title={!isResendAllowed ? transWithFallback('waitToResend', 'Vui lòng chờ để gửi lại') : ''}
                       className={`resend-btn ml-1 fw-bold ${isResendAllowed ? '' : 'disabled'}`}
                       style={{ cursor: isResendAllowed ? 'pointer' : 'not-allowed' }}
                     >
-                      {transWithFallback('resendCode', 'Gửi lại mã')}
+                      {isResending ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-1" role="status" />
+                          {transWithFallback('resending', 'Đang gửi lại mã...')}
+                        </>
+                      ) : (
+                        transWithFallback('resendCode', 'Gửi lại mã')
+                      )}
                     </span>
                   </p>
                 </div>

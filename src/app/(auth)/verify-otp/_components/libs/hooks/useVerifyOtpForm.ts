@@ -31,6 +31,7 @@ export const useVerifyOTPForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [requestToken, setRequestToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const router = useRouter();
   const t = useTranslations('common');
 
@@ -134,6 +135,9 @@ export const useVerifyOTPForm = () => {
   };
 
   const handleResendOtp = async () => {
+    if (!isResendAllowed) return;
+
+    setIsResending(true);
     setError('');
     setCntAttempts(cntAttempts + 1);
 
@@ -149,7 +153,7 @@ export const useVerifyOTPForm = () => {
         request_token: requestToken,
       });
 
-      if (result.status === 200) {
+      if (result.statusCode === 200) {
         setTimeLeft(result.data.resend_allowed_in ?? TIMELEFT);
         setAttempts(result.data.remaining_attempts ?? ATTEMPTS);
         setError('');
@@ -159,6 +163,10 @@ export const useVerifyOTPForm = () => {
       }
     } catch (err) {
       setError(`${transWithFallback('sendOTPFailMessage', 'Gửi mã OTP thất bại, vui lòng thử lại sau:')} ${err}.`);
+    } finally {
+      setTimeout(() => {
+        setIsResending(false);
+      }, 200);
     }
   };
 
@@ -180,6 +188,7 @@ export const useVerifyOTPForm = () => {
     isVerified,
     isOpen,
     isLoading,
+    isResending,
     formatTime,
     handleKeyDown,
     handleChange,
