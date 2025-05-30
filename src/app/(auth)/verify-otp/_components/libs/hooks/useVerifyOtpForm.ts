@@ -91,6 +91,10 @@ export const useVerifyOTPForm = () => {
         if (result.statusCode === 200) {
           setIsVerified(true);
           setError('');
+          const token = result.data?.token;
+          if (token) {
+            localStorage.setItem('reset_token', token);
+          }
         }
         setIsOpen(true);
       } catch (err) {
@@ -189,6 +193,7 @@ export const useVerifyOTPForm = () => {
     isOpen,
     isLoading,
     isResending,
+    type,
     formatTime,
     handleKeyDown,
     handleChange,

@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import 'styles/admin/pages/VerifyOTP.css'
+import { OtpConstants } from './libs/constants/otpConstants';
 import { useVerifyOTPForm } from './libs/hooks/useVerifyOtpForm';
 
 export const VerifyOTPForm = () => {
@@ -31,6 +32,7 @@ export const VerifyOTPForm = () => {
     isOpen,
     isLoading,
     isResending,
+    type,
     formatTime,
     handleKeyDown,
     handleChange,
@@ -133,10 +135,16 @@ export const VerifyOTPForm = () => {
       </div>
       <Dialog open={isOpen} className="custom-dialog">
         <DialogTitle>
-          <div className="dialog-title">
-            {isVerified ? transWithFallback('registerSuccess', 'Đăng ký thành công') : transWithFallback('registerFail', 'Đăng ký thất bại')}
+          <div className="dialog-title" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', fontWeight: 'bold', fontSize: '1.25rem', width: '100%'}}>
+            {type === OtpConstants.FORGOT_PASSWORD
+              ? isVerified
+                ? transWithFallback('verifySuccess', 'Xác thực thành công')
+                : transWithFallback('verifyFail', 'Xác thực thất bại')
+              : isVerified
+                ? transWithFallback('registerSuccess', 'Đăng ký thành công')
+                : transWithFallback('registerFail', 'Đăng ký thất bại')}
             <IconButton
-              className="close-button"
+              className="close-button" style={{ position: 'absolute', right: 2, top: '40%', transform: 'translateY(-50%)'}}
               onClick={handleCloseDialog}
               aria-label="Close"
             >
@@ -149,7 +157,13 @@ export const VerifyOTPForm = () => {
             <Icon icon={isVerified ? 'ph:check-circle-fill' : 'fluent-color:error-circle-24'} width="48px" color="#22C55E" />
             <h3>{isVerified ? transWithFallback('successTitle', 'Thành công') : transWithFallback('failTitle', 'Thất bại')}</h3>
             <br />
-            <p className="subtext">{transWithFallback('activateAccount', 'Kích hoạt tài khoản')} {isVerified ? transWithFallback('activeSucess', 'thành công') : transWithFallback('failTitle', 'Thất bại').toLocaleLowerCase()}!</p>
+            {type === OtpConstants.FORGOT_PASSWORD
+              ? `${transWithFallback('verifyAccount', 'Xác thực')} ${isVerified
+                ? transWithFallback('activeSucess', 'thành công')
+                : transWithFallback('failTitle', 'Thất bại').toLowerCase()}!`
+              : `${transWithFallback('activateAccount', 'Kích hoạt tài khoản')} ${isVerified
+                ? transWithFallback('activeSucess', 'thành công')
+                : transWithFallback('failTitle', 'Thất bại').toLowerCase()}!`}
           </div>
         </DialogContent>
         <DialogActions style={{ marginBottom: '30px' }} className='d-flex flex-column justify-content-center'>
@@ -157,7 +171,9 @@ export const VerifyOTPForm = () => {
             onClick={handleCloseDialog}
             className="action-button"
           >
-            {transWithFallback('backLoginPage', 'Về trang Đăng nhập')}
+            {type === OtpConstants.FORGOT_PASSWORD
+              ? transWithFallback('titleResetPass', 'Đặt lại mật khẩu')
+              : transWithFallback('backLoginPage', 'Về trang Đăng nhập')}
           </Button>
         </DialogActions>
       </Dialog>
