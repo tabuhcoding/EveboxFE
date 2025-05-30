@@ -10,7 +10,9 @@ import {
   VerifyOtpPayloadProps, 
   VerifyOtpResponse,
   ResendOtpPayloadProps, 
-  ResendOtpResponse} 
+  ResendOtpResponse,
+  ResetPasswordPayloadProps,
+  ResetPasswordResponse} 
 from "./interface/auth.interface";
 
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
@@ -30,5 +32,10 @@ export const verifyOtp = async (payload: VerifyOtpPayloadProps): Promise<BaseApi
 
 export const resendOtp = async (payload: ResendOtpPayloadProps): Promise<BaseApiResponse<ResendOtpResponse>> => {
   const result = await authService.post<BaseApiResponse<ResendOtpResponse>>(END_POINT_LIST.USER.RESEND_OTP, payload);
+  return result.data;
+};
+
+export const resetPassword = async (payload: ResetPasswordPayloadProps): Promise<BaseApiResponse<ResetPasswordResponse>> => {
+  const result = await authService.post<BaseApiResponse<ResetPasswordResponse>>(END_POINT_LIST.USER.CHANGE_PASSWORD, payload);
   return result.data;
 };

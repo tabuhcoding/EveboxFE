@@ -43,3 +43,15 @@ export interface ResendOtpResponse {
   remaining_attempts: number;
   message?: string;
 }
+
+export interface ResetPasswordPayloadProps {
+  newPassword: string;
+  confirmPassword: string;
+  resetToken: string;
+}
+
+export interface ResetPasswordResponse {
+  statusCode: number;
+  message?: string;
+}
+

@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 
 /* Package Application */
+import { resetPassword } from 'services/auth.service';
 import { ErrorResponse } from 'types/errorResponse';
 
 export const useResetPasswordForm = () => {
@@ -25,7 +26,7 @@ export const useResetPasswordForm = () => {
 
 
   useEffect(() => {
-    const token = sessionStorage.getItem('reset_token');
+    const token = localStorage.getItem('reset_token');
     if (token) {
       setResetToken(token);
     } else {
@@ -51,13 +52,13 @@ export const useResetPasswordForm = () => {
       }
 
       try {
-        const result = await axios.post('/api/user/reset-password', {
+        const result = await resetPassword({
           newPassword: values.password,
           confirmPassword: values.re_password,
           resetToken
         });
 
-        if (result.status === 200) {
+        if (result.statusCode === 200) {
           router.push('/login');
         }
       } catch (err) {
