@@ -55,3 +55,13 @@ export interface ResetPasswordResponse {
   message?: string;
 }
 
+export interface ChangePasswordPayloadProps {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  statusCode: number;
+  message: string;
+}

@@ -9,6 +9,7 @@ import { useState, useRef, FormEvent } from 'react';
 
 /* Package Application */
 import 'styles/admin/pages/ForgotPassword.css';
+import { changePassword } from 'services/auth.service';
 
 export const ChangePasswordForm = () => {
     const formRef = useRef<HTMLFormElement>(null); // Add a form reference
@@ -57,32 +58,21 @@ export const ChangePasswordForm = () => {
 
         if (isValid) {
             try {
-                const response = await fetch('/api/user/change-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        oldPassword,
-                        newPassword,
-                        confirmPassword
-                    }),
+                const result = await changePassword({
+                    oldPassword,
+                    newPassword,
+                    confirmPassword,
                 });
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    if (data.message.includes("old password")) {
-                        setErrorOld(data.message);
-                    } else {
-                        setErrorMessage(data.message);
-                    }
-                } else {
+                if (result.statusCode === 200) {
                     setSuccessMessage(transWithFallback('changePassSuccess', 'Đổi mật khẩu thành công!'));
-                    // Use the form reference instead of the event
+                    setErrorMessage('');
+                    setErrorOld('');
                     if (formRef.current) {
                         formRef.current.reset();
                     }
+                } else {
+                    setErrorMessage(result.message);
                 }
             } catch (error) {
                 setErrorMessage(transWithFallback('changePassError', 'Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại sau.'));

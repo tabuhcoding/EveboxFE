@@ -3,17 +3,20 @@ import { BaseApiResponse } from "types/baseApiResponse";
 
 import { END_POINT_LIST } from "./endpoint";
 import { authService } from "./instance.service";
-import { 
-  ForgotPasswordResponse, 
-  RegisterPayloadProps, 
-  RegisterResponse, 
-  VerifyOtpPayloadProps, 
+import {
+  ForgotPasswordResponse,
+  RegisterPayloadProps,
+  RegisterResponse,
+  VerifyOtpPayloadProps,
   VerifyOtpResponse,
-  ResendOtpPayloadProps, 
+  ResendOtpPayloadProps,
   ResendOtpResponse,
   ResetPasswordPayloadProps,
-  ResetPasswordResponse} 
-from "./interface/auth.interface";
+  ResetPasswordResponse,
+  ChangePasswordPayloadProps,
+  ChangePasswordResponse
+}
+  from "./interface/auth.interface";
 
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
   const result = await authService.post<BaseApiResponse<ForgotPasswordResponse>>(END_POINT_LIST.USER.FORGOT_PASSWORD, { email });
@@ -36,6 +39,11 @@ export const resendOtp = async (payload: ResendOtpPayloadProps): Promise<BaseApi
 };
 
 export const resetPassword = async (payload: ResetPasswordPayloadProps): Promise<BaseApiResponse<ResetPasswordResponse>> => {
-  const result = await authService.post<BaseApiResponse<ResetPasswordResponse>>(END_POINT_LIST.USER.CHANGE_PASSWORD, payload);
+  const result = await authService.post<BaseApiResponse<ResetPasswordResponse>>(END_POINT_LIST.USER.RESET_PASSWORD, payload);
+  return result.data;
+};
+
+export const changePassword = async (payload: ChangePasswordPayloadProps): Promise<BaseApiResponse<ChangePasswordResponse>> => {
+  const result = await authService.post<BaseApiResponse<ChangePasswordResponse>>(END_POINT_LIST.USER.CHANGE_PASSWORD, payload);
   return result.data;
 };

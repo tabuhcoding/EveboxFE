@@ -5,7 +5,8 @@ export class END_POINT_LIST {
     REGISTER: "/api/user/register",
     REFRESH_TOKEN: "/api/user/refresh-token",
     FORGOT_PASSWORD: "/api/user/forgot-password",
-    CHANGE_PASSWORD: "/api/user/reset-password",
+    RESET_PASSWORD: "/api/user/reset-password",
+    CHANGE_PASSWORD: "/api/user/change-password",
     VERIFY_OTP: "/api/user/otps/verify-otp",
     RESEND_OTP: "/api/user/otps/resend-otp",
     GET_USER_INFO: "/api/user/me",
@@ -53,7 +54,7 @@ export class END_POINT_LIST {
     GET_REVENUE_BY_PROVINCE: "/api/admin/revenue-by-province",
     GET_REVENUE_BY_TICKETPRICE: "/api/admin/revenue-by-ticket-price"
   };
-  
+
   static readonly ADMIN = {
     EVENTS: "/api/admin/event",
     SHOWINGS: "/api/admin/showing",
