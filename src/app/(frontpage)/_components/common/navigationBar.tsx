@@ -2,19 +2,20 @@
 
 /* Package System */
 import { Menu, ChevronDown, User2Icon } from "lucide-react";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
-import Sidebar from "./sidebar";
-import { UserInfo, UserInfoResponse } from "../../../../types/models/userInfo";
-import LanguageSwitcher from "../common/languageSwitcher";
-import { useI18n } from "../../../providers/i18nProvider";
 import { gatewayService } from "../../../../services/instance.service";
+import { UserInfo, UserInfoResponse } from "../../../../types/models/userInfo";
+import { useI18n } from "../../../providers/i18nProvider";
+import LanguageSwitcher from "../common/languageSwitcher";
+
+import Sidebar from "./sidebar";
 
 const NavigationBar = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);

@@ -1,14 +1,19 @@
 /* Package System */
-import { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import axios, { AxiosError } from 'axios';
+import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import {
+  useState,
+  useEffect
+} from 'react';
+import * as Yup from 'yup';
 
 /* Package Application */
+import { verifyOtp, resendOtp } from 'services/auth.service';
+import { ErrorResponse } from 'types/errorResponse';
+
 import { OtpConstants } from '../constants/otpConstants';
-import { ErrorResponse } from 'types/ErrorResponse';
-import { verifyOtp } from 'services/auth.service';
 
 const TIMELEFT = 60;
 const ATTEMPTS = 5;
@@ -26,7 +31,16 @@ export const useVerifyOTPForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [requestToken, setRequestToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isResending, setIsResending] = useState(false);
   const router = useRouter();
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   useEffect(() => {
     const verifyData = JSON.parse(localStorage.getItem('verifyData') || '{}');
@@ -63,7 +77,7 @@ export const useVerifyOTPForm = () => {
   const formik = useFormik({
     initialValues: { otp: '' },
     validationSchema: Yup.object({
-      otp: Yup.string().required('Yêu cầu nhập mã OTP'),
+      otp: Yup.string().required(transWithFallback('requiredOTP', 'Yêu cầu nhập mã OTP')),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -74,19 +88,24 @@ export const useVerifyOTPForm = () => {
           request_token: requestToken,
           type,
         });
-        
+
+
         if (result.statusCode === 200) {
           setIsVerified(true);
           setError('');
+          const token = result.data?.token;
+          if (token) {
+            localStorage.setItem('reset_token', token);
+          }
         }
         setIsOpen(true);
       } catch (err) {
         setIsLoading(false);
         if (axios.isAxiosError(err)) {
           const error = err as AxiosError<ErrorResponse>;
-          setError(error.response?.data?.message || 'Xác thực thất bại');
+          setError(error.response?.data?.message || transWithFallback('authFailed', 'Xác thực thất bại'));
         } else {
-          setError('Xác thực thất bại');
+          setError(transWithFallback('authFailed', 'Xác thực thất bại'));
         }
       } finally {
         setIsLoading(false);
@@ -101,27 +120,30 @@ export const useVerifyOTPForm = () => {
         e.preventDefault();
         newOtp[index - 1] = '';
         setOtp(newOtp);
-  
+
         const prevInput = (e.target as HTMLInputElement).previousSibling as HTMLInputElement | null;
         if (prevInput) prevInput.focus();
       }
     }
-  } 
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     if (isNaN(Number(e.target.value))) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = e.target.value;
     setOtp(newOtp);
     formik.setFieldValue('otp', newOtp.join(''));
-    
+
     if (e.target.value && e.target.nextElementSibling) {
       (e.target.nextElementSibling as HTMLElement).focus();
     }
   };
 
   const handleResendOtp = async () => {
+    if (!isResendAllowed) return;
+
+    setIsResending(true);
     setError('');
     setCntAttempts(cntAttempts + 1);
 
@@ -131,22 +153,28 @@ export const useVerifyOTPForm = () => {
     }
 
     try {
-      const result = await axios.post('/api/user/otps/resend-otp', {
+
+      const result = await resendOtp({
         email,
         type,
         request_token: requestToken,
       });
 
-      if (result.status === 200) {
+
+      if (result.statusCode === 200) {
         setTimeLeft(result.data.resend_allowed_in ?? TIMELEFT);
         setAttempts(result.data.remaining_attempts ?? ATTEMPTS);
         setError('');
       } else {
-        setError(`Gửi mã OTP thất bại: ${result.data.message}`);
+        setError(`${transWithFallback('sendOTPFail', 'Gửi mã OTP thất bại')}: ${result.data.message}`);
         alert(result.data.message);
       }
     } catch (err) {
-      setError(`Gửi mã OTP thất bại, vui lòng thử lại sau: ${err}.`);
+      setError(`${transWithFallback('sendOTPFailMessage', 'Gửi mã OTP thất bại, vui lòng thử lại sau:')} ${err}.`);
+    } finally {
+      setTimeout(() => {
+        setIsResending(false);
+      }, 200);
     }
   };
 
@@ -168,6 +196,8 @@ export const useVerifyOTPForm = () => {
     isVerified,
     isOpen,
     isLoading,
+    isResending,
+    type,
     formatTime,
     handleKeyDown,
     handleChange,

@@ -1,14 +1,15 @@
 "use client";
 
 /* Package System */
+import { useTranslations } from 'next-intl';
 import { useState, useEffect } from "react";
 
 /* Package Application */
-import AvatarUpload from "./avatarUpload";
-import useProfile from "./libs/hooks/useProfile";
-//import AlertDialog from "@/app/(showing)/showing/components/alertDialog";
 import { gatewayService } from "../../../../../services/instance.service";
-//import Loading from "../loading";
+
+import AvatarUpload from "./avatarUpload";
+import useAvatar from "./libs/hooks/useAvatar";
+import useProfile from "./libs/hooks/useProfile";
 import { OrganizerDetail } from "./libs/interface/favorite.interface";
 import MyFavoritePage from "./myFavoritePage";
 
@@ -17,7 +18,7 @@ export default function ProfileForm() {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { updateProfile } = useProfile();
-    const [profile, setProfile] = useState(null);
+    const [_profile, setProfile] = useState(null);
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -25,14 +26,15 @@ export default function ProfileForm() {
         avatar_id: 0
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [dialogMessage, setDialogMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
+    const [_dialogOpen, setDialogOpen] = useState(false);
+    const [_dialogMessage, setDialogMessage] = useState("");
+    const [_isLoading, setIsLoading] = useState(true);
     const fetchProfile = async () => {
         try {
             setIsLoading(true);
             const response = await gatewayService.get("/api/user/me");
             setProfile(response.data.data);
+            console.log(response.data);
 
             // Update form with profile data
             setForm({
@@ -63,7 +65,7 @@ export default function ProfileForm() {
         try {
             const result = await updateProfile({
                 name: form.name,
-                phone: form.phone
+                phone: form.phone,
             });
 
             if (result.success) {
@@ -72,24 +74,20 @@ export default function ProfileForm() {
                 setDialogMessage('Cập nhật thông tin thất bại');
             }
             setDialogOpen(true);
-        } catch (error) {
+        } catch {
             setDialogMessage('Cập nhật thông tin thất bại');
             setDialogOpen(true);
         } finally {
             setIsSubmitting(false);
         }
     };
-
-    // if (isLoading) {
-    //     return <><Loading /></>;
-    // }
+    const { imageUrl } = useAvatar({ avatar_id: form.avatar_id}) || "/default_avt.png";
 
     //Call API truyền dữ liệu các sự kiện yêu thích vào -> truyền vào EventSlider giống ở trang Dashboard
     const events = {
         favoriteEvents: [],
     };
 
-    //Call API truyền dữ liệu nhà tổ chức yêu thích
     const favoriteOrganizers: OrganizerDetail[] = [
         {
             id: 1,
@@ -127,9 +125,17 @@ export default function ProfileForm() {
 
     const paginatedData = favoriteOrganizers.slice(startItem - 1, endItem);
 
+    const t = useTranslations('common');
+    
+        const transWithFallback = (key: string, fallback: string) => {
+            const msg = t(key);
+            if (!msg || msg.startsWith('common.')) return fallback;
+            return msg;
+        };
+
     const tabs = [
-        { key: "info", label: "Thông tin cá nhân" },
-        { key: "favorites", label: "Danh sách yêu thích" },
+        { key: "info", label: transWithFallback('personalInfo', 'Thông tin cá nhân')},
+        { key: "favorites", label: transWithFallback('favoriteList', 'Danh sách yêu thích')},
     ];
 
     return (
@@ -138,11 +144,10 @@ export default function ProfileForm() {
             <div className="bg-gradient-to-r from-slate-900 to-slate-700 p-6 text-white">
                 <div className="max-w-4xl mx-auto flex items-center gap-6">
                     <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-white">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/default-avatar.png" alt="Avatar" className="w-full h-full object-cover" />
+                        <img src={imageUrl} alt="Avatar" className="w-full h-full object-cover" />
                     </div>
                     <div>
-                        <p className="text-sm">Tài khoản của</p>
+                        <p className="text-sm">{transWithFallback('account', 'Tài khoản của')}</p>
                         <h1 className="text-2xl font-bold">{form.name}</h1>
                     </div>
                 </div>
@@ -169,12 +174,12 @@ export default function ProfileForm() {
                         open={dialogOpen}
                         onClose={() => setDialogOpen(false)}
                         message={dialogMessage}
-                    /> */}
+                    />  */}
                     <div className="flex justify-between items-center">
                         <div>
-                            <h2 className="text-2xl font-bold mt-8 mb-4">Quản lý thông tin tài khoản</h2>
+                            <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('accountManagement', 'Quản lý thông tin tài khoản')}</h2>
                             <h5 className="text-sm text-gray-700">
-                                Quản lý và cập nhật thông tin cá nhân cho tài khoản của bạn
+                                {transWithFallback('updatePersonalInfo', 'Quản lý và cập nhật thông tin cá nhân cho tài khoản của bạn')}
                             </h5>
                         </div>
                         <AvatarUpload initAvatarId={form.avatar_id} />
@@ -185,22 +190,24 @@ export default function ProfileForm() {
                     <form onSubmit={handleSubmit}>
                         <div className="space-y-6">
                             <div>
-                                <label className="block text-gray-700 font-medium">Họ và tên</label>
+                                <label htmlFor="name" className="block text-gray-700 font-medium">{transWithFallback('fullName', 'Họ và tên')}</label>
                                 <div className="relative">
                                     <input
+                                        id ="name"
                                         type="text"
                                         name="name"
                                         value={form.name}
                                         onChange={handleChange}
-                                        placeholder="Nhập họ và tên của bạn"
+                                        placeholder={transWithFallback('namePlaceholder', 'Nhập họ và tên của bạn')}
                                         className="w-full border p-2 rounded-md mt-1 bg-gray-100 focus:bg-white"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-gray-700 font-medium">Địa chỉ email</label>
+                                <label htmlFor="email" className="block text-gray-700 font-medium">{transWithFallback('emailAddress', 'Địa chỉ Email')}</label>
                                 <input
+                                    id = "email"
                                     type="email"
                                     name="email"
                                     value={form.email}
@@ -210,14 +217,15 @@ export default function ProfileForm() {
                             </div>
 
                             <div>
-                                <label className="block text-gray-700 font-medium">Số điện thoại</label>
+                                <label htmlFor="phone" className="block text-gray-700 font-medium">{transWithFallback('phone', 'Số điện thoại')}</label>
                                 <div className="relative">
                                     <input
+                                        id="phone"
                                         type="tel"
                                         name="phone"
                                         value={form.phone}
                                         onChange={handleChange}
-                                        placeholder="Nhập số điện thoại của bạn"
+                                        placeholder= {transWithFallback('phonePlaceholder', 'Nhập số điện thoại của bạn')}
                                         className="w-full border p-2 rounded-md mt-1 bg-gray-100 focus:bg-white"
                                     />
                                 </div>
@@ -229,7 +237,7 @@ export default function ProfileForm() {
                                     disabled={isSubmitting}
                                     className="w-full bg-[#51DACF] text-[#0C4762] px-4 py-2 rounded-md mt-2 hover:bg-teal-300 transition disabled:opacity-50"
                                 >
-                                    {isSubmitting ? 'Đang xử lý...' : 'Lưu'}
+                                    {isSubmitting ? 'Đang xử lý...' : transWithFallback('save', 'Lưu')}
                                 </button>
                             </div>
                             <div className="h-16"></div>

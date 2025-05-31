@@ -1,17 +1,17 @@
 'use client'
 
 /* Package System */
-import { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import * as Yup from 'yup';
 
 /* Package Application */
-import { register } from 'services/auth.service';
-import { useAuth } from 'contexts/auth.context';
 import { OtpConstants } from 'app/(auth)/verify-otp/_components/libs/constants/otpConstants';
-import { ErrorResponse } from 'types/ErrorResponse';
+import { useAuth } from 'contexts/auth.context';
+import { register } from 'services/auth.service';
+import { ErrorResponse } from 'types/errorResponse';
 
 export const useRegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);

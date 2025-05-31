@@ -1,12 +1,11 @@
-import { useState , useEffect } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { useState , useEffect } from 'react';
+import * as Yup from 'yup';
 
 import { useAuth } from 'contexts/auth.context';
-import { useI18n } from 'app/providers/i18nProvider';
 
 export const useLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,7 +13,6 @@ export const useLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
-  const { locale } = useI18n();
 
   const handleGoogleLogin = () => {
     try {
@@ -35,8 +33,6 @@ export const useLoginForm = () => {
           const { type/* , data */, error } = event.data;
 
           if (type === 'GOOGLE_LOGIN_SUCCESS') {
-            // const { access_token } = data;
-            // login(access_token);
             router.push('/');
             popup?.close();
           } else if (type === 'GOOGLE_LOGIN_ERROR') {
@@ -69,7 +65,7 @@ export const useLoginForm = () => {
 
           if (access_token) {
             login(access_token, refresh_token);
-            localStorage.setItem('refresh_token', refresh_token); // Lưu refresh_token vào localStorage
+            localStorage.setItem('refresh_token', refresh_token);
             router.push('/');
           } else {
             setError('Không nhận được access token từ Google.');
@@ -109,8 +105,7 @@ export const useLoginForm = () => {
         } else {
           setError('Đăng nhập thất bại: ' + res?.error);
         }
-      } catch (error) {
-        console.error;
+      } catch  {
         setError("Đăng nhập thất bại, vui lòng thử lại.");
       } finally {
         setIsLoading(false);

@@ -5,6 +5,13 @@ import { ReactNode } from 'react';
 import { Providers } from "./provider";
 import "tailwindcss/tailwind.css";
 
+export const metadata = {
+  title: 'Evebox - Bán vé và quản lý sự kiện',
+  description: 'evebox.vn',
+  icons: {
+    icon: '/images/logoweb.png', 
+  },
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

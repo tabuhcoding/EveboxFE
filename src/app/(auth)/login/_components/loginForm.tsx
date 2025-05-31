@@ -1,12 +1,12 @@
 "use client";
 
 /* Package System */
-import { CircularProgress, IconButton } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { CircularProgress, IconButton } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Image from 'next/image';
 import Link from 'next/link';
-import Image from 'next/image'
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import { useLoginForm } from './libs/hooks/useLoginForm';
@@ -23,14 +23,18 @@ export const LoginForm = () => {
     formik,
   } = useLoginForm();
 
-  const locale = useLocale();
-  const t = useTranslations('common');
-
   if (error) {
-    if (error=="SERVER_DOWN") {
+    if (error==="SERVER_DOWN") {
       throw new Error(error);
     }
   }
+
+  const t = useTranslations('common');
+  const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
   return (
     <div>
@@ -47,7 +51,7 @@ export const LoginForm = () => {
                   className="logo"
                 />
                 <h3 className='mt-3'><strong>
-                  {t("login")+ " Evebox" || "Đăng nhập Evebox"}
+                  {transWithFallback('login', 'Đăng nhập Evebox')}
                   </strong></h3>
               </div>
               <form onSubmit={formik.handleSubmit}>
@@ -58,7 +62,7 @@ export const LoginForm = () => {
                     id="email"
                     name='email'
                     className={`form-control ${formik.touched.email && formik.errors.email ? 'is-invalid' : ''}`}
-                    placeholder={t("emailPlaceholder") || "Nhập email của bạn"}
+                    placeholder={transWithFallback('emailPlaceholder', 'Nhập email của bạn')}
                     style={{ height: '46px' }}
                     onChange={(e) => {
                       if (error) setError('');
@@ -67,7 +71,6 @@ export const LoginForm = () => {
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
                   />
-                  {/* Hiển thị thông báo lỗi */}
                   {formik.touched.email && formik.errors.email && (
                     <div className="text-danger" style={{ fontSize: '12px' }}>
                       {formik.errors.email}
@@ -75,14 +78,14 @@ export const LoginForm = () => {
                   )}
                 </div>
                 <div className="mb-3 short-input">
-                  <label htmlFor="password" className="form-label font-style">{t("password") || "MẬT KHẨU"}</label>
+                  <label htmlFor="password" className="form-label font-style">{transWithFallback('password', 'MẬT KHẨU')}</label>
                   <div className='position-relative'>
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="password"
                       name='password'
                       className={`form-control pr-10 ${formik.touched.password && formik.errors.password ? 'is-invalid' : ''}`}
-                      placeholder={t("passwordPlaceholder") || "Nhập mật khẩu của bạn"}
+                      placeholder={transWithFallback('passwordPlaceholder', 'Nhập mật khẩu của bạn')}
                       style={{ height: '46px', paddingRight: '50px' }}
                       onChange={(e) => {
                         if (error) setError('');
@@ -115,11 +118,11 @@ export const LoginForm = () => {
                       {...formik.getFieldProps('agree')}
                     />
                     <label htmlFor="agree" className="form-check-label m-0">
-                      {t("rememberCredentials") || "Ghi nhớ đăng nhập"}
+                      {transWithFallback('rememberCredentials', 'Ghi nhớ đăng nhập')}
                     </label>
                   </div>
                   <a href="/forgot-password" className="text-decoration-none font-forget">
-                    {t("forgotPassword") || "Quên mật khẩu?"}
+                    {transWithFallback('forgotPassword', 'Quên mật khẩu')}
                   </a>
                 </div>
 
@@ -129,20 +132,20 @@ export const LoginForm = () => {
                     {isLoading ? (
                       <CircularProgress size={24} />
                     ) : (
-                        t("login") || "Đăng nhập"
+                        transWithFallback('login', 'Đăng nhập')
                     )}
                   </button>
                 </div>
                 <div className="text-center short-input">
                   <span style={{ color: 'white' }}>{t("noAccount") || "Bạn chưa có tài khoản?"}</span>
                   <Link href="/register" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>
-                    {" "+ t("registerNow") || "Đăng ký ngay"}
+                    {" "+ transWithFallback('registerNow', 'Đăng ký ngay')}
                   </Link>
-                  <p style={{ color: 'white', marginBottom: '20px', marginTop: '5px' }}>{t("or") || "Hoặc"}</p>
+                  <p style={{ color: 'white', marginBottom: '20px', marginTop: '5px' }}>{transWithFallback('or', 'Hoặc')}</p>
                   <Link style={{ textDecoration: 'none' }} href="#">
                     <button className="google-button" style={{ marginBottom: '20px' }} onClick={handleGoogleLogin} disabled={isLoading}>
                       <Icon icon="flat-color-icons:google" width="20px" color="#fff" />
-                      {t("signInWith") + " Google" || "Đăng nhập với Google"}
+                      {transWithFallback('signInWith', 'Đăng nhập với') + " Google"}
                     </button>
                   </Link>
                 </div>

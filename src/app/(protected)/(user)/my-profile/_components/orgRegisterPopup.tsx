@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { ChangeEvent } from 'react';
 import { X } from "lucide-react"
+import { useState, ChangeEvent } from "react"
 
 interface OrganizerRegistrationPopupProps {
   onClose: () => void
@@ -103,17 +102,18 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
           className="p-4 rounded-lg mb-4"
           style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}
         >
-          <label className="text-base font-bold block mb-2">Thông tin thanh toán</label>
+          <label htmlFor="paymentInfo" className="text-base font-bold block mb-2">Thông tin thanh toán</label>
           <span className="text-sm block mb-3">
             Evebox sẽ chuyển tiền bán vé đến tài khoản của bạn. Tiền bán vé (sau khi trừ phí dịch vụ cho Evebox) sẽ vào
             tài khoản của bạn sau khi xác nhận sale report từ 7 - 10 ngày.
           </span>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="accName" className="block text-sm font-medium mb-1">
               Chủ tài khoản: <span className="text-red-500">*</span>
             </label>
             <input
+              id="accName"
               type="text"
               value={paymentForm.accName}
               onChange={(e) => handlePaymentInputChange(e, "accName")}
@@ -124,10 +124,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="accNum" className="block text-sm font-medium mb-1">
               Số tài khoản: <span className="text-red-500">*</span>
             </label>
             <input
+              id="accNum"
               type="text"
               value={paymentForm.accNum}
               onChange={(e) => handlePaymentInputChange(e, "accNum")}
@@ -137,10 +138,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="bankName" className="block text-sm font-medium mb-1">
               Tên ngân hàng: <span className="text-red-500">*</span>
             </label>
             <input
+              id="bankName"
               type="text"
               value={paymentForm.bankName}
               onChange={(e) => handlePaymentInputChange(e, "bankName")}
@@ -151,10 +153,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="bankBranch" className="block text-sm font-medium mb-1">
               Chi nhánh: <span className="text-red-500">*</span>
             </label>
             <input
+              id="bankBranch"
               type="text"
               value={paymentForm.bankBranch}
               onChange={(e) => handlePaymentInputChange(e, "bankBranch")}
@@ -164,13 +167,14 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             {errors.bankBranch && <p className="text-red-500 text-xs mt-1">{errors.bankBranch}</p>}
           </div>
 
-          <label className="text-base font-bold block mt-4 mb-2">Hoá đơn đỏ</label>
+          <label htmlFor="redBill" className="text-base font-bold block mt-4 mb-2">Hoá đơn đỏ</label>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="typeBusiness" className="block text-sm font-medium mb-1">
               Loại hình kinh doanh: <span className="text-red-500">*</span>
             </label>
             <select
+              id="typeBusiness"
               value={paymentForm.typeBusiness}
               onChange={handleSelectChange}
               className="w-full border p-2 rounded-md bg-white"
@@ -180,14 +184,14 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             </select>
           </div>
 
-          {/* Hiển thị khi Loại hình kinh doanh là Cá nhân */}
           {paymentForm.typeBusiness === "Cá nhân" && (
             <div className="infoOfPersonal">
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="perName" className="block text-sm font-medium mb-1">
                   Họ tên: <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="perName"
                   type="text"
                   value={paymentForm.perName}
                   onChange={(e) => handlePaymentInputChange(e, "perName")}
@@ -198,10 +202,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="perAddress" className="block text-sm font-medium mb-1">
                   Địa chỉ: <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="perAddress"
                   type="text"
                   value={paymentForm.perAddress}
                   onChange={(e) => handlePaymentInputChange(e, "perAddress")}
@@ -212,10 +217,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="taxCode" className="block text-sm font-medium mb-1">
                   Mã số thuế: <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="taxCode"
                   type="text"
                   value={paymentForm.taxCode}
                   onChange={(e) => handlePaymentInputChange(e, "taxCode")}
@@ -226,14 +232,14 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             </div>
           )}
 
-          {/* Hiển thị khi Loại hình kinh doanh là Doanh nghiệp/Tổ chức */}
           {paymentForm.typeBusiness === "Doanh nghiệp/Tổ chức" && (
             <div className="infoOfCompany">
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="companyName" className="block text-sm font-medium mb-1">
                   Tên công ty: <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="companyName"
                   type="text"
                   value={paymentForm.companyName}
                   onChange={(e) => handlePaymentInputChange(e, "companyName")}
@@ -244,10 +250,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="companyAddress" className="block text-sm font-medium mb-1">
                   Địa chỉ công ty: <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="companyAddress"
                   type="text"
                   value={paymentForm.companyAddress}
                   onChange={(e) => handlePaymentInputChange(e, "companyAddress")}
@@ -258,10 +265,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="companyTaxCode" className="block text-sm font-medium mb-1">
                   Mã số thuế: <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="companyTaxCode"
                   type="text"
                   value={paymentForm.companyTaxCode}
                   onChange={(e) => handlePaymentInputChange(e, "companyTaxCode")}
@@ -272,6 +280,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             </div>
           )}
         </div>
+
 
         <div className="flex justify-center gap-4">
           <button

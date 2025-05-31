@@ -1,13 +1,14 @@
 "use client"
 
+import { User, Ticket, Calendar, LogOut, Lock, Menu } from 'lucide-react';
 import Link from 'next/link';
-import { User, Ticket, Calendar, LogOut, Lock } from 'lucide-react';
-import { Menu } from 'lucide-react';
-import { useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { SidebarProps } from '../libs/interface/dashboard.interface';
 import { useTranslations } from "next-intl";
+import { useState } from 'react';
+
 import { gatewayService } from 'services/instance.service';
+
+import { SidebarProps } from '../libs/interface/dashboard.interface';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
@@ -26,9 +27,9 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       await gatewayService.post('/api/user/logout', {
         refresh_token: session.user.refreshToken
       });
-      
+
       await signOut({ redirect: false });
-      window.location.href = "/"; 
+      window.location.href = "/";
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -50,8 +51,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={onClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onClose();
+            }
+          }}
         />
       )}
+
 
       <div
         className={`fixed top-0 left-0 h-full w-64 sm:w-72 bg-sky-900 text-white transform transition-transform duration-300 ease-in-out z-50 ${isOpen ? 'translate-x-0' : '-translate-x-full'

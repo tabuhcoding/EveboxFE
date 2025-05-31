@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+
 import { useI18n } from "../../../providers/i18nProvider";
 
 export default function LanguageSwitcher() {

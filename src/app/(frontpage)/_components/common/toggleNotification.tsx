@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+
 import { Bell } from "lucide-react";
+import { useState } from "react";
 
 export default function ToggleNotification() {
   const [isOn, setIsOn] = useState(false);

@@ -1,10 +1,14 @@
+/* Package Application */
+import { ReactScan } from "components/reactScan";
+
 import { VerifyOTPForm } from "./_components/verifyOtpForm";
 
 const VerifyOTPPage = () => {
   return (
-    <div className="verify-otp-page">
+    <>
+      <ReactScan />
       <VerifyOTPForm />
-    </div>
+    </>
   );
 };
 

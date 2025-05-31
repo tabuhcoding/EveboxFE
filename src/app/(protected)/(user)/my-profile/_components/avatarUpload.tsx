@@ -2,11 +2,12 @@
 
 import { Camera } from "lucide-react";
 import { useRef, useState } from "react";
-import { useImageUpload } from "./libs/hooks/useImageUpload";
+
 import { CircularProgress } from "./circularProgress";
 import useAvatar from "./libs/hooks/useAvatar";
+import { useImageUpload } from "./libs/hooks/useImageUpload";
 
-export default function AvatarUpload({initAvatarId}: { initAvatarId?: number }) {
+export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }) {
     const {
         image,
         isDialogOpen,
@@ -25,7 +26,7 @@ export default function AvatarUpload({initAvatarId}: { initAvatarId?: number }) 
         confirmImage,
     } = useImageUpload();
 
-    const {imageUrl} = useAvatar({avatar_id: initAvatarId}); 
+    const { imageUrl } = useAvatar({ avatar_id: initAvatarId });
 
     const cameraInputRef = useRef<HTMLInputElement>(null);
     const [viewMode, setViewMode] = useState<"menu" | "gallery">("menu");
@@ -145,7 +146,14 @@ export default function AvatarUpload({initAvatarId}: { initAvatarId?: number }) 
                                             <div
                                                 key={img.id}
                                                 className="relative aspect-square cursor-pointer"
+                                                role="button"
+                                                tabIndex={0}
                                                 onClick={() => handleImageSelection(img.imageUrl, img.id, false)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        handleImageSelection(img.imageUrl, img.id, false);
+                                                    }
+                                                }}
                                             >
                                                 <img
                                                     src={img.imageUrl}

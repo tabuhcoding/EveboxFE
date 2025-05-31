@@ -5,15 +5,21 @@ import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 
 /* Package application */
-import useProfile from "./useProfile";
 import { gatewayService } from "services/instance.service";
+
+import useProfile from "./useProfile";
+
+type GalleryImage = {
+  id: number;
+  imageUrl: string;
+};
 
 export const useImageUpload = () => {
     const {updateProfile} = useProfile();
     const [image, setImage] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     // TODO: replace any with a proper type if known
-    const [galleryImages, setGalleryImages] = useState<any[]>([]);
+    const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);

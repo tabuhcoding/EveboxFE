@@ -1,12 +1,12 @@
 "use client";
 
 /* Packagae system */
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 /* Package application */
-import { UserInfo } from "types/models/userInfo";
 import { gatewayService } from "services/instance.service";
+import { UserInfo } from "types/models/userInfo";
 
 export default function useProfile() {
   const { data: session } = useSession();
@@ -29,7 +29,7 @@ export default function useProfile() {
 
   const updateProfile = async (updatedData: Partial<UserInfo>) => {
     try {
-      const response = await gatewayService.patch("/api/user/me", updatedData);
+      const response = await gatewayService.put("/api/user/me", updatedData);
       setProfile(prev => ({ ...prev, ...response.data.data }));
       return { success: true };
     } catch (err) {

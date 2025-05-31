@@ -1,13 +1,14 @@
 "use client";
 
 /* Package System */
+import { Bell } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { Bell } from "lucide-react";
 
 /* Package Application */
-// import EventSlider from "@/app/(dashboard)/components/dashboard/eventSlider";
-// import Pagination from "@/app/(admin)/admin/event-special-management/components/common/pagination";
+import EventSlider from "app/(frontpage)/_components/dashboard/eventSlider";
+import Pagination from "app/(protected)/admin/event-special-management/_common/pagination";
+
 import { FavoriteProps } from "./libs/interface/favorite.interface";
 
 export default function MyFavoritePage({
@@ -44,14 +45,14 @@ export default function MyFavoritePage({
                         Sự kiện <span className="text-teal-400"> Yêu thích</span>
                     </h2>
                 </div>
-                {/* {events.favoriteEvents.length > 0 ? (
+                {events.favoriteEvents.length > 0 ? (
                     <EventSlider title="" subtitle="" events={events.favoriteEvents} />
                 ) : (
                     <p className="text-base">Bạn chưa có Sự kiện yêu thích nào!</p>
-                )} */}
+                )}
             </div>
 
-            {/* <div className="list-organizer-favorite mt-8">
+            <div className="list-organizer-favorite mt-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
                     <h2 className="text-lg md:text-2lg font-bold">
                         Nhà tổ chức <span className="text-teal-400"> Yêu thích</span>
@@ -89,7 +90,7 @@ export default function MyFavoritePage({
                 ) : (
                     <p className="text-base">Bạn chưa có Nhà tổ chức yêu thích nào!</p>
                 )}
-            </div> */}
+            </div>
         </div>
     )
 }
