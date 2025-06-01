@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 /* Package Application */
 import { gatewayService } from "../../../../../services/instance.service";
 
-import useAvatar from "./libs/hooks/useAvatar";
 import AvatarUpload from "./avatarUpload";
+import useAvatar from "./libs/hooks/useAvatar";
 import useProfile from "./libs/hooks/useProfile";
 import { OrganizerDetail } from "./libs/interface/favorite.interface";
 import MyFavoritePage from "./myFavoritePage";
