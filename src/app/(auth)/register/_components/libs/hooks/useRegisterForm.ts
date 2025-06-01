@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 import { OtpConstants } from 'app/(auth)/verify-otp/_components/libs/constants/otpConstants';
 import { useAuth } from 'contexts/auth.context';
 import { register } from 'services/auth.service';
-import { ErrorResponse } from 'types/ErrorResponse';
+import { ErrorResponse } from 'types/errorResponse';
 
 export const useRegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);

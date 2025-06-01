@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 
 import { OtpConstants } from 'app/(auth)/verify-otp/_components/libs/constants/otpConstants';
 import { forgotPassword } from 'services/auth.service';
-import { ErrorResponse } from 'types/ErrorResponse';
+import { ErrorResponse } from 'types/errorResponse';
 
 export const useForgotPasswordForm = () => {
   const [error, setError] = useState('');
