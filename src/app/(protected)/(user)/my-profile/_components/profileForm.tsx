@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 /* Package Application */
 import { gatewayService } from "../../../../../services/instance.service";
 
-import AvatarUpload from "./avatarUpload";
 import useAvatar from "./libs/hooks/useAvatar";
+import AvatarUpload from "./avatarUpload";
 import useProfile from "./libs/hooks/useProfile";
 import { OrganizerDetail } from "./libs/interface/favorite.interface";
 import MyFavoritePage from "./myFavoritePage";
@@ -34,7 +34,6 @@ export default function ProfileForm() {
             setIsLoading(true);
             const response = await gatewayService.get("/api/user/me");
             setProfile(response.data.data);
-            console.log(response.data);
 
             // Update form with profile data
             setForm({
