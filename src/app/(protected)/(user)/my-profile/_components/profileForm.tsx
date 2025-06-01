@@ -65,6 +65,7 @@ export default function ProfileForm() {
             const result = await updateProfile({
                 name: form.name,
                 phone: form.phone,
+                avatar_id: form.avatar_id
             });
 
             if (result.success) {
@@ -80,7 +81,7 @@ export default function ProfileForm() {
             setIsSubmitting(false);
         }
     };
-    const { imageUrl } = useAvatar({ avatar_id: form.avatar_id}) || "/default_avt.png";
+    const imageUrl  = useAvatar({ avatar_id: form.avatar_id})?.imageUrl || "/images/default_avt.png";
 
     //Call API truyền dữ liệu các sự kiện yêu thích vào -> truyền vào EventSlider giống ở trang Dashboard
     const events = {

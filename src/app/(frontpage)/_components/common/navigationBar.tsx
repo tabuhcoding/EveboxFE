@@ -50,6 +50,12 @@ const NavigationBar = () => {
     }
   }, [session]);
 
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-sky-900 shadow-lg z-50">
@@ -85,7 +91,7 @@ const NavigationBar = () => {
                 onClick={() => setIsLangOpen(!isLangOpen)}
               >
                 <Image src={locale === "vi" ? "/images/dashboard/vietnam-icon.png" : "/images/dashboard/english-icon.png"} alt="flag" width={28} height={28} />
-                <span className="hidden sm:inline">{t("langCode") || "Fallback Text"}</span>
+                <span className="hidden sm:inline">{transWithFallback('angCode', 'Fallback Text')}</span>
                 <ChevronDown size={16} className="hidden sm:block" />
               </button>
 
@@ -95,7 +101,7 @@ const NavigationBar = () => {
             </div>
 
             {isLoading ? (
-              <span className="text-white">{t("loading") ?? 'Đang tải'}</span>
+              <span className="text-white">{transWithFallback('loading', 'Đang tải')}</span>
             ) : userInfo ? (
               <div className="flex items-center">
                 <h3 className="mr-2">
@@ -109,13 +115,13 @@ const NavigationBar = () => {
               <div>
                 <Link href="/login" style={{ textDecoration: "none" }}>
                   <button className="text-white hover:text-teal-100 text-sm sm:text-base">
-                    {t("login") || "Fallback Text"}
+                    {transWithFallback('login', 'Fallback Text')}
                   </button>
                 </Link>
 
                 <Link href="/register" style={{ textDecoration: "none" }}>
                   <button className="ml-4 bg-teal-200 text-teal-950 px-3 sm:px-4 py-2 rounded-md hover:bg-teal-50 text-sm sm:text-base">
-                    {t("register") || "Fallback Text"}
+                    {transWithFallback('register', 'Fallback Text')}
                   </button>
                 </Link>
               </div>

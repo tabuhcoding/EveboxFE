@@ -1,6 +1,7 @@
 "use client";
 
 import { Camera } from "lucide-react";
+import { useTranslations } from 'next-intl';
 import { useRef, useState } from "react";
 
 import { CircularProgress } from "./circularProgress";
@@ -9,7 +10,6 @@ import { useImageUpload } from "./libs/hooks/useImageUpload";
 
 export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }) {
     const {
-        image,
         isDialogOpen,
         setIsDialogOpen,
         dialogRef,
@@ -35,6 +35,14 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
         setViewMode("gallery");
     };
 
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     return (
         <div className="relative w-14 h-14">
             {/* Loading overlay cho avatar */}
@@ -46,7 +54,7 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
 
             {/* Avatar preview */}
             <img
-                src={image || imageUrl}
+                src={imageUrl || "/images/default_avt.png"}
                 alt="Avatar"
                 className="w-full h-full rounded-full border border-gray-300 object-cover"
             />
@@ -83,28 +91,28 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
                         {viewMode === "menu" ? (
                             // Menu lựa chọn
                             <>
-                                <h3 className="text-lg font-medium mb-4">Select Image Source</h3>
+                                <h3 className="text-lg font-medium mb-4">{transWithFallback('selectImageSource', 'Chọn ảnh')}</h3>
                                 <div className="space-y-3">
                                     <button
                                         type="button"
                                         onClick={() => cameraInputRef.current?.click()}
                                         className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                                     >
-                                        Upload a image
+                                        {transWithFallback('uploadImage', 'Tải ảnh lên')}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={handleOpenGallery}
                                         className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
                                     >
-                                        Choose from uploaded images
+                                        {transWithFallback('chooseUploadedImages', 'Chọn từ ảnh đã được tải lên')}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setIsDialogOpen(false)}
                                         className="w-full px-4 py-2 text-red-500 hover:bg-gray-100 rounded-md transition-colors"
                                     >
-                                        Cancel
+                                        {transWithFallback('cancel', 'Đóng')}
                                     </button>
                                 </div>
                             </>
@@ -112,19 +120,19 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
                             // Gallery ảnh
                             <>
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-lg font-medium">Your Photos</h3>
+                                    <h3 className="text-lg font-medium">{transWithFallback('yourPhotos', 'Ảnh của bạn')}</h3>
                                     <div className="space-x-2">
                                         <button
                                             onClick={() => setViewMode("menu")}
                                             className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
                                         >
-                                            Back
+                                            {transWithFallback('back', 'Quay lại')}
                                         </button>
                                         <button
                                             onClick={() => setIsDialogOpen(false)}
                                             className="px-4 py-2 text-red-500 hover:bg-gray-100 rounded-md"
                                         >
-                                            Close
+                                            {transWithFallback('close', 'Đóng')}
                                         </button>
                                     </div>
                                 </div>
@@ -132,7 +140,7 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
                                 {isLoading && (
                                     <div className="text-center py-8">
                                         <CircularProgress size={32} className="text-blue-500" />
-                                        <p className="mt-2">Loading images...</p>
+                                        <p className="mt-2">{transWithFallback('loadingImage', 'Đang tải ảnh lên')}</p>
                                     </div>
                                 )}
 
@@ -195,14 +203,14 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
                                 className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
                                 disabled={isUploading || isLoading}
                             >
-                                Cancel
+                                {transWithFallback('cancel', 'Đóng')}
                             </button>
                             <button
                                 onClick={confirmImage}
                                 className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md disabled:opacity-50"
                                 disabled={isUploading || isLoading}
                             >
-                                {isUploading ? 'Uploading...' : 'Confirm'}
+                                {isUploading ? transWithFallback('uploading', 'Đang tải...'):transWithFallback('confirm', 'Xác nhận')}
                             </button>
                         </div>
                     </div>

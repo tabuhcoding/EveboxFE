@@ -3,6 +3,7 @@
 /* Package System */
 import { Bell } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 /* Package Application */
@@ -22,16 +23,24 @@ export default function MyFavoritePage({
 }: FavoriteProps) {
     const [isOn, setIsOn] = useState(false);
 
+    const t = useTranslations('common');
+    
+        const transWithFallback = (key: string, fallback: string) => {
+            const msg = t(key);
+            if (!msg || msg.startsWith('common.')) return fallback;
+            return msg;
+        };
+
     return (
         <div className="favorite-page max-w-3xl mx-auto mb-10">
             <div className="flex justify-between mt-8">
-                <h2 className="text-2xl font-bold">Danh sách yêu thích của tôi</h2>
+                <h2 className="text-2xl font-bold">{transWithFallback('favoriteList', 'Danh sách yêu thích của tôi')}</h2>
                 <div className="notify-btn">
                     <button onClick={() => setIsOn(!isOn)}
                         className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-black rounded-full shadow-sm transition-all">
                         <Bell size={18} className={isOn ? "fill-black text-black" : "text-black"}/>
                         <span className="text-sm font-medium">
-                            {isOn ? "Đã đăng ký" : "Chưa đăng ký"}
+                        {isOn ? transWithFallback('subscribed', 'Đã đăng ký') : transWithFallback('unsubscribed', 'Chưa đăng ký')}
                         </span>
                     </button>
                 </div>
@@ -42,20 +51,20 @@ export default function MyFavoritePage({
             <div className="list-event-favorite">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
                     <h2 className="text-lg md:text-2lg font-bold">
-                        Sự kiện <span className="text-teal-400"> Yêu thích</span>
+                        {transWithFallback('event', 'Sự kiện')} <span className="text-teal-400"> {transWithFallback('favorite', 'Yêu thích')}</span>
                     </h2>
                 </div>
                 {events.favoriteEvents.length > 0 ? (
                     <EventSlider title="" subtitle="" events={events.favoriteEvents} />
                 ) : (
-                    <p className="text-base">Bạn chưa có Sự kiện yêu thích nào!</p>
+                    <p className="text-base">{transWithFallback("noLoveEvent", 'Bạn chưa có sự kiện yêu thích nào!')}</p>
                 )}
             </div>
 
             <div className="list-organizer-favorite mt-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
                     <h2 className="text-lg md:text-2lg font-bold">
-                        Nhà tổ chức <span className="text-teal-400"> Yêu thích</span>
+                        {transWithFallback('org', 'Nhà tổ chức')} <span className="text-teal-400"> {transWithFallback('favorite', 'Yêu thích')}</span>
                     </h2>
                 </div>
                 {paginatedData.length > 0 ? (
@@ -88,7 +97,7 @@ export default function MyFavoritePage({
                             onNext={onNext} />
                     </>
                 ) : (
-                    <p className="text-base">Bạn chưa có Nhà tổ chức yêu thích nào!</p>
+                    <p className="text-base">{transWithFallback('noLoveOrg', 'Bạn chưa có Nhà tổ chức yêu thích nào!')}</p>
                 )}
             </div>
         </div>
