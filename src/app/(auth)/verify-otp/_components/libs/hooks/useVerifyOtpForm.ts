@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 
 /* Package Application */
 import { verifyOtp, resendOtp } from 'services/auth.service';
-import { ErrorResponse } from 'types/errorResponse';
+import { ErrorResponse } from 'types/ErrorResponse';
 
 import { OtpConstants } from '../constants/otpConstants';
 

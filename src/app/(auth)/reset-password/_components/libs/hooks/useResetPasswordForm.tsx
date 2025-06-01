@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 
 /* Package Application */
 import { resetPassword } from 'services/auth.service';
-import { ErrorResponse } from 'types/errorResponse';
+import { ErrorResponse } from 'types/ErrorResponse';
 
 export const useResetPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
