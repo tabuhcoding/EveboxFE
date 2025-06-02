@@ -8,7 +8,7 @@ import { CircularProgress } from "./circularProgress";
 import useAvatar from "./libs/hooks/useAvatar";
 import { useImageUpload } from "./libs/hooks/useImageUpload";
 
-export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }) {
+export default function AvatarUpload({ initAvatarId, onChange }: { initAvatarId?: number; onChange?: (avatarId: number) => void }) {
     const {
         isDialogOpen,
         setIsDialogOpen,
@@ -24,7 +24,7 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
         setIsPreviewOpen,
         handleImageSelection,
         confirmImage,
-    } = useImageUpload();
+    } = useImageUpload(onChange);
 
     const { imageUrl } = useAvatar({ avatar_id: initAvatarId });
 
@@ -210,7 +210,7 @@ export default function AvatarUpload({ initAvatarId }: { initAvatarId?: number }
                                 className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md disabled:opacity-50"
                                 disabled={isUploading || isLoading}
                             >
-                                {isUploading ? transWithFallback('uploading', 'Đang tải...'):transWithFallback('confirm', 'Xác nhận')}
+                                {isUploading ? transWithFallback('uploading', 'Đang tải...') : transWithFallback('confirm', 'Xác nhận')}
                             </button>
                         </div>
                     </div>

@@ -57,6 +57,13 @@ export default function ProfileForm() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleAvatarChange = (newAvatarId: number) => {
+        setForm(prev => ({
+            ...prev,
+            avatar_id: newAvatarId
+        }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -182,7 +189,7 @@ export default function ProfileForm() {
                                 {transWithFallback('updatePersonalInfo', 'Quản lý và cập nhật thông tin cá nhân cho tài khoản của bạn')}
                             </h5>
                         </div>
-                        <AvatarUpload initAvatarId={form.avatar_id} />
+                        <AvatarUpload initAvatarId={form.avatar_id} onChange = {handleAvatarChange}/>
                     </div>
 
                     <hr className="my-6 border-gray-700" />

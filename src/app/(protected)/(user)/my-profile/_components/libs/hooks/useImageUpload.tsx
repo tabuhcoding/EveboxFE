@@ -14,7 +14,7 @@ type GalleryImage = {
   imageUrl: string;
 };
 
-export const useImageUpload = () => {
+export const useImageUpload = (onChange?: (avatarId: number) => void) => {
     const {updateProfile} = useProfile();
     const [image, setImage] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -113,10 +113,12 @@ export const useImageUpload = () => {
 
             if (result.success) {
                 setImage(imageUrl);  
+                if (onChange) {
+                    onChange(imageId);
+                }
             } else {
                 setError("Cập nhật ảnh đại diện thất bại");
             } 
-
         } finally {
             setIsLoading(false);
         }
