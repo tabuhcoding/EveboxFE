@@ -12,6 +12,7 @@ import useAvatar from "./libs/hooks/useAvatar";
 import useProfile from "./libs/hooks/useProfile";
 import { OrganizerDetail } from "./libs/interface/favorite.interface";
 import MyFavoritePage from "./myFavoritePage";
+import AlertDialog from 'components/common/alertDialog';
 
 export default function ProfileForm() {
     const [activeTab, setActiveTab] = useState("info");
@@ -177,11 +178,11 @@ export default function ProfileForm() {
             </div>
             {activeTab === "info" && (
                 <div className="max-w-3xl mx-auto">
-                    {/* <AlertDialog
-                        open={dialogOpen}
+                    <AlertDialog
+                        open={_dialogOpen}
                         onClose={() => setDialogOpen(false)}
-                        message={dialogMessage}
-                    />  */}
+                        message={_dialogMessage}
+                    /> 
                     <div className="flex justify-between items-center">
                         <div>
                             <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('accountManagement', 'Quản lý thông tin tài khoản')}</h2>
