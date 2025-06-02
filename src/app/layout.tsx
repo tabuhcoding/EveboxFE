@@ -2,9 +2,7 @@
 import { ReactNode } from 'react';
 
 /* Package Application */
-
 import { Providers } from "./provider";
-// import "../styles/global.css";
 import "tailwindcss/tailwind.css";
 
 export const metadata = {

@@ -36,7 +36,7 @@
   "rules": {
     // Next.js Rules
     "@next/next/no-html-link-for-pages": "error",    // Không dùng <a href=""> để link giữa các page Next.js
-    "@next/next/no-img-element": "warn",             // Cảnh báo dùng <img>, khuyến khích dùng <Image> của Next.js
+    "@next/next/no-img-element": "off",             // Cảnh báo dùng <img>, khuyến khích dùng <Image> của Next.js
 
     // React Rules
     "react/prop-types": "off",                       // Không bắt buộc dùng prop-types (dùng TypeScript rồi)
@@ -75,7 +75,7 @@
     "camelcase": ["warn", { "properties": "never" }],        // Khuyến khích dùng camelCase, bỏ qua object property
 
     // Accessibility (A11y) Rules
-    "jsx-a11y/anchor-is-valid": "warn",                      // Cảnh báo <a> không hợp lệ (ví dụ thiếu href)
+    "jsx-a11y/anchor-is-valid": "off",                      // Cảnh báo <a> không hợp lệ (ví dụ thiếu href)
     "jsx-a11y/alt-text": "warn"                              // Cảnh báo thiếu alt cho hình ảnh
   }
 }

@@ -1,6 +1,5 @@
-/* Package System */
 import axios from "axios";
-import { AuthOptions } from "next-auth";
+import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
@@ -23,12 +22,9 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(
-        credentials: Record<"email" | "password", string> | undefined
-      ) {
-        if (!credentials) {
-          return null;
-        }
+      async authorize(credentials) {
+        if (!credentials) return null;
+
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/login`, {
             email: credentials.email,
@@ -45,7 +41,6 @@ export const authOptions: AuthOptions = {
               refreshToken: user.refresh_token,
             };
           }
-
           return null;
         } catch (error) {
           console.error("Error logging in:", error);
@@ -62,10 +57,8 @@ export const authOptions: AuthOptions = {
         token.userId = user.id;
         token.email = user.email;
       }
-
       return token;
     },
-
     async session({ session, token }) {
       if (token) {
         session.user = {
@@ -75,12 +68,11 @@ export const authOptions: AuthOptions = {
           refreshToken: token.refreshToken as string,
         };
       }
-
       return session;
     }
   },
   pages: {
-    signIn: '/login'
+    signIn: '/login',
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
+};

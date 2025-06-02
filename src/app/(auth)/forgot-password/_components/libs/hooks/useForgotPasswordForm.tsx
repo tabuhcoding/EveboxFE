@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import * as Yup from 'yup';
 
-/* Package Application */
 import { OtpConstants } from 'app/(auth)/verify-otp/_components/libs/constants/otpConstants';
 import { forgotPassword } from 'services/auth.service';
 import { ErrorResponse } from 'types/errorResponse';

@@ -31,6 +31,7 @@ export const useVerifyOTPForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [requestToken, setRequestToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
   const [isResending, setIsResending] = useState(false);
   const router = useRouter();
   const t = useTranslations('common');
@@ -87,6 +88,7 @@ export const useVerifyOTPForm = () => {
           request_token: requestToken,
           type,
         });
+
 
         if (result.statusCode === 200) {
           setIsVerified(true);
@@ -151,11 +153,13 @@ export const useVerifyOTPForm = () => {
     }
 
     try {
+
       const result = await resendOtp({
         email,
         type,
         request_token: requestToken,
       });
+
 
       if (result.statusCode === 200) {
         setTimeLeft(result.data.resend_allowed_in ?? TIMELEFT);

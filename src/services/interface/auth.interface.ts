@@ -12,7 +12,7 @@ export interface RegisterPayloadProps {
   re_password: string;
   agree: boolean;
   role_id: number;
-  province_id: number[];
+  province_id: number[] | null;
 }
 
 export interface RegisterResponse {
