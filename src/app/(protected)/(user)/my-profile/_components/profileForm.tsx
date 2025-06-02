@@ -80,6 +80,7 @@ export default function ProfileForm() {
                 setDialogMessage('Cập nhật thông tin thành công');
             } else {
                 setDialogMessage('Cập nhật thông tin thất bại');
+                await fetchProfile(); // Refresh profile data
             }
             setDialogOpen(true);
         } catch {
