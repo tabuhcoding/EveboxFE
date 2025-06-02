@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useState, useEffect } from "react";
 
 /* Package Application */
+import AlertDialog from 'components/common/alertDialog';
+
 import { gatewayService } from "../../../../../services/instance.service";
 
 import AvatarUpload from "./avatarUpload";
@@ -12,7 +14,6 @@ import useAvatar from "./libs/hooks/useAvatar";
 import useProfile from "./libs/hooks/useProfile";
 import { OrganizerDetail } from "./libs/interface/favorite.interface";
 import MyFavoritePage from "./myFavoritePage";
-import AlertDialog from 'components/common/alertDialog';
 
 export default function ProfileForm() {
     const [activeTab, setActiveTab] = useState("info");
