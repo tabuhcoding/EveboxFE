@@ -91,7 +91,7 @@ const NavigationBar = () => {
                 onClick={() => setIsLangOpen(!isLangOpen)}
               >
                 <Image src={locale === "vi" ? "/images/dashboard/vietnam-icon.png" : "/images/dashboard/english-icon.png"} alt="flag" width={28} height={28} />
-                <span className="hidden sm:inline">{transWithFallback('angCode', 'Fallback Text')}</span>
+                <span className="hidden sm:inline">{transWithFallback('langCode', 'Fallback Text')}</span>
                 <ChevronDown size={16} className="hidden sm:block" />
               </button>
 
