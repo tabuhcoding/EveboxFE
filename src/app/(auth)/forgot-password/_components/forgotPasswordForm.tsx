@@ -27,7 +27,7 @@ export const ForgotPasswordForm = () => {
 
   return (
     <div className="forgot-password-page">
-      <div className="row">
+      <div className="w-screen h-screen overflow-x-hidden flex">
         <div className="col-md-7 d-flex align-items-center justify-content-center left-pane">
           <a href="/login" className="back-link">
             &lt; {transWithFallback('backLogin', 'Quay lại Đăng nhập')}
