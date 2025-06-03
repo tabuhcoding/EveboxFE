@@ -85,9 +85,11 @@ export const ChangePasswordForm = () => {
 
     return (
         <div className="forgot-password-page">
-            <div className="flex flex-col md:flex-row min-h-screen">
+            <div className="flex flex-col md:flex-row min-h-screen" style={{
+                background: "linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%)"
+            }}>
                 {/* Left Pane */}
-                <div className="md:w-7/12 flex flex-col justify-center items-center px-6 py-10 left-pane relative">
+                <div className="md:w-7/12 flex flex-col justify-center items-center px-6 py-10 overflow-y-auto max-h-screen">
                     <div className="w-full max-w-md mb-12 mt-12">
                         <div className="flex flex-col items-center mb-8">
                             <Image

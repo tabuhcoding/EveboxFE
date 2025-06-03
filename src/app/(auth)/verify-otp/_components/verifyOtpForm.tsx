@@ -43,7 +43,7 @@ export const VerifyOTPForm = () => {
 
   return (
     <div className="verify-otp-page">
-      <div className='row'>
+      <div className='w-screen h-screen flex flex-col md:flex-row'>
         <div className={`col-md-5 d-flex align-items-center justify-content-center left-register-pane`}>
           <div className="text-center">
             <h2>{transWithFallback('welcomeBack', 'Chào mừng bạn quay lại!')}</h2>
