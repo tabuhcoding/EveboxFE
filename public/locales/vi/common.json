@@ -201,5 +201,6 @@
   "loadingBtn": "Đang xử lý...",
   "successTitle": "Thành công",
   "failTitle": "Thất bại",
-  "activeSucess": "thành công"
+  "activeSucess": "thành công",
+  "isLogouting": "Đang đăng xuất..."
 }
