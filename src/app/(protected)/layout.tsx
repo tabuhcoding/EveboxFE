@@ -3,10 +3,10 @@ import { Suspense, ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 
 /* Package Application */
-import '../../styles/global.css';
+import Footer from "app/(frontpage)/_components/common/footer";
+import NavigationBar from "app/(frontpage)/_components/common/navigationBar";
 
-import Footer from "components/common/footer";
-import NavigationBar from "components/common/navigationBar";
+import '../../styles/global.css';
 // import 'tailwindcss/tailwind.css';
 
 export default function DefaultLayout({
