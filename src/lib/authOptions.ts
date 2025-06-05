@@ -10,8 +10,8 @@ export const authOptions: AuthOptions = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: false,
-        domain: 'localhost'
+        secure: true,
+        domain: process.env.NEXT_PUBLIC_URL
       }
     }
   },
