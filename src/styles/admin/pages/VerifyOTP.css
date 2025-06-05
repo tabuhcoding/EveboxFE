@@ -3,6 +3,7 @@ body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  background: linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%);
 }
 
 .row {
@@ -46,6 +47,35 @@ body {
   }
 }
 
+/* Mặc định ẩn link */
+.mobile-back-link {
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  margin-bottom: 10px;
+  color: #0C4762;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.mobile-back-link:hover {
+  text-decoration: underline;
+}
+
+/* Ẩn phần trái và hiển thị link khi màn hình nhỏ */
+@media (max-width: 767px) {
+  .left-register-pane {
+    display: none !important;
+  }
+
+  .mobile-back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+
+
 .font-style {
   font-weight: bold;
   font-size: 16px;
@@ -68,7 +98,6 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%);
 }
 
 .verify-form {
