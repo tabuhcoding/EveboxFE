@@ -81,7 +81,7 @@ const Footer = () => {
                 </a>
               </div>
               <div className="text-xs sm:text-sm">
-                Non Copyrighted © {process.env.NEXT_PUBLIC_VERSION} Upload by EveBox
+                Non Copyrighted © 2025.1 Upload by EveBox
               </div>
             </div>
           </div>
