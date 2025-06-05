@@ -3,6 +3,7 @@ body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  background: linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%);
 }
 
 .row {
@@ -46,6 +47,35 @@ body {
   }
 }
 
+/* Mặc định ẩn link */
+.mobile-back-link {
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  margin-bottom: 10px;
+  color: #0C4762;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.mobile-back-link:hover {
+  text-decoration: underline;
+}
+
+/* Ẩn phần trái và hiển thị link khi màn hình nhỏ */
+@media (max-width: 767px) {
+  .left-register-pane {
+    display: none !important;
+  }
+
+  .mobile-back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+
+
 .font-style {
   font-weight: bold;
   font-size: 16px;
@@ -68,7 +98,6 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%);
 }
 
 .verify-form {
@@ -90,20 +119,47 @@ input {
   }
 
   .otp-nums {
-    justify-content: center;
-    margin: 20px auto;
     display: flex;
+    justify-content: center;
     gap: 10px;
+    margin: 20px auto;
 
     .otp-input {
       width: 50px;
       padding: 10px;
-      outline: none;
       text-align: center;
       border-radius: 10.8px;
+      outline: none;
 
       &:focus {
         border: 2px solid #000;
+      }
+    }
+
+    @media (max-width: 576px) {
+      gap: 10px;
+
+      .otp-input {
+        width: 40px;
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      gap: 8px;
+
+      .otp-input {
+        width: 36px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      gap: 6px;
+
+      .otp-input {
+        width: 30px;
+        padding: 6px;
       }
     }
   }

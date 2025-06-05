@@ -32,7 +32,7 @@ export const ResetPasswordForm = () => {
 
     return (
         <div className="reset-password-page">
-            <div className="row">
+            <div className="w-screen h-screen overflow-x-hidden flex">
                 <div className="col-md-7 d-flex align-items-center justify-content-center left-pane">
                     <Link href="/login" className="back-link">&lt; {transWithFallback('backLogin', 'v')}</Link>
                     <div className="w-75 mb-12 mt-12">
