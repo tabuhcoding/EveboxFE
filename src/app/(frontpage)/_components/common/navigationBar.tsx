@@ -1,15 +1,16 @@
 "use client";
 
 /* Package System */
-import { Menu, ChevronDown, User2Icon } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
-import 'tailwindcss/tailwind.css';
 
 /* Package Application */
+import useAvatar from "app/(protected)/(user)/my-profile/_components/libs/hooks/useAvatar";
+
 import { gatewayService } from "../../../../services/instance.service";
 import { UserInfo, UserInfoResponse } from "../../../../types/models/userInfo";
 import { useI18n } from "../../../providers/i18nProvider";
@@ -21,6 +22,7 @@ const NavigationBar = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [userInfoFetched, setUserInfoFetched] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const { data: session } = useSession();
   const { locale } = useI18n();
@@ -29,14 +31,17 @@ const NavigationBar = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       setLoading(true);
+      setUserInfoFetched(false);
       try {
         const response = await gatewayService.get<UserInfoResponse>("/api/user/me");
         setUserInfo(response.data.data);
+        setUserInfoFetched(true);
         if (response?.data?.data?.name) {
           localStorage.setItem("name", response.data.data.name);
         }
       } catch (error) {
         console.error("Error fetching user info:", error);
+        setUserInfoFetched(true);
       } finally {
         setLoading(false);
       }
@@ -47,15 +52,23 @@ const NavigationBar = () => {
       fetchUserInfo();
     } else {
       setUserInfo(null);
+      setUserInfoFetched(false);
     }
   }, [session]);
 
-    const transWithFallback = (key: string, fallback: string) => {
-        const msg = t(key);
-        if (!msg || msg.startsWith('common.')) return fallback;
-        return msg;
-    };
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+  
+  const avatarData = useAvatar({
+    avatar_id: userInfoFetched && userInfo?.avatar_id ? userInfo.avatar_id : undefined
+  });
 
+  const imageUrl = userInfo && userInfoFetched ?
+    (avatarData?.imageUrl || "/images/default_avt.png") :
+    "/images/default_avt.png";
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-sky-900 shadow-lg z-50">
@@ -76,7 +89,6 @@ const NavigationBar = () => {
                   height={30}
                   priority
                 />
-
               </div>
               <span className="text-white font-bold text-xl hidden sm:inline">
                 EveBox
@@ -109,7 +121,14 @@ const NavigationBar = () => {
                     {userInfo.name}
                   </Link>
                 </h3>
-                <User2Icon className="bg-white rounded-full" size={24} />
+                <Image
+                  src={imageUrl}
+                  alt="avatar"
+                  width={40}
+                  height={40}
+                  priority
+                  className="w-10 h-10 rounded-full object-cover border-2 border-white hover:border-teal-300 transition-colors cursor-pointer"
+                />
               </div>
             ) : (
               <div>
