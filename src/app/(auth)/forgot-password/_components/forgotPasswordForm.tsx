@@ -15,6 +15,7 @@ export const ForgotPasswordForm = () => {
     error,
     isLoading,
     emailFormik,
+    setError,
   } = useForgotPasswordForm();
 
   const t = useTranslations('common');
@@ -54,6 +55,7 @@ export const ForgotPasswordForm = () => {
                     className={`form-control ${emailFormik.touched.email && emailFormik.errors.email ? 'is-invalid' : ''}`}
                     placeholder={transWithFallback('emailHint', 'Nhập email của bạn')}
                     onChange={(e) => {
+                      if (error) setError('');
                       emailFormik.setFieldValue('email', e.target.value);
                       emailFormik.setFieldTouched('email', true, false);
                     }}

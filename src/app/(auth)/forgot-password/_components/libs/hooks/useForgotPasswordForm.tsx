@@ -70,5 +70,6 @@ export const useForgotPasswordForm = () => {
     error,
     isLoading,
     emailFormik,
+    setError,
   };
 };
