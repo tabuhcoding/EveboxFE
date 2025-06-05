@@ -33,7 +33,7 @@ export const RegisterForm = () => {
         <div>
             <div className="row min-h-[100vh] m-0">
                 {/* Left pane */}
-                <div className={`col-lg-5 col-md-12 d-flex left-register-pane`}>
+                <div className={`col-lg-5 col-md-12 d-flex align-items-center justify-content-center left-register-pane`}>
                     <div className="text-center">
                         <h2>{transWithFallback('welcomeBack', 'Chào mừng bạn quay lại!')}</h2>
                         <p>{transWithFallback('welcomeText', '')}</p>
