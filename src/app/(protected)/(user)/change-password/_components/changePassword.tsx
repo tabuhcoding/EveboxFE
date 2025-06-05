@@ -5,15 +5,16 @@ import 'tailwindcss/tailwind.css';
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { useState, useRef, FormEvent } from 'react';
+import { useState, useRef, FormEvent, useEffect } from 'react';
 
 /* Package Application */
 import 'styles/admin/pages/ForgotPassword.css';
 import { changePassword } from 'services/auth.service';
 
 export const ChangePasswordForm = () => {
+    const { data: _session, status } = useSession();
     const router = useRouter();
     const formRef = useRef<HTMLFormElement>(null); // Add a form reference
     const [loading, setLoading] = useState(false);
@@ -28,6 +29,12 @@ export const ChangePasswordForm = () => {
     const [errorOld, setErrorOld] = useState('');
     const [errorNew, setErrorNew] = useState('');
     const [errorConfirm, setErrorConfirm] = useState('');
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/login');
+        }
+    }, [status, router]);
 
     const t = useTranslations('common');
 
@@ -206,7 +213,7 @@ export const ChangePasswordForm = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-lg shadow-lg text-center flex flex-col items-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-3" />
-                        <p className="text-gray-800 font-medium">{transWithFallback('isLogouting', 'Đang đăng xuất...') }</p>
+                        <p className="text-gray-800 font-medium">{transWithFallback('isLogouting', 'Đang đăng xuất...')}</p>
                     </div>
                 </div>
             )}
