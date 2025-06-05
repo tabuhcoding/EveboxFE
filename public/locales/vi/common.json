@@ -202,5 +202,6 @@
   "successTitle": "Thành công",
   "failTitle": "Thất bại",
   "activeSucess": "thành công",
-  "isLogouting": "Đang đăng xuất..."
+  "isLogouting": "Đang đăng xuất...",
+  "emailNotFound": "Không tìm thấy người dùng với Email này"
 }

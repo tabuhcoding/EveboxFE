@@ -203,5 +203,6 @@
     "successTitle": "Success",
     "failTitle": "Failed",
     "activeSucess": "successful",
-    "isLogouting": "Logging out..."
+    "isLogouting": "Logging out...",
+    "emailNotFound": "User not found with provided email"
 }

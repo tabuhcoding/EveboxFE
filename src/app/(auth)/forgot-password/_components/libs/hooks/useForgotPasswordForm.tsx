@@ -36,6 +36,12 @@ export const useForgotPasswordForm = () => {
       setIsLoading(true);
       try {
         const result = await forgotPassword(values.email);
+
+        if (result.statusCode === 404) {
+          setError(transWithFallback('emailNotFound', 'Không tìm thấy người dùng với Email này'));
+          return;
+        }
+
         if (result.statusCode === 200) {
           setError('');
           localStorage.setItem('verifyData', JSON.stringify({
