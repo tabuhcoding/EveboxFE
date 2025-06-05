@@ -10,6 +10,30 @@ body {
   height: 100%;
 }
 
+.mobile-back-link {
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-decoration: none;
+  display: none;
+
+  color: #0C4762;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:active,
+  &:hover {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-back-link {
+    display: block !important;
+  }
+}
+
 /* Phần bên trái: nền hình ảnh và nội dung chào mừng */
 .left-register-pane {
   flex-direction: column;
@@ -18,6 +42,17 @@ body {
   background-image: url(../../../../public/images/background_login.png);
   background-size: cover;
   background-position: center;
+}
+
+@media (max-width: 767px) {
+
+  .left-register-pane,
+  .left-register-pane h2,
+  .left-register-pane p,
+  .left-register-pane .login-btn,
+  .left-register-pane .login-btn:hover {
+    display: none !important;
+  }
 }
 
 .left-register-pane h2 {
@@ -198,7 +233,7 @@ input {
     height: 20px;
     margin-right: 10px;
   }
-  
+
   .is-invalid {
     border-color: #FF0000 !important;
     background-image: none !important;

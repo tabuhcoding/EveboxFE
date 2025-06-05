@@ -31,7 +31,7 @@ export const RegisterForm = () => {
 
     return (
         <div>
-            <div className="row min-h-[100vh]">
+            <div className="row min-h-[100vh] m-0">
                 {/* Left pane */}
                 <div className={`col-lg-5 col-md-12 d-flex align-items-center justify-content-center left-register-pane`}>
                     <div className="text-center">
@@ -47,6 +47,9 @@ export const RegisterForm = () => {
                 <div className="col-lg-7 col-md-12 d-flex align-items-center justify-content-center right-register-pane">
                     <div className="w-75">
                         <div className="register-form">
+                            <Link href="/login" className="mobile-back-link mb-3">
+                                &lt; {transWithFallback('login', 'Đăng nhập')}
+                            </Link>
                             <div className="register-container d-flex flex-column align-items-center">
                                 <Image
                                     src="/images/logo.png"
@@ -141,7 +144,7 @@ export const RegisterForm = () => {
                                         )}
                                     </div>
                                     <div className="w-50">
-                                        <label htmlFor="re_password" className="form-label font-style">{transWithFallback('reEnterPw', 'NHẬP LẠI MẬT KHẨU')}</label>
+                                        <label htmlFor="re_password" className="form-label font-style text-nowrap">{transWithFallback('reEnterPw', 'NHẬP LẠI MẬT KHẨU')}</label>
                                         <div className="position-relative">
                                             <input
                                                 type={showRePassword ? 'text' : 'password'}
