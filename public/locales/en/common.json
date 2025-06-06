@@ -45,7 +45,7 @@
     "phoneNumber": "PHONE NUMBER",
     "phonePlaceholder": "Input your phone number",
     "reEnterPw": "CONFIRM PASSWORD",
-    "confirmPwPlaceholder":"Input your password again",
+    "confirmPwPlaceholder": "Input your password again",
     "agree": "I agree with all",
     "term": "Terms and Conditions",
     "policy": "Privacy Policy",
@@ -204,5 +204,7 @@
     "failTitle": "Failed",
     "activeSucess": "successful",
     "isLogouting": "Logging out...",
-    "emailNotFound": "User not found with provided email"
+    "emailNotFound": "User not found with provided email",
+    "notLogin": "You are not logged in",
+    "pleaseLogin": "Please login to continue!"
 }
