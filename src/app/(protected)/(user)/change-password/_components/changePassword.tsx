@@ -3,6 +3,7 @@
 /* Package System */
 import 'tailwindcss/tailwind.css';
 import { Icon } from '@iconify/react';
+import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
@@ -14,8 +15,9 @@ import 'styles/admin/pages/ForgotPassword.css';
 import { changePassword } from 'services/auth.service';
 
 export const ChangePasswordForm = () => {
-    const { data: _session, status } = useSession();
+    const { status } = useSession();
     const router = useRouter();
+    const [showPopup, setShowPopup] = useState(false);
     const formRef = useRef<HTMLFormElement>(null); // Add a form reference
     const [loading, setLoading] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -30,12 +32,6 @@ export const ChangePasswordForm = () => {
     const [errorNew, setErrorNew] = useState('');
     const [errorConfirm, setErrorConfirm] = useState('');
 
-    useEffect(() => {
-        if (status === 'unauthenticated') {
-            router.push('/login');
-        }
-    }, [status, router]);
-
     const t = useTranslations('common');
 
     const transWithFallback = (key: string, fallback: string) => {
@@ -43,6 +39,21 @@ export const ChangePasswordForm = () => {
         if (!msg || msg.startsWith('common.')) return fallback;
         return msg;
     };
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            setShowPopup(true);
+        }
+    }, [status]);
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+        router.push('/login');
+    };
+
+    if (status === 'loading') {
+        return <div className="text-center mt-10">Đang kiểm tra phiên đăng nhập...</div>;
+    }
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -217,6 +228,32 @@ export const ChangePasswordForm = () => {
                     </div>
                 </div>
             )}
+
+            <Dialog open={showPopup} className="custom-dialog">
+                <DialogTitle>
+                    <div className="dialog-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', fontSize: '1.25rem', width: '100%', }}>
+                        {transWithFallback('notLogin', 'Bạn chưa đăng nhập')}
+                        <IconButton className="close-button" style={{ position: 'absolute', right: 2, top: '40%', transform: 'translateY(-50%)' }}
+                            onClick={handleClosePopup} aria-label="Close"
+                        >
+                            <Icon icon="ph:x" width="24px" />
+                        </IconButton>
+                    </div>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="dialog-content text-center">
+                        <Icon icon="fluent:warning-24-filled" width="48px" color="#f87171" />
+                        <h3 className="font-semibold mt-2">{transWithFallback('pleaseLogin', 'Vui lòng đăng nhập để tiếp tục!')}</h3>
+                    </div>
+                </DialogContent>
+                <DialogActions className="dialog-actions">
+                    <div className="action-wrapper">
+                        <Button onClick={handleClosePopup} className="action-button">
+                            {transWithFallback('backLoginPage', 'Về trang Đăng nhập')}
+                        </Button>
+                    </div>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
