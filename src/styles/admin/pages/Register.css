@@ -15,6 +15,17 @@ body {
   margin-bottom: 16px;
   text-decoration: none;
   display: none;
+
+  color: #0C4762;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:active,
+  &:hover {
+    text-decoration: underline;
+    font-weight: bold;
+  }
 }
 
 @media (max-width: 767px) {
@@ -34,6 +45,7 @@ body {
 }
 
 @media (max-width: 767px) {
+
   .left-register-pane,
   .left-register-pane h2,
   .left-register-pane p,
@@ -221,7 +233,7 @@ input {
     height: 20px;
     margin-right: 10px;
   }
-  
+
   .is-invalid {
     border-color: #FF0000 !important;
     background-image: none !important;

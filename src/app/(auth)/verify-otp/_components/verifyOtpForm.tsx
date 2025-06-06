@@ -43,9 +43,17 @@ export const VerifyOTPForm = () => {
 
   return (
     <div className="verify-otp-page">
-      <div className='row'>
+      <div className='w-screen h-screen flex flex-col md:flex-row'>
+        {/* Mobile view */}
+        <div className="d-block d-md-none text-center mt-3">
+          <Link href="/login" className="mobile-back-link">
+            &lt; {transWithFallback('backLogin', 'Quay lại Đăng nhập')}
+          </Link>
+        </div>
+
+        {/* Desktop view */}
         <div className={`col-md-5 d-flex align-items-center justify-content-center left-register-pane`}>
-          <div className="text-center">
+          <div className="text-center d-none d-md-block">
             <h2>{transWithFallback('welcomeBack', 'Chào mừng bạn quay lại!')}</h2>
             <p>{transWithFallback('welcomeText', 'Để không bỏ lỡ sự kiện nào, hãy cho chúng tôi biết thông tin của bạn')}</p>
             <Link href="/login">
@@ -53,6 +61,7 @@ export const VerifyOTPForm = () => {
             </Link>
           </div>
         </div>
+        
         <div className="col-md-7 d-flex align-items-center justify-content-center right-register-pane">
           <div className="w-75 mb-12 mt-12">
             <div className='verify-form'>
@@ -135,7 +144,7 @@ export const VerifyOTPForm = () => {
       </div>
       <Dialog open={isOpen} className="custom-dialog">
         <DialogTitle>
-          <div className="dialog-title" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', fontWeight: 'bold', fontSize: '1.25rem', width: '100%'}}>
+          <div className="dialog-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', fontWeight: 'bold', fontSize: '1.25rem', width: '100%' }}>
             {type === OtpConstants.FORGOT_PASSWORD
               ? isVerified
                 ? transWithFallback('verifySuccess', 'Xác thực thành công')
@@ -144,7 +153,7 @@ export const VerifyOTPForm = () => {
                 ? transWithFallback('registerSuccess', 'Đăng ký thành công')
                 : transWithFallback('registerFail', 'Đăng ký thất bại')}
             <IconButton
-              className="close-button" style={{ position: 'absolute', right: 2, top: '40%', transform: 'translateY(-50%)'}}
+              className="close-button" style={{ position: 'absolute', right: 2, top: '40%', transform: 'translateY(-50%)' }}
               onClick={handleCloseDialog}
               aria-label="Close"
             >

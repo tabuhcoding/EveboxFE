@@ -3,17 +3,24 @@
 /* Package System */
 import 'tailwindcss/tailwind.css';
 import { Icon } from '@iconify/react';
+import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { useState, useRef, FormEvent } from 'react';
+import { useState, useRef, FormEvent, useEffect } from 'react';
 
 /* Package Application */
 import 'styles/admin/pages/ForgotPassword.css';
 import { changePassword } from 'services/auth.service';
 
 export const ChangePasswordForm = () => {
+    const { status } = useSession();
+    const router = useRouter();
+    const [showPopup, setShowPopup] = useState(false);
     const formRef = useRef<HTMLFormElement>(null); // Add a form reference
     const [loading, setLoading] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -32,6 +39,21 @@ export const ChangePasswordForm = () => {
         if (!msg || msg.startsWith('common.')) return fallback;
         return msg;
     };
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            setShowPopup(true);
+        }
+    }, [status]);
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+        router.push('/login');
+    };
+
+    if (status === 'loading') {
+        return <div className="text-center mt-10">Đang kiểm tra phiên đăng nhập...</div>;
+    }
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -68,9 +90,23 @@ export const ChangePasswordForm = () => {
                     setSuccessMessage(transWithFallback('changePassSuccess', 'Đổi mật khẩu thành công!'));
                     setErrorMessage('');
                     setErrorOld('');
+
                     if (formRef.current) {
                         formRef.current.reset();
                     }
+
+                    setIsLoggingOut(true);
+
+                    setTimeout(async () => {
+                        try {
+                            await signOut({ redirect: false });
+                            router.push('/login');
+                        } catch (error) {
+                            console.error("Error during logout:", error);
+                        } finally {
+                            setIsLoggingOut(false);
+                        }
+                    }, 1000);
                 } else {
                     setErrorMessage(result.message);
                 }
@@ -85,9 +121,11 @@ export const ChangePasswordForm = () => {
 
     return (
         <div className="forgot-password-page">
-            <div className="flex flex-col md:flex-row min-h-screen">
+            <div className="flex flex-col md:flex-row min-h-screen" style={{
+                background: "linear-gradient(180deg, #9EF5CF 0%, #2F9098 68%, #176B87 100%)"
+            }}>
                 {/* Left Pane */}
-                <div className="md:w-7/12 flex flex-col justify-center items-center px-6 py-10 left-pane relative">
+                <div className="md:w-7/12 flex flex-col justify-center items-center px-6 py-10 overflow-y-auto max-h-screen">
                     <div className="w-full max-w-md mb-12 mt-12">
                         <div className="flex flex-col items-center mb-8">
                             <Image
@@ -181,6 +219,41 @@ export const ChangePasswordForm = () => {
                     <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                 </div>
             </div>
+
+            {isLoggingOut && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-lg shadow-lg text-center flex flex-col items-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-3" />
+                        <p className="text-gray-800 font-medium">{transWithFallback('isLogouting', 'Đang đăng xuất...')}</p>
+                    </div>
+                </div>
+            )}
+
+            <Dialog open={showPopup} className="custom-dialog">
+                <DialogTitle>
+                    <div className="dialog-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', fontSize: '1.25rem', width: '100%', }}>
+                        {transWithFallback('notLogin', 'Bạn chưa đăng nhập')}
+                        <IconButton className="close-button" style={{ position: 'absolute', right: 2, top: '40%', transform: 'translateY(-50%)' }}
+                            onClick={handleClosePopup} aria-label="Close"
+                        >
+                            <Icon icon="ph:x" width="24px" />
+                        </IconButton>
+                    </div>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="dialog-content text-center">
+                        <Icon icon="fluent:warning-24-filled" width="48px" color="#f87171" />
+                        <h3 className="font-semibold mt-2">{transWithFallback('pleaseLogin', 'Vui lòng đăng nhập để tiếp tục!')}</h3>
+                    </div>
+                </DialogContent>
+                <DialogActions className="dialog-actions">
+                    <div className="action-wrapper">
+                        <Button onClick={handleClosePopup} className="action-button">
+                            {transWithFallback('backLoginPage', 'Về trang Đăng nhập')}
+                        </Button>
+                    </div>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
