@@ -13,6 +13,7 @@ import { SidebarProps } from '../libs/interface/dashboard.interface';
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const [loading, setLoading] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { data: session } = useSession();
   const t = useTranslations("common");
 
@@ -37,8 +38,22 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     }
   };
 
+  const handleProtectedClick = (href: string) => {
+  if (!session?.user) {
+    setShowLoginPrompt(true);
+  } else {
+    window.location.href = href;
+  }
+};
+
+const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   const menuItems = [
-    { icon: <User size={20} />, text: t("accountManagement"), href: '/my-profile' },
+    { icon: <User size={20} />, text: t("accountManagement"), onClick: () => handleProtectedClick('/my-profile') },
     { icon: <Ticket size={20} />, text: t("ticketManagement"), href: '/ticket' },
     { icon: <Calendar size={20} />, text: t("createEvent"), href: '/organizer/create-event' },
     { icon: <Lock size={20} />, text: t("changePassword"), href: '/change-password' },
@@ -104,6 +119,22 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </nav>
         </div>
       </div>
+
+      {showLoginPrompt && (
+      <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
+        <div className="bg-white text-black p-6 rounded-md shadow-lg w-[90%] max-w-sm">
+          <p className="text-base sm:text-lg">{transWithFallback("pleaseLogin", "Vui lòng đăng nhập!")}</p>
+          <div className="mt-4 flex justify-end space-x-2">
+            <Link href="/login" style={{ textDecoration: "none" }}>
+                  <button className=" px-4 py-2 bg-teal-300 rounded">
+                    {transWithFallback('login', 'Fallback Text')}
+                  </button>
+            </Link>
+            <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>            
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 };
