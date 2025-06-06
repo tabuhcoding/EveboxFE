@@ -127,7 +127,7 @@ const transWithFallback = (key: string, fallback: string) => {
           <div className="mt-4 flex justify-end space-x-2">
             <Link href="/login" style={{ textDecoration: "none" }}>
                   <button className=" px-4 py-2 bg-teal-300 rounded">
-                    {transWithFallback('login', 'Fallback Text')}
+                    {transWithFallback('login', 'Đăng nhập')}
                   </button>
             </Link>
             <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>            
