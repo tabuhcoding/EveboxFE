@@ -191,12 +191,29 @@
     border-radius: 5px;
 }
 
+.btn-sold-out-ticket {
+    width: 70px;
+    height: 34px;
+    background-color: #FFC9C9;
+    color: #FF0000;
+    border-radius: 8px;
+}
+
 .btn-disable {
     width: 156px;
     height: 34px;
     background-color: #FFFFFF;
     color: #999999;
     border-radius: 5px;
+
+}
+
+.btn-disable-ticket {
+    width: 115px;
+    height: 34px;
+    background-color: #FFFFFF;
+    color: #999999;
+    border-radius: 8px;
 
 }
 

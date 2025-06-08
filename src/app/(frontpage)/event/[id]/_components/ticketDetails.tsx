@@ -125,14 +125,85 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                               {ticket.name}
                             </div>
                             <div className="d-flex flex-column align-items-end">
-                              {ticket.status === "sold_out" ? (
-                                <>
-                                  <p className="price !text-gray-700 p-2">{ticket.price?.toLocaleString("vi-VN")}đ</p>
-                                  <button type="button" className="btn-sold-out">Hết vé</button>
-                                </>
-                              ) : (
-                                <p className="price mb-0 !border !border-[#9ef5cf] rounded-lg p-2">{ticket.price?.toLocaleString("vi-VN")}đ</p>
-                              )}
+                              {(() => {
+                                switch (ticket.status) {
+                                  case "SOLD_OUT":
+                                    return (
+                                      <>
+                                        <p className="price !text-gray-200">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                        <button type="button" className="btn-sold-out-ticket" disabled>
+                                           {t('soldOutTicket') || "Hết vé"}
+                                        </button>
+                                      </>
+                                    );
+
+                                  case "REGISTER_NOW":
+                                    return (
+                                      <>
+                                        <p className="price mb-0 !border !border-[#9ef5cf] rounded-lg p-2">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                      </>
+                                    );
+
+                                  case "BOOK_NOW":
+                                    return (
+                                        <p className="price mb-0 !border !border-[#9ef5cf] rounded-lg p-2">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                    );
+
+                                  case "REGISTER_CLOSED":
+                                    return (
+                                      <>
+                                        <p className="price !text-gray-200">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                        <button type="button" className="btn-disable-ticket" disabled>
+                                          {t('registerClosedTicket') || "Đóng đăng ký"}
+                                        </button>
+                                      </>
+                                    );
+
+                                  case "SALE_CLOSED":
+                                    return (
+                                      <>
+                                        <p className="price !text-gray-200">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                        <button type="button" className="btn-disable-ticket" disabled>
+                                          {t('saleClosedTicket') || "Ngừng bán"}
+                                        </button>
+                                      </>
+                                    );
+
+                                  case "NOT_OPEN":
+                                    return (
+                                      <>
+                                        <p className="price !text-gray-200">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                        <button type="button" className="btn-disable-ticket" disabled>
+                                           {t('notOpenTicket') || "Chưa mở bán"}
+                                        </button>
+                                      </>
+                                    );
+
+                                  default:
+                                    return (
+                                      <>
+                                        <p className="price text-muted p-2">
+                                          {ticket.price?.toLocaleString("vi-VN")}đ
+                                        </p>
+                                        <button type="button" className="btn-disable-ticket" disabled>
+                                          {t('unavailable') || "Không khả dụng"}
+                                        </button>
+                                      </>
+                                    );
+                                }
+                              })()}
                             </div>
                           </div>
                           {/* Ticket Image */}
