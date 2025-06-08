@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from "next-intl";
 
 /* Package Application */
-import { EventDetail } from './libs/interface/event.interface';
+import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 import { useI18n } from 'app/providers/i18nProvider';
 
 const extractFirstParagraph = (html: string) => {

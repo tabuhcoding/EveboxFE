@@ -6,9 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 /* Package Application */
-import { Showing } from "./libs/interface/event.interface";
+import { Showing } from "../../../../../types/models/event/eventdetail/event.interface";
 import { useTranslations } from "next-intl";
-import { EventDetail } from './libs/interface/event.interface';
+import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 
 
 const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventDetail }) => {

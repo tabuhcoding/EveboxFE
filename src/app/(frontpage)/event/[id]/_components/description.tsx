@@ -1,17 +1,17 @@
 'use client';
 
+/* Package System */
 import { useState } from "react";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
-
-interface DescriptionProps {
-    description: string;
-}
+/* Package Application */
+import { DescriptionProps } from '../../../../../types/models/event/eventdetail/event.interface';
 
 export default function Description({ description }: DescriptionProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-     const t = useTranslations("common");
+    const t = useTranslations("common");
 
     return (
         <div className="flex justify-center mt-8 ml-2">
@@ -30,11 +30,7 @@ export default function Description({ description }: DescriptionProps) {
                     className="d-flex justify-content-center div-more cursor-pointer mt-2 hover:text-gray-600 bg-transparent"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
-                    {isExpanded ? (
-                        <i className="bi bi-chevron-up bg-transparent"></i>
-                    ) : (
-                        <i className="bi bi-chevron-down bg-transparent"></i>
-                    )}
+                    {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </div>
             </div>
         </div>

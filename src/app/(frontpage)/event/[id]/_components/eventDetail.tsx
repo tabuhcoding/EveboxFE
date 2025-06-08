@@ -14,7 +14,7 @@ import MoreInformation from './moreInformation';
 import EventSlider from 'app/(frontpage)/_components/dashboard/eventSlider';
 import EventBox from './eventBox';
 import { Event } from 'types/models/dashboard/dashboard.interface';
-import { EventDetail } from './libs/interface/event.interface';
+import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 
 // Client component
 export default function EventDetailClient({ event: events, recommendedEvent: recommendedEvents }: { event: EventDetail, recommendedEvent: Event[]}) {

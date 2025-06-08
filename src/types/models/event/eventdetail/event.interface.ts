@@ -36,7 +36,6 @@ export interface EventDetail {
   title: string;
   description: string;
   startDate: string;
-  // startTime: string;
   venue: string;
   Showing: Showing[];
   minPrice: number;
@@ -45,4 +44,8 @@ export interface EventDetail {
   orgName: string;
   locationsString: string;
   orgDescription: string;
+}
+
+export interface DescriptionProps {
+    description: string;
 }
