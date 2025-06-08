@@ -3,13 +3,11 @@
 /* Package System */
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
 import 'styles/admin/pages/EventDetail.css'
 import 'styles/admin/pages/Dashboard.css';
-import Comment from "./comment";
 import Description from "./description";
 import TicketDetails from "./ticketDetails";
 import MoreInformation from './moreInformation';
@@ -31,8 +29,6 @@ export default function EventDetailClient({ event: events, recommendedEvent: rec
                 </div>
                 <MoreInformation title={events.title} location={events.venue} locationsString={events.locationsString} />
             </div>
-
-            <Comment />
 
             {/* Events Section */}
             <div className="d-flex justify-center mt-8">

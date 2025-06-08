@@ -21,13 +21,13 @@ export default function EventBox({ event }: { event: EventDetail }) {
     const router = useRouter(); // Sử dụng useRouter
 
     return (
-        <div className="d-flex justify-content-center px-4">
+        <div className="event-box d-flex justify-content-center px-4">
             <div className="eve-image d-flex justify-content-center align-items-center">
                 {/* Mask phủ lên hình ảnh */}
                 <div
                     className="mask mask-img"
                     style={{
-                        backgroundImage: `url(${event.Images_Events_imgPosterIdToImages?.imageUrl || '/images/default-mask.png'})`,
+                        backgroundImage: `url(${event.imgLogoUrl || '/images/default-mask.png'})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
@@ -67,7 +67,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     <h5 className="card-title title-box">{t("dateTime") || "Thời gian"}</h5>
                                     <p className="card-text m-0 text-body-secondary">
                                         <i className="bi bi-calendar2-event mr-2"></i>
-                                        {new Date(event.startTime).toLocaleString( locale === "vi" ? 'vi-VN' : 'en-US', {
+                                        {new Date(event.startDate).toLocaleString( locale === "vi" ? 'vi-VN' : 'en-US', {
                                             weekday: 'long',
                                             year: 'numeric',
                                             month: 'long',
@@ -80,7 +80,6 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                             + 4 ngày khác
                                         </button> */}
                                     </p>
-                                    <p className="card-text text-add p-0">{t("addCalendar") || "Thêm vào lịch"}</p>
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
                                     <p className="card-text text-body-secondary mb-2" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -94,8 +93,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                         <h5 className="card-title title-box text-center w-100">
                                            {t("priceTitle") || "Fallback Text"}
                                             <span className="ml-2 text-teal-400" style={{ cursor: "pointer" }}>
-                                                {event.minTicketPrice?.toLocaleString('vi-VN')}đ
-                                                {/* 350.000đ */}
+                                                {event.minPrice?.toLocaleString('vi-VN')}đ
                                                 <i className="bi bi-chevron-right ml-1" style={{ fontSize: 18 }} />
                                             </span>
                                         </h5>

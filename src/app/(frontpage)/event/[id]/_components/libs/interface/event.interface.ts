@@ -35,13 +35,13 @@ export interface EventDetail {
   id: number;
   title: string;
   description: string;
-  // startDate: string;
-  startTime: string;
+  startDate: string;
+  // startTime: string;
   venue: string;
   Showing: Showing[];
-  minTicketPrice: number;
-  Images_Events_imgLogoIdToImages?: { imageUrl: string };
-  Images_Events_imgPosterIdToImages?: { imageUrl: string };
+  minPrice: number;
+  imgLogoUrl: string ;
+  imgPosterUrl: string ;
   orgName: string;
   locationsString: string;
   orgDescription: string;
