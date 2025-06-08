@@ -1,4 +1,9 @@
 {
+  "liked": "Đã thêm vào danh sách yêu thích!",
+  "unliked": "Đã xóa khỏi danh sách yêu thích!",
+  "notice": "Bạn sẽ nhận được thông báo về sự kiện này!",
+  "unnotice": "Bạn đã tắt thông báo về sự kiện này!",
+  "from": "Từ",
   "pleaseLogin": "Vui lòng đăng nhập để truy cập vào trang này!",
   "noLoveOrg": "Bạn chưa có Nhà tổ chức yêu thích nào!",
   "org": "Nhà tổ chức",
@@ -96,7 +101,7 @@
   "contactOrganizer": "Liên hệ ban tổ chức",
   "commentTitle": "Bình luận",
   "soldOut": "Hết vé",
-  "special": "Sự kiên",
+  "special": "Sự kiện",
   "trending": "Sự kiện",
   "onlyOnEve": "Sự kiện",
   "specialEvent": "Đặc biệt",

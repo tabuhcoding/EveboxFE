@@ -156,9 +156,9 @@ export default function SearchControls() {
           </div>
           <div className="flex-[1.5] text-left">
             <label className="text-sm font-medium mb-2">{t('timeTitle')}</label>
-            <div className="mt-2 relative">
-              <DatePicker onDateRangeChange={setDateRange} />
-            </div>
+            <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
+  <DatePicker onDateRangeChange={setDateRange} />
+</div>
           </div>
           <div className="flex md:items-end">
             <Link

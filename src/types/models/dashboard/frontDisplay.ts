@@ -6,6 +6,7 @@ export interface Event {
   startDate: string;
   // startTime: string;
   status: string;
+  totalClicks: number;
   imgLogoUrl: string;
   minTicketPrice: number;
 }
