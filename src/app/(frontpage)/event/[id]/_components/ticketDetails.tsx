@@ -31,13 +31,14 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                   <div className="d-flex justify-content-between align-items-center">
                     {/* Toggle Button for Show Details */}
                     <div className="d-flex text-ticket" onClick={() => {
-                      console.log("showing.id: ", showing.id )
-                      setExpandedShowId(expandedShowId === showing.id ? null : showing.id)}}>
-                      <div className="mr-2"  style={{ position: 'relative', top: '3px' }}>
+                      console.log("showing.id: ", showing.id)
+                      setExpandedShowId(expandedShowId === showing.id ? null : showing.id)
+                    }}>
+                      <div className="mr-2 cursor-pointer" style={{ position: 'relative', top: '3px' }}>
                         {expandedShowId === showing.id ? (
-                          <ChevronDown size={20}/>
+                          <ChevronDown size={20} />
                         ) : (
-                          <ChevronRight size={20}/>
+                          <ChevronRight size={20} />
                         )}
                       </div>
                       {new Date(showing.startTime).toLocaleTimeString("vi-VN", {
@@ -53,17 +54,65 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                     </div>
 
                     {/* Button: Show Availability */}
-                    {showing.status === "sold_out" ? (
-                      <button type="button" className="btn-sold-out cursor-none">{t('soldOut')}</button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn-buy"
-                        onClick={() => router.push(`/event/${showing.eventId}/booking/select-ticket?showingId=${showing.id}&eventId=${showing.eventId}${(showing.seatMapId && showing.seatMapId !== 0) ? `&seatMapId=${showing.seatMapId}` : ""}`)}
-                      >
-                        {t('bookNow')}
-                      </button>
-                    )}
+                    {(() => {
+                      switch (showing.status) {
+                        case "SOLD_OUT":
+                          return (
+                            <button type="button" className="btn-sold-out cursor-not-allowed" disabled>
+                              {t('soldOut') || "Hết vé"}
+                            </button>
+                          );
+
+                        case "REGISTER_NOW":
+                          return (
+                            <button type="button" className="btn-buy" onClick={() =>
+                              router.push(`/event/${showing.eventId}/register?showingId=${showing.id}`)}>
+                              {t('registerNow') || "Đăng ký ngay"}
+                            </button>
+                          );
+
+                        case "BOOK_NOW":
+                          return (
+                            <button
+                              type="button"
+                              className="btn-buy"
+                              onClick={() =>
+                                router.push(`/event/${showing.eventId}/booking/select-ticket?showingId=${showing.id}&eventId=${showing.eventId}${(showing.seatMapId && showing.seatMapId !== 0) ? `&seatMapId=${showing.seatMapId}` : ""}`)
+                              }
+                            >
+                              {t('bookNow') || "Mua vé ngay"}
+                            </button>
+                          );
+
+                        case "NOT_OPEN":
+                          return (
+                            <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                              {t('notOpen') || "Vé chưa mở bán"}
+                            </button>
+                          );
+
+                        case "REGISTER_CLOSED":
+                          return (
+                            <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                              {t('registerClosed') || "Đã đóng đăng ký"}
+                            </button>
+                          );
+
+                        case "SALE_CLOSED":
+                          return (
+                            <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                              {t('saleClosed') || "Vé ngừng bán"}
+                            </button>
+                          );
+
+                        default:
+                          return (
+                            <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                              {t('unavailable') || "Không khả dụng"}
+                            </button>
+                          );
+                      }
+                    })()}
                   </div>
 
                   {/* Ticket Types for This Showing */}
@@ -87,12 +136,16 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                             </div>
                           </div>
                           {/* Ticket Image */}
-                          {ticket.imageUrl && (
-                            <div className="text-center">
-                              <Image width={140}
-                                height={100} src={ticket.imageUrl} alt={ticket.name} className="w-32 rounded-lg shadow-md" />
-                            </div>
+                          {ticket.imageUrl && ticket.imageUrl.startsWith("http") && (
+                            <Image
+                              width={140}
+                              height={100}
+                              src={ticket.imageUrl}
+                              alt={ticket.name}
+                              className="w-32 rounded-lg shadow-md"
+                            />
                           )}
+
                           {/* Ticket Description */}
                           <div style={{ whiteSpace: 'pre-line' }}>
                             <p className="text-white-500 text-sm ml-4">{ticket.description}</p>
