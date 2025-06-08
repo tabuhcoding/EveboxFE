@@ -48,7 +48,7 @@
     background-color: #51DACF;
     color: #0C4762;
     border-radius: 5px;
-
+    font-weight: 500;
 }
 
 .btn-buy-now:hover {
@@ -215,6 +215,15 @@
     color: #999999;
     border-radius: 8px;
 
+}
+
+.btn-disable-event {
+    width: 325px;
+    height: 52px;
+    background-color: #f0f0f0d7 !important;
+    color: #999999;
+    border-radius: 5px;
+    font-weight: 500;
 }
 
 .price-sold-out {

@@ -44,6 +44,7 @@ export interface EventDetail {
   orgName: string;
   locationsString: string;
   orgDescription: string;
+  status:string;
 }
 
 export interface DescriptionProps {

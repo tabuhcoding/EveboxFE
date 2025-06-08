@@ -84,7 +84,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
                                     <p className="card-text text-body-secondary mb-2 flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
-                                        <MapPin size={18}/>
+                                        <MapPin size={18} />
                                         {event.venue}
                                     </p>
 
@@ -95,16 +95,75 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                             {t("priceTitle") || "Fallback Text"}
                                             <span className="text-teal-400 d-flex align-items-center" style={{ cursor: "pointer" }}>
                                                 {event.minPrice?.toLocaleString('vi-VN')}đ
-                                                <ChevronRight size={22} className='ml-1' style={{ position: 'relative', top: '1px' }}/>
+                                                <ChevronRight size={22} className='ml-1' style={{ position: 'relative', top: '1px' }} />
                                             </span>
                                         </h5>
                                     </div>
 
-                                    <div className="d-flex justify-content-center">
+                                    {/* <div className="d-flex justify-content-center">
                                         <button type="button" className="btn-buy-now" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
                                             {t("bookNow") || "Fallback Text"}
                                         </button>
+                                    </div> */}
+                                    <div className="d-flex justify-content-center">
+                                        {(() => {
+                                            switch (event.status) {
+                                                case "AVAILABLE":
+                                                    return (
+                                                        <button
+                                                            type="button"
+                                                            className="btn-buy-now"
+                                                            onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
+                                                        >
+                                                            {t("bookNow") || "Mua vé ngay"}
+                                                        </button>
+                                                    );
+
+                                                case "NOT_OPEN":
+                                                    return (
+                                                        <button type="button" className="btn-disable-event cursor-not-allowed" disabled>
+                                                            {t("notOpen") || "Vé chưa mở bán"}
+                                                        </button>
+                                                    );
+
+                                                case "SALE_CLOSE":
+                                                    return (
+                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                            {t("saleClosed") || "Vé ngừng bán"}
+                                                        </button>
+                                                    );
+
+                                                case "REGISTER_CLOSE":
+                                                    return (
+                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                            {t("registerClosed") || "Đã đóng đăng ký"}
+                                                        </button>
+                                                    );
+
+                                                case "SOLD_OUT":
+                                                    return (
+                                                        <button type="button" className="btn-sold-out cursor-not-allowed" disabled>
+                                                            {t("soldOut") || "Hết vé"}
+                                                        </button>
+                                                    );
+
+                                                case "EVENT_OVER":
+                                                    return (
+                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                            {t("eventOver") || "Sự kiện đã kết thúc"}
+                                                        </button>
+                                                    );
+
+                                                default:
+                                                    return (
+                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                            {t("unavailable") || "Không khả dụng"}
+                                                        </button>
+                                                    );
+                                            }
+                                        })()}
                                     </div>
+
                                 </div>
                             </div>
                         </div>
