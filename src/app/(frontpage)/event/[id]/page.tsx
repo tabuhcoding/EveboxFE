@@ -1,6 +1,6 @@
 import { fetchRecommendEvents } from 'app/(frontpage)/_components/libs/server/fetchRecommendEvents'
-import EventDetailClient from '../_components/eventDetail';
-import { fetchEventDetail } from '../_components/libs/server/fetchEventDetail';
+import EventDetailClient from './_components/eventDetail';
+import { fetchEventDetail } from './_components/libs/server/fetchEventDetail';
 
 export default async function Page({ params }: {
    params: Promise<{ id: string }>;
