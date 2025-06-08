@@ -8,8 +8,8 @@ export interface TicketType {
   originalPrice: number;
   maxQtyPerOrder: number;
   minQtyPerOrder: number;
-  effectiveFrom: Date;
-  effectiveTo: Date;
+  startTime: Date;
+  endTime: Date;
   position: number;
   status: string;
   imageUrl: string;
@@ -37,7 +37,7 @@ export interface EventDetail {
   description: string;
   startDate: string;
   venue: string;
-  Showing: Showing[];
+  showing: Showing[];
   minPrice: number;
   imgLogoUrl: string ;
   imgPosterUrl: string ;
@@ -48,4 +48,10 @@ export interface EventDetail {
 
 export interface DescriptionProps {
     description: string;
+}
+
+export interface MoreInformationProps {
+    title: string;
+    location: string;
+    locationsString: string;
 }

@@ -25,7 +25,7 @@ export default function EventDetailClient({ event: events, recommendedEvent: rec
             <div className="row align-items-start">
                 <div className="col-lg-8 col-md-12 custom-col-left ">
                     <Description description={events.description} />
-                    <TicketDetails event={events} showings={events.Showing} />
+                    <TicketDetails showings={events.showing} event={events} />
                 </div>
                 <MoreInformation title={events.title} location={events.venue} locationsString={events.locationsString} />
             </div>

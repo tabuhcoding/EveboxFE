@@ -1,9 +1,11 @@
 'use client';
 
+/* Package System */
 import { useEffect, useState } from 'react';
+
+/* Package Application */
 import { fetchEventDetail } from '../server/fetchEventDetail';
 import { Event } from 'types/models/event/event';
-
 
 export function useFetchEventDetail(eventId: string) {
   const [event, setEvent] = useState<Event | null>(null);

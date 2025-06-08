@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 /* Package Application */
 import { Showing } from "../../../../../types/models/event/eventdetail/event.interface";
@@ -29,12 +30,14 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                 <li key={showing.id} className="list-group-item li-ticket">
                   <div className="d-flex justify-content-between align-items-center">
                     {/* Toggle Button for Show Details */}
-                    <div className="d-flex text-ticket" onClick={() => setExpandedShowId(expandedShowId === showing.id ? null : showing.id)}>
-                      <div className="mr-2">
+                    <div className="d-flex text-ticket" onClick={() => {
+                      console.log("showing.id: ", showing.id )
+                      setExpandedShowId(expandedShowId === showing.id ? null : showing.id)}}>
+                      <div className="mr-2"  style={{ position: 'relative', top: '3px' }}>
                         {expandedShowId === showing.id ? (
-                          <i className="bi bi-chevron-down"></i>
+                          <ChevronDown size={20}/>
                         ) : (
-                          <i className="bi bi-chevron-right"></i>
+                          <ChevronRight size={20}/>
                         )}
                       </div>
                       {new Date(showing.startTime).toLocaleTimeString("vi-VN", {
@@ -111,14 +114,14 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
           <h2 className="text-xl md:text-2xl font-bold">{t('contactOrganizer')}</h2>
 
           {/* Organizer Section */}
-          <div className="flex items-center mt-4">
+          <div className="flex items-center">
             {/* Organizer Image */}
-            <div className="w-20 h-20 flex-shrink-0">
-              {event.Images_Events_imgLogoIdToImages?.imageUrl ? (
+            <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center text-base">
+              {event.imgLogoUrl ? (
                 <Image
                   width={200}
                   height={160}
-                  src={event.Images_Events_imgLogoIdToImages?.imageUrl || ''}
+                  src={event.imgLogoUrl || ''}
                   alt={event.orgName}
                   className="object-cover rounded-md"
                 />

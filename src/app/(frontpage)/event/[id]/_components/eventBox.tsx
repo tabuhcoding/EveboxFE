@@ -4,6 +4,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from "next-intl";
+import { Calendar, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 /* Package Application */
 import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
@@ -37,8 +38,8 @@ export default function EventBox({ event }: { event: EventDetail }) {
 
                 {/* Nút "Quay lại" */}
                 <div className="back-button-wrapper position-absolute mt-4">
-                    <button type="button" className="btn-back" onClick={() => router.back()}>
-                        <i className="bi bi-chevron-left mr-2" style={{ fontSize: '14px' }}></i>
+                    <button type="button" className="btn-back flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-white transition" onClick={() => router.back()}>
+                        <ChevronLeft size={20} />
                         {t("backBtn") || "Fallback Text"}
                     </button>
                 </div>
@@ -53,8 +54,8 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     className="card-text  text-white prose max-w-none"
                                     dangerouslySetInnerHTML={{ __html: extractFirstParagraph(event.description) }}
                                 />
-                                <p className="mt-4 card-text view-location" onClick={() => document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' })}>
-                                    <i className="bi bi-geo-alt mr-2"></i>
+                                <p className="mt-4 card-text view-location flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' })}>
+                                    <MapPin size={16} />
                                     {t("mapRedirect") || "Fallback Text"}
                                 </p>
                             </div>
@@ -65,9 +66,9 @@ export default function EventBox({ event }: { event: EventDetail }) {
                             <div className="card" style={{ width: '385px' }}>
                                 <div className="card-body px-4 mt-2 mb-3">
                                     <h5 className="card-title title-box">{t("dateTime") || "Thời gian"}</h5>
-                                    <p className="card-text m-0 text-body-secondary">
-                                        <i className="bi bi-calendar2-event mr-2"></i>
-                                        {new Date(event.startDate).toLocaleString( locale === "vi" ? 'vi-VN' : 'en-US', {
+                                    <p className="card-text m-0 text-body-secondary flex items-center gap-1 cursor-pointer">
+                                        <Calendar size={18} />
+                                        {new Date(event.startDate).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
                                             weekday: 'long',
                                             year: 'numeric',
                                             month: 'long',
@@ -82,26 +83,26 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     </p>
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
-                                    <p className="card-text text-body-secondary mb-2" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
-                                        <i className="bi bi-geo-alt-fill mr-2"></i>
+                                    <p className="card-text text-body-secondary mb-2 flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
+                                        <MapPin size={18}/>
                                         {event.venue}
                                     </p>
 
                                     <hr />
 
                                     <div className="d-flex justify-content-center align-items-center mt-3 mb-2">
-                                        <h5 className="card-title title-box text-center w-100">
-                                           {t("priceTitle") || "Fallback Text"}
-                                            <span className="ml-2 text-teal-400" style={{ cursor: "pointer" }}>
+                                        <h5 className="card-title title-box d-flex align-items-center gap-2" style={{ cursor: "default" }}>
+                                            {t("priceTitle") || "Fallback Text"}
+                                            <span className="text-teal-400 d-flex align-items-center" style={{ cursor: "pointer" }}>
                                                 {event.minPrice?.toLocaleString('vi-VN')}đ
-                                                <i className="bi bi-chevron-right ml-1" style={{ fontSize: 18 }} />
+                                                <ChevronRight size={22} className='ml-1' style={{ position: 'relative', top: '1px' }}/>
                                             </span>
                                         </h5>
                                     </div>
 
                                     <div className="d-flex justify-content-center">
                                         <button type="button" className="btn-buy-now" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
-                                           {t("bookNow") || "Fallback Text"}
+                                            {t("bookNow") || "Fallback Text"}
                                         </button>
                                     </div>
                                 </div>
