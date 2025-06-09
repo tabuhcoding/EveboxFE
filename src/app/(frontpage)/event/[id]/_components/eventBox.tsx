@@ -47,9 +47,9 @@ export default function EventBox({ event }: { event: EventDetail }) {
                 </div>
 
                 <div className="mt-8 eve-padding w-full">
-                    <div className="row justify-content-between">
+                    <div className="flex flex-col lg:flex-row justify-between gap-6">
                         {/* Thông tin sự kiện */}
-                        <div className="event-info col-lg-7 col-md-12 mt-4mt-4 p-0 d-flex align-items-center text-left" style={{ zIndex: 2 }}>
+                        <div className="event-info w-full lg:w-7/12 mt-4 text-left flex items-center" style={{ zIndex: 2 }}>
                             <div>
                                 <p className="txt-name-event-title">{event.title}</p>
                                 <div
@@ -76,8 +76,8 @@ export default function EventBox({ event }: { event: EventDetail }) {
                         </div>
 
                         {/* Thông tin ngày & giờ, địa điểm */}
-                        <div className="col-lg-5 col-md-12 p-0 d-flex justify-content-end align-items-center" style={{ zIndex: 2 }}>
-                            <div className="card" style={{ width: '385px' }}>
+                        <div className="w-full lg:w-5/12 flex justify-center lg:justify-end items-center relative z-10" style={{ zIndex: 2 }}>
+                            <div className="card w-full max-w-[385px]">
                                 <div className="card-body px-4 mt-2 mb-3">
                                     <h5 className="card-title title-box">{t("dateTime") || "Thời gian"}</h5>
                                     <p className="card-text m-0 text-body-secondary flex items-center gap-1 cursor-pointer">

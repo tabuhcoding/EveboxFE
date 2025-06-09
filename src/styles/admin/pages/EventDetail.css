@@ -10,7 +10,7 @@
     /* Sử dụng flexbox */
     flex-direction: column;
     /* Các phần tử con xếp theo cột */
-    overflow: hidden;
+    overflow:scroll;
     /* Ngăn chặn nội dung vượt ra ngoài */
     position: relative;
     z-index: 0;
@@ -38,7 +38,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 0;
     /* Để lớp mask ở dưới phần chữ và card */
 }
 
