@@ -12,8 +12,7 @@ import { EventDetail, Showing } from "../../../../../types/models/event/eventdet
 
 const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventDetail }) => {
   const [expandedShowId, setExpandedShowId] = useState<string | null>(null);
-  // const [isTicketInfoExpanded, setIsTicketInfoExpanded] = useState(false);
-  // const [isTicketNoteExpanded, setIsTicketNoteExpanded] = useState(false);
+  const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations("common");
 
@@ -124,9 +123,30 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                     <ul className="ul-ticket-item">
                       {showing.TicketType.map((ticket) => (
                         <li key={ticket.id} className="li-ticket-item !border-dashed !border-white-500 rounded-lg p-4 shadow-md">
-                          <div className="d-flex justify-content-between align-items-center mb-2">
-                            <div className="d-flex ml-2 text-ticket text-lg font-bold text-[#9ef5cf]">
-                              {ticket.name}
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <div className="flex items-start gap-4 mb-2">
+                              {/* Toggle Chevron + Ticket Name */}
+                              <div
+                                role="button"
+                                tabIndex={0}
+                                onClick={() =>
+                                  setExpandedTicketId(expandedTicketId === ticket.id ? null : ticket.id)
+                                }
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    setExpandedTicketId(expandedTicketId === ticket.id ? null : ticket.id);
+                                  }
+                                }}
+                                className="flex items-center gap-2 cursor-pointer ml-2 text-ticket text-lg font-bold text-[#9ef5cf]"
+                              >
+                                {expandedTicketId === ticket.id ? (
+                                  <ChevronDown size={18} />
+                                ) : (
+                                  <ChevronRight size={18} />
+                                )}
+                                {ticket.name}
+                              </div>
                             </div>
                             <div className="d-flex flex-column align-items-end">
                               {(() => {
@@ -210,21 +230,27 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                               })()}
                             </div>
                           </div>
-                          {/* Ticket Image */}
-                          {ticket.imageUrl && ticket.imageUrl.startsWith("http") && (
-                            <Image
-                              width={140}
-                              height={100}
-                              src={ticket.imageUrl}
-                              alt={ticket.name}
-                              className="w-32 rounded-lg shadow-md"
-                            />
+
+                          {expandedTicketId === ticket.id && (
+                            <div className="flex items-start gap-4 mb-4 mt-2">
+                              {/* Ticket Image */}
+                              {ticket.imageUrl && ticket.imageUrl.startsWith("http") && (
+                                <Image
+                                  width={140}
+                                  height={100}
+                                  src={ticket.imageUrl}
+                                  alt={ticket.name}
+                                  className="w-32 h-auto rounded-lg shadow-md object-cover"
+                                />
+                              )}
+
+                              {/* Ticket Description */}
+                              <div className="flex-1" style={{ whiteSpace: "pre-line" }}>
+                                <p className="text-white-500 text-sm ml-4">{ticket.description}</p>
+                              </div>
+                            </div>
                           )}
 
-                          {/* Ticket Description */}
-                          <div style={{ whiteSpace: 'pre-line' }}>
-                            <p className="text-white-500 text-sm ml-4">{ticket.description}</p>
-                          </div>
                         </li>
                       ))}
                     </ul>

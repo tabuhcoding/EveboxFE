@@ -30,7 +30,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                 <div
                     className="mask mask-img"
                     style={{
-                        backgroundImage: `url(${event.imgLogoUrl || '/images/default-mask.png'})`,
+                        backgroundImage: `url(${event.imgPosterUrl || '/images/default-mask.png'})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
