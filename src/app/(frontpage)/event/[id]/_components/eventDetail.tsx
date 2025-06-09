@@ -8,10 +8,9 @@ import 'tailwindcss/tailwind.css';
 /* Package Application */
 import 'styles/admin/pages/EventDetail.css'
 import 'styles/admin/pages/Dashboard.css';
-import EventSlider from 'app/(frontpage)/_components/dashboard/eventSlider';
-
 import { Event } from 'types/models/dashboard/dashboard.interface';
 import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
+import EventSlider from 'app/(frontpage)/_components/dashboard/eventSlider';
 import Description from "./description";
 import EventBox from './eventBox';
 import MoreInformation from './moreInformation';

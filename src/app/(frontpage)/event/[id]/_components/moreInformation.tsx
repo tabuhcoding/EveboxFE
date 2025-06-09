@@ -40,7 +40,7 @@ export default function MoreInformation({ title, location, locationsString }: Mo
                         <MapPin size={16} />
                         {location}
                     </p>
-                    <p role="button" tabIndex={0}
+                    <span role="button" tabIndex={0}
                         className="card-text text-body-secondary ml-6 mb-2" id="event-location" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
@@ -49,7 +49,7 @@ export default function MoreInformation({ title, location, locationsString }: Mo
                             }
                         }}>
                         {locale === "vi" ? convertLocationToVietnamese(locationsString) : locationsString}
-                    </p>
+                    </span>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import React from 'react';
 
 /* Package Application */
 import { useI18n } from 'app/providers/i18nProvider';
+
 import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 
 const extractFirstParagraph = (html: string) => {
@@ -59,7 +60,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                 {(event.totalClicks !== undefined || event.lastScore !== undefined) && (
                                     <div className="mt-4 space-y-1 text-white text-sm">
                                         {typeof event.totalClicks === 'number' && (
-                                            <div className="flex items-center gap-1"><Eye size={16}/> {t("totalClicksLabel") || "Tổng lượt xem"}: <strong>{event.totalClicks}</strong></div>
+                                            <div className="flex items-center gap-1"><Eye size={16} /> {t("totalClicksLabel") || "Tổng lượt xem"}: <strong>{event.totalClicks}</strong></div>
                                         )}
 
                                         {typeof event.lastScore === 'number' && event.lastScore > 7 && (
@@ -68,10 +69,18 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     </div>
                                 )}
 
-                                <p className="mt-4 card-text view-location flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' })}>
+                                <span role="button" tabIndex={0}
+                                    className="mt-4 card-text view-location flex items-center gap-1 cursor-pointer"
+                                    onClick={() => document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' })}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }}>
                                     <MapPin size={16} />
                                     {t("mapRedirect") || "Fallback Text"}
-                                </p>
+                                </span>
                             </div>
                         </div>
 
@@ -102,7 +111,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     )}
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
-                                    <p role="button" tabIndex={0}
+                                    <span role="button" tabIndex={0}
                                         className="card-text text-body-secondary mb-2 flex items-center gap-1 cursor-pointer"
                                         onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
                                         onKeyDown={(e) => {
@@ -113,7 +122,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     >
                                         <MapPin size={18} />
                                         {event.venue}
-                                    </p>
+                                    </span>
 
                                     <hr />
 
