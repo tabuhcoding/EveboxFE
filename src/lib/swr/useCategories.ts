@@ -20,7 +20,8 @@ export const useCategories = () => {
   );
 
   return {
-    categories: data ?? [], 
+    // categories: data ?? [], 
+    categories: data, 
     isLoading,
     error,
     mutate,

@@ -142,7 +142,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
 
                   <Image
                     src={
-                      event?.imgLogoUrl ||
+                      event?.imgPosterUrl ||
                       '/images/dashboard/card_pic.png'
                     }
                     alt={event.title}

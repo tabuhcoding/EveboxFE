@@ -20,7 +20,8 @@ export const useFrontDisplayEvents = () => {
   );
 
   return {
-    frontDisplayEvents: data?.data ?? [], // Trả về mảng sự kiện từ response
+    // frontDisplayEvents: data?.data ?? [], // Trả về mảng sự kiện từ response
+    frontDisplayEvents: data?.data, // Trả về mảng sự kiện từ response
     isLoading,
     error,
     mutate,

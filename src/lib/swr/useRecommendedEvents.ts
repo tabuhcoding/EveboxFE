@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import { getRecommendedEvents } from "services/event.service";
 import { BaseApiResponse } from "types/baseApiResponse";
+import { Event } from "types/models/dashboard/frontDisplay";
 
 // Hook sử dụng SWR để fetch dữ liệu recommended events
 export const useRecommendedEvents = (timeWindow: string) => {
@@ -21,7 +22,8 @@ export const useRecommendedEvents = (timeWindow: string) => {
   );
 
   return {
-    recommendedEvents: data?.data ?? [], 
+    // recommendedEvents: data?.data ?? [], 
+    recommendedEvents: data?.data, 
     isLoading,
     error,
     mutate,

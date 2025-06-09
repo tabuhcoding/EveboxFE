@@ -1,3 +1,5 @@
+"use client"
+
 /* Package System */
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -7,34 +9,47 @@ import '../../../../styles/admin/pages/Dashboard.css';
 import '../../../../styles/global.css';
 import 'tailwindcss/tailwind.css';
 
-import { getFrontDisplayEvents } from 'services/event.service';
+import { useFrontDisplayEvents } from 'lib/swr/useFrontDisplayEvents';
+import { useRecommendedEvents } from 'lib/swr/useRecommendedEvents';
 import { CategorySpecial } from 'types/models/dashboard/frontDisplay';
-
-import { fetchRecommendEvents } from '../libs/server/fetchData';
 
 import EventSlider from './eventSlider';
 import ImageSlider from './imageSlider';
 import SearchControls from './searchControl';
 import TabSwitcher from './tabSwitcher';
+import DashboardLoading from 'app/(frontpage)/loading';
+import Error from 'app/(frontpage)/error';
 
+const DashboardPage = () => {
+  const { frontDisplayEvents, isLoading: isLoadingFrontDisplay, error: frontDisplayError } = useFrontDisplayEvents();
+  const { recommendedEvents: monthlyRecommendedEvents, isLoading: isLoadingMonthly, error: monthlyError } = useRecommendedEvents('month');
+  const { recommendedEvents: weeklyRecommendedEvents, isLoading: isLoadingWeekly, error: weeklyError } = useRecommendedEvents('week');
 
-const DashboardPage = async () => {
-  const data = await getFrontDisplayEvents();
-  const weekTime = 'week';
-  const monthTime = 'month';
-  const dataMonthlyRecommendedEvent = await fetchRecommendEvents(monthTime);
-  const dataImageSlider = await fetchRecommendEvents(weekTime);
+  if (isLoadingFrontDisplay || isLoadingMonthly || isLoadingWeekly) {
+    return (
+      <DashboardLoading></DashboardLoading>
+    );
+  }
+
+  if (frontDisplayError || monthlyError || weeklyError) {
+    return (
+      <Error></Error>
+    );
+  }
+
+  if (!frontDisplayEvents) {
+    return null;
+  }
 
   const events = {
-    specialEvents: data.data.specialEvents || [],
-    trendingEvents: data.data.trendingEvents || [],
-    onlyOnEve: data.data.onlyOnEve || [],
-    categorySpecial: data.data.categorySpecial as CategorySpecial[] || [],
+    specialEvents: frontDisplayEvents.specialEvents || [],
+    trendingEvents: frontDisplayEvents.trendingEvents || [],
+    onlyOnEve: frontDisplayEvents.onlyOnEve || [],
+    categorySpecial: frontDisplayEvents.categorySpecial as CategorySpecial[] || [],
   };
 
-  const sliderMontlyEvents = dataMonthlyRecommendedEvent.data || [];
-  const sliderEvents = dataImageSlider.data || [];
-
+  const sliderMontlyEvents = monthlyRecommendedEvents || [];
+  const sliderEvents = weeklyRecommendedEvents || [];
 
   return (
     <div className="min-h-screen flex flex-col mb-8">
@@ -79,4 +94,3 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
-export const dynamic = 'force-dynamic';

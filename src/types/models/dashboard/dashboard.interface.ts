@@ -20,7 +20,7 @@ export interface Event {
   // startTime: string;
   status: string;
   totalClicks: number;
-  imgLogoUrl: string;
+  imgPosterUrl: string;
   minTicketPrice: number;
 }
 

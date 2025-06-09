@@ -1,6 +1,6 @@
 /* Package Application */
 import { BaseApiResponse } from "types/baseApiResponse";
-import { Category, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
+import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
