@@ -1,14 +1,14 @@
 'use client';
 
 /* Pacakage System */
-import React from 'react';
+import { Calendar, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { useTranslations } from "next-intl";
-import { Calendar, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import React from 'react';
 
 /* Package Application */
-import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 import { useI18n } from 'app/providers/i18nProvider';
+import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 
 const extractFirstParagraph = (html: string) => {
     // Match the first <p>...</p> and extract its content
@@ -90,7 +90,15 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     )}
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
-                                    <p className="card-text text-body-secondary mb-2 flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
+                                    <p role="button" tabIndex={0}
+                                        className="card-text text-body-secondary mb-2 flex items-center gap-1 cursor-pointer"
+                                        onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                                document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' });
+                                            }
+                                        }}
+                                    >
                                         <MapPin size={18} />
                                         {event.venue}
                                     </p>
@@ -106,7 +114,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                             </span>
                                         </h5>
                                     </div>
-                                    
+
                                     <div className="d-flex justify-content-center">
                                         {(() => {
                                             switch (event.status) {
@@ -165,7 +173,6 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                             }
                                         })()}
                                     </div>
-
                                 </div>
                             </div>
                         </div>

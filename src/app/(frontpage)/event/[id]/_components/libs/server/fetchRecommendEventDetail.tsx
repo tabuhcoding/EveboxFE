@@ -1,4 +1,4 @@
-export const fetchRecommendEventDetail = async (eventId: string, limit = 10) => {
+export const fetchRecommendEventDetail = async (eventId: string, limit = 20) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/event/detail/recommended-events?eventId=${eventId}&limit=${limit}`,

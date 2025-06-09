@@ -1,10 +1,9 @@
 'use client';
 
 /* Package System */
-import { useState } from "react";
-import React from "react";
-import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useTranslations } from "next-intl";
+import React, { useState } from "react";
 
 /* Package Application */
 import { DescriptionProps } from '../../../../../types/models/event/eventdetail/event.interface';
@@ -27,8 +26,14 @@ export default function Description({ description }: DescriptionProps) {
                     />
                 </div>
                 <div
+                    role="button"
+                    tabIndex={0}
                     className="d-flex justify-content-center div-more cursor-pointer mt-2 hover:text-gray-600 bg-transparent"
-                    onClick={() => setIsExpanded(!isExpanded)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            setIsExpanded(!isExpanded);
+                        }
+                    }}
                 >
                     {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </div>

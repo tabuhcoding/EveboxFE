@@ -1,16 +1,14 @@
 'use client';
 
 /* Package System */
-import { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 /* Package Application */
-import { Showing } from "../../../../../types/models/event/eventdetail/event.interface";
-import { useTranslations } from "next-intl";
-import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
-
+import { EventDetail, Showing } from "../../../../../types/models/event/eventdetail/event.interface";
 
 const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventDetail }) => {
   const [expandedShowId, setExpandedShowId] = useState<string | null>(null);
@@ -30,10 +28,16 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                 <li key={showing.id} className="list-group-item li-ticket">
                   <div className="d-flex justify-content-between align-items-center">
                     {/* Toggle Button for Show Details */}
-                    <div className="d-flex text-ticket" onClick={() => {
-                      console.log("showing.id: ", showing.id)
-                      setExpandedShowId(expandedShowId === showing.id ? null : showing.id)
-                    }}>
+                    <div role="button" tabIndex={0}
+                      className="d-flex text-ticket" onClick={() => {
+                        setExpandedShowId(expandedShowId === showing.id ? null : showing.id)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setExpandedShowId(expandedShowId === showing.id ? null : showing.id);
+                        }
+                      }}>
                       <div className="mr-2 cursor-pointer" style={{ position: 'relative', top: '3px' }}>
                         {expandedShowId === showing.id ? (
                           <ChevronDown size={20} />
@@ -134,7 +138,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                                           {ticket.price?.toLocaleString("vi-VN")}đ
                                         </p>
                                         <button type="button" className="btn-sold-out-ticket" disabled>
-                                           {t('soldOutTicket') || "Hết vé"}
+                                          {t('soldOutTicket') || "Hết vé"}
                                         </button>
                                       </>
                                     );
@@ -150,9 +154,9 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
 
                                   case "BOOK_NOW":
                                     return (
-                                        <p className="price mb-0 !border !border-[#9ef5cf] rounded-lg p-2">
-                                          {ticket.price?.toLocaleString("vi-VN")}đ
-                                        </p>
+                                      <p className="price mb-0 !border !border-[#9ef5cf] rounded-lg p-2">
+                                        {ticket.price?.toLocaleString("vi-VN")}đ
+                                      </p>
                                     );
 
                                   case "REGISTER_CLOSED":
@@ -186,7 +190,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                                           {ticket.price?.toLocaleString("vi-VN")}đ
                                         </p>
                                         <button type="button" className="btn-disable-ticket" disabled>
-                                           {t('notOpenTicket') || "Chưa mở bán"}
+                                          {t('notOpenTicket') || "Chưa mở bán"}
                                         </button>
                                       </>
                                     );

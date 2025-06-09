@@ -3,11 +3,12 @@
 /* Package System */
 import { GoogleMapsEmbed } from '@next/third-parties/google';
 import { MapPin } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 /* Package Application */
-import { convertLocationToVietnamese } from "utils/helpers";
-import { useTranslations } from "next-intl";
 import { useI18n } from "app/providers/i18nProvider";
+import { convertLocationToVietnamese } from "utils/helpers";
+
 import { MoreInformationProps } from '../../../../../types/models/event/eventdetail/event.interface';
 
 export default function MoreInformation({ title, location, locationsString }: MoreInformationProps) {
@@ -39,7 +40,14 @@ export default function MoreInformation({ title, location, locationsString }: Mo
                         <MapPin size={16} />
                         {location}
                     </p>
-                    <p className="card-text text-body-secondary ml-6 mb-2" id="event-location" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
+                    <p role="button" tabIndex={0}
+                        className="card-text text-body-secondary ml-6 mb-2" id="event-location" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }}>
                         {locale === "vi" ? convertLocationToVietnamese(locationsString) : locationsString}
                     </p>
                 </div>
