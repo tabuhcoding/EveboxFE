@@ -16,10 +16,12 @@ const extractFirstParagraph = (html: string) => {
     return match ? match[1] : ''; // Return content inside first <p> or empty string
 };
 
+
 export default function EventBox({ event }: { event: EventDetail }) {
     const t = useTranslations("common");
     const { locale } = useI18n(); // Get current locale 
     const router = useRouter(); // Sử dụng useRouter
+    const otherShowingsCount = Array.isArray(event.showing) ? event.showing.length - 1 : 0;
 
     return (
         <div className="event-box d-flex justify-content-center px-4">
@@ -74,13 +76,18 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                             month: 'long',
                                             day: 'numeric',
                                         })}
-                                        {/* <button
-                                            type="button" className="btn btn-outline-dark ml-6 mt-2 mb-2 btn-date"
-                                            onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
-                                        >
-                                            + 4 ngày khác
-                                        </button> */}
                                     </p>
+                                    {otherShowingsCount > 0 && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-dark ml-6 mt-2 mb-2 btn-date"
+                                            onClick={() =>
+                                                document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })
+                                            }
+                                        >
+                                            + {otherShowingsCount} ngày khác
+                                        </button>
+                                    )}
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
                                     <p className="card-text text-body-secondary mb-2 flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -99,12 +106,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                             </span>
                                         </h5>
                                     </div>
-
-                                    {/* <div className="d-flex justify-content-center">
-                                        <button type="button" className="btn-buy-now" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}>
-                                            {t("bookNow") || "Fallback Text"}
-                                        </button>
-                                    </div> */}
+                                    
                                     <div className="d-flex justify-content-center">
                                         {(() => {
                                             switch (event.status) {
