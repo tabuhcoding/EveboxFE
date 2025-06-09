@@ -9,6 +9,8 @@ import '../../../../styles/admin/pages/Dashboard.css';
 import '../../../../styles/global.css';
 import 'tailwindcss/tailwind.css';
 
+import Error from 'app/(frontpage)/error';
+import DashboardLoading from 'app/(frontpage)/loading';
 import { useFrontDisplayEvents } from 'lib/swr/useFrontDisplayEvents';
 import { useRecommendedEvents } from 'lib/swr/useRecommendedEvents';
 import { CategorySpecial } from 'types/models/dashboard/frontDisplay';
@@ -17,8 +19,7 @@ import EventSlider from './eventSlider';
 import ImageSlider from './imageSlider';
 import SearchControls from './searchControl';
 import TabSwitcher from './tabSwitcher';
-import DashboardLoading from 'app/(frontpage)/loading';
-import Error from 'app/(frontpage)/error';
+
 
 const DashboardPage = () => {
   const { frontDisplayEvents, isLoading: isLoadingFrontDisplay, error: frontDisplayError } = useFrontDisplayEvents();
