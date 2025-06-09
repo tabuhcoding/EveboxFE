@@ -213,5 +213,7 @@
     "isLogouting": "Logging out...",
     "emailNotFound": "User not found with provided email",
     "notLogin": "You are not logged in",
-    "pleaseLogin": "Please login to continue!"
+    "pleaseLogin": "Please login to continue!",
+    "totalClicksLabel": "Total views",
+    "lastScoreLabel": "Rating Score"
 }

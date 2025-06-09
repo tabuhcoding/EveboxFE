@@ -1,7 +1,7 @@
 'use client';
 
 /* Pacakage System */
-import { Calendar, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Eye, MapPin, Star } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import React from 'react';
@@ -56,6 +56,18 @@ export default function EventBox({ event }: { event: EventDetail }) {
                                     className="card-text  text-white prose max-w-none"
                                     dangerouslySetInnerHTML={{ __html: extractFirstParagraph(event.description) }}
                                 />
+                                {(event.totalClicks !== undefined || event.lastScore !== undefined) && (
+                                    <div className="mt-4 space-y-1 text-white text-sm">
+                                        {typeof event.totalClicks === 'number' && (
+                                            <div className="flex items-center gap-1"><Eye size={16}/> {t("totalClicksLabel") || "Tổng lượt xem"}: <strong>{event.totalClicks}</strong></div>
+                                        )}
+
+                                        {typeof event.lastScore === 'number' && event.lastScore > 7 && (
+                                            <div className="flex items-center gap-1"><Star size={16} color="#FFD700" fill="#FFD700" /> {t("lastScoreLabel") || "Đánh giá"}: <strong>{event.lastScore}/10</strong></div>
+                                        )}
+                                    </div>
+                                )}
+
                                 <p className="mt-4 card-text view-location flex items-center gap-1 cursor-pointer" onClick={() => document.getElementById('event-location')?.scrollIntoView({ behavior: 'smooth' })}>
                                     <MapPin size={16} />
                                     {t("mapRedirect") || "Fallback Text"}

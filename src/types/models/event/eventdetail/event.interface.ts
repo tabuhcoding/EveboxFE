@@ -45,6 +45,8 @@ export interface EventDetail {
   locationsString: string;
   orgDescription: string;
   status:string;
+  totalClicks?: number;
+  lastScore?: number;
 }
 
 export interface DescriptionProps {
