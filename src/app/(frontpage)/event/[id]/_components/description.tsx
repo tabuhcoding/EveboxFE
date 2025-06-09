@@ -29,6 +29,7 @@ export default function Description({ description }: DescriptionProps) {
                     role="button"
                     tabIndex={0}
                     className="d-flex justify-content-center div-more cursor-pointer mt-2 hover:text-gray-600 bg-transparent"
+                    onClick={() => setIsExpanded(!isExpanded)}
                     onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                             setIsExpanded(!isExpanded);
