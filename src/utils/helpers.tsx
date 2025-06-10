@@ -1,10 +1,10 @@
-import CryptoJS from "crypto-js";
+// import CryptoJS from "crypto-js";
 
-const keyHex = process.env.NEXT_PUBLIC_ENCRYPTION_KEY!;
-const ivHex = process.env.NEXT_PUBLIC_ENCRYPTION_IV!;
+// const keyHex = process.env.NEXT_PUBLIC_ENCRYPTION_KEY!;
+// const ivHex = process.env.NEXT_PUBLIC_ENCRYPTION_IV!;
 
-const key = CryptoJS.enc.Hex.parse(keyHex);
-const iv = CryptoJS.enc.Hex.parse(ivHex);
+// const key = CryptoJS.enc.Hex.parse(keyHex);
+// const iv = CryptoJS.enc.Hex.parse(ivHex);
 
 /**
  * Formats a date string into a more readable format.
@@ -41,17 +41,17 @@ export const convertLocationToVietnamese = (locationString: string): string => {
     .replace(/(\b[A-Za-z ]+) Province\b/gi, "Tỉnh $1");
 };
 
-/**
- * Decrypts a given hex-encoded string using AES encryption.
- * because the backend uses CryptoJS to encrypt, so we also use CryptoJS to decrypt
- * @param encryptedText - The hex-encoded string to decrypt.
- * @returns The decrypted string.
- */
-export function decrypt(encryptedText: string): string {
-  const decrypted = CryptoJS.AES.decrypt(encryptedText, key, {
-    iv: iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7,
-  });
-  return decrypted.toString(CryptoJS.enc.Utf8);
-}
+// /**
+//  * Decrypts a given hex-encoded string using AES encryption.
+//  * because the backend uses CryptoJS to encrypt, so we also use CryptoJS to decrypt
+//  * @param encryptedText - The hex-encoded string to decrypt.
+//  * @returns The decrypted string.
+//  */
+// export function decrypt(encryptedText: string): string {
+//   const decrypted = CryptoJS.AES.decrypt(encryptedText, key, {
+//     iv: iv,
+//     mode: CryptoJS.mode.CBC,
+//     padding: CryptoJS.pad.Pkcs7,
+//   });
+//   return decrypted.toString(CryptoJS.enc.Utf8);
+// }
