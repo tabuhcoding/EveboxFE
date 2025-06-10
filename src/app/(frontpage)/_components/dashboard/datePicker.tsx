@@ -21,12 +21,18 @@ export default function DatePicker({ onDateRangeChange }: DatePickerProps) {
   };
 
   return (
-    <div className="date-picker-container rounded-[4px] !bg-white">
+    <div className="relative h-[37px]">
       <DateRangePicker
         value={value}
         onChange={handleChange}
         visibleMonths={2}
         radius="sm"
+        classNames={{
+          base: "w-full text-gray-800",
+          selectorButton: "h-[30px] py-0 bg-white text-sm text-left flex items-center gap-2",
+          selectorIcon: "text-gray-500 border-none outline-none shadow-none p-0 m-0 h-5 w-5",
+          popoverContent: "bg-white rounded-lg shadow-lg p-2 z-50",
+        }}
       />
     </div>
   );

@@ -1,3 +1,5 @@
+"use client"
+
 /* Package System */
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -5,42 +7,57 @@ import 'swiper/css/navigation';
 /* Package Application */
 import '../../../../styles/admin/pages/Dashboard.css';
 import '../../../../styles/global.css';
-// import 'tailwindcss/tailwind.css';
-import { getFrontDisplayEvents } from 'services/event.service';
+import 'tailwindcss/tailwind.css';
+
+import Error from 'app/(frontpage)/error';
+import DashboardLoading from 'app/(frontpage)/loading';
+import { useFrontDisplayEvents } from 'lib/swr/useFrontDisplayEvents';
+import { useRecommendedEvents } from 'lib/swr/useRecommendedEvents';
 import { CategorySpecial } from 'types/models/dashboard/frontDisplay';
 
 import EventSlider from './eventSlider';
+import ImageSlider from './imageSlider';
 import SearchControls from './searchControl';
-// import ImageSlider from './imageSlider';
-// import TabSwitcher from './tabSwitcher';
-// import { fetchEvents } from '../libs/server/fetchData';
-// import { useFrontDisplayEvents } from '../../lib/swr/useFrontDisplayEvents';
-// import { useRecommendedEvents } from '../../lib/swr/useRecommendedEvents';
+import TabSwitcher from './tabSwitcher';
 
-const DashboardPage = async () => {
-  const data = await getFrontDisplayEvents();
-  // const weekTime = 'week';
-  // const monthTime = 'month';
-  // const dataMonthlyRecommendedEvent = await fetchRecommendEvents(monthTime);
-  // const dataImageSlider = await fetchRecommendEvents(weekTime);
+
+const DashboardPage = () => {
+  const { frontDisplayEvents, isLoading: isLoadingFrontDisplay, error: frontDisplayError } = useFrontDisplayEvents();
+  const { recommendedEvents: monthlyRecommendedEvents, isLoading: isLoadingMonthly, error: monthlyError } = useRecommendedEvents('month');
+  const { recommendedEvents: weeklyRecommendedEvents, isLoading: isLoadingWeekly, error: weeklyError } = useRecommendedEvents('week');
+
+  if (isLoadingFrontDisplay || isLoadingMonthly || isLoadingWeekly) {
+    return (
+      <DashboardLoading></DashboardLoading>
+    );
+  }
+
+  if (frontDisplayError || monthlyError || weeklyError) {
+    return (
+      <Error></Error>
+    );
+  }
+
+  if (!frontDisplayEvents) {
+    return null;
+  }
 
   const events = {
-    specialEvents: data.data.specialEvents || [],
-    trendingEvents: data.data.trendingEvents || [],
-    onlyOnEve: data.data.onlyOnEve || [],
-    categorySpecial: data.data.categorySpecial as CategorySpecial[] || [],
+    specialEvents: frontDisplayEvents.specialEvents || [],
+    trendingEvents: frontDisplayEvents.trendingEvents || [],
+    onlyOnEve: frontDisplayEvents.onlyOnEve || [],
+    categorySpecial: frontDisplayEvents.categorySpecial as CategorySpecial[] || [],
   };
 
-  // const sliderMontlyEvents = dataMonthlyRecommendedEvent.data || [];
-  // const sliderEvents = dataImageSlider.data || [];
-
+  const sliderMontlyEvents = monthlyRecommendedEvents || [];
+  const sliderEvents = weeklyRecommendedEvents || [];
 
   return (
     <div className="min-h-screen flex flex-col mb-8">
       <main className="flex-1">
         <div className="w-full flex justify-center flex-col items-center px-4 md:mt-8">
           <div className="w-full md:w-5/6 relative">
-            {/* <ImageSlider events={sliderEvents} /> */}
+            <ImageSlider events={sliderEvents} />
             <SearchControls />
           </div>
         </div>
@@ -59,16 +76,17 @@ const DashboardPage = async () => {
             </div>
 
             {/* Client-side TabSwitcher */}
-            {/* <TabSwitcher
+            <TabSwitcher
               sliderEvents={sliderEvents}
               dataMonthlyRecommendedEvent={sliderMontlyEvents}
-            /> */}
-
-            {events.categorySpecial?.map((category, index) => (
-              <div key={index} className="mt-8">
-                <EventSlider title={category.category.name} events={category.events} />
-              </div>
-            ))}
+            />
+            {events.categorySpecial
+              ?.filter(category => category.events && category.events.length > 0)
+              .map((category, index) => (
+                <div key={index} className="mt-8">
+                  <EventSlider title={category.category.name} events={category.events} />
+                </div>
+              ))}
           </div>
         </div>
       </main>
@@ -77,4 +95,3 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
-export const dynamic = 'force-dynamic';

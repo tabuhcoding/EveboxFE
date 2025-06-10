@@ -1,4 +1,9 @@
 {
+    "liked": "Added to favorite list!",
+    "unliked": "Removed from favorite list!",
+    "notice": "You will receive notification about this event!",
+    "unnotice": "You have turned off notification about this event yet!",
+    "from": "From",
     "pleaseLogin": "Please sign in to access this page!",
     "noLoveOrg":"You don't have any favorite organizations!",
     "org": "Organizer",
@@ -102,7 +107,7 @@
     "onlyOnEve": "Only on",
     "specialEvent": "Event",
     "trendingEvent": "Event",
-    "onlyOnEveEvent": "Event",
+    "onlyOnEveEvent": "Evebox",
     "anotherEvents": "Another events",
     "mayLike": "You may like",
     "navigatorSentence1": "Go to ",
