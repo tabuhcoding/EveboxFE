@@ -5,7 +5,7 @@
     "unnotice": "You have turned off notification about this event yet!",
     "from": "From",
     "pleaseLogin": "Please sign in to access this page!",
-    "noLoveOrg":"You don't have any favorite organizations!",
+    "noLoveOrg": "You don't have any favorite organizations!",
     "org": "Organizer",
     "noLoveEvent": "You don't have any favorite events!",
     "event": "Event",
@@ -102,6 +102,12 @@
     "contactOrganizer": "Contact Organizer",
     "commentTitle": "Comment",
     "soldOut": "Sold out",
+    "notOpen": "Not open",
+    "notOpenTicket": "Not open",
+    "registerClosed": "Register closed",
+    "registerClosedTicket": "Register closed",
+    "saleClosed": "Sale closed",
+    "saleClosedTicket": "Closed",
     "special": "Special",
     "trending": "Trending",
     "onlyOnEve": "Only on",
@@ -212,5 +218,7 @@
     "isLogouting": "Logging out...",
     "emailNotFound": "User not found with provided email",
     "notLogin": "You are not logged in",
-    "pleaseLogin": "Please login to continue!"
+    "pleaseLogin": "Please login to continue!",
+    "totalClicksLabel": "Total views",
+    "lastScoreLabel": "Rating Score"
 }

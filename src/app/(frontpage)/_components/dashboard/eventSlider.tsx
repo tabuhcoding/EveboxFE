@@ -107,7 +107,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
       >
         {uniqueEvents.map((event) => (
           <SwiperSlide key={event.id} className="h-full">
-            <Link href={`/event/${event.id}`}>
+            <Link href={`/event/${event.id}`} className='no-underline'>
               <div className="bg-[#0C4762] rounded-lg overflow-hidden shadow-md transition-shadow flex flex-col h-full">
                 <div className="flex items-center justify-center p-2 w-full h-auto overflow-hidden">
                   <div className='absolute top-2 left-2 flex items-center gap-2 z-10'>
