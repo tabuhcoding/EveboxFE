@@ -1,7 +1,7 @@
 'use client';
 
 /* Package System */
-import { Bell, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { Bell, ChevronLeft, ChevronRight, Heart, MousePointerClick } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
@@ -15,9 +15,11 @@ import 'swiper/css/navigation';
 
 /* Package Application */
 import { EventSliderProps } from 'types/models/dashboard/dashboard.interface';
+
+import mapEventStatus from '../libs/functions/mapEventStatus';
+
 import '../../../../styles/admin/eventSlider.css';
 import '../../../../styles/global.css';
-// import 'tailwindcss/tailwind.css';
 
 type NavigationOptionsTyped = {
   prevEl?: HTMLElement | null;
@@ -55,27 +57,34 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
     setLikedEvents(prev => ({ ...prev, [id.toString()]: isLiked }));
     toast.success(
       isLiked
-        ? "Đã thêm vào danh sách yêu thích!"
-        : "Đã bỏ khỏi danh sách yêu thích!"
+        ? transWithFallback("liked","Đã thêm vào danh sách yêu thích!")
+        : transWithFallback("unliked","Đã bỏ khỏi danh sách yêu thích!")
     );
-  };  
+  };
 
   const toggleNotify = (id: number) => {
     const isNotified = !notifiedEvents[id.toString()];
     setNotifiedEvents(prev => ({ ...prev, [id.toString()]: isNotified }));
     toast.success(
       isNotified
-        ? "Bạn sẽ được nhận thông báo về sự kiện!"
-        : "Bạn đã tắt thông báo về sự kiện này!"
+        ? transWithFallback("noticed","Bạn sẽ được nhận thông báo về sự kiện!")
+        : transWithFallback("unnoticed","Bạn đã tắt thông báo về sự kiện này!")
     );
-  };  
+  };
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   return (
     <div className="relative">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
         <h2 className="text-xl md:text-2xl font-bold">
-          {title === "" ? '' : t(`${title || ""}`)}  {subtitle && <span className="text-teal-400"> {t(`${subtitle || ""}`) ?? subtitle}</span>}
+          {title === "" ? '' : transWithFallback(title || "", title || "")}
+          {subtitle && <span className="text-teal-400"> {transWithFallback(subtitle || "", subtitle || "")}</span>}
         </h2>
       </div>
 
@@ -101,8 +110,12 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
             <Link href={`/event/${event.id}`} className='no-underline'>
               <div className="bg-[#0C4762] rounded-lg overflow-hidden shadow-md transition-shadow flex flex-col h-full">
                 <div className="flex items-center justify-center p-2 w-full h-auto overflow-hidden">
-                  {/* Favorite and Notification Button */}
-                  <div className="favorite-heart-btn absolute top-2 right-2 flex gap-2 z-10">
+                  <div className='absolute top-2 left-2 flex items-center gap-2 z-10'>
+                    <span className="text-xs text-teal-800 bg-white/80 px-2 py-1 rounded-full flex items-center gap-1">
+                      <MousePointerClick className="w-3 h-3" /> {event.totalClicks?.toLocaleString() ?? '123'}
+                    </span>
+                  </div>
+                  <div className="favorite-heart-btn absolute top-2 right-2 flex items-center gap-2 z-10">
                     <button className="bg-white p-1 rounded-full hover:bg-red-100 transition"
                       onClick={(e) => {
                         e.preventDefault();
@@ -129,7 +142,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
 
                   <Image
                     src={
-                      event?.imgLogoUrl ||
+                      event?.imgPosterUrl ||
                       '/images/dashboard/card_pic.png'
                     }
                     alt={event.title}
@@ -143,21 +156,18 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                     {event.title}
                   </h3>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-2 text-[14px]">
-                    <time className="text-left text-teal-500">
+                    <time className="text-left text-teal-200">
                       <span>
                         {new Date(event.startDate).toLocaleDateString()}
                       </span>
                     </time>
-                    <span className={`rounded-lg px-2 font-medium text-sky-950 text-center md:text-left ${event.status === 'event_over' ? 'bg-red-300 ' : 'bg-emerald-200'}`}>
-                      {/* {event.status === 'available'
-                        ? 'Miễn phí'
-                        : 'Từ ' +
-                        event.minTicketPrice.toLocaleString('vi-VN') +
-                        'đ'} */}
-                      {event.status === 'available' ?
-                        'Từ ' + event.minTicketPrice?.toLocaleString('vi-VN') + 'đ' :
-                        event.status === 'event_over' ? 'Đã kết thúc' : event.status === 'sold_out' ? 'Hết vé' : 'Vé chưa mở bán'
-                      }
+                    <span
+                      className={`rounded-lg px-2 font-medium text-sky-950 text-center md:text-left ${event.status.toUpperCase() === 'EVENT_OVER' ? 'bg-red-300' : 'bg-emerald-200'
+                        }`}
+                    >
+                      {event.status.toUpperCase() === 'AVAILABLE'
+                        ? transWithFallback("from", "Từ") +" " + event.minTicketPrice?.toLocaleString('vi-VN') + 'đ'
+                        : mapEventStatus(event.status.toUpperCase())}
                     </span>
                   </div>
                 </div>
@@ -168,12 +178,16 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
       </Swiper>
 
       {/* Các nút custom navigation */}
-      <button ref={prevRef} className="custom-swiper-button-prev">
-        <ChevronLeft />
-      </button>
-      <button ref={nextRef} className="custom-swiper-button-next">
-        <ChevronRight />
-      </button>
+      {uniqueEvents.length >= 4 && (
+        <>
+          <button ref={prevRef} className="custom-swiper-button-prev">
+            <ChevronLeft />
+          </button>
+          <button ref={nextRef} className="custom-swiper-button-next">
+            <ChevronRight />
+          </button>
+        </>
+      )}
     </div>
   );
 };

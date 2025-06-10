@@ -19,7 +19,8 @@ export interface Event {
   startDate: string;
   // startTime: string;
   status: string;
-  imgLogoUrl: string;
+  totalClicks: number;
+  imgPosterUrl: string;
   minTicketPrice: number;
 }
 
