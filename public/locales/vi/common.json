@@ -212,8 +212,6 @@
   "isLogouting": "Đang đăng xuất...",
   "emailNotFound": "Không tìm thấy người dùng với Email này",
   "notLogin": "Bạn chưa đăng nhập",
-  "totalClicksLabel": "Tổng lượt xem",
-  "lastScoreLabel": "Đánh giá",
   "timeOutTicketTitle": "Hết thời gian giữ vé",
   "timeOutTicket": "Đã hết thời gian giữ vé!",
   "bookNewTicketNoti": "Bạn hãy vui lòng đặt vé mới",
@@ -225,6 +223,10 @@
   "selectedSeat": "Ghế đang chọn",
   "selectedPos": "Vị trí đã chọn",
   "errorShowing": "Lỗi khi tải dữ liệu showing",
+  "errorLockSeat": "Lỗi khi khóa ghế",
+  "pleaseLoginContinue": "Vui lòng đăng nhập để tiếp tục!",
+  "totalClicksLabel": "Tổng lượt xem",
+  "lastScoreLabel": "Đánh giá",
   "eventOver": "Sự kiện đã kết thúc",
-  "errorLockSeat": "Lỗi khi khóa ghế"
+  "unavailable": "Không khả dụng"
 }

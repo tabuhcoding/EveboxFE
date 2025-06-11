@@ -213,8 +213,6 @@
     "isLogouting": "Logging out...",
     "emailNotFound": "User not found with provided email",
     "notLogin": "You are not logged in",
-    "totalClicksLabel": "Total views",
-    "lastScoreLabel": "Rating Score",
     "timeOutTicketTitle": "Reservation time expired",
     "timeOutTicket": "The reservation time has expired!",
     "bookNewTicketNoti": "Please book a new ticket",
@@ -226,6 +224,10 @@
     "selectedSeat": "Selected seat",
     "selectedPos": "Selected position",
     "errorShowing": "Error when get showing data",
-    "eventOver": "Event is over",
-    "errorLockSeat": "Error when locking seat"
+    "errorLockSeat": "Error when locking seat",
+    "pleaseLoginContinue": "Please login to continue!",
+    "totalClicksLabel": "Total views",
+    "lastScoreLabel": "Rating Score",
+    "eventOver": "Event has ended",
+    "unavailable": "Unavailable"
 }

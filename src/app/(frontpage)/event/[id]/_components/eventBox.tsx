@@ -159,14 +159,14 @@ export default function EventBox({ event }: { event: EventDetail }) {
 
                                                 case "SALE_CLOSE":
                                                     return (
-                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                        <button type="button" className="btn-disable-event cursor-not-allowed" disabled>
                                                             {t("saleClosed") || "Vé ngừng bán"}
                                                         </button>
                                                     );
 
                                                 case "REGISTER_CLOSE":
                                                     return (
-                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                        <button type="button" className="btn-disable-event cursor-not-allowed" disabled>
                                                             {t("registerClosed") || "Đã đóng đăng ký"}
                                                         </button>
                                                     );
@@ -180,14 +180,14 @@ export default function EventBox({ event }: { event: EventDetail }) {
 
                                                 case "EVENT_OVER":
                                                     return (
-                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                        <button type="button" className="btn-disable-event cursor-not-allowed" disabled>
                                                             {t("eventOver") || "Sự kiện đã kết thúc"}
                                                         </button>
                                                     );
 
                                                 default:
                                                     return (
-                                                        <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                                                        <button type="button" className="btn-disable-event cursor-not-allowed" disabled>
                                                             {t("unavailable") || "Không khả dụng"}
                                                         </button>
                                                     );

@@ -250,7 +250,6 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                               </div>
                             </div>
                           )}
-
                         </li>
                       ))}
                     </ul>
@@ -263,18 +262,18 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
       </div>
 
       {/* Contact Section */}
-      <div className="flex justify-center mt-8 ml-2">
+      <div className="contact-org flex justify-center mt-8 ml-2">
         <div className="w-full md:w-5/6">
-          <h2 className="text-xl md:text-2xl font-bold">{t('contactOrganizer')}</h2>
+          <h2 className="text-xl md:text-2xl font-bold">{t('contactOrganizer')|| "Liên hệ ban tổ chức"}</h2>
 
           {/* Organizer Section */}
           <div className="flex items-center">
             {/* Organizer Image */}
-            <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center text-base">
+            <div className="w-[120px] md:w-[160px] flex-shrink-0 flex items-center justify-center text-base">
               {event.imgLogoUrl ? (
                 <Image
-                  width={200}
-                  height={160}
+                  width={160}
+                  height={120}
                   src={event.imgLogoUrl || ''}
                   alt={event.orgName}
                   className="object-cover rounded-md"
@@ -287,13 +286,12 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
               <h2 className="text-xl px-2 md:text-xl font-bold">{event.orgName}</h2>
               <div
                 className="prose max-w-none px-2 text-gray-800"
-                dangerouslySetInnerHTML={{ __html: event.orgDescription }}
+                dangerouslySetInnerHTML={{ __html: event.orgDescription || '' }}
               />
             </div>
           </div>
         </div>
       </div>
-
     </>
   )
 };
