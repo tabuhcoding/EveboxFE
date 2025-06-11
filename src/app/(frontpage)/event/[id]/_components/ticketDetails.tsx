@@ -140,11 +140,13 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                                 }}
                                 className="flex items-center gap-2 cursor-pointer ml-2 text-ticket text-lg font-bold text-[#9ef5cf]"
                               >
-                                {expandedTicketId === ticket.id ? (
-                                  <ChevronDown size={18} />
-                                ) : (
-                                  <ChevronRight size={18} />
-                                )}
+                                {ticket.description !== "Default Ticket Description" ? (
+                                  expandedTicketId === ticket.id ? (
+                                    <ChevronDown size={18} />
+                                  ) : (
+                                    <ChevronRight size={18} />
+                                  )
+                                ) : ( null)}
                                 {ticket.name}
                               </div>
                             </div>
@@ -231,7 +233,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                             </div>
                           </div>
 
-                          {expandedTicketId === ticket.id && (
+                          {expandedTicketId === ticket.id && ticket.description !== "Default Ticket Description" && (
                             <div className="flex items-start gap-4 mb-4 mt-2">
                               {/* Ticket Image */}
                               {ticket.imageUrl && ticket.imageUrl.startsWith("http") && (
@@ -264,7 +266,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
       {/* Contact Section */}
       <div className="contact-org flex justify-center mt-8 ml-2">
         <div className="w-full md:w-5/6">
-          <h2 className="text-xl md:text-2xl font-bold">{t('contactOrganizer')|| "Liên hệ ban tổ chức"}</h2>
+          <h2 className="text-xl md:text-2xl font-bold">{t('contactOrganizer') || "Liên hệ ban tổ chức"}</h2>
 
           {/* Organizer Section */}
           <div className="flex items-center">
