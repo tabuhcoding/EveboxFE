@@ -95,20 +95,20 @@
 }
 
 .btn-back {
-    background-color: transparent;
-    color: #0C4762;
-    width: 135px;
-    height: 42px;
-    background-color: #51DACF;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
+    background-color: transparent !important;
+    color: #0C4762 !important;
+    width: 135px !important;
+    height: 42px !important;
+    background-color: #51DACF !important;
+    border: none !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
 }
 
 .btn-back:hover {
-    color: white;
-    background-color: #0C4762;
+    color: white !important;
+    background-color: #0C4762 !important;
 }
 
 .title-box {
@@ -202,8 +202,8 @@
 .btn-disable {
     width: 156px;
     height: 34px;
-    background-color: #FFFFFF;
-    color: #999999;
+    background-color: #FFFFFF !important;
+    color: #999999 !important;
     border-radius: 5px;
 
 }
