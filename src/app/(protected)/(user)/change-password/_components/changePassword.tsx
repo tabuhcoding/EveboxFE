@@ -243,7 +243,7 @@ export const ChangePasswordForm = () => {
                 <DialogContent>
                     <div className="dialog-content text-center">
                         <Icon icon="fluent:warning-24-filled" width="48px" color="#f87171" />
-                        <h3 className="font-semibold mt-2">{transWithFallback('pleaseLogin', 'Vui lòng đăng nhập để tiếp tục!')}</h3>
+                        <h3 className="font-semibold mt-2">{transWithFallback('pleaseLoginContinue', 'Vui lòng đăng nhập để tiếp tục!')}</h3>
                     </div>
                 </DialogContent>
                 <DialogActions className="dialog-actions">

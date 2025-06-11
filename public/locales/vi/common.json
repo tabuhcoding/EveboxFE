@@ -217,7 +217,9 @@
   "isLogouting": "Đang đăng xuất...",
   "emailNotFound": "Không tìm thấy người dùng với Email này",
   "notLogin": "Bạn chưa đăng nhập",
-  "pleaseLogin": "Vui lòng đăng nhập để tiếp tục!",
+  "pleaseLoginContinue": "Vui lòng đăng nhập để tiếp tục!",
   "totalClicksLabel": "Tổng lượt xem",
-  "lastScoreLabel": "Đánh giá"
+  "lastScoreLabel": "Đánh giá",
+  "eventOver": "Sự kiện đã kết thúc",
+  "unavailable": "Không khả dụng"
 }
