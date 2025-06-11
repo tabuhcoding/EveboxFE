@@ -24,6 +24,15 @@ export class END_POINT_LIST {
     GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids"
   };
 
+  static readonly SHOWING = {
+    GET_SHOWING: "/api/showing",
+    GET_SEAT_MAP: "/api/showing/seatmap"
+  };
+
+  static readonly BOOKING = {
+    SELECT_SEAT: '/api/booking/selectSeat',
+  }
+
   static readonly ORG_EVENT = {
     EVENT: "/api/org/event",
   }
