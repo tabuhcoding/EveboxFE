@@ -12,9 +12,20 @@ import { useI18n } from 'app/providers/i18nProvider';
 import { EventDetail } from '../../../../../types/models/event/eventdetail/event.interface';
 
 const extractFirstParagraph = (html: string) => {
-    // Match the first <p>...</p> and extract its content
-    const match = html.match(/<p[^>]*>(.*?)<\/p>/);
-    return match ? match[1] : ''; // Return content inside first <p> or empty string
+    // Tìm tất cả các <p>...</p>
+    const matches = html.match(/<p[^>]*>(.*?)<\/p>/g);
+    if (!matches) return '';
+
+    for (const paragraph of matches) {
+        // Bỏ qua đoạn chứa <img
+        if (!/<img\s/i.test(paragraph)) {
+            // Lấy nội dung trong thẻ <p>
+            const contentMatch = paragraph.match(/<p[^>]*>(.*?)<\/p>/);
+            return contentMatch ? contentMatch[1] : '';
+        }
+    }
+
+    return '';
 };
 
 
