@@ -80,7 +80,7 @@ const NavigationBar = () => {
             >
               <Menu size={24} />
             </button>
-            <Link href={"/"} className="flex items-center gap-2">
+            <Link href={"/"} className="flex items-center gap-2 no-underline">
               <div className="w-18 h-9 rounded">
                 <Image
                   src="/images/dashboard/logo-icon.png"
@@ -117,7 +117,7 @@ const NavigationBar = () => {
             ) : userInfo ? (
               <div className="flex items-center">
                 <h3 className="mr-2">
-                  <Link href="/my-profile" className="text-white hover:text-teal-400 text-sm sm:text-base">
+                  <Link href="/my-profile" className="text-white hover:text-teal-400 text-sm sm:text-base no-underline">
                     {userInfo.name}
                   </Link>
                 </h3>

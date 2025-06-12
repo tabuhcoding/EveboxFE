@@ -36,7 +36,7 @@ const ImageSlider = ({ events }: ImageSliderProps) => {
            <Link key={event.id} href={`/event/${event.id}`} className="w-full h-full flex-shrink-0 relative group">
            <div className="w-full h-full">
              <Image
-               src={event.imgLogoUrl ||  '/images/dashboard/card_pic.png'}
+               src={event.imgPosterUrl ||  '/images/dashboard/card_pic.png'}
                alt={event.title}
                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                layout="fill"

@@ -1,4 +1,9 @@
 {
+  "liked": "Đã thêm vào danh sách yêu thích!",
+  "unliked": "Đã xóa khỏi danh sách yêu thích!",
+  "notice": "Bạn sẽ nhận được thông báo về sự kiện này!",
+  "unnotice": "Bạn đã tắt thông báo về sự kiện này!",
+  "from": "Từ",
   "pleaseLogin": "Vui lòng đăng nhập để truy cập vào trang này!",
   "noLoveOrg": "Bạn chưa có Nhà tổ chức yêu thích nào!",
   "org": "Nhà tổ chức",
@@ -97,6 +102,12 @@
   "commentTitle": "Bình luận",
   "soldOut": "Hết vé",
   "special": "Sự kiên",
+  "notOpen": "Vé chưa mở bán",
+  "notOpenTicket": "Chưa mở bán",
+  "registerClosed": "Đã đóng đăng ký",
+  "registerClosedTicket": "Đóng đăng ký",
+  "saleClosed": "Vé ngừng bán",
+  "saleClosedTicket": "Ngừng bán",
   "trending": "Sự kiện",
   "onlyOnEve": "Sự kiện",
   "specialEvent": "Đặc biệt",
@@ -206,5 +217,9 @@
   "isLogouting": "Đang đăng xuất...",
   "emailNotFound": "Không tìm thấy người dùng với Email này",
   "notLogin": "Bạn chưa đăng nhập",
-  "pleaseLogin": "Vui lòng đăng nhập để tiếp tục!"
+  "pleaseLoginContinue": "Vui lòng đăng nhập để tiếp tục!",
+  "totalClicksLabel": "Tổng lượt xem",
+  "lastScoreLabel": "Đánh giá",
+  "eventOver": "Sự kiện đã kết thúc",
+  "unavailable": "Không khả dụng"
 }
