@@ -99,27 +99,30 @@ export default function EventBox({ event }: { event: EventDetail }) {
                         <div className="w-full lg:w-5/12 flex justify-center lg:justify-end items-center relative z-10" style={{ zIndex: 2 }}>
                             <div className="card w-full max-w-[385px]">
                                 <div className="card-body px-4 mt-2 mb-3">
-                                    <h5 className="card-title title-box">{t("dateTime") || "Thời gian"}</h5>
-                                    <p className="card-text m-0 text-body-secondary flex items-center gap-1 cursor-pointer">
-                                        <Calendar size={18} />
-                                        {new Date(event.startDate).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
-                                            weekday: 'long',
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        })}
-                                    </p>
-                                    {otherShowingsCount > 0 && (
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline-dark ml-6 mt-2 mb-2 btn-date"
-                                            onClick={() =>
-                                                document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })
-                                            }
-                                        >
-                                            + {otherShowingsCount} ngày khác
-                                        </button>
-                                    )}
+                                    {new Date(event.startDate).getTime() !== new Date("9999-12-31T23:59:59.999Z").getTime() && (<>
+                                        <h5 className="card-title title-box">{t("dateTime") || "Thời gian"}</h5>
+                                        <p className="card-text m-0 text-body-secondary flex items-center gap-1 cursor-pointer">
+                                            <Calendar size={18} />
+                                            {new Date(event.startDate).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
+                                                weekday: 'long',
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                            })}
+                                        </p>
+
+                                        {otherShowingsCount > 0 && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline-dark ml-6 mt-2 mb-2 btn-date"
+                                                onClick={() =>
+                                                    document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })
+                                                }
+                                            >
+                                                + {otherShowingsCount} ngày khác
+                                            </button>
+                                        )}
+                                    </>)}
 
                                     <h5 className="card-title mt-2 title-box">{t("locationTitle") || "Địa điểm"}</h5>
                                     <span role="button" tabIndex={0}
