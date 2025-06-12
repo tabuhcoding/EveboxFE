@@ -101,6 +101,13 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                             </button>
                           );
 
+                        case "SHOWING_OVER":
+                          return (
+                            <button type="button" className="btn-disable cursor-not-allowed" disabled>
+                              {t('showingOver') || "Đã kết thúc"}
+                            </button>
+                          );
+
                         case "SALE_CLOSED":
                           return (
                             <button type="button" className="btn-disable cursor-not-allowed" disabled>
@@ -146,7 +153,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                                   ) : (
                                     <ChevronRight size={18} />
                                   )
-                                ) : ( null)}
+                                ) : (null)}
                                 {ticket.name}
                               </div>
                             </div>
