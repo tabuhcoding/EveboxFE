@@ -2,6 +2,7 @@
 import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 import { SeatMapResponse, ShowingData, SelectSeatPayload } from "types/models/event/booking/seatmap.interface";
+import { IForm } from "@/types/models/event/booking/questionForm.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
@@ -67,24 +68,16 @@ export async function getShowingData(showingId: string): Promise<BaseApiResponse
   }
 }
 
-export async function selectSeat(payload: SelectSeatPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
+export async function getFormOfShowing(showingId: string): Promise<BaseApiResponse<IForm> | null> {
   try {
-    const res = await eventService.post(END_POINT_LIST.BOOKING.SELECT_SEAT, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      }
-    });
+    const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_FORM}?showingId=${showingId}`);
 
-    if (!res) throw new Error('Failed to select seat');
+    console.log("🚀 ~ getFormOfShowing ~ res:", res)
+    if (!res) throw new Error('Failed to get form of showing, please try again later');
 
-    return res.data as BaseApiResponse<boolean>;
-  } catch (error) {
-    console.error("Error selecting seat:", error);
-    if (error instanceof Error) {
-      throw new Error(`Failed to select seat: ${error.message}`);
-    } else {
-      throw new Error("Failed to select seat: Unknown error");
-    }
+    return res.data;
+  } catch (error: any) {
+    console.error("Error selecting seat:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
   }
 }

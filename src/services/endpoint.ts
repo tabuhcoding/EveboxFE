@@ -26,11 +26,15 @@ export class END_POINT_LIST {
 
   static readonly SHOWING = {
     GET_SHOWING: "/api/showing",
-    GET_SEAT_MAP: "/api/showing/seatmap"
+    GET_SEAT_MAP: "/api/showing/seatmap",
+    GET_FORM: "/api/showing/get-form",
   };
 
   static readonly BOOKING = {
     SELECT_SEAT: '/api/booking/selectSeat',
+    SUBMIT_FORM: '/api/booking/submitForm',
+    GET_REDIS_SEAT: "/api/booking/getRedisSeat",
+    UNSELECT_SEAT: "/api/booking/unSelectSeat"
   }
 
   static readonly ORG_EVENT = {

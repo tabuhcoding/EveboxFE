@@ -14,7 +14,7 @@ import 'tailwindcss/tailwind.css';
 import { useI18n } from "app/providers/i18nProvider";
 import AlertDialog from "components/common/alertDialog";
 import { TicketInforProps, SelectSeatPayload } from "types/models/event/booking/seatmap.interface";
-import { selectSeat } from "services/event.service";
+import { selectSeat } from "@/services/booking.service";
 
 export default function TicketInfor({
   event,
@@ -25,7 +25,8 @@ export default function TicketInfor({
   ticketType,            // mảng loại vé
   selectedSeatIds,
   showingId,
-  onClearSelection
+  onClearSelection,
+  seatMapId,
 }: TicketInforProps) {
   const t = useTranslations('common');
   const { locale } = useI18n();
@@ -52,8 +53,8 @@ export default function TicketInfor({
 
     const ticketTypeSelection = Object.entries(selectedTickets)
       .filter(([_, info]) => info.quantity > 0)
-      .map(([tickettypeId, info]) => ({
-        tickettypeId: tickettypeId,
+      .map(([ticketTypeId, info]) => ({
+        tickettypeId: ticketTypeId,
         quantity: info.quantity,
         seatInfo: (info.seatIds || []).map(id => ({ seatId: id })),
         ...(info.sectionId ? { sectionId: info.sectionId } : {}), // optional
@@ -81,18 +82,20 @@ export default function TicketInfor({
         localStorage.setItem('hasSelectedTickets', hasSelectedTickets.toString());
         localStorage.setItem('selectedTickets', JSON.stringify(selectedTickets));
         // localStorage.setItem('selectedTicketType', JSON.stringify(selectedTicketType));
+        localStorage.setItem('ticketTypeArr', JSON.stringify(ticketType));
         localStorage.setItem('selectedSeatIds', JSON.stringify(selectedSeatIds));
         // localStorage.setItem('ticketTypeId', selectedTicketType?.id.toString() || '');
         localStorage.setItem('showingId', showingId || '');
-        router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
+        router.push(`/event/${event.id}/booking/question-form?showingId=${showingId}`);
       } else {
         setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
         setAlertOpen(true);
         onClearSelection?.();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Lỗi khi gọi API lock-seat:', error);
-      setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
+      // setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
+      setAlertMessage(error.toString());
       setAlertOpen(true);
       onClearSelection?.();
     } finally {

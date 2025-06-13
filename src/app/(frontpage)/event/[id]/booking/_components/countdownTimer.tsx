@@ -71,7 +71,7 @@ export default function CountdownTimer({ expiredTime }: CountdownTimerProps) {
     <div className="mt-3 bg-[#DDF9F5] border border-[#52D1C9] rounded-xl p-4 text-center shadow-md flex flex-col items-center">
       <p className="text-black mb-2">Hoàn tất đặt vé trong</p>
       <div className="w-24 h-12 flex items-center justify-center bg-[#52D1C9] text-black text-xl font-bold rounded-md mt-2">
-        {formatTime(timeLeft)}
+        {formatTime(Math.floor(timeLeft))}
       </div>
       <TimeOutDialog open={isTimeout} onClose={() => setIsTimeout(false)} />
     </div>

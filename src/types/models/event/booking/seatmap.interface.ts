@@ -166,6 +166,7 @@ export interface TicketInforProps {
   ticketType: TicketType[];                   // <-- để tra info loại vé (name, price...)
   selectedSeatIds?: number[];                 // tổng hợp seat đã chọn (cho tiện)
   showingId?: string;
+  seatMapId?: number;
   onClearSelection?: () => void;
 }
 
