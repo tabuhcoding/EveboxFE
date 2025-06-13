@@ -1,9 +1,10 @@
 'use client';
 
 /* Package System */
-import { useState, useEffect } from "react";
 import crypto from 'crypto';
+
 import { useTranslations } from "next-intl";
+import { useState, useEffect } from "react";
 
 /* Package Application */
 import { IFormInput, QuestionListProps } from "types/models/event/booking/questionForm.interface";
@@ -54,7 +55,7 @@ export default function QuestionList({
 
     let isValid = true;
     let errorMessage = null;
-
+    
     // Check required field
     if (required && (!value || value.trim() === "")) {
       isValid = false;
@@ -63,7 +64,8 @@ export default function QuestionList({
       isValid = false;
       errorMessage = `${transWithFallback('invalidFormat', 'Sai format')}:${hashedValue}`;
     }
-
+    
+    console.log("🚀 ~ handleChange ~ isValid:", isValid);
     setAnswers((prev) => ({ ...prev, [id]: hashedValue }));
     setErrors((prev) => ({ ...prev, [id]: errorMessage }));
   };

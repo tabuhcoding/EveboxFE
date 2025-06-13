@@ -1,8 +1,8 @@
 'use client'
 
-import { useTranslations } from 'next-intl';
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { useTranslations } from 'next-intl';
 
 interface TimeOutDialogProps {
   open: boolean;

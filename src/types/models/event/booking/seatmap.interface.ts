@@ -1,5 +1,6 @@
-import { BaseApiResponse } from "types/baseApiResponse";
 import { JsonValue } from "type-fest";
+
+import { BaseApiResponse } from "types/baseApiResponse";
 
 export enum SeatmapType {
   NOT_A_SEATMAP = 'NOT_A_SEATMAP',

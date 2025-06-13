@@ -1,23 +1,24 @@
 'use client';
 
 /* Package System */
-import { useState } from 'react';
 import Image from 'next/image';
-import React from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import React, { useState } from 'react';
 
 /* Package Application */
-import ConfirmDialog from './confirmDialog';
 import AlertDialog from '@/components/common/alertDialog';
-import { TicketInformationProps } from 'types/models/event/booking/questionForm.interface';
 import { submitForm, unselectSeat } from '@/services/booking.service';
+import { TicketInformationProps } from 'types/models/event/booking/questionForm.interface';
+
+import ConfirmDialog from './confirmDialog';
 
 export default function TicketInformation({
   event, totalTickets, totalAmount, isFormValid,
   selectedTickets, ticketType, formData, showingId, formId, redisInfo, seatMapId
 }: TicketInformationProps) {
+  console.log("🚀 ~ totalTickets:", totalTickets)
   const t = useTranslations('common');
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);

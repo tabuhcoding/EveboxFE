@@ -1,20 +1,20 @@
 'use client';
 
 /* Package System */
-import { useState } from "react";
+import { Calendar, Ticket } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Calendar, Ticket } from "lucide-react";
+import { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
+import { selectSeat } from "@/services/booking.service";
 import { useI18n } from "app/providers/i18nProvider";
 import AlertDialog from "components/common/alertDialog";
 import { TicketInforProps, SelectSeatPayload } from "types/models/event/booking/seatmap.interface";
-import { selectSeat } from "@/services/booking.service";
 
 export default function TicketInfor({
   event,
@@ -26,7 +26,7 @@ export default function TicketInfor({
   selectedSeatIds,
   showingId,
   onClearSelection,
-  seatMapId,
+  // seatMapId,
 }: TicketInforProps) {
   const t = useTranslations('common');
   const { locale } = useI18n();

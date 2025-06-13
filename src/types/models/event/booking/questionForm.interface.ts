@@ -1,5 +1,6 @@
-import { EventProps, TicketType, SelectedTicketsState } from "./seatmap.interface";
 import { RedisInfo } from "../redisSeat";
+
+import { EventProps, TicketType, SelectedTicketsState } from "./seatmap.interface";
 
 export interface IFormInput {
   id: number;

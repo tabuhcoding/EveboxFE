@@ -1,22 +1,24 @@
 'use client';
 
 /* Package System */
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tailwindcss/tailwind.css';
-import { useTranslations } from 'next-intl';
 
 /* Package Application */
-import Navigation from '../../_components/navigation';
-import TicketInfor from './ticketInfo';
-import SelectTicket from './selectTicket';
+import Error from 'app/(frontpage)/error';
+import Loading from 'app/(protected)/(user)/my-profile/loading';
+import { getSeatMap, getShowingData } from 'services/event.service';
 import { SeatMap, ShowingData, TicketType } from 'types/models/event/booking/seatmap.interface';
 import { SelectTicketPageProps, SelectedTicketsState } from 'types/models/event/booking/selectTicket.interface';
-import SeatMapComponent from './seatmap';
-import Loading from 'app/(protected)/(user)/my-profile/loading';
-import Error from 'app/(frontpage)/error';
-import { getSeatMap, getShowingData } from 'services/event.service';
 import { EventDetail } from 'types/models/event/eventdetail/event.interface';
+
+import Navigation from '../../_components/navigation';
+
+import SeatMapComponent from './seatmap';
+import SelectTicket from './selectTicket';
+import TicketInfor from './ticketInfo';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
@@ -95,10 +97,10 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
 
   const totalTickets = Object.values(selectedTickets).reduce((a, b) => a + (b.quantity || 0), 0);
 
-  const selectedTicketType =
-    Object.keys(selectedTickets).length === 1
-      ? ticketType.find((t) => t.id === Object.keys(selectedTickets)[0])
-      : undefined;
+  // const selectedTicketType =
+  //   Object.keys(selectedTickets).length === 1
+  //     ? ticketType.find((t) => t.id === Object.keys(selectedTickets)[0])
+  //     : undefined;
 
   useEffect(() => {
     if (!seatMapData) return;

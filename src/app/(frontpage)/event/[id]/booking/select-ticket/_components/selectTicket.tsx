@@ -1,11 +1,9 @@
 /* Package System */
-import { useState } from "react";
 import { useTranslations } from 'next-intl';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
-import AlertDialog from "components/common/alertDialog";
 import { SelectTicketProps } from "types/models/event/booking/selectTicket.interface";
 
 export default function SelectTicket({

@@ -1,6 +1,7 @@
 /* Package Application */
-import SelectTicketPage from "./_components/selectTicketPage";
 import { fetchEventDetail } from "../../_components/libs/server/fetchEventDetail";
+
+import SelectTicketPage from "./_components/selectTicketPage";
 
 interface PageProps {
   params: { id: string };

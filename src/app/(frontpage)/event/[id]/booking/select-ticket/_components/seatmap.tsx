@@ -1,12 +1,12 @@
 'use client';
 
 /* Package System */
-import React, { useState, FC } from "react";
 import { useTranslations } from "next-intl";
+import React, { useState } from "react";
 
 /* Package Application */
 import { Seat, SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
-import AlertDialog from "components/common/alertDialog";
+// import AlertDialog from "components/common/alertDialog";
 import '@/styles/event/seatmap.css';
 
 export default function SeatMapComponent({ seatMap, onSeatSelectionChange }: SeatMapProps) {

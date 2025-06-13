@@ -1,8 +1,8 @@
 /* Package Application */
+import { IForm } from "@/types/models/event/booking/questionForm.interface";
 import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
-import { SeatMapResponse, ShowingData, SelectSeatPayload } from "types/models/event/booking/seatmap.interface";
-import { IForm } from "@/types/models/event/booking/questionForm.interface";
+import { SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";

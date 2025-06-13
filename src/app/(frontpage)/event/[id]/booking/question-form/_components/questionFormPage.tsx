@@ -1,26 +1,28 @@
 'use client';
 
 /* Package System */
-import React from 'react';
+import { useTranslations } from 'next-intl';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'tailwindcss/tailwind.css';
-import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import AlertDialog from '@/components/common/alertDialog';
-import '@/styles/admin/pages/Dashboard.css';
-import '@/styles/admin/pages/BookingQuestionForm.css';
-import QuestionList from './questionList';
-import TicketInformation from './ticketInfo';
-import Navigation from '../../_components/navigation';
-import CountdownTimer from '../../_components/countdownTimer';
+import { getRedisSeat } from '@/services/booking.service';
+import { getFormOfShowing } from '@/services/event.service';
+import { IFormInput } from '@/types/models/event/booking/questionForm.interface';
 import { TicketType, EventProps, SelectedTicketsState } from '@/types/models/event/booking/seatmap.interface';
 import { RedisInfo } from '@/types/models/event/redisSeat';
-import { IFormInput } from '@/types/models/event/booking/questionForm.interface';
-import { getFormOfShowing } from '@/services/event.service';
-import { getRedisSeat } from '@/services/booking.service';
+
+import CountdownTimer from '../../_components/countdownTimer';
+import Navigation from '../../_components/navigation';
+
+import QuestionList from './questionList';
+import TicketInformation from './ticketInfo';
+
+import '@/styles/admin/pages/Dashboard.css';
+import '@/styles/admin/pages/BookingQuestionForm.css';
 
 export default function QuestionFormPage({ showingId, seatMapId }: { showingId: string, seatMapId: number }) {
   const t = useTranslations('common');

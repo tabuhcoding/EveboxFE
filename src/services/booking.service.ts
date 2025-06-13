@@ -1,6 +1,6 @@
 import { BaseApiResponse } from "@/types/baseApiResponse";
-import { SelectSeatPayload } from "@/types/models/event/booking/seatmap.interface";
 import { AnswersFormPayload, AnswerFormRespone } from "@/types/models/event/booking/questionForm.interface";
+import { SelectSeatPayload } from "@/types/models/event/booking/seatmap.interface";
 import { RedisInfo } from "@/types/models/event/redisSeat";
 
 import { END_POINT_LIST } from "./endpoint";
