@@ -1,8 +1,8 @@
 'use client';
 
 /* Package System */
-import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 /* Package Application */
 import { Event } from 'types/models/event/event';
