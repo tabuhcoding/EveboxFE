@@ -2,6 +2,7 @@
 
 /* Package System */
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 /* Package Application */
 import { Event } from 'types/models/event/event';
@@ -9,6 +10,9 @@ import { Event } from 'types/models/event/event';
 import { fetchEventDetail } from '../server/fetchEventDetail';
 
 export function useFetchEventDetail(eventId: string) {
+  const { data: session } = useSession();
+  const accessToken = session?.user?.accessToken;
+
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +20,7 @@ export function useFetchEventDetail(eventId: string) {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const eventData = await fetchEventDetail(eventId);
+      const eventData = await fetchEventDetail(eventId, accessToken);
       if (!eventData) {
         setError('Error loading event details');
       }

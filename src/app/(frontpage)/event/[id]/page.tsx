@@ -12,7 +12,7 @@ export default async function Page({ params }: {
   params: Promise<{ id: string }>;
 }) {
   const session = await getServerSession(authOptions);
-  const accessToken = session?.user?.accessToken || '';
+  const accessToken = session?.user?.accessToken;
   const { id } = await params;
   const dataEvent = await fetchEventDetail(id, accessToken);
   const event = dataEvent.data || {};

@@ -1,4 +1,4 @@
-export async function fetchEventDetail(eventId: string, accessToken: string) {
+export async function fetchEventDetail(eventId: string, accessToken?: string) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/event/detail?eventId=${eventId}`,
