@@ -1,46 +1,46 @@
 "use client";
 
-/* Packagae system */
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+/* Package system */
+import { useState } from "react";
 
 /* Package application */
+import { useUserInfo } from "lib/swr/useUserInfo";
 import { gatewayService } from "services/instance.service";
 import { UserInfo } from "types/models/userInfo";
 
 export default function useProfile() {
-  const { data: session } = useSession();
-  const [profile, setProfile] = useState<UserInfo | null>(null);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await gatewayService.get("/api/user/me");
-      setProfile(response.data.data);
-    } catch (err) {
-      console.error("Profile fetch error:", err);
-    } 
-  };
-  
-  useEffect(() => {
-    if (session?.user?.accessToken) {
-      fetchProfile();
-    } 
-  }, [session]);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const { userInfo, refetch, updateUserInfo } = useUserInfo();
 
   const updateProfile = async (updatedData: Partial<UserInfo>) => {
+    setIsUpdating(true);
+    
     try {
+      // Optimistic update
+      updateUserInfo(updatedData);
+      
       const response = await gatewayService.put("/api/user/me", updatedData);
-      setProfile(prev => ({ ...prev, ...response.data.data }));
-      return { success: true };
+      
+      // Revalidate data từ server
+      await refetch();
+      
+      return { success: true, data: response.data.data };
     } catch (err) {
       console.error("Profile update error:", err);
-      return { success: false };
-    } 
+      
+      // Revert optimistic update on error
+      await refetch();
+      
+      return { success: false, error: err };
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return {
-    profile,
+    profile: userInfo,
     updateProfile,
-    refresh: fetchProfile,
+    isUpdating,
+    refresh: refetch,
   };
 }

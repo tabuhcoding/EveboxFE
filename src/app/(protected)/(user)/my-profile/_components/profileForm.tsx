@@ -6,8 +6,7 @@ import { useState, useEffect } from "react";
 
 /* Package Application */
 import AlertDialog from 'components/common/alertDialog';
-
-import { gatewayService } from "../../../../../services/instance.service";
+import { useUserInfo } from 'lib/swr/useUserInfo';
 
 import AvatarUpload from "./avatarUpload";
 import useAvatar from "./libs/hooks/useAvatar";
@@ -20,7 +19,8 @@ export default function ProfileForm() {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { updateProfile } = useProfile();
-    const [_profile, setProfile] = useState(null);
+    const { userInfo, userInfoFetched, refetch } = useUserInfo();
+
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -30,41 +30,17 @@ export default function ProfileForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [_dialogOpen, setDialogOpen] = useState(false);
     const [_dialogMessage, setDialogMessage] = useState("");
-    const [_isLoading, setIsLoading] = useState(true);
-    const fetchProfile = async () => {
-        try {
-            setIsLoading(true);
-            const response = await gatewayService.get("/api/user/me");
-            setProfile(response.data.data);
-
-            // Update form with profile data
-            setForm({
-                name: response.data.data?.name || "",
-                email: response.data.data?.email || "",
-                phone: response.data.data?.phone || "",
-                avatar_id: response.data.data?.avatar_id || ""
-            });
-        } catch (err) {
-            console.error("Profile fetch error:", err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     useEffect(() => {
-        fetchProfile();
-    }, []);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleAvatarChange = (newAvatarId: number) => {
-        setForm(prev => ({
-            ...prev,
-            avatar_id: newAvatarId
-        }));
-    };
+        if (userInfo && userInfoFetched) {
+            setForm({
+                name: userInfo.name || "",
+                email: userInfo.email || "",
+                phone: userInfo.phone || "",
+                avatar_id: userInfo.avatar_id || 0
+            });
+        }
+    }, [userInfo, userInfoFetched]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -79,9 +55,10 @@ export default function ProfileForm() {
 
             if (result.success) {
                 setDialogMessage('Cập nhật thông tin thành công');
+                // SWR mutate để refresh data
+                await refetch();
             } else {
                 setDialogMessage('Cập nhật thông tin thất bại');
-                await fetchProfile(); // Refresh profile data
             }
             setDialogOpen(true);
         } catch {
@@ -91,9 +68,20 @@ export default function ProfileForm() {
             setIsSubmitting(false);
         }
     };
-    const imageUrl  = useAvatar({ avatar_id: form.avatar_id})?.imageUrl || "/images/default_avt.png";
 
-    //Call API truyền dữ liệu các sự kiện yêu thích vào -> truyền vào EventSlider giống ở trang Dashboard
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleAvatarChange = (newAvatarId: number) => {
+        setForm(prev => ({
+            ...prev,
+            avatar_id: newAvatarId
+        }));
+    };
+
+    const imageUrl = useAvatar({ avatar_id: form.avatar_id })?.imageUrl || "/images/default_avt.png";
+
     const events = {
         favoriteEvents: [],
     };
@@ -136,16 +124,16 @@ export default function ProfileForm() {
     const paginatedData = favoriteOrganizers.slice(startItem - 1, endItem);
 
     const t = useTranslations('common');
-    
-        const transWithFallback = (key: string, fallback: string) => {
-            const msg = t(key);
-            if (!msg || msg.startsWith('common.')) return fallback;
-            return msg;
-        };
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
     const tabs = [
-        { key: "info", label: transWithFallback('personalInfo', 'Thông tin cá nhân')},
-        { key: "favorites", label: transWithFallback('favoriteList', 'Danh sách yêu thích')},
+        { key: "info", label: transWithFallback('personalInfo', 'Thông tin cá nhân') },
+        { key: "favorites", label: transWithFallback('favoriteList', 'Danh sách yêu thích') },
     ];
 
     return (
@@ -184,7 +172,7 @@ export default function ProfileForm() {
                         open={_dialogOpen}
                         onClose={() => setDialogOpen(false)}
                         message={_dialogMessage}
-                    /> 
+                    />
                     <div className="flex justify-between items-center">
                         <div>
                             <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('accountManagement', 'Quản lý thông tin tài khoản')}</h2>
@@ -192,7 +180,7 @@ export default function ProfileForm() {
                                 {transWithFallback('updatePersonalInfo', 'Quản lý và cập nhật thông tin cá nhân cho tài khoản của bạn')}
                             </h5>
                         </div>
-                        <AvatarUpload initAvatarId={form.avatar_id} onChange = {handleAvatarChange}/>
+                        <AvatarUpload initAvatarId={form.avatar_id} onChange={handleAvatarChange} />
                     </div>
 
                     <hr className="my-6 border-gray-700" />
@@ -203,7 +191,7 @@ export default function ProfileForm() {
                                 <label htmlFor="name" className="block text-gray-700 font-medium">{transWithFallback('fullName', 'Họ và tên')}</label>
                                 <div className="relative">
                                     <input
-                                        id ="name"
+                                        id="name"
                                         type="text"
                                         name="name"
                                         value={form.name}
@@ -217,7 +205,7 @@ export default function ProfileForm() {
                             <div>
                                 <label htmlFor="email" className="block text-gray-700 font-medium">{transWithFallback('emailAddress', 'Địa chỉ Email')}</label>
                                 <input
-                                    id = "email"
+                                    id="email"
                                     type="email"
                                     name="email"
                                     value={form.email}
@@ -235,7 +223,7 @@ export default function ProfileForm() {
                                         name="phone"
                                         value={form.phone}
                                         onChange={handleChange}
-                                        placeholder= {transWithFallback('phonePlaceholder', 'Nhập số điện thoại của bạn')}
+                                        placeholder={transWithFallback('phonePlaceholder', 'Nhập số điện thoại của bạn')}
                                         className="w-full border p-2 rounded-md mt-1 bg-gray-100 focus:bg-white"
                                     />
                                 </div>
