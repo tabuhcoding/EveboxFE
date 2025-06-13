@@ -15,8 +15,6 @@ interface PageProps {
 
 export default async function Page({ params, searchParams }: PageProps) {
   const session = await getServerSession(authOptions);
-  const accessToken = session?.user?.accessToken;
-
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
@@ -24,7 +22,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   const showingId = resolvedSearchParams.showingId || "";
   const seatMapId = resolvedSearchParams.seatMapId || 0;
 
-  const response = await fetchEventDetail(eventId, accessToken);
+  const response = await fetchEventDetail(eventId, session?.user?.accessToken);
   const event = response?.data || null;
 
   return (

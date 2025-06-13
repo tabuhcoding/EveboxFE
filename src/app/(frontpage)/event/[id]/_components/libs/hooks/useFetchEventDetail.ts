@@ -11,8 +11,6 @@ import { fetchEventDetail } from '../server/fetchEventDetail';
 
 export function useFetchEventDetail(eventId: string) {
   const { data: session } = useSession();
-  const accessToken = session?.user?.accessToken;
-
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +18,7 @@ export function useFetchEventDetail(eventId: string) {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const eventData = await fetchEventDetail(eventId, accessToken);
+      const eventData = await fetchEventDetail(eventId, session?.user?.accessToken);
       if (!eventData) {
         setError('Error loading event details');
       }

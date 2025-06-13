@@ -13,9 +13,8 @@ export default async function Page({ params }: {
   params: Promise<{ id: string }>;
 }) {
   const session = await getServerSession(authOptions);
-  const accessToken = session?.user?.accessToken;
   const { id } = await params;
-  const dataEvent = await fetchEventDetail(id, accessToken);
+  const dataEvent = await fetchEventDetail(id, session?.user?.accessToken);
   const event = dataEvent.data || {};
   const dataRecommendedEvents = await fetchRecommendEventDetail(id);
   const recommendedEvents = dataRecommendedEvents.data || [];
@@ -28,4 +27,3 @@ export default async function Page({ params }: {
   );
 }
 
-export const dynamic = 'force-dynamic';
