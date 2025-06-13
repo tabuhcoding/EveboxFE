@@ -222,5 +222,6 @@
     "totalClicksLabel": "Total views",
     "lastScoreLabel": "Rating Score",
     "eventOver": "Event has ended",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "showingOver": "Showing has ended"
 }

@@ -221,5 +221,6 @@
   "totalClicksLabel": "Tổng lượt xem",
   "lastScoreLabel": "Đánh giá",
   "eventOver": "Sự kiện đã kết thúc",
-  "unavailable": "Không khả dụng"
+  "unavailable": "Không khả dụng",
+  "showingOver": "Đã kết thúc"
 }
