@@ -2,17 +2,16 @@
 import QuestionFormPage from "./_components/questionFormPage";
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     showingId?: string;
-    seatMapId?: number
-  }
+    seatMapId?: string;
+  }>;
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const resolvedSearchParams = await searchParams;
-  
-  const showingId = resolvedSearchParams.showingId || "";
-  const seatMapId = resolvedSearchParams.seatMapId || 0;
+  const params = await searchParams;
+  const showingId = params.showingId || "";
+  const seatMapId = Number(params.seatMapId || 0);
 
   return (
     <QuestionFormPage showingId={showingId} seatMapId={seatMapId} />

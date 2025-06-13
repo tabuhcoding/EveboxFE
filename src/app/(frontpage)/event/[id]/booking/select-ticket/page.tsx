@@ -4,14 +4,15 @@ import { fetchEventDetail } from "../../_components/libs/server/fetchEventDetail
 import SelectTicketPage from "./_components/selectTicketPage";
 
 interface PageProps {
-  params: { id: string };
-  searchParams: { showingId?: string; eventId?: string, seatMapId?: number };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ showingId?: string; eventId?: string, seatMapId?: number }>;
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
+  const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   
-  const eventId = resolvedSearchParams.eventId || params.id;
+  const eventId = resolvedSearchParams.eventId || resolvedParams.id;
   const showingId = resolvedSearchParams.showingId || "";
   const seatMapId = resolvedSearchParams.seatMapId || 0;
 
