@@ -251,5 +251,6 @@
     "bookedTicketInfo": "Booked tickets information",
     "errorSubmitForm": "Error when submitting form",
     "errorGetRedisSeat": "Error when get redis seat",
-    "errorUnselectSeat": "Error when unselect seat"
+    "errorUnselectSeat": "Error when unselect seat",
+    "showingOver": "Showing has ended"
 }

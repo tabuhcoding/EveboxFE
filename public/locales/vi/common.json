@@ -250,5 +250,6 @@
   "bookedTicketInfo": "Thông tin đặt vé",
   "errorSubmitForm": "Lỗi khi gửi form đi",
   "errorGetRedisSeat": "Lỗi khi lấy thông tin từ redis",
-  "errorUnselectSeat": "Lỗi khi hủy chọn vé"
+  "errorUnselectSeat": "Lỗi khi hủy chọn vé",
+  "showingOver": "Đã kết thúc"
 }
