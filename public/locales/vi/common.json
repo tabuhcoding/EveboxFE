@@ -1,4 +1,6 @@
 {
+  "updateSuccessfully": "Cập nhật thông tin thành công!",
+  "updateFailed": "Cập nhật thông tin thất bại!",
   "liked": "Đã thêm vào danh sách yêu thích!",
   "unliked": "Đã xóa khỏi danh sách yêu thích!",
   "notice": "Bạn sẽ nhận được thông báo về sự kiện này!",

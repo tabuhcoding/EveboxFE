@@ -1,4 +1,6 @@
 {
+    "updateSuccessfully": "Updated information successfully!",
+    "updateFailed": "Update information failed!",
     "liked": "Added to favorite list!",
     "unliked": "Removed from favorite list!",
     "notice": "You will receive notification about this event!",
