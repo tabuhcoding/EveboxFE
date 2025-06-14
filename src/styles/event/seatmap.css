@@ -4,6 +4,10 @@
   align-items: center;
   justify-content: center;
   margin: 20px 0;
+  overscroll-behavior: contain;
+  /* Ngăn cuộn lan ra ngoài */
+  touch-action: none;
+  /* Ngăn zoom pinch hoặc gesture */
 }
 
 .seatmap {
@@ -43,4 +47,9 @@
 
 .selected {
   background-color: #6FEC61;
+}
+
+.seatmap-zoom {
+  cursor: grab;
+  user-select: none;
 }

@@ -2,7 +2,7 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 /* Package Application */
 import AlertDialog from "components/common/alertDialog";
@@ -12,6 +12,9 @@ import '@/styles/event/seatmap.css';
 export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds }: SeatMapProps) {
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeatsMap>({});
   const [zoom, setZoom] = useState<number>(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const lastMousePosition = useRef({ x: 0, y: 0 });
   // const [selectedTicketType, setSelectedTicketType] = useState<string | null>(null);
 
   const [alertOpen, setAlertOpen] = useState(false);
@@ -31,25 +34,6 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
       setSelectedSeats({});
     }
   }, [selectedSeatIds]);
-
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    // e.preventDefault();
-    e.stopPropagation();
-
-    const delta = e.deltaY;
-    setZoom((prev: number) => {
-      let newZoom = prev;
-      if (delta < 0) {
-        // wheel up: increase zoom
-        newZoom = prev * 1.1;
-      } else {
-        // wheel down: decrease zoom
-        newZoom = prev / 1.1;
-      }
-
-      return Math.min(Math.max(newZoom, 0.5), 3);
-    });
-  }
 
   const handleSeatClick = (seat: Seat, sectionTicketTypeId: string, sectionId: number, status: string, rowName: string) => {
     if (status !== 'AVAILABLE') return;
@@ -131,8 +115,74 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
   const stageSections = seatMap.Section?.filter(s => s.isStage);
   const normalSections = seatMap.Section?.filter(s => !s.isStage);
 
+  const seatmapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = seatmapRef.current;
+
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY;
+      setZoom((prev: number) => {
+        let newZoom = delta < 0 ? prev * 1.1 : prev / 1.1;
+        return Math.min(Math.max(newZoom, 0.5), 3);
+      });
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
+  const isDraggingRef = useRef(false);
+
+  useEffect(() => {
+    const container = seatmapRef.current;
+    if (!container) return;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      isDraggingRef.current = true;
+      lastMousePosition.current = { x: e.clientX, y: e.clientY };
+      setIsDragging(true);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+
+      const dx = e.clientX - lastMousePosition.current.x;
+      const dy = e.clientY - lastMousePosition.current.y;
+
+      setPosition(prev => ({
+        x: prev.x + dx,
+        y: prev.y + dy,
+      }));
+
+      lastMousePosition.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+      setIsDragging(false);
+    };
+
+    container.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      container.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
   return (
-    <div className="seatmap-container relative overflow-hidden" onWheel={handleWheel}>
+    <div className="seatmap-container relative overflow-hidden" ref={seatmapRef}>
       <div className="seatmap-legend-container absolute top-0 left-[50%] transform -translate-x-1/2 z-10 bg-white bg-opacity-80 w-full">
         <div className="mb-3 seatmap-legend justify-between">
           <div className="legend-item">
@@ -151,9 +201,10 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
         <div
           className="seatmap-zoom"
           style={{
-            transform: `scale(${zoom})`,
+            transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
             transformOrigin: "center center",
-            transition: "transform 0.2s ease-in-out"
+            transition: isDragging ? "none" : "transform 0.2s ease-in-out",
+            cursor: isDragging ? "grabbing" : "grab"
           }}
         >
           <svg viewBox={seatMap.viewBox} className="seatmap">
