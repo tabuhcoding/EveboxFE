@@ -5,17 +5,17 @@ import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 /* Package Application */
+import AlertDialog from "components/common/alertDialog";
 import { Seat, SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
-// import AlertDialog from "components/common/alertDialog";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapComponent({ seatMap, onSeatSelectionChange }: SeatMapProps) {
+export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticketType }: SeatMapProps) {
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeatsMap>({});
   const [zoom, setZoom] = useState<number>(1);
   // const [selectedTicketType, setSelectedTicketType] = useState<string | null>(null);
 
-  // const [alertOpen, setAlertOpen] = useState(false);
-  // const [alertMessage, setAlertMessage] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
 
   const t = useTranslations("common");
@@ -45,38 +45,45 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange }: Sea
     });
   }
 
-  // const handleSeatClick = (seat: Seat, sectionTicketTypeId: string, status: string) => {
-  //   if (status !== 'AVAILABLE') return;
-
-  //   const newSeatSelected = new Set(selectedSeats);
-  //   const isSelected = newSeatSelected.has(seat.id);
-  //   if (isSelected) {
-  //     newSeatSelected.delete(seat.id);
-  //   } else {
-  //     newSeatSelected.add(seat.id);
-  //   }
-
-  //   setSelectedSeats(newSeatSelected);
-
-  //   onSeatSelectionChange?.({ id: seat.id, ticketTypeId: sectionTicketTypeId }, !isSelected);
-  // };
-
-  const handleSeatClick = (seat: Seat, sectionTicketTypeId: string, sectionId: number, status: string) => {
+  const handleSeatClick = (seat: Seat, sectionTicketTypeId: string, sectionId: number, status: string, rowName: string) => {
     if (status !== 'AVAILABLE') return;
 
     // Lấy data hiện tại của loại vé đó (ticketType)
-    const ticketData = selectedSeats[sectionTicketTypeId] || { seatIds: [], sectionId, quantity: 0 };
+    const ticket = ticketType.find((t) => t.id === sectionTicketTypeId);
+    const ticketData = selectedSeats[sectionTicketTypeId] || { seatIds: [], labels: [], sectionId, quantity: 0 };
     const seatIds = ticketData.seatIds;
+    const labels = ticketData.labels || [];
+    const cleanRowName = rowName.replace(/"/g, '');
+    const cleanSeatName = seat.name.replace(/"/g, '');
+    const seatLabel = `${cleanRowName}-${cleanSeatName}`;
     const exists = seatIds.includes(seat.id);
-    const newSeatIds = exists
-      ? seatIds.filter(id => id !== seat.id) // Bỏ chọn nếu đã chọn
-      : [...seatIds, seat.id];              // Chọn nếu chưa chọn
-    const isSelected = !exists; // true nếu vừa chọn, false nếu vừa bỏ chọn
+    const maxQty = ticket?.maxQtyPerOrder ?? Infinity
+
+    let newSeatIds: number[];
+    let newLabels: string[] = [];
+    let isSelected: boolean;
+
+    if (exists) {
+      newSeatIds = seatIds.filter(id => id !== seat.id);
+      newLabels = labels.filter(label => label !== seatLabel);
+      isSelected = false;
+    } else {
+      if (seatIds.length + 1 > maxQty) {
+        setAlertMessage(
+          `${transWithFallback('ticketQuantity', 'Số lượng vé')} ${ticket?.name} ${transWithFallback('mustMax', 'không được vượt quá')} ${maxQty}`
+        );
+        setAlertOpen(true);
+        return;
+      }
+      newSeatIds = [...seatIds, seat.id];
+      newLabels = [...labels, seatLabel];
+      isSelected = true;
+    }
 
     // Gọi callback thông báo
     if (onSeatSelectionChange) {
       onSeatSelectionChange(
-        { id: seat.id, ticketTypeId: sectionTicketTypeId },
+        { id: seat.id, ticketTypeId: sectionTicketTypeId, label: newLabels },
         isSelected
       );
     }
@@ -85,12 +92,12 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange }: Sea
       ...selectedSeats,
       [sectionTicketTypeId]: {
         seatIds: newSeatIds,
+        labels: newLabels,
         sectionId,
         quantity: newSeatIds.length,
       },
     });
   };
-
 
   const getSeatLabel = (rowName: string, seatName: string): string => {
     const cleanRow = rowName.replace(/"/g, '');
@@ -205,7 +212,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange }: Sea
                           stroke="#000"
                           strokeWidth={1}
                           fill={fillColor}
-                          onClick={() => handleSeatClick(seat, section.ticketTypeId ?? "", section.id, seat.status)}
+                          onClick={() => handleSeatClick(seat, section.ticketTypeId ?? "", section.id, seat.status, row.name)}
                           style={{ cursor: seat.status === 'AVAILABLE' ? "pointer" : "not-allowed" }}
                         />
                         {zoom >= 1.5 && (
@@ -234,11 +241,11 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange }: Sea
         </div>
       </div>
 
-      {/* <AlertDialog
+      <AlertDialog
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
-      /> */}
+      />
     </div>
   );
 }

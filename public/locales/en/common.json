@@ -254,5 +254,8 @@
     "errorSubmitForm": "Error when submitting form",
     "errorGetRedisSeat": "Error when get redis seat",
     "errorUnselectSeat": "Error when unselect seat",
-    "showingOver": "Showing has ended"
+    "showingOver": "Showing has ended",
+    "ticketQuantity": "Quantity of tickets",
+    "mustMin": "must at least",
+    "mustMax": "must not over"
 }

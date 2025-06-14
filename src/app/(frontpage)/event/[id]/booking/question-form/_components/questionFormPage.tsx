@@ -137,7 +137,7 @@ export default function QuestionFormPage({ showingId, seatMapId }: { showingId: 
       <div className="mt-5 mb-5">
         <Navigation title={`${t("questionForm") || 'Bảng câu hỏi'}`} />
 
-        <div className="fixed top-10 right-10 mt-4">
+        <div className="fixed top-10 right-10 mt-4 z-10">
           <CountdownTimer expiredTime={redisSeatInfo?.expiredTime ? redisSeatInfo?.expiredTime : 0} />
         </div>
 

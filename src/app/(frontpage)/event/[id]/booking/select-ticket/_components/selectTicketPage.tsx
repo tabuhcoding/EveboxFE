@@ -137,7 +137,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
   //   );
   // };
 
-  const handleSeatSelectionChange = (seat: { id: number; ticketTypeId: string }, isSelected: boolean) => {
+  const handleSeatSelectionChange = (seat: { id: number; ticketTypeId: string; label: string[] }, isSelected: boolean) => {
     setSelectedTickets((prev) => {
       const ticketTypeId = seat.ticketTypeId;
       const current = prev[ticketTypeId] || { quantity: 0, seatIds: [] };
@@ -155,6 +155,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           ...current,
           quantity: newQuantity,
           seatIds: newSeatIds,
+          name: seat.label
         },
       };
     });
@@ -188,6 +189,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           selectedSeatIds={selectedSeatIds}
           showingId={showingId}
           onClearSelection={clearSelection}
+          seatMapId={seatMapId}
         />
       ) : (
         <Loading />
@@ -210,6 +212,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                   available: ticket.status !== "sold_out",
                   description: ticket.description,
                   position: ticket.position,
+                  minQtyPerOrder: ticket.minQtyPerOrder,
+                  maxQtyPerOrder: ticket.maxQtyPerOrder
                 }))
             }
             selectedTickets={selectedTickets}
@@ -219,7 +223,11 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           />
         ) : (
           <>
-            <SeatMapComponent seatMap={seatMapData as SeatMap} onSeatSelectionChange={handleSeatSelectionChange} />
+            <SeatMapComponent 
+              seatMap={seatMapData as SeatMap} 
+              onSeatSelectionChange={handleSeatSelectionChange}
+              ticketType={ticketType}
+            />
             <div className='w-[30%] pl-4'>
               {ticketType.length > 0 && (
                 <div className='ticket-type-list'>

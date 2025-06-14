@@ -159,7 +159,7 @@ export default function TicketInformation({
                       <span style={{ display: "block", fontWeight: 600 }}>{type?.name}</span>
                       {info.seatIds && info.seatIds.length > 0 && (
                         <span style={{ display: "block", fontSize: 13, color: "#666" }}>
-                          {transWithFallback('bookedSeat', 'Ghế đã đặt')}: {info.seatIds.join(", ")}
+                          {transWithFallback('bookedSeat', 'Ghế đã đặt')}: {info.name.join(", ")}
                         </span>
                       )}
                       <span style={{ display: "block", fontSize: 13 }}>

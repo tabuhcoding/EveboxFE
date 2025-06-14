@@ -253,5 +253,8 @@
   "errorSubmitForm": "Lỗi khi gửi form đi",
   "errorGetRedisSeat": "Lỗi khi lấy thông tin từ redis",
   "errorUnselectSeat": "Lỗi khi hủy chọn vé",
-  "showingOver": "Đã kết thúc"
+  "showingOver": "Đã kết thúc",
+  "ticketQuantity": "Số lượng vé",
+  "mustMin": "phải tối thiểu",
+  "mustMax": "không được vượt quá"
 }
