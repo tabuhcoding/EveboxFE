@@ -1,9 +1,11 @@
 "use client";
 
-import { useUserInfo } from "lib/swr/useUserInfo";
+
 import { Bell } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from "react";
+
+import { useUserInfo } from "lib/swr/useUserInfo";
 import { toggleNotification } from "services/auth.service";
 
 export default function ToggleNotification() {
