@@ -67,7 +67,7 @@ export default function SearchControls() {
   return (
     <div className="absolute left-0 right-0 -bottom-20 mx-auto w-full md:w-11/12 px-4">
       <div className="bg-sky-900 text-white p-4 md:p-6 rounded-lg shadow-lg">
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col md:flex-row gap-4 w-full">
           <div className="flex-[1.5] text-left">
             <label className="text-sm font-medium mb-2"> {t("searchTitle") || "Fallback Text"}</label>
             <div className="mt-2 relative">
@@ -157,21 +157,22 @@ export default function SearchControls() {
           <div className="flex-[1.5] text-left">
             <label className="text-sm font-medium mb-2">{t('timeTitle')}</label>
             <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
-  <DatePicker onDateRangeChange={setDateRange} />
-</div>
+              <DatePicker onDateRangeChange={setDateRange} />
+            </div>
           </div>
-          <div className="flex md:items-end">
-            <Link
-              href={{
-                pathname: "/search",
-                query: queryParams,
-              }}
-            >
-              <button className="w-full md:w-14 h-10 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center">
-                <Search size={20} className="text-white" />
-              </button>
-            </Link>
-          </div>
+          <div className="flex md:items-end justify-center md:justify-start">
+          <Link
+            href={{
+              pathname: "/search",
+              query: queryParams,
+            }}
+            className="w-full md:w-auto"
+          >
+            <button className="w-full h-10 md:w-14 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200">
+              <Search size={20} className="text-white" />
+            </button>
+          </Link>
+        </div>
         </div>
       </div>
     </div>

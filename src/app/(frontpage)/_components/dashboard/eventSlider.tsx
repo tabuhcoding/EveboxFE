@@ -38,6 +38,14 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
   const navigation = swiperInstance?.params.navigation as NavigationOptionsTyped;
 
+  const [windowWidth, setWindowWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     if (swiperInstance && prevRef.current && nextRef.current) {
       navigation.prevEl = prevRef.current;
@@ -57,8 +65,8 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
     setLikedEvents(prev => ({ ...prev, [id.toString()]: isLiked }));
     toast.success(
       isLiked
-        ? transWithFallback("liked","Đã thêm vào danh sách yêu thích!")
-        : transWithFallback("unliked","Đã bỏ khỏi danh sách yêu thích!")
+        ? transWithFallback("liked", "Đã thêm vào danh sách yêu thích!")
+        : transWithFallback("unliked", "Đã bỏ khỏi danh sách yêu thích!")
     );
   };
 
@@ -67,8 +75,8 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
     setNotifiedEvents(prev => ({ ...prev, [id.toString()]: isNotified }));
     toast.success(
       isNotified
-        ? transWithFallback("noticed","Bạn sẽ được nhận thông báo về sự kiện!")
-        : transWithFallback("unnoticed","Bạn đã tắt thông báo về sự kiện này!")
+        ? transWithFallback("noticed", "Bạn sẽ được nhận thông báo về sự kiện!")
+        : transWithFallback("unnoticed", "Bạn đã tắt thông báo về sự kiện này!")
     );
   };
 
@@ -77,6 +85,11 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
+
+  const isMobile = windowWidth < 768;
+  const showNav = isMobile
+    ? uniqueEvents.length > 2
+    : uniqueEvents.length > 4;
 
   return (
     <div className="relative">
@@ -90,12 +103,20 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
 
       {/* Swiper Slider */}
       <Swiper
-        slidesPerView={4}
-        slidesPerGroup={4}
         spaceBetween={10}
         modules={[Navigation]}
         onSwiper={setSwiperInstance}
-        // navigation={true}
+        breakpoints={{
+          0: {
+            slidesPerView: 2,
+            slidesPerGroup: 2,
+          },
+          768: {
+            slidesPerView: 4,
+            slidesPerGroup: 4,
+          },
+        }}
+        navigation={showNav ? { prevEl: prevRef.current, nextEl: nextRef.current } : false}
         style={{
           overflowX: 'auto',
           scrollBehavior: 'smooth',
@@ -105,6 +126,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
         }}
         className="mySwiper"
       >
+
         {uniqueEvents.map((event) => (
           <SwiperSlide key={event.id} className="h-full">
             <Link href={`/event/${event.id}`} className='no-underline'>
@@ -166,7 +188,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                         }`}
                     >
                       {event.status.toUpperCase() === 'AVAILABLE'
-                        ? transWithFallback("from", "Từ") +" " + event.minTicketPrice?.toLocaleString('vi-VN') + 'đ'
+                        ? transWithFallback("from", "Từ") + " " + event.minTicketPrice?.toLocaleString('vi-VN') + 'đ'
                         : mapEventStatus(event.status.toUpperCase())}
                     </span>
                   </div>
@@ -178,7 +200,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
       </Swiper>
 
       {/* Các nút custom navigation */}
-      {uniqueEvents.length >= 4 && (
+      {showNav && (
         <>
           <button ref={prevRef} className="custom-swiper-button-prev">
             <ChevronLeft />
