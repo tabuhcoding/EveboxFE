@@ -21,7 +21,7 @@ import TicketDetails from "./ticketDetails";
 // Client component
 export default function EventDetailClient({ event: events, recommendedEvent: recommendedEvents }: { event: EventDetail, recommendedEvent: Event[]}) {
     return (
-        <div className="mt-5 mb-5">
+        <div className="event-detail-page mt-5 mb-5">
             <EventBox event={events} />
 
             <div className="row align-items-start">
