@@ -30,6 +30,10 @@ export default function SelectTicket({
     //   return;
     // }
 
+    const currentQty = selectedTickets[id]?.quantity || 0;
+    const ticket = tickets.find(t => t.id === id);
+    if (ticket && currentQty >= ticket.maxQtyPerOrder) return;
+
     setSelectedTickets((prev) => ({
       ...prev,
       [id]: {
@@ -95,13 +99,18 @@ export default function SelectTicket({
                       >-</button>
                       <span className="px-4 font-semibold">{selectedTickets[ticket.id]?.quantity || 0}</span>
                       <button
-                        className="px-3 py-1 border rounded-r bg-gray-100 hover:bg-gray-200"
+                        className={`px-3 py-1 border rounded-r bg-gray-100 hover:bg-gray-200 
+                                  ${(selectedTickets[ticket.id]?.quantity || 0) >= ticket.maxQtyPerOrder ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={() => handleIncrease(ticket.id)}
+                        disabled={
+                          (selectedTickets[ticket.id]?.quantity || 0) >= ticket.maxQtyPerOrder
+                        }
                       >+</button>
                     </div>
                   ) : (
                     <p className="text-red-500 mt-2 font-semibold">{transWithFallback('soldOut', 'Hết vé')}</p>
                   )}
+
                 </div>
               </div>
             ))}

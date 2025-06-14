@@ -10,6 +10,7 @@ export type SelectedTicketsState = {
     quantity: number; // tổng số vé loại này
     sectionId?: number; // sectionId nếu event có seatmap
     seatIds?: number[]; // nếu chọn ghế
+    name: string[];
   }
 };
 
@@ -19,6 +20,8 @@ export interface Ticket {
   price: number;
   available: boolean;
   description: string;
+  maxQtyPerOrder: number;
+  minQtyPerOrder: number;
 }
 
 export interface SelectTicketProps {

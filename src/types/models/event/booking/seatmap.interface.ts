@@ -13,6 +13,7 @@ export type SelectedSeatsMap = {
     seatIds: number[];
     sectionId: number;
     quantity: number;
+    labels: string[];
   }
 };
 
@@ -29,10 +30,12 @@ export interface Seat {
 
 export interface SeatMapProps {
   seatMap: SeatMap;
+  ticketType: TicketType[];
   onSeatSelectionChange?: (
     seat: {
       id: number;
       ticketTypeId: string
+      label: string[];
     },
     isSelected: boolean
   ) => void;
@@ -151,6 +154,7 @@ export interface SelectedTicketInfo {
   quantity: number;          // Tổng số vé đã chọn (hoặc số ghế nếu là seatmap)
   seatIds?: number[];        // Chỉ có ở seatmap: ID các ghế đã chọn cho loại vé này
   sectionId?: number;        // Nếu cần, lưu ID section của ghế
+  name: string[];
 }
 
 // selectedTickets: key là ticketTypeId (string), value là SelectedTicketInfo
