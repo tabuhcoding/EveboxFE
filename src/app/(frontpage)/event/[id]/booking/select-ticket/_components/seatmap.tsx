@@ -218,13 +218,13 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                         {zoom >= 1.5 && (
                           <text
                             x={(typeof seat.positionX === "number" ? seat.positionX : seat.positionX[0] ?? 0) + labelOffsetX}
-                            y={(typeof seat.positionY === "number" ? seat.positionY : seat.positionY[0] ?? 0) + labelOffsetY}
+                            y={(typeof seat.positionY === "number" ? seat.positionY : seat.positionY[0] ?? 0) + labelOffsetY + 2}
                             fontSize={4}
                             fill="#000"
                             textAnchor="middle"
                             dominantBaseline="middle"
                           >
-                            {seat.name}
+                            {String(seat.name).replace(/"/g, "")}
                           </text>
                         )}
                       </g>
