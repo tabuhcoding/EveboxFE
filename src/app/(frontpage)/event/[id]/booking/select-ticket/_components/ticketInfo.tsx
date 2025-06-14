@@ -26,7 +26,7 @@ export default function TicketInfor({
   selectedSeatIds,
   showingId,
   onClearSelection,
-  // seatMapId,
+  seatMapId,
 }: TicketInforProps) {
   const t = useTranslations('common');
   const { locale } = useI18n();
@@ -86,7 +86,7 @@ export default function TicketInfor({
         localStorage.setItem('selectedSeatIds', JSON.stringify(selectedSeatIds));
         // localStorage.setItem('ticketTypeId', selectedTicketType?.id.toString() || '');
         localStorage.setItem('showingId', showingId || '');
-        router.push(`/event/${event.id}/booking/question-form?showingId=${showingId}`);
+        router.push(`/event/${event.id}/booking/question-form?showingId=${showingId}${seatMapId ? `&seatMapId=${seatMapId}` : ''}`);
       } else {
         setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
         setAlertOpen(true);

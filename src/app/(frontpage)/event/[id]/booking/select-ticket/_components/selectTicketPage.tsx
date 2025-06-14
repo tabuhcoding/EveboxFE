@@ -189,6 +189,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           selectedSeatIds={selectedSeatIds}
           showingId={showingId}
           onClearSelection={clearSelection}
+          seatMapId={seatMapId}
         />
       ) : (
         <Loading />

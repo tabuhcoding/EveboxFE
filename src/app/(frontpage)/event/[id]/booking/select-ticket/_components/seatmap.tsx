@@ -53,7 +53,9 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
     const ticketData = selectedSeats[sectionTicketTypeId] || { seatIds: [], labels: [], sectionId, quantity: 0 };
     const seatIds = ticketData.seatIds;
     const labels = ticketData.labels || [];
-    const seatLabel = `${rowName}-${seat.name}`;
+    const cleanRowName = rowName.replace(/"/g, '');
+    const cleanSeatName = seat.name.replace(/"/g, '');
+    const seatLabel = `${cleanRowName}-${cleanSeatName}`;
     const exists = seatIds.includes(seat.id);
     const maxQty = ticket?.maxQtyPerOrder ?? Infinity
 
