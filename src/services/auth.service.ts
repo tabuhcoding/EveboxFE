@@ -14,7 +14,8 @@ import {
   ResetPasswordPayloadProps,
   ResetPasswordResponse,
   ChangePasswordPayloadProps,
-  ChangePasswordResponse
+  ChangePasswordResponse,
+  ToggleNotificationResponse
 }
   from "./interface/auth.interface";
 
@@ -45,5 +46,12 @@ export const resetPassword = async (payload: ResetPasswordPayloadProps): Promise
 
 export const changePassword = async (payload: ChangePasswordPayloadProps): Promise<BaseApiResponse<ChangePasswordResponse>> => {
   const result = await authService.post<BaseApiResponse<ChangePasswordResponse>>(END_POINT_LIST.USER.CHANGE_PASSWORD, payload);
+  return result.data;
+};
+
+export const toggleNotification = async (isReceived: boolean): Promise<BaseApiResponse<ToggleNotificationResponse>> => {
+  const result = await authService.post(
+    `${END_POINT_LIST.USER.TOGGLE_NOTIFICATION}?isReceived=${isReceived}`,
+  );
   return result.data;
 };

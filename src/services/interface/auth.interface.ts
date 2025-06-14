@@ -65,3 +65,7 @@ export interface ChangePasswordResponse {
   statusCode: number;
   message: string;
 }
+
+export interface ToggleNotificationResponse {
+  success: boolean;
+}
