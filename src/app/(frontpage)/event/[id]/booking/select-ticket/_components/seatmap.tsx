@@ -2,14 +2,14 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 /* Package Application */
 import AlertDialog from "components/common/alertDialog";
 import { Seat, SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticketType }: SeatMapProps) {
+export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds }: SeatMapProps) {
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeatsMap>({});
   const [zoom, setZoom] = useState<number>(1);
   // const [selectedTicketType, setSelectedTicketType] = useState<string | null>(null);
@@ -25,6 +25,12 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
+
+  useEffect(() => {
+    if (!selectedSeatIds || selectedSeatIds.length === 0) {
+      setSelectedSeats({});
+    }
+  }, [selectedSeatIds]);
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     // e.preventDefault();
