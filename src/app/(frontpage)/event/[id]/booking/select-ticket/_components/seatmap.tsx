@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 /* Package Application */
-import { Seat, SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
 import AlertDialog from "components/common/alertDialog";
+import { Seat, SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
 export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticketType }: SeatMapProps) {
