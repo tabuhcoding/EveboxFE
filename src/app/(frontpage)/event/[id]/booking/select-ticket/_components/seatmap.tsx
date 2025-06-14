@@ -97,11 +97,6 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
     });
   };
 
-  // setAlertMessage(
-  //   `${transWithFallback('ticketQuantity', 'Số lượng vé')} ${ticketInfo?.name} ${transWithFallback('mustMax', 'không được vượt quá')} ${ticketInfo?.maxQtyPerOrder}`
-  // );
-  // setAlertOpen(true);
-
   const getSeatLabel = (rowName: string, seatName: string): string => {
     const cleanRow = rowName.replace(/"/g, '');
     const cleanSeat = seatName.replace(/"/g, '');
