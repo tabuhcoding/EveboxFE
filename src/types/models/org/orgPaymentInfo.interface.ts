@@ -12,3 +12,14 @@ export interface OrgPaymentInfoData {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CreateOrgPaymentInfoDto {
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+  branch: string;
+  businessType: number;
+  fullName?: string;
+  address?: string;
+  taxCode?: string;
+}

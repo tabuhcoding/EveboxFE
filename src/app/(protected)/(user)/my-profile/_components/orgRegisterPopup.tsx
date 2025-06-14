@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react"
 import { useState, ChangeEvent } from "react"
+import { createOrgPaymentInfo } from "services/org.service";
 
 interface OrganizerRegistrationPopupProps {
   onClose: () => void
@@ -55,34 +56,50 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
     })
   }
 
-  const handleSubmitPayment = () => {
-    // Xác thực form
-    const newErrors: Record<string, string> = {}
+  const handleSubmitPayment = async () => {
+  const newErrors: Record<string, string> = {};
 
-    if (!paymentForm.accName.trim()) newErrors.accName = "Vui lòng nhập tên chủ tài khoản"
-    if (!paymentForm.accNum.trim()) newErrors.accNum = "Vui lòng nhập số tài khoản"
-    if (!paymentForm.bankName.trim()) newErrors.bankName = "Vui lòng nhập tên ngân hàng"
-    if (!paymentForm.bankBranch.trim()) newErrors.bankBranch = "Vui lòng nhập chi nhánh"
+  if (!paymentForm.accName.trim()) newErrors.accName = "Vui lòng nhập tên chủ tài khoản";
+  if (!paymentForm.accNum.trim()) newErrors.accNum = "Vui lòng nhập số tài khoản";
+  if (!paymentForm.bankName.trim()) newErrors.bankName = "Vui lòng nhập tên ngân hàng";
+  if (!paymentForm.bankBranch.trim()) newErrors.bankBranch = "Vui lòng nhập chi nhánh";
 
-    if (paymentForm.typeBusiness === "Cá nhân") {
-      if (!paymentForm.perName.trim()) newErrors.perName = "Vui lòng nhập họ tên"
-      if (!paymentForm.perAddress.trim()) newErrors.perAddress = "Vui lòng nhập địa chỉ"
-      if (!paymentForm.taxCode.trim()) newErrors.taxCode = "Vui lòng nhập mã số thuế"
-    } else {
-      if (!paymentForm.companyName.trim()) newErrors.companyName = "Vui lòng nhập tên công ty"
-      if (!paymentForm.companyAddress.trim()) newErrors.companyAddress = "Vui lòng nhập địa chỉ công ty"
-      if (!paymentForm.companyTaxCode.trim()) newErrors.companyTaxCode = "Vui lòng nhập mã số thuế"
-    }
+  const isPersonal = paymentForm.typeBusiness === "Cá nhân";
 
-    setErrors(newErrors)
+  if (isPersonal) {
+    if (!paymentForm.perName.trim()) newErrors.perName = "Vui lòng nhập họ tên";
+    if (!paymentForm.perAddress.trim()) newErrors.perAddress = "Vui lòng nhập địa chỉ";
+    if (!paymentForm.taxCode.trim()) newErrors.taxCode = "Vui lòng nhập mã số thuế";
+  } else {
+    if (!paymentForm.companyName.trim()) newErrors.companyName = "Vui lòng nhập tên công ty";
+    if (!paymentForm.companyAddress.trim()) newErrors.companyAddress = "Vui lòng nhập địa chỉ công ty";
+    if (!paymentForm.companyTaxCode.trim()) newErrors.companyTaxCode = "Vui lòng nhập mã số thuế";
+  }
 
-    // Nếu không có lỗi, tiến hành xử lý
-    if (Object.keys(newErrors).length === 0) {
-      // Xử lý gửi thông tin thanh toán
-      alert("Đã gửi thông tin đăng ký nhà tổ chức!")
-      onSuccess()
+  setErrors(newErrors);
+
+  if (Object.keys(newErrors).length === 0) {
+    try {
+      const payload = {
+        accountName: paymentForm.accName,
+        accountNumber: paymentForm.accNum,
+        bankName: paymentForm.bankName,
+        branch: paymentForm.bankBranch,
+        businessType: isPersonal ? 1 : 2,
+        fullName: isPersonal ? paymentForm.perName : paymentForm.companyName,
+        address: isPersonal ? paymentForm.perAddress : paymentForm.companyAddress,
+        taxCode: isPersonal ? paymentForm.taxCode : paymentForm.companyTaxCode,
+      };
+
+      await createOrgPaymentInfo(payload);
+      onSuccess(); // success callback (e.g., redirect or close popup)
+    } catch (error) {
+      console.error("Create payment info failed:", error);
+      alert("Đăng ký thông tin thanh toán thất bại. Vui lòng thử lại!");
     }
   }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

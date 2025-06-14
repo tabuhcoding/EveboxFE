@@ -4,7 +4,7 @@ import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/fr
 
 import { END_POINT_LIST } from "./endpoint";
 import { orgService } from "./instance.service";
-import { OrgPaymentInfoData } from "types/models/org/orgPaymentInfo.interface";
+import { CreateOrgPaymentInfoDto, OrgPaymentInfoData } from "types/models/org/orgPaymentInfo.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -29,3 +29,31 @@ export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   }
 }
 
+
+export async function createOrgPaymentInfo(
+  dto: CreateOrgPaymentInfoDto
+): Promise<{ id: string }> {
+  if (typeof window === "undefined") {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/org/payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
+        },
+        body: JSON.stringify(dto),
+      }
+    );
+    if (!res.ok) throw new Error("Failed to create organizer payment info");
+    const json: BaseApiResponse<{ id: string }> = await res.json();
+    return json.data;
+  } else {
+    const res = await orgService.post<BaseApiResponse<{ id: string }>>(
+      END_POINT_LIST.ORG_PAYMENT.PAYMENT,
+      dto
+    );
+    if (!res) throw new Error("Failed to create organizer payment info");
+    return res.data.data;
+  }
+}

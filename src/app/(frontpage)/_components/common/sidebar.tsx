@@ -168,7 +168,7 @@ const transWithFallback = (key: string, fallback: string) => {
     )}
 
     {showPaymentWarning && (
-  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
     <div className="bg-white text-black p-6 rounded-md shadow-lg w-[90%] max-w-sm">
       <p className="text-base sm:text-lg">
         {transWithFallback("noPaymentInfo", "Bạn chưa đăng ký thông tin thanh toán với tư cách tổ chức.")}
