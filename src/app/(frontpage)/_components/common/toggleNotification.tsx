@@ -1,26 +1,48 @@
 "use client";
 
+import { useUserInfo } from "lib/swr/useUserInfo";
 import { Bell } from "lucide-react";
 import { useTranslations } from 'next-intl';
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { toggleNotification } from "services/auth.service";
 
 export default function ToggleNotification() {
   const [isOn, setIsOn] = useState(false);
   const t = useTranslations('common');
+  const { userInfo, refetch } = useUserInfo();
+
+  useEffect(() => {
+    if (userInfo) {
+      setIsOn(userInfo.receiveNoti);
+    }
+  }, [userInfo]);
 
   const transWithFallback = (key: string, fallback: string) => {
-      const msg = t(key);
-      if (!msg || msg.startsWith('common.')) return fallback;
-      return msg;
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
   };
 
+  const handleToggleNotification = async () => {
+    try {
+      const newState = !isOn;
+      
+      const response = await toggleNotification(newState);
+      if (response.statusCode === 200) {
+        setIsOn(newState);
+        refetch(); 
+      }
+    } catch (error) {
+      setIsOn(isOn);
+      console.error('Failed to toggle notification:', error);
+    }
+  };
   return (
     <div className="notify-btn flex flex-col items-center justify-center text-center">
       <h3 className="text-lg font-semibold mb-3">{transWithFallback('receiveMessage', 'Nhận thông báo từ EveBox')}</h3>
 
       <button
-        onClick={() => setIsOn(!isOn)}
+        onClick={() => handleToggleNotification()}
         className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-black rounded-full shadow-sm transition-all"
       >
         <Bell

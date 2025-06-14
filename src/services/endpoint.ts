@@ -12,6 +12,8 @@ export class END_POINT_LIST {
     GET_USER_INFO: "/api/user/me",
     GOOGLE: "/api/user/google",
     GOOGLE_CALLBACK: "/api/user/google/callback",
+    TOGGLE_NOTIFICATION: "/api/user/notification/all",
+    FAVORITE_EVENT: "/api/user/favorite/event",
   };
 
   static readonly EVENT = {
