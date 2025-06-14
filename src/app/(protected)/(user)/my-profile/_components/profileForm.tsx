@@ -54,15 +54,15 @@ export default function ProfileForm() {
             });
 
             if (result.success) {
-                setDialogMessage('Cập nhật thông tin thành công');
+                setDialogMessage(transWithFallback('updateSuccess', 'Cập nhật thông tin thành công'));
                 // SWR mutate để refresh data
                 await refetch();
             } else {
-                setDialogMessage('Cập nhật thông tin thất bại');
+                setDialogMessage(transWithFallback('updateFailed', 'Cập nhật thông tin thất bại'));
             }
             setDialogOpen(true);
         } catch {
-            setDialogMessage('Cập nhật thông tin thất bại');
+            setDialogMessage(transWithFallback('updateError', 'Đã xảy ra lỗi khi cập nhật thông tin'));
             setDialogOpen(true);
         } finally {
             setIsSubmitting(false);
