@@ -2,6 +2,8 @@
 
 /* Package System */
 import { Calendar, Ticket } from "lucide-react";
+import { Icon } from "@iconify/react";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -34,6 +36,7 @@ export default function TicketInfor({
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -142,9 +145,23 @@ export default function TicketInfor({
           </div>
 
           <div className='action-wrapper pb-4'>
-            <div className="flex items-center space-x-2 mt-4">
-              <Ticket size={28} /> <span className="text-gray-700 text-xl">x{totalTickets}</span>
+            <div className="flex justify-between items-center mt-4 px-2 py-2 bg-gray-50 rounded-lg shadow-sm">
+              <div className="flex items-center space-x-2">
+                <Ticket size={28} />
+                <span className="text-gray-800 text-lg font-medium">x{totalTickets}</span>
+              </div>
+              <button
+                className={`ml-4 px-4 py-1.5 text-sm font-semibold rounded-md transition ${hasSelectedTickets
+                  ? 'bg-red-100 text-red-600 hover:bg-red-200'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  }`}
+                onClick={() => setShowConfirmDialog(true)}
+                disabled={!hasSelectedTickets}
+              >
+                {t("clearTicket") ?? "Hủy chọn vé"}
+              </button>
             </div>
+
             <button
               className={`w-full choose-ticket-btn items-center p-2 rounded-lg mt-4 ${hasSelectedTickets
                 ? 'bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'
@@ -174,6 +191,36 @@ export default function TicketInfor({
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
       />
+
+      <Dialog open={showConfirmDialog} onClose={() => setShowConfirmDialog(false)}>
+        <div className="text-white dialog-header px-4 py-3 justify-center items-center flex relative" style={{ background: '#0C4762' }}>
+          <DialogTitle className="!m-0 !p-0 text-lg text-center font-bold">
+            {t("notify") ?? "Thông báo"}
+          </DialogTitle>
+          <button onClick={() => setShowConfirmDialog(false)} className="absolute right-2 top-2 px-1 py-1 close-btn">
+            <Icon icon="ic:baseline-close" width="20" height="20" />
+          </button>
+        </div>
+
+        <DialogContent className="p-4 flex flex-col justify-center items-center">
+          <Icon icon="material-symbols:warning" width="50" height="50" color="#f59e0b" />
+          <p className="text-center mt-3 mb-6">
+            {t("confirmFirst") ?? "Bạn có chắc chắn muốn xóa"} <strong>{totalTickets}</strong> {t("confirmSecond") ?? "vé đã chọn không?"}
+          </p>
+          <div className="flex space-x-4">
+            <button className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 text-sm" onClick={() => setShowConfirmDialog(false)}>
+              {t("btnCancel") ?? "Hủy"}
+            </button>
+            <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
+              onClick={() => {
+                onClearSelection?.();
+                setShowConfirmDialog(false);
+              }}>
+              {t("btnDeleteAll") ?? "Xóa tất cả vé"}
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
