@@ -239,17 +239,25 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                     const isSelected = Object.values(selectedSeats).some(ticketInfo =>
                       ticketInfo.seatIds.includes(seat.id)
                     );
-
-
+                    
+                    // Xác định màu sắc của ghế dựa trên trạng thái
                     let fillColor: string;
-                    if (seat.status === 'AVAILABLE') {
-                      // Ghế trống: nếu chọn thì màu xanh lá, còn lại màu trắng
-                      fillColor = isSelected ? "#6FEC61" : "white";
-                    } else if (seat.status === 'SOLD' || seat.status === 'ESOLD' || seat.status === 'NOTSALE') {
-                      // Vé điện tử hoặc ghế đang khóa: hiển thị màu đỏ
-                      fillColor = "red";
-                    } else {
-                      fillColor = "gray";
+                    switch (seat.status) {
+                      case 'AVAILABLE':
+                        // Ghế trống: nếu chọn thì màu xanh lá, còn lại màu trắng
+                        fillColor = isSelected ? "#6FEC61" : "white";
+                        break;
+                      case 'ESOLD':
+                      case 'INCACHE':
+                        // Vé điện tử hoặc ghế đang khóa: hiển thị màu đỏ
+                        fillColor = "red";
+                        break;
+                      case 'SOLD':
+                      case 'NOTSALE':
+                        fillColor = "gray";
+                        break;
+                      default:
+                        fillColor = "gray"; 
                     }
 
                     const seatNumber = parseInt(seat.name, 10);
