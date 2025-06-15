@@ -2,8 +2,8 @@
 
 import { Icon } from "@iconify/react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface AlertDialogProps {
   message: string;
