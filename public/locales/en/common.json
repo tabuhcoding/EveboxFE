@@ -255,5 +255,10 @@
     "showingOver": "Showing has ended",
     "ticketQuantity": "Quantity of tickets",
     "mustMin": "must at least",
-    "mustMax": "must not over"
+    "mustMax": "must not over",
+    "clearTicket": "Clear ticket",
+    "btnCancel": "Cancel",
+    "btnDeleteAll": "Delete all",
+    "confirmFirst": "Are you sure you want to remove",
+    "confirmSecond": "selected tickets?"
 }
