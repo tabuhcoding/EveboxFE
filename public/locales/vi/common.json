@@ -256,5 +256,10 @@
   "showingOver": "Đã kết thúc",
   "ticketQuantity": "Số lượng vé",
   "mustMin": "phải tối thiểu",
-  "mustMax": "không được vượt quá"
+  "mustMax": "không được vượt quá",
+  "clearTicket": "Hủy chọn vé",
+  "btnCancel": "Hủy",
+  "btnDeleteAll": "Xóa tất cả vé",
+  "confirmFirst": "Bạn có chắc chắn muốn xóa",
+  "confirmSecond": "vé đã chọn không?"
 }
