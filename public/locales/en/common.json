@@ -258,4 +258,9 @@
     "mustMin": "must at least",
     "mustMax": "must not over",
     "error": "Error, please try again!"
+    "clearTicket": "Clear ticket",
+    "btnCancel": "Cancel",
+    "btnDeleteAll": "Delete all",
+    "confirmFirst": "Are you sure you want to remove",
+    "confirmSecond": "selected tickets?"
 }

@@ -257,4 +257,9 @@
   "mustMin": "phải tối thiểu",
   "mustMax": "không được vượt quá",
   "error": "Có lỗi xảy ra, vui lòng thử lại!"
+  "clearTicket": "Hủy chọn vé",
+  "btnCancel": "Hủy",
+  "btnDeleteAll": "Xóa tất cả vé",
+  "confirmFirst": "Bạn có chắc chắn muốn xóa",
+  "confirmSecond": "vé đã chọn không?"
 }
