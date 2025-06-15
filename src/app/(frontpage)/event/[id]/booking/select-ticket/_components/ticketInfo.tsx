@@ -34,6 +34,7 @@ export default function TicketInfor({
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [href, setHref] = useState("");
 
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +48,7 @@ export default function TicketInfor({
   const handleContinue = async () => {
     if (!showingId || !session?.user?.accessToken) {
       setAlertMessage(transWithFallback("pleaseLogin", "Vui lòng đăng nhập để truy cập vào trang này!"));
+      setHref("/login");
       setAlertOpen(true);
       return;
     }
@@ -173,6 +175,7 @@ export default function TicketInfor({
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
+        {...href ? { href } : {}}
       />
     </>
   );
