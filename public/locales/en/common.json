@@ -257,7 +257,7 @@
     "ticketQuantity": "Quantity of tickets",
     "mustMin": "must at least",
     "mustMax": "must not over",
-    "error": "Error, please try again!"
+    "error": "Error, please try again!",
     "clearTicket": "Clear ticket",
     "btnCancel": "Cancel",
     "btnDeleteAll": "Delete all",
