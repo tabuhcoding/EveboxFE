@@ -83,7 +83,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
         })
         .then((showingResponse) => {
           if (showingResponse?.data?.TicketType) {
-            setTicketType(showingResponse.data.TicketType);
+            const sortedTicketType = [...showingResponse.data.TicketType].sort((a, b) => a.position - b.position);
+            setTicketType(sortedTicketType);
           }
         })
         .catch(() => setSeatmapError(transWithFallback('errorShowing', 'Lỗi khi dữ liệu showing')))
@@ -169,16 +170,6 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
     <div>
       <Navigation title={transWithFallback('chooseTicket', 'Chọn vé')} />
       {(event) ? (
-        // <TicketInfor
-        //   event={event}
-        //   totalTickets={totalTickets}
-        //   totalAmount={totalAmount}
-        //   hasSelectedTickets={totalTickets > 0}
-        //   selectedTicketType={selectedTicketType}
-        //   selectedSeatIds={selectedSeatIds}
-        //   showingId={showingId}
-        //   onClearSelection={clearSelection}
-        // />
         <TicketInfor
           event={event}
           totalTickets={totalTickets}
@@ -223,8 +214,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           />
         ) : (
           <>
-            <SeatMapComponent 
-              seatMap={seatMapData as SeatMap} 
+            <SeatMapComponent
+              seatMap={seatMapData as SeatMap}
               onSeatSelectionChange={handleSeatSelectionChange}
               ticketType={ticketType}
             />

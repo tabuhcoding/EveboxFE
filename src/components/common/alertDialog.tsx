@@ -2,22 +2,31 @@
 
 import { Icon } from "@iconify/react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 interface AlertDialogProps {
   message: string;
   onClose: () => void;
   open: boolean;
+  href?: string;
 }
 
-export default function AlertDialog({ message, onClose, open }: AlertDialogProps) {
+export default function AlertDialog({ message, onClose, open, href }: AlertDialogProps) {
   const t = useTranslations("common");
+  const router = useRouter();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
+
+  const handleRouterPush = () => {
+    if (href) {
+      router.push(href);
+    }
+  }
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -31,6 +40,11 @@ export default function AlertDialog({ message, onClose, open }: AlertDialogProps
       <DialogContent className="p-6 flex flex-col justify-center items-center">
         <Icon icon="material-symbols:warning" width="50" height="50" color="#f59e0b" />
         <p className="text-center">{message}</p>
+        {href && (
+          <button onClick={handleRouterPush} className="bg-[#0C4762] hover:bg-[#1d3945] text-white font-bold py-2 px-4 rounded mt-4">
+            {transWithFallback('login', 'Đến trang đăng nhập')}
+          </button>
+        )}
       </DialogContent>
     </Dialog>
   );
