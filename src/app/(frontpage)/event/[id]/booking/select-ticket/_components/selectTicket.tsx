@@ -2,6 +2,7 @@
 import { useTranslations } from 'next-intl';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tailwindcss/tailwind.css';
+import { useState } from 'react';
 
 /* Package Application */
 import { SelectTicketProps } from "types/models/event/booking/selectTicket.interface";
@@ -21,6 +22,15 @@ export default function SelectTicket({
     const msg = t(key);
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
+  };
+
+  const [expandedDescriptions, setExpandedDescriptions] = useState<{ [key: string]: boolean }>({});
+
+  const toggleDescription = (id: string) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   const handleIncrease = (id: string) => {
@@ -75,14 +85,45 @@ export default function SelectTicket({
                 onClick={() => ticket.available && handleSelect(ticket.id)}
               >
                 <div className='ticket-info'>
-                  <h3 className='font-semibold'>{ticket.name}</h3>
+                  <h3 className='font-semibold text-xl break-words leading-snug min-h-[60px] line-clamp-2'
+                    title={ticket.name}>
+                    {ticket.name}
+                  </h3>
 
-                  {ticket.description && ticket.description !== "" && (
+                  {/* {ticket.description && ticket.description !== "" && (
                     <div className="bg-[#F4EEEE] text-gray-700 rounded-lg p-2 mt-2 text-sm text-left flex items-start">
                       <div className="flex items-center justify-center w-6 h-6 mr-2">
                         <i className="bi bi-exclamation-circle-fill text-orange-600"></i>
                       </div>
                       <p className="whitespace-pre-line">{ticket.description}</p>
+                    </div>
+                  )} */}
+
+                  {ticket.description && ticket.description !== "" && (
+                    <div className="bg-[#F4EEEE] text-gray-700 rounded-lg p-2 mt-2 text-sm text-left flex items-start relative">
+                      <div className="flex items-center justify-center w-6 h-6 mr-2 mt-1">
+                        <i className="bi bi-exclamation-circle-fill text-orange-600"></i>
+                      </div>
+                      <div className="flex-1 overflow-hidden min-h-[120px] flex flex-col justify-between">
+                        <p className={`whitespace-pre-line transition-all duration-300 ${expandedDescriptions[ticket.id] ? '' : 'line-clamp-6'}`}>
+                          {ticket.description}
+                        </p>
+
+                        {/* Dù không hiển thị, vẫn chiếm không gian */}
+                        <div className="flex justify-center">
+                          {ticket.description.length > 120 ? (
+                            <button
+                              onClick={() => toggleDescription(ticket.id)}
+                              className="text-blue-600 text-xs underline hover:text-blue-800"
+                            >
+                              {expandedDescriptions[ticket.id] ? transWithFallback("showLess", "Thu gọn") : transWithFallback("showMore", "Xem thêm")}
+                            </button>
+                          ) : (
+                            // Placeholder để chiếm chỗ tương đương với nút
+                            <span className="invisible text-3xl">{transWithFallback("showMore", "Xem thêm")}</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
