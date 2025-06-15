@@ -126,7 +126,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
       e.preventDefault();
       const delta = e.deltaY;
       setZoom((prev: number) => {
-        let newZoom = delta < 0 ? prev * 1.1 : prev / 1.1;
+        const newZoom = delta < 0 ? prev * 1.1 : prev / 1.1;
         return Math.min(Math.max(newZoom, 0.5), 3);
       });
     };
