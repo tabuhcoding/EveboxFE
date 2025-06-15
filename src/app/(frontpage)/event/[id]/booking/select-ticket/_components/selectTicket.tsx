@@ -90,42 +90,40 @@ export default function SelectTicket({
                     {ticket.name}
                   </h3>
 
-                  {/* {ticket.description && ticket.description !== "" && (
-                    <div className="bg-[#F4EEEE] text-gray-700 rounded-lg p-2 mt-2 text-sm text-left flex items-start">
-                      <div className="flex items-center justify-center w-6 h-6 mr-2">
-                        <i className="bi bi-exclamation-circle-fill text-orange-600"></i>
-                      </div>
-                      <p className="whitespace-pre-line">{ticket.description}</p>
-                    </div>
-                  )} */}
-
                   {ticket.description && ticket.description !== "" && (
-                    <div className="bg-[#F4EEEE] text-gray-700 rounded-lg p-2 mt-2 text-sm text-left flex items-start relative">
-                      <div className="flex items-center justify-center w-6 h-6 mr-2 mt-1">
-                        <i className="bi bi-exclamation-circle-fill text-orange-600"></i>
-                      </div>
-                      <div className="flex-1 overflow-hidden min-h-[120px] flex flex-col justify-between">
-                        <p className={`whitespace-pre-line transition-all duration-300 ${expandedDescriptions[ticket.id] ? '' : 'line-clamp-6'}`}>
-                          {ticket.description}
-                        </p>
-
-                        {/* Dù không hiển thị, vẫn chiếm không gian */}
-                        <div className="flex justify-center">
-                          {ticket.description.length > 120 ? (
-                            <button
-                              onClick={() => toggleDescription(ticket.id)}
-                              className="text-blue-600 text-xs underline hover:text-blue-800"
-                            >
-                              {expandedDescriptions[ticket.id] ? transWithFallback("showLess", "Thu gọn") : transWithFallback("showMore", "Xem thêm")}
-                            </button>
-                          ) : (
-                            // Placeholder để chiếm chỗ tương đương với nút
-                            <span className="invisible text-3xl">{transWithFallback("showMore", "Xem thêm")}</span>
-                          )}
+                    <div className="bg-[#F4EEEE] text-gray-700 rounded-lg p-2 mt-2 text-sm text-left flex flex-col relative">
+                      <div className="flex items-start">
+                        <div className="flex items-center justify-center w-6 h-6 mr-2">
+                          <i className="bi bi-exclamation-circle-fill text-orange-600"></i>
                         </div>
+
+                        <div className="flex-1 overflow-hidden min-h-[120px]">
+                          <p className={`whitespace-pre-line transition-all duration-300 ${expandedDescriptions[ticket.id] ? '' : 'line-clamp-6'}`}>
+                            {ticket.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-center">
+                        {ticket.description.length > 120 ? (
+                          <button
+                            onClick={() => toggleDescription(ticket.id)}
+                            className={`text-[13px] font-medium text-[#005AE0] opacity-60 hover:opacity-100 focus:opacity-100 transition-all duration-200 hover:underline focus:underline
+                                        ${expandedDescriptions[ticket.id] ? '' : ''}
+                                      `}
+                            style={{ textDecoration: expandedDescriptions[ticket.id] ? 'none' : undefined }}
+                          >
+                            {expandedDescriptions[ticket.id]
+                              ? transWithFallback("showLess", "Thu gọn")
+                              : transWithFallback("showMore", "Hiện thêm")}
+                          </button>
+                        ) : (
+                          <span className="invisible text-3xl">{transWithFallback("showMore", "Hiện thêm")}</span>
+                        )}
                       </div>
                     </div>
                   )}
+
                 </div>
 
                 <div className='ticket-actions mt-auto'>
