@@ -256,5 +256,6 @@
     "showingOver": "Showing has ended",
     "ticketQuantity": "Quantity of tickets",
     "mustMin": "must at least",
-    "mustMax": "must not over"
+    "mustMax": "must not over",
+    "error": "Error, please try again!"
 }

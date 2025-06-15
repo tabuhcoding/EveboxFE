@@ -15,7 +15,9 @@ import {
   ResetPasswordResponse,
   ChangePasswordPayloadProps,
   ChangePasswordResponse,
-  ToggleNotificationResponse
+  ToggleNotificationResponse,
+  EventOrOrgFavouriteData,
+  AddEventOrOrgFavouritePayload,
 }
   from "./interface/auth.interface";
 
@@ -55,3 +57,18 @@ export const toggleNotification = async (isReceived: boolean): Promise<BaseApiRe
   );
   return result.data;
 };
+
+export async function addEventOrOrgFavourite(payload: AddEventOrOrgFavouritePayload): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
+    const res = await authService.post(`${END_POINT_LIST.USER.ADD_FAVORITE_EVENT}`, payload);
+    return res.data;
+}
+export async function removeEventFavourite(eventId: string): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
+
+    const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_EVENT}/${eventId}`);
+    return res.data;
+}
+
+export async function removeOrgFavourite(orgId: string): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
+    const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_ORG}/${orgId}`);
+    return res.data;
+}

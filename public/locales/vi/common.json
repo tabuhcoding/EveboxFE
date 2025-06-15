@@ -255,5 +255,6 @@
   "showingOver": "Đã kết thúc",
   "ticketQuantity": "Số lượng vé",
   "mustMin": "phải tối thiểu",
-  "mustMax": "không được vượt quá"
+  "mustMax": "không được vượt quá",
+  "error": "Có lỗi xảy ra, vui lòng thử lại!"
 }
