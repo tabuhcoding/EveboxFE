@@ -21,7 +21,7 @@ export class END_POINT_LIST {
     CLICKS: "/api/event/detail/clicks",
     ALL_CATEGORIES: "/api/categories",
     GET_FRONT_DISPLAY: "/api/event/front-display",
-    GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids"
+    GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids",
   };
 
   static readonly ORG_EVENT = {
@@ -63,6 +63,6 @@ export class END_POINT_LIST {
 
   static readonly LOCATION = {
     GET_ALL_LOCATIONS: "/api/location/all",
-    GET_ALL_DISTRICTS: "/api/all-districts"
+    GET_ALL_DISTRICTS: "/api/location/all-districts"
   }
 }

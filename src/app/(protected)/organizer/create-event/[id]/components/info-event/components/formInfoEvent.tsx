@@ -14,20 +14,18 @@ import OrganizationInfoForm from "./organizationInfoForm";
 import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
 import { GenerationProps } from "./descriptionWithAI";
+import { getAllDistricts } from "services/event.service";
+import { Province } from "types/models/event/location.interface";
+import { CreateEventDto } from "types/models/event/createEvent.dto";
+import { useEventImageUpload } from "../../../libs/hooks/useEventImageUpload";
 
 interface Category {
     id: number;
     name: string;
 }
 
-interface Province {
-    id: number;
-    name: string;
-    districts: { id: number; name: string }[];
-}
-
 interface FormInformationEventClientProps {
-    onNextStep: (formData: FormData) => void;
+    onNextStep: (payload: CreateEventDto) => void;
     btnValidate: string;
 }
 
@@ -44,9 +42,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     const { data: session } = useSession();
 
     const [background, setBackground] = useState<string | null>(null);
-    const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
     const [logoOrg, setLogoOrg] = useState<string | null>(null);
-    const [logoOrgFile, setLogoOrgFile] = useState<File | null>(null);
 
     const [eventName, setEventName] = useState("");
     const [nameOrg, setNameOrg] = useState("");
@@ -151,22 +147,17 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     }, []);
 
     useEffect(() => {
-        const fetchProvinces = async () => {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/all-districts`);
-                if (!res.ok) {
-                    throw new Error("Failed to fetch provinces");
-                }
+         const fetchProvinces = async () => {
+    try {
+      const data = await getAllDistricts();
+      setAllProvinces(data);
+    } catch (error) {
+      console.error("Error fetching provinces:", error);
+      toast.error("Lỗi khi tải danh sách tỉnh thành phố!", { duration: 5000 });
+    }
+  };
 
-                const data = await res.json();
-                setAllProvinces(data);
-            } catch (error) {
-                console.error("Error fetching provinces:", error);
-                toast.error("Lỗi khi tải danh sách tỉnh thành phố!", { duration: 5000 });
-            }
-        };
-
-        fetchProvinces();
+  fetchProvinces();
     }, []);
 
     useEffect(() => {
@@ -247,14 +238,34 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             [field]: value,
         }));
     };
+    const { uploadImage } = useEventImageUpload();
 
-    const handleUpload = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
-        handleImageUpload(event, type, setImageErrors, setBackground, setBackgroundFile);
-    };
 
-    const handleUploadLogo = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
-        handleImageUpload(event, type, setImageLogoErrors, setLogoOrg, setLogoOrgFile);
-    };
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  
+
+  try {
+    const { imageUrl } = await uploadImage(file);
+    setBackground(imageUrl);
+  } catch {
+    toast.error("Tải ảnh nền thất bại");
+  }
+};
+
+
+   const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const { imageUrl } = await uploadImage(file);
+    setLogoOrg(imageUrl);
+  } catch {
+    toast.error("Tải logo thất bại");
+  }
+};
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>, field: string) => {
         const value = e.target.value;
@@ -309,7 +320,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
         if (field === "ward") setWard(value);
         if (field === "logoOrg") setLogoOrg(value);
         // if (field === "logoOrgFile") setLogoOrgFile(value);
-        if (field === "background") setBackground(value);
+        // if (field === "background") setBackground(value);
         // if (field === "backgroundFile") setBackgroundFile(value);
 
         if (errors[field]) {
@@ -353,11 +364,11 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
         if (!infoOrg.trim()) newErrors.infoOrg = true;
 
         if (!currentEventId) {
-            if (!background || !backgroundFile) {
+            if (!background) {
                 setImageErrors((prev) => ({ ...prev, background: "Vui lòng tải lên ảnh nền sự kiện" }));
                 toast.error("Vui lòng tải lên ảnh nền sự kiện!", { duration: 5000 });
             }
-            if (!logoOrg || !logoOrgFile) {
+            if (!logoOrg) {
                 setImageLogoErrors((prev) => ({ ...prev, logoOrg: "Vui lòng tải lên logo ban tổ chức" }));
                 toast.error("Vui lòng tải lên logo ban tổ chức!", { duration: 5000 });
             }
@@ -396,12 +407,12 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                 formData.append("categoryIds", JSON.stringify([selectedCategory.id]));
             }
 
-            if (backgroundFile) {
-                formData.append("imgPoster", backgroundFile);
-            }
-            if (logoOrgFile) {
-                formData.append("imgLogo", logoOrgFile);
-            }
+            // if (backgroundFile) {
+            //     formData.append("imgPoster", backgroundFile);
+            // }
+            // if (logoOrgFile) {
+            //     formData.append("imgLogo", logoOrgFile);
+            // }
 
             if (currentEventId) {
                 if (eventTypeSelected === "offline" || eventTypeSelected === "Offline") {
@@ -436,11 +447,43 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
                 if (btnValidate === "Save") {
                     toast.success("Form hợp lệ! Đã lưu thông tin sự kiện!", { duration: 5000 });
-                    onNextStep(formData);
+                    onNextStep({
+  title: eventName,
+  description: post,
+  isOnline: eventTypeSelected === "online" || eventTypeSelected === "Online",
+  venue: eventAddress,
+  orgName: nameOrg,
+  orgDescription: infoOrg,
+  categoryIds: selectedCategory ? [selectedCategory.id] : [],
+  imgLogoUrl: logoOrg || "",            // use default image URL if needed
+  imgPosterUrl: background || "",       // use default image URL if needed
+  wardString: ward,
+  streetString: street,
+  districtId:
+    allProvinces
+      .find((p) => p.name === province)
+      ?.districts.find((d) => d.name === district)?.id ?? undefined,
+});
                     toast.success("Đã lưu thông tin sự kiện!", { duration: 5000 });
                 } else if (btnValidate === "Continue") {
                     toast.success("Form hợp lệ! Sẽ chuyển sang bước tiếp theo!", { duration: 5000 });
-                    onNextStep(formData);
+                    onNextStep({
+  title: eventName,
+  description: post,
+  isOnline: eventTypeSelected === "online" || eventTypeSelected === "Online",
+  venue: eventAddress,
+  orgName: nameOrg,
+  orgDescription: infoOrg,
+  categoryIds: selectedCategory ? [selectedCategory.id] : [],
+  imgLogoUrl: logoOrg || "",            // use default image URL if needed
+  imgPosterUrl: background || "",       // use default image URL if needed
+  wardString: ward,
+  streetString: street,
+  districtId:
+    allProvinces
+      .find((p) => p.name === province)
+      ?.districts.find((d) => d.name === district)?.id ?? undefined,
+});
                 }
             }
         }
