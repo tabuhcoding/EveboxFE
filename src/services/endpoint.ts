@@ -72,10 +72,15 @@ export class END_POINT_LIST {
     EVENTS: "/api/admin/event",
     SHOWINGS: "/api/admin/showing",
     EVENTS_SPECIAL: "api/admin/event-special"
-  }
+  };
 
   static readonly LOCATION = {
     GET_ALL_LOCATIONS: "/api/location/all",
     GET_ALL_DISTRICTS: "/api/all-districts"
+  };
+
+  static readonly PAYMENT = {
+    GET_METHOD_STATUS: '/api/payment/getPaymentMethodStatus',
+    CHECKOUT: '/api/payment/checkout'
   }
 }

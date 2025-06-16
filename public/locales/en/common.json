@@ -260,5 +260,12 @@
     "btnCancel": "Cancel",
     "btnDeleteAll": "Delete all",
     "confirmFirst": "Are you sure you want to remove",
-    "confirmSecond": "selected tickets?"
+    "confirmSecond": "selected tickets?",
+    "errorGetPaymentMethodStatus": "Error when get payment method status",
+    "checkReceiveInfo": "Please check your ticket receive information carefully before proceeding to payment.",
+    "anyChanges": "If you need to make any changes",
+    "pleaseClickHere": "please click here to edit your information.",
+    "ticketReceiveInfo": "Ticket receive information",
+    "errorCheckout": "Error when checkout payment",
+    "noShowing": "No showing id found"
 }
