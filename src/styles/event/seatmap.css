@@ -1,0 +1,55 @@
+.seatmap-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  overscroll-behavior: contain;
+  /* Ngăn cuộn lan ra ngoài */
+  touch-action: none;
+  /* Ngăn zoom pinch hoặc gesture */
+}
+
+.seatmap {
+  width: 100%;
+  height: 100vh;
+  border: 1px solid #ddd;
+}
+
+.seatmap-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.seat {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.booked {
+  background-color: #f00;
+}
+
+.available {
+  background-color: gray;
+}
+
+.selected {
+  background-color: #6FEC61;
+}
+
+.seatmap-zoom {
+  cursor: grab;
+  user-select: none;
+}

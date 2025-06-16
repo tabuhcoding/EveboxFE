@@ -21,9 +21,9 @@ const Footer = () => {
 
         <div className="max-w-4xl mx-auto px-4 mb-8 sm:mb-12">
           <div className="flex flex-col sm:flex-row justify-evenly items-start gap-12">
-            <div className="text-center sm:text-left space-y-2">
+            <div className="text-left space-y-2">
               <p className="font-semibold">Dành cho khách hàng</p>
-              <ul className="space-y-1">
+              <ul className="space-y-1 list-none p-0">
                 <li>
                   <a href="/customer-terms-of-use" className="text-white no-underline hover:underline">
                     Điều khoản sử dụng cho khách hàng
@@ -32,7 +32,7 @@ const Footer = () => {
               </ul>
 
               <p className="font-semibold mt-4">Dành cho Ban Tổ chức</p>
-              <ul className="space-y-1">
+              <ul className="space-y-1 list-none p-0">
                 <li>
                   <a href="/organizer-terms-of-use" className="text-white no-underline hover:underline">
                     Điều khoản sử dụng cho ban tổ chức
@@ -41,9 +41,9 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="text-center sm:text-left space-y-2">
+            <div className="text-left space-y-2">
               <p className="font-semibold">Về chúng tôi</p>
-              <ul className="space-y-1">
+              <ul className="space-y-1 list-none p-0">
                 <li><a href="/operational-regulations" className="text-white no-underline hover:underline">Quy chế hoạt động</a></li>
                 <li><a href="/information-privacy-policy" className="text-white no-underline hover:underline">Chính sách bảo mật thông tin</a></li>
                 <li><a href="/dispute-settlement-policy" className="text-white no-underline hover:underline">Cơ chế giải quyết tranh chấp/ khiếu nại</a></li>
@@ -81,7 +81,7 @@ const Footer = () => {
                 </a>
               </div>
               <div className="text-xs sm:text-sm">
-                Non Copyrighted © 2025.3 Upload by EveBox
+                Non Copyrighted © 2025.6 Upload by EveBox
               </div>
             </div>
           </div>

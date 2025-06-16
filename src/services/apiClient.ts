@@ -1,6 +1,5 @@
 /* Package System */
 import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import axiosRetry from "axios-retry";
 import { getServerSession } from "next-auth";
 import { getSession, signOut } from "next-auth/react";
 
@@ -8,52 +7,79 @@ import { getSession, signOut } from "next-auth/react";
 import { authOptions } from "lib/authOptions";
 
 let cachedSession: Awaited<ReturnType<typeof getSession>> | null = null;
+let sessionPromise: Promise<any> | null = null; 
+let lastSessionFetch = 0;
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value: any) => void;
+  reject: (error: any) => void;
+}> = [];
 
 // Check if code is running on server or client
 const isServer = typeof window === 'undefined';
 
-// --- Retry delay management for DEV mode ---
-let currentRetryDelay = 1000; // Start with 1s
-const isDev = process.env.NODE_ENV === "development";
+// Session cache duration (5 phút)
+const SESSION_CACHE_DURATION = 5 * 60 * 1000;
 
-const resetRetryDelay = () => {
-  currentRetryDelay = 1000;
-}
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
 
-const increaseRetryDelay = () => {
-  // max 10s delay in dev, less aggressive
-  if (isDev) {
-    currentRetryDelay = Math.min(currentRetryDelay + 1000, 10000);
+const getOptimizedSession = async (): Promise<Awaited<ReturnType<typeof getSession>>> => {
+  const now = Date.now();
+  
+  if (cachedSession && (now - lastSessionFetch) < SESSION_CACHE_DURATION) {
+    return cachedSession;
   }
+  
+  if (sessionPromise) {
+    return sessionPromise;
+  }
+  
+  // Tạo mới session request
+  sessionPromise = (async () => {
+    try {
+      const session = isServer 
+        ? await getServerSession(authOptions)
+        : await getSession();
+      
+      cachedSession = session;
+      lastSessionFetch = now;
+      return session;
+    } catch (error) {
+      console.error('Session fetch error:', error);
+      return null;
+    } finally {
+      sessionPromise = null;
+    }
+  })();
+  
+  return sessionPromise;
+};
+
+const clearSessionCache = () => {
+  cachedSession = null;
+  sessionPromise = null;
+  lastSessionFetch = 0;
 };
 
 const createApiClient = (baseUrl: string): AxiosInstance => {
   const apiClient = axios.create({ baseURL: baseUrl });
 
-  axiosRetry(apiClient, {
-    retries: 2,
-
-    retryDelay: () => {
-      return currentRetryDelay;
-    },
-
-    retryCondition: (error) => {
-      const shouldRetry = axiosRetry.isNetworkOrIdempotentRequestError(error) || error.code === 'ECONNABORTED';
-      if (shouldRetry) {
-        resetRetryDelay();
-      } else {
-        increaseRetryDelay();
-      }
-
-      return shouldRetry;
-    }
-  });
-
   apiClient.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
-      if (!cachedSession) cachedSession = await getSession();
+      // Chỉ fetch session khi cần thiết và chưa có cache
+      const session = await getOptimizedSession();
 
-      const token = cachedSession?.user?.accessToken;
+      const token = session?.user?.accessToken;
       if (token) {
         if (!config.headers) {
           config.headers = new AxiosHeaders();
@@ -76,14 +102,32 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
       };
 
       if (error.response?.status === 401 && !originalRequest._retry) {
+        if (isRefreshing) {
+          // Nếu đang refresh, đưa request vào queue
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          }).then(token => {
+            if (!originalRequest.headers) {
+              originalRequest.headers = new AxiosHeaders();
+            }
+            originalRequest.headers.set("Authorization", `Bearer ${token}`);
+            return apiClient(originalRequest);
+          }).catch(err => {
+            return Promise.reject(err);
+          });
+        }
+
         originalRequest._retry = true;
+        isRefreshing = true;
 
         try {
-          cachedSession = isServer
-            ? await getServerSession(authOptions)
-            : await getSession();
-
-          const refreshToken = cachedSession?.user?.refreshToken;
+          console.log("🔒 Refreshing token...: isServer:", isServer);
+          
+          clearSessionCache();
+          
+          const session = await getOptimizedSession();
+          const refreshToken = session?.user?.refreshToken;
+          
           if (!refreshToken) {
             throw new Error("No refresh token available");
           }
@@ -106,10 +150,15 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
 
           originalRequest.headers.set("Authorization", `Bearer ${access_token}`);
 
+          processQueue(null, access_token);
+          
           return apiClient(originalRequest);
         } catch (refreshError) {
           console.error("🔒 Refresh token failed", refreshError);
-          cachedSession = null;
+          
+          processQueue(refreshError, null);
+          
+          clearSessionCache();
 
           await signOut({
             redirect: true,
@@ -117,6 +166,8 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
           });
 
           return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
         }
       }
 
@@ -127,4 +178,5 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
   return apiClient;
 }
 
+export { clearSessionCache };
 export default createApiClient;

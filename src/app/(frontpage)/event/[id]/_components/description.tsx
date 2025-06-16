@@ -21,7 +21,7 @@ export default function Description({ description }: DescriptionProps) {
                     style={{ lineHeight: "1.6" }}
                 >
                     <div
-                        className="prose max-w-none px-2 text-gray-800"
+                        className="event-html-content max-w-full text-gray-800 text-base leading-relaxed px-2"
                         dangerouslySetInnerHTML={{ __html: description }}
                     />
                 </div>
