@@ -40,3 +40,4 @@ docker tag evebox-backend eveboxregistry.azurecr.io/evebox-api:latest
 az acr login --name eveboxregistry
 docker push eveboxregistry.azurecr.io/evebox-api:latest
 
+fake
