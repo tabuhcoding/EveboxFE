@@ -1,9 +1,9 @@
 'use client';
 
 /* Package System */
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* Package Application */
@@ -15,7 +15,7 @@ import '@/styles/event/payment.css';
 
 export default function PaymentMethod({ onMethodSelected }: PaymentMethodProps) {
   const t = useTranslations('common');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [selectedMethod, setSelectedMethod] = useState("");
 

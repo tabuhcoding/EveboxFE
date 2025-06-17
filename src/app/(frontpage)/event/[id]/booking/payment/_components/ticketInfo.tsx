@@ -1,18 +1,19 @@
 'use client';
 
 /* Package System */
+import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
 
 /* Package Application */
-import AlertDialog from "@/components/common/alertDialog";
-import ConfirmDialog from "../../question-form/_components/confirmDialog";
-import { checkoutPayment } from "@/services/payment.service";
 import { useI18n } from "@/app/providers/i18nProvider";
-import { TicketInforProps } from "@/types/models/event/booking/payment.interface";
+import AlertDialog from "@/components/common/alertDialog";
 import { unselectSeat } from "@/services/booking.service";
+import { checkoutPayment } from "@/services/payment.service";
+import { TicketInforProps } from "@/types/models/event/booking/payment.interface";
+
+import ConfirmDialog from "../../question-form/_components/confirmDialog";
 
 export default function TicketInformation({ event, totalTickets, totalAmount, selectedTickets, ticketType, paymentMethod, showingId, seatMapId, redisInfo }: TicketInforProps) {
   console.log("🚀 ~ TicketInformation ~ totalTickets:", totalTickets)
@@ -20,22 +21,22 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
   const t = useTranslations('common');
   const { data: session } = useSession();
 
-  const [promoCode, setPromoCode] = useState('');
+  // const [promoCode, setPromoCode] = useState('');
 
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [openUnselectSeatDialog, setOpenUnselectSeatDialog] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const handleOpenDialog = () => {
-    setIsOpen(true);
-  };
+  // const handleOpenDialog = () => {
+  //   setIsOpen(true);
+  // };
 
   const handlePayment = async () => {
-    if (paymentMethod === '') {
-      handleOpenDialog();
-      return;
-    }
+    // if (paymentMethod === '') {
+    //   handleOpenDialog();
+    //   return;
+    // }
 
     if (paymentMethod && paymentMethod === "PAYOS") {
       try {

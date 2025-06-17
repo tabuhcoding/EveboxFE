@@ -1,6 +1,6 @@
 /* Package System */
-import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 /* Package Application */
 import { OrderShowingResponse } from "@/types/models/event/booking/payment.interface";

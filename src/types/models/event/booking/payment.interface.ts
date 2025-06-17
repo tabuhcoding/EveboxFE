@@ -1,5 +1,6 @@
-import { EventProps, TicketType } from "./seatmap.interface";
 import { RedisInfo } from "../redisSeat";
+
+import { EventProps, TicketType } from "./seatmap.interface";
 
 export interface PaymentMethod {
   paymentMethod: string;

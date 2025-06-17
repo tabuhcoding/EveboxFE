@@ -1,7 +1,6 @@
 /* Package Application */
 import { fetchEventDetail } from "../../_components/libs/server/fetchEventDetail";
 
-import { ReactScan } from "@/components/reactScan";
 import SelectTicketPage from "./_components/selectTicketPage";
 
 interface PageProps {
@@ -21,13 +20,10 @@ export default async function Page({ params, searchParams }: PageProps) {
   const event = response?.data || null;
 
   return (
-    <>
-      <ReactScan />
-      <SelectTicketPage
-        showingId={showingId}
-        serverEvent={event}
-        seatMapId={seatMapId}
-      />
-    </>
+    <SelectTicketPage
+      showingId={showingId}
+      serverEvent={event}
+      seatMapId={seatMapId}
+    />
   );
 }

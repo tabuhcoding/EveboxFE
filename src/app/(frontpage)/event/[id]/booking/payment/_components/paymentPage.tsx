@@ -9,13 +9,15 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 /* Package Application */
 import AlertDialog from "@/components/common/alertDialog";
-import PaymentMethod from "./paymentMethod";
-import TicketInformation from "./ticketInfo";
-import Navigation from "../../_components/navigation";
-import CountdownTimer from "../../_components/countdownTimer";
+import { getRedisSeat } from "@/services/booking.service";
 import { TicketType, EventProps, SelectedTicketsState } from "@/types/models/event/booking/seatmap.interface";
 import { RedisInfo } from "@/types/models/event/redisSeat";
-import { getRedisSeat } from "@/services/booking.service";
+
+import CountdownTimer from "../../_components/countdownTimer";
+import Navigation from "../../_components/navigation";
+
+import PaymentMethod from "./paymentMethod";
+import TicketInformation from "./ticketInfo";
 
 export default function PaymentPage({ showingId, seatMapId }: { showingId: string, seatMapId?: number }) {
   const t = useTranslations('common');

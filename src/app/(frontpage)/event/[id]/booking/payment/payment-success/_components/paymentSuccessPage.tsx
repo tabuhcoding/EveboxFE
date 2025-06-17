@@ -1,19 +1,18 @@
 'use client';
 
 /* Package System */
-import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 /* Package Application */
-import AlertDialog from "@/components/common/alertDialog";
-import OrderInfoTable from "./orderInfoTable";
-import TicketResponseInfo from "./ticketResponseInfo";
-import ShowingInfo from "./showingInfo";
-import { OrderResponse, OrderStatus } from "@/types/models/event/booking/payment.interface";
 import { getUserOrderByOriginalId } from "@/services/payment.service";
+import { OrderResponse } from "@/types/models/event/booking/payment.interface";
+
+import OrderInfoTable from "./orderInfoTable";
+import ShowingInfo from "./showingInfo";
+import TicketResponseInfo from "./ticketResponseInfo";
 
 export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: string, status?: string }) {
   const t = useTranslations('common');
