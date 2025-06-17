@@ -10,7 +10,7 @@ import 'tailwindcss/tailwind.css';
 import Error from 'app/(frontpage)/error';
 import Loading from 'app/(protected)/(user)/my-profile/loading';
 import { getSeatMap, getShowingData } from 'services/event.service';
-import { SeatMap, ShowingData, TicketType } from 'types/models/event/booking/seatmap.interface';
+import { SeatMap, SeatmapType, ShowingData, TicketType } from 'types/models/event/booking/seatmap.interface';
 import { SelectTicketPageProps, SelectedTicketsState } from 'types/models/event/booking/selectTicket.interface';
 import { EventDetail } from 'types/models/event/eventdetail/event.interface';
 
@@ -19,6 +19,7 @@ import Navigation from '../../_components/navigation';
 import SeatMapComponent from './seatmap';
 import SelectTicket from './selectTicket';
 import TicketInfor from './ticketInfo';
+import SeatMapSectionComponent from './seatmapSection';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
@@ -28,6 +29,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
 
   const [event] = useState<EventDetail | null>(serverEvent);
   const [ticketType, setTicketType] = useState<TicketType[]>([]);
+  const [seatmapType, setSeatmapType] = useState<SeatmapType>(SeatmapType.NOT_A_SEATMAP);
 
   const [seatMapData, setSeatMapData] = useState<SeatMap | ShowingData | null>(null);
   const [isLoadingSeatmap, setIsLoadingSeatmap] = useState(true);
@@ -73,7 +75,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
         .then((seatMapResponse) => {
           if (seatMapResponse?.data) {
             setSeatMapData(seatMapResponse.data);
-
+            setSeatmapType(seatMapResponse.data.SeatMap?.seatMapType || SeatmapType.NOT_A_SEATMAP);
             return getShowingData(showingId);
           }
           else {
@@ -212,7 +214,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
             selectedTicket={selectedTicket}
             setSelectedTicket={setSelectedTicket}
           />
-        ) : (
+        ) : seatmapType == SeatmapType.SELECT_SEAT ? (
           <>
             <SeatMapComponent
               seatMap={seatMapData as SeatMap}
@@ -240,6 +242,14 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
               )}
             </div>
           </>
+        ) :
+        (
+          <SeatMapSectionComponent
+            seatMap={seatMapData as SeatMap}
+            onSeatSelectionChange={handleSeatSelectionChange}
+            ticketType={ticketType}
+            selectedSeatIds={selectedSeatIds}
+          />
         )}
       </div>
     </div>

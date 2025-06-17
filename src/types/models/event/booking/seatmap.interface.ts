@@ -48,6 +48,8 @@ export interface SeatMapElement {
   fill: string;
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 export interface Row {
@@ -76,8 +78,8 @@ export interface SeatMap {
   createdAt: Date;
   viewBox: string;
   status: number;
-  hasSeat: boolean;
   Section?: Section[];
+  seatMapType: SeatmapType;
 }
 
 export interface TicketType {
