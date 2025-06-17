@@ -74,8 +74,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
       getSeatMap(showingId)
         .then((seatMapResponse) => {
           if (seatMapResponse?.data) {
+            setSeatmapType(seatMapResponse.data.seatMapType || SeatmapType.NOT_A_SEATMAP);
             setSeatMapData(seatMapResponse.data);
-            setSeatmapType(seatMapResponse.data.SeatMap?.seatMapType || SeatmapType.NOT_A_SEATMAP);
             return getShowingData(showingId);
           }
           else {
@@ -244,12 +244,33 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           </>
         ) :
         (
+          <>
           <SeatMapSectionComponent
             seatMap={seatMapData as SeatMap}
             onSeatSelectionChange={handleSeatSelectionChange}
             ticketType={ticketType}
             selectedSeatIds={selectedSeatIds}
           />
+          <div className='w-[30%] pl-4'>
+              {ticketType.length > 0 && (
+                <div className='ticket-type-list'>
+                  <h2 className='font-bold text-lg mb-2'>{t("ticketPrice") ?? "Giá vé"}</h2>
+                  {ticketType.map((type) => (
+                    <div key={type.id} className='ticket-type-item flex justify-between items-center mb-2'>
+                      <div className='flex items-center'>
+                        <span
+                          className="inline-block ticket-type-color w-10 h-6 rounded mr-2"
+                          style={{ backgroundColor: type.color }}
+                        ></span>
+                        <span className='ticket-type-name'>{type.name}</span>
+                      </div>
+                      <span className='ticket-type-price text-[#0C4762] font-semibold'>{type.price?.toLocaleString("vi-VN")}đ</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>

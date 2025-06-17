@@ -140,7 +140,7 @@ export interface ShowingData {
   }
 }
 
-export type SeatMapResponse = BaseApiResponse<ShowingData>;
+export type SeatMapResponse = BaseApiResponse<SeatMap>;
 
 export interface EventProps {
   id: number;
