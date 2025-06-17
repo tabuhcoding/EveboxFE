@@ -294,5 +294,8 @@
   "orderStatus": "Tình trạng đơn hàng",
   "location": "Địa điểm",
   "address": "Địa chỉ",
-  "time": "Thời gian"
+  "time": "Thời gian",
+  "redirectToMyTicket": "Sẽ chuyển về trang Vé của tôi trong",
+  "seconds": "giây",
+  "supportLongWait": "Nếu chờ quá lâu, vui lòng liên hệ hỗ trợ để được giải quyết nhanh nhất"
 }

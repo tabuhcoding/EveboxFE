@@ -10,8 +10,10 @@ import { useEffect, useState } from "react";
 import { getUserOrderByOriginalId } from "@/services/payment.service";
 import { OrderResponse } from "@/types/models/event/booking/payment.interface";
 
+import AutoCloseDialog from "./autoCloseDialog";
 import OrderInfoTable from "./orderInfoTable";
 import ShowingInfo from "./showingInfo";
+import SupportInfo from "./supportInfo";
 import TicketResponseInfo from "./ticketResponseInfo";
 
 export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: string, status?: string }) {
@@ -31,8 +33,7 @@ export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: 
   };
 
   useEffect(() => {
-    if (!orderCode) {
-      setAlertMessage(transWithFallback('noOrderCodeFound', 'Không tìm thấy mã đơn hàng'));
+    if (!orderCode || orderCode === "") {
       setAlertOpen(true);
       return;
     }
@@ -47,7 +48,7 @@ export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: 
     const fetchUserOrder = async () => {
       setIsLoading(true);
       try {
-        const res = await getUserOrderByOriginalId(orderCode ?? "0", session?.user?.accessToken ?? "");
+        const res = await getUserOrderByOriginalId(orderCode || "0", session?.user?.accessToken || "");
 
         if (res.statusCode === 200) {
           setOrderResponseDetail(res?.data);
@@ -70,28 +71,13 @@ export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: 
 
   if (alertOpen) {
     return (
-      <div className="flex flex-col items-center justify-center bg-gray-100 p-6 min-h-[60vh]">
-        <div className="text-center mb-6">
-          <div className="text-red-500 text-6xl mb-4 animate-bounce">😥</div>
-          <h1 className="text-3xl font-bold text-red-600">
-            {transWithFallback('payError', 'Thanh toán thất bại!')}
-          </h1>
-          <div className="mt-4 bg-red-100 text-red-800 p-4 rounded-lg shadow-md max-w-2xl">
-            <p>{alertMessage}</p>
-          </div>
-          <p className="text-gray-700 mt-4 text-lg max-w-2xl">
-            {transWithFallback('tryAgain', 'Vui lòng thử lại hoặc liên hệ hỗ trợ nếu gặp vấn đề khi thanh toán.')}
-          </p>
-        </div>
-        <div className="mt-6">
-          <Link href="/">
-            <button className="bg-[#0C4762] hover:bg-[#3BB8AE] text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all">
-              {transWithFallback('backToHome', 'Quay lại trang chủ')}
-            </button>
-          </Link>
-        </div>
-      </div>
-    );
+      <AutoCloseDialog
+        open={alertOpen}
+        message={!orderCode ? transWithFallback('noOrderCodeFound', 'Không tìm thấy mã đơn hàng.') : alertMessage}
+        seconds={10}
+        onClose={() => setAlertOpen(false)}
+      />
+    )
   }
 
   const isPaidProcessing =
@@ -116,6 +102,10 @@ export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: 
           <h1 className="text-3xl font-bold text-sky-900">
             {transWithFallback('loadingOrder', 'Đang lấy thông tin đơn hàng...')}
           </h1>
+          <p className="mt-4 text-gray-600 text-base">
+            {transWithFallback('supportLongWait', 'Nếu chờ quá lâu, vui lòng liên hệ hỗ trợ để được giải quyết nhanh nhất')}:
+          </p>
+          <SupportInfo />
         </div>
         {orderResponseDetail?.Showing && (
           <div className="bg-white p-6 rounded-lg shadow-md mt-4 w-full max-w-4xl">
