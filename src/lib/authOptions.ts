@@ -11,7 +11,7 @@ export const authOptions: AuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: true,
-        domain: process.env.NEXT_PUBLIC_URL
+        domain: process.env.NEXT_PUBLIC_DOMAIN
       }
     }
   },
