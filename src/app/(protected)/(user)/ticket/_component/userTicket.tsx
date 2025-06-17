@@ -1,5 +1,9 @@
 'use client';
 
+/* Package System */
+import { useTranslations } from 'next-intl';
+
+/* Package Application */
 import { useEffect, useState } from 'react';
 import createApiClient from '@/services/apiClient';
 import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticketInfo';
@@ -15,6 +19,14 @@ const TicketManagement = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
 
   const router = useRouter();
+
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   useEffect(() => {
     setCurrentTime(Date.now()); // Cập nhật giờ hiện tại khi client render
@@ -72,14 +84,14 @@ const TicketManagement = () => {
   }, [setTicketInfo]);
 
   return (
-    <div className="mt-2 mx-auto px-4">
-      <h2 className="text-2xl font-bold mt-8 mb-4">Quản lý vé đã mua</h2>
-      <h5 className="text-sm text-gray-700">Quản lý tiến trình tham gia sự kiện qua các vé</h5>
+    <div className="ticket-management mt-2 mx-auto px-4">
+      <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('managementTicket', 'Quản lý vé đã mua')}</h2>
+      <h5 className="text-sm text-gray-700">{transWithFallback('managementTicketSubtitle', 'Quản lý tiến trình tham gia sự kiện qua các vé')}</h5>
       <hr className="my-6 border-gray-800 font-bold" />
 
       {/* Tabs */}
       <div className="grid grid-cols-4 gap-20 mb-4">
-        {["Tất cả", "Thành công", "Đang xử lý", "Đã hủy"].map((tab, index) => (
+        {[transWithFallback('allTab', 'Tất cả'), transWithFallback('successTitle', 'Thành công'), transWithFallback('processingTab', 'Đang xử lý'), transWithFallback('canceledTab', 'Đã hủy')].map((tab, index) => (
           <button
             key={index}
             className={`px-8 py-2 rounded-full ${selectedTab === index ? 'bg-[#51DACF] text-black font-bold' : 'bg-gray-300 text-gray-700'}`}
@@ -93,7 +105,7 @@ const TicketManagement = () => {
       {/* Sub-tabs */}
       <div className="flex justify-center mb-4">
         <div className="flex w-full max-w-md justify-between">
-          {["Sắp diễn ra", "Đã kết thúc"].map((subTab, index) => (
+          {[transWithFallback('upcomingTab', 'Sắp diễn ra'), transWithFallback('showingOver', 'Đã kết thúc')].map((subTab, index) => (
             <button
               key={index}
               className={`relative px-10 py-2 font-medium ${selectedSubTab === index ? 'text-black font-bold' : 'text-gray-700'}`}
@@ -107,9 +119,9 @@ const TicketManagement = () => {
       </div>
 
       {loading ? (
-        <p className="text-center">Đang tải dữ liệu...</p>
+        <p className="text-center">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
       ) : filteredTickets.length === 0 ? (
-        <p className="text-center">Bạn chưa có vé nào.</p>
+        <p className="text-center">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
           {filteredTickets.map((ticket) => (

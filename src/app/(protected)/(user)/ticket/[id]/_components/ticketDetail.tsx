@@ -6,15 +6,12 @@ import { useState } from 'react';
 import Image from 'next/image';
 // import { ArrowLeft } from 'lucide-react';
 import jsQR from 'jsqr';
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 import { decrypt } from '@/utils/helpers';
-
-
-interface TicketDetailProps {
-    ticketId: string;
-}
+import {TicketDetailProps} from '@/types/models/ticket/ticketInfoById';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
@@ -22,12 +19,21 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const [qrDecodedData, setQrDecodedData] = useState(null);
     // const router = useRouter();
 
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
+
     if (loading) {
-        return <div className="text-white text-center">Đang tải...</div>;
+        return <div className="text-white text-center">{transWithFallback('uploading', 'Đang tải...')}</div>;
     }
 
     if (error || !ticket) {
-        return <div className="text-white text-center">Không tìm thấy vé</div>;
+        return <div className="text-white text-center">{transWithFallback('notFoundTicket', 'Không tìm thấy vé')}</div>;
     }
 
     const getStatusInfo = (status: number) => {
@@ -40,7 +46,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     };
 
     if (!ticket) {
-        return <div className="text-white text-center">Không tìm thấy vé</div>;
+        return <div className="text-white text-center">{transWithFallback('notFoundTicket', 'Không tìm thấy vé')}</div>;
     }
 
     const { text, color } = getStatusInfo(ticket.status);
@@ -85,20 +91,20 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     const parsedData = JSON.parse(decryptedContent);
                     setQrDecodedData(parsedData);
                 } catch (error) {
-                    console.error('Lỗi khi giải mã hoặc parse QR:', error);
-                    alert('Có lỗi xảy ra khi giải mã QR.');
+                    console.error(transWithFallback('errorDecodeQR', 'Lỗi khi giải mã hoặc parse QR:'), error);
+                    alert(transWithFallback('errorDecodeQRAlert', 'Có lỗi xảy ra khi giải mã QR.'));
                 }
             } else {
-                alert('Không tìm thấy dữ liệu QR.');
+                alert(transWithFallback('notFoundQRData', 'Không tìm thấy dữ liệu QR.'));
             }
         };
         img.onerror = (event: string | Event) => {
-            console.error('Lỗi khi load ảnh QR:', event);
+            console.error(transWithFallback('errorLoadQRImage', 'Lỗi khi load ảnh QR:'), event);
         };
     }
 
     return (
-        <div className="mt-8 min-h-screen flex justify-center items-center px-4">
+        <div className="ticket-detail mt-8 min-h-screen flex justify-center items-center px-4">
             {/* <button
                 onClick={() => router.back()}
                 className="p-1.5 border-2 border-[#0C4762] rounded-md hover:bg-gray-200 absolute top-4 left-4"
@@ -122,19 +128,19 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
                     <div className="mt-4 grid grid-cols-4 gap-x-4">
                         <div>
-                            <p className="text-sm text-gray-300">Loại vé</p>
+                            <p className="text-sm text-gray-300">{transWithFallback('ticketType', 'Loại vé')}</p>
                             <p className="text-[#9EF5CF] font-semibold">{ticket.ticketType.name}</p>
                         </div>
                         <div>
-                            <p className="text-sm text-gray-300">Khu vực</p>
+                            <p className="text-sm text-gray-300">{transWithFallback('area', 'Khu vực')}</p>
                             <p className="text-[#9EF5CF] font-semibold">{seatInfo.section}</p>
                         </div>
                         <div>
-                            <p className="text-sm text-gray-300">Hàng: Ghế</p>
+                            <p className="text-sm text-gray-300">{transWithFallback('rowSeat', 'Hàng: Ghế')}</p>
                             <p className="text-[#9EF5CF] font-semibold">{seatInfo.row} : {seatInfo.seat}</p>
                         </div>
                         <div>
-                            <p className="text-sm text-gray-300">Thời gian</p>
+                            <p className="text-sm text-gray-300">{transWithFallback('timeTitle', 'Thời gian')}</p>
                             <p className="text-[#9EF5CF] font-semibold">
                                 {new Date(ticket.Showing?.startTime || '').toLocaleTimeString()} - {new Date(ticket.Showing?.endTime || '').toLocaleTimeString()}
                             </p>
@@ -148,7 +154,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     {currentTicket?.qrCode && currentTicket.qrCode !== "Unknow" && (
                         <div className="mt-6 flex justify-center">
                             <div className="bg-[#9EF5CF] p-2 rounded-lg flex flex-col items-center gap-2">
-                                <span className="text-sm text-[#0C4762] font-semibold">Mã QR vé</span>
+                                <span className="text-sm text-[#0C4762] font-semibold">{transWithFallback('qrCode', 'Mã QR vé')}</span>
                                 <Image
                                     src={currentTicket.qrCode.startsWith('data:image') ? currentTicket.qrCode : `data:image/png;base64,${currentTicket.qrCode}`}
                                     alt="QR Code"
@@ -166,13 +172,13 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             onClick={handleDecodeQR}
                             className="bg-[#51DACF] text-[#0C4762] px-4 py-2 rounded-lg"
                         >
-                            Giải mã QR
+                            {transWithFallback('decodeQR', 'Giải mã QR')}
                         </button>
                     </div>
                     {/* Hiển thị dữ liệu giải mã được dưới dạng danh sách */}
                     {qrDecodedData && (
                         <div className="mt-4 bg-gray-800 p-4 rounded-lg">
-                            <h3 className="text-white font-semibold mb-2">Nội dung QR:</h3>
+                            <h3 className="text-white font-semibold mb-2">{transWithFallback('qrContent', 'Nội dung QR:')}</h3>
                             <ul className="text-white text-sm list-disc pl-5">
                                 {Object.entries(qrDecodedData).map(([key, value]) => (
                                     <li key={key}>
@@ -191,15 +197,15 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                                 onClick={() => setCurrentTicketIndex((prev) => Math.max(0, prev - 1))}
                                 disabled={currentTicketIndex === 0}
                             >
-                                Trước
+                                {transWithFallback('previous', 'Trước')}
                             </button>
-                            <span className="flex items-center justify-center">Vé {currentTicketIndex + 1} / {totalTickets}</span>
+                            <span className="flex items-center justify-center">{transWithFallback('ticket', 'Vé')} {currentTicketIndex + 1} / {totalTickets}</span>
                             <button
                                 className="bg-[#51DACF] text-[#0C4762] px-4 py-2 rounded-lg disabled:opacity-50"
                                 onClick={() => setCurrentTicketIndex((prev) => Math.min(totalTickets - 1, prev + 1))}
                                 disabled={currentTicketIndex === totalTickets - 1}
                             >
-                                Sau
+                                {transWithFallback('next', 'Sau')}
                             </button>
                         </div>
                     )}
@@ -209,19 +215,19 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                 {/* Order Details */}
                 <div className="bg-[#0C4762] text-white w-1/2 p-6 rounded-lg shadow-lg">
                     <div className="bg-[#083A4F] p-4 rounded-lg">
-                        <h3 className="text-lg font-bold mb-2">Thông tin đơn hàng</h3>
+                        <h3 className="text-lg font-bold mb-2">{transWithFallback('orderInfo', 'Thông tin đơn hàng')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
-                            <p className="text-gray-300">Ngày đặt hàng:</p>
+                            <p className="text-gray-300">{transWithFallback('orderDated', 'Ngày đặt hàng:')}</p>
                             <p className="text-[#9EF5CF]">{new Date(ticket.PaymentInfo?.paidAt || '').toLocaleString()}</p>
-                            <p className="text-gray-300">Phương thức thanh toán:</p>
+                            <p className="text-gray-300">{transWithFallback('paymentMethod', 'Phương thức thanh toán')}:</p>
                             <p className="text-[#9EF5CF]">{ticket.PaymentInfo?.method}</p>
-                            <p className="text-gray-300">Tình trạng đơn hàng:</p>
+                            <p className="text-gray-300">{transWithFallback('orderStatus', 'Tình trạng đơn hàng')}:</p>
                             <p className={`${color} font-bold`}>{text}</p>
                         </div>
                     </div>
 
                     <div className="mt-4 bg-[#083A4F] p-4 rounded-lg">
-                        <h3 className="text-lg font-bold mb-2">Thông tin người mua</h3>
+                        <h3 className="text-lg font-bold mb-2">{transWithFallback('buyerInfo', 'Thông tin người mua')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             {ticket?.FormResponse?.FormAnswer.length ? (
                                 ticket.FormResponse.FormAnswer.map((answer, index) => (
@@ -231,28 +237,28 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-gray-300 col-span-2">Không có thông tin người mua.</p>
+                                <p className="text-gray-300 col-span-2">{transWithFallback('noBuyerInfo', 'Không có thông tin người mua.')}</p>
                             )}
                         </div>
                     </div>
 
                     <div className="mt-4 bg-[#083A4F] p-4 rounded-lg">
-                        <h3 className="text-lg font-bold mb-2">Chi tiết thanh toán</h3>
+                        <h3 className="text-lg font-bold mb-2">{transWithFallback('paymentDetails', 'Chi tiết thanh toán')}</h3>
                         <div className="grid grid-cols-3 gap-2 text-sm">
-                            <p className="text-gray-300">Loại vé</p>
-                            <p className="text-gray-300 text-center">Số lượng</p>
-                            <p className="text-gray-300 text-right">Thành tiền</p>
+                            <p className="text-gray-300">{transWithFallback('ticketType', 'Loại vé')}</p>
+                            <p className="text-gray-300 text-center">{transWithFallback('quantity', 'Số lượng')}</p>
+                            <p className="text-gray-300 text-right">{transWithFallback('totalAmount', 'Thành tiền')}</p>
                             <p className="text-[#9EF5CF]">{ticket.ticketType.name}</p>
                             <p className="text-[#9EF5CF] text-center">{ticket.count}</p>
                             <p className="text-[#9EF5CF] text-right">{(ticket.price * ticket.count).toLocaleString()} đ</p>
                         </div>
                         <div className="border-t border-gray-400 mt-2 pt-2 text-sm">
                             <p className="text-gray-300 flex justify-between">
-                                Tổng tạm tính:
+                                {transWithFallback('subTotal', 'Tổng tạm tính:')}:
                                 <span className="text-[#9EF5CF]">{(ticket.price * ticket.count).toLocaleString()} đ</span>
                             </p>
                             <p className="text-white flex justify-between font-bold text-lg mt-2">
-                                Tổng tiền:
+                                {transWithFallback('total', 'Tổng tiền:')}:
                                 <span className="text-[#00FF00]">{(ticket.price * ticket.count).toLocaleString()} đ</span>
                             </p>
                         </div>

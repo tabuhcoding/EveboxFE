@@ -1,5 +1,9 @@
 import { BaseApiResponse } from "@/types/baseApiResponse";
 
+export interface TicketDetailProps {
+    ticketId: string;
+}
+
 export interface IImagesResponseData {
   imageUrl: string;
 }
