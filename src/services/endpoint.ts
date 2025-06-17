@@ -34,7 +34,8 @@ export class END_POINT_LIST {
     SELECT_SEAT: '/api/booking/selectSeat',
     SUBMIT_FORM: '/api/booking/submitForm',
     GET_REDIS_SEAT: "/api/booking/getRedisSeat",
-    UNSELECT_SEAT: "/api/booking/unSelectSeat"
+    UNSELECT_SEAT: "/api/booking/unSelectSeat",
+    GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId"
   }
 
   static readonly ORG_EVENT = {
@@ -72,10 +73,15 @@ export class END_POINT_LIST {
     EVENTS: "/api/admin/event",
     SHOWINGS: "/api/admin/showing",
     EVENTS_SPECIAL: "api/admin/event-special"
-  }
+  };
 
   static readonly LOCATION = {
     GET_ALL_LOCATIONS: "/api/location/all",
     GET_ALL_DISTRICTS: "/api/all-districts"
+  };
+
+  static readonly PAYMENT = {
+    GET_METHOD_STATUS: '/api/payment/getPaymentMethodStatus',
+    CHECKOUT: '/api/payment/checkout'
   }
 }

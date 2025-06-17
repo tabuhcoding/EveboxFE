@@ -1,49 +1,83 @@
 'use client';
 
 /* Package System */
-import Image from 'next/image';
-import { useRouter } from "next/navigation";
-import { useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
-import React, { useState } from 'react';
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 /* Package Application */
-import AlertDialog from '@/components/common/alertDialog';
-import { submitForm, unselectSeat } from '@/services/booking.service';
-import { TicketInformationProps } from 'types/models/event/booking/questionForm.interface';
+import { useI18n } from "@/app/providers/i18nProvider";
+import AlertDialog from "@/components/common/alertDialog";
+import { unselectSeat } from "@/services/booking.service";
+import { checkoutPayment } from "@/services/payment.service";
+import { TicketInforProps } from "@/types/models/event/booking/payment.interface";
 
-import ConfirmDialog from './confirmDialog';
+import ConfirmDialog from "../../question-form/_components/confirmDialog";
 
-export default function TicketInformation({
-  event, totalTickets, totalAmount, isFormValid,
-  selectedTickets, ticketType, formData, showingId, formId, redisInfo, seatMapId
-}: TicketInformationProps) {
-  console.log("🚀 ~ totalTickets:", totalTickets)
+export default function TicketInformation({ event, totalTickets, totalAmount, selectedTickets, ticketType, paymentMethod, showingId, seatMapId, redisInfo }: TicketInforProps) {
+  console.log("🚀 ~ TicketInformation ~ totalTickets:", totalTickets)
+  const { locale } = useI18n();
   const t = useTranslations('common');
-  const [openDialog, setOpenDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
 
+  // const [promoCode, setPromoCode] = useState('');
+
+  // const [isOpen, setIsOpen] = useState(false);
+  const [openUnselectSeatDialog, setOpenUnselectSeatDialog] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const { data: session } = useSession();
-  const router = useRouter();
 
-  const transWithFallback = (key: string, fallback: string) => {
-    const msg = t(key);
-    if (!msg || msg.startsWith('common.')) return fallback;
-    return msg;
-  };
+  // const handleOpenDialog = () => {
+  //   setIsOpen(true);
+  // };
+
+  const handlePayment = async () => {
+    // if (paymentMethod === '') {
+    //   handleOpenDialog();
+    //   return;
+    // }
+
+    if (paymentMethod && paymentMethod === "PAYOS") {
+      try {
+        if (!showingId) {
+          setAlertMessage(transWithFallback('noShowing', 'Không tìm thấy id của suất diễn'));
+          setAlertOpen(true);
+          return;
+        }
+
+        const res = await checkoutPayment({
+          showingID: showingId,
+          paymentMethod,
+          paymentSuccessUrl: `${process.env.NODE_ENV === 'development' ? `http://${process.env.NEXT_PUBLIC_URL}:${process.env.PORT}` : process.env.NEXT_PUBLIC_API_URL}/event/${event.id}/booking/payment/payment-success`,
+          paymentCancelUrl: window.location.href
+        }, session?.user?.accessToken || "");
+
+        if (res.statusCode === 200) {
+          window.location.href = res.data.paymentLink;
+        }
+        else {
+          setAlertMessage(transWithFallback('errorCheckout', 'Lỗi khi thanh toán vé'));
+          setAlertOpen(true);
+        }
+      } catch (error: any) {
+        console.error('Lỗi khi thanh toán vé:', error);
+        setAlertMessage(error.toString());
+        setAlertOpen(true);
+      }
+    }
+  }
 
   const handleClose = async () => {
     if (!redisInfo) {
-      setOpenDialog(false);
+      setOpenUnselectSeatDialog(false);
       return;
     }
 
     try {
       const res = await unselectSeat(showingId ?? "", session?.user?.accessToken || "");
       if (res?.statusCode === 200) {
-        setOpenDialog(false);
+        setOpenUnselectSeatDialog(false);
       } else {
         setAlertMessage(transWithFallback('errorUnselectSeat', 'Lỗi khi hủy chọn vé'));
         setAlertOpen(true);
@@ -55,41 +89,11 @@ export default function TicketInformation({
     }
   }
 
-  const handlePayment = async () => {
-    if (!session?.user?.accessToken || !event || !formId || !showingId) return;
-
-    setLoading(true);
-
-    try {
-      const answers = Object.entries(formData).map(([formInputId, value]) => ({
-        formInputId: Number(formInputId),
-        value,
-      }));
-      const res = await submitForm({
-        formId: Number(formId),
-        showingId,
-        answers
-      }, session?.user?.accessToken);
-
-      if (res.statusCode === 200) {
-        localStorage.setItem('submittedForm', JSON.stringify(formData));
-
-        if (seatMapId && seatMapId !== 0) {
-          router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);
-        }
-        else router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
-      } else {
-        setAlertMessage(transWithFallback('errorSubmitForm', 'Lỗi khi gửi form đi'));
-        setAlertOpen(true);
-      }
-    } catch (error: any) {
-      console.error('Lỗi khi gọi API submit form:', error);
-      setAlertMessage(error.toString());
-      setAlertOpen(true);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   return (
     <div className="col-5 border-start" style={{ borderLeft: '1px solid #ddd' }}>
@@ -114,7 +118,7 @@ export default function TicketInformation({
               </p>
               <p className='d-flex justify-content-start'>
                 <i className="bi bi-calendar2-event mr-2"></i>
-                {new Date(event?.startDate).toLocaleString('vi-VN', {
+                {new Date(event?.startDate).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
@@ -133,7 +137,7 @@ export default function TicketInformation({
           </div>
           {event && (
             <div className="col-md-4 d-flex justify-content-end">
-              <p style={{ cursor: 'pointer', color: '#007bff' }} onClick={() => setOpenDialog(true)}>
+              <p style={{ cursor: 'pointer', color: '#007bff' }} onClick={() => setOpenUnselectSeatDialog(true)}>
                 {transWithFallback('reBookTicket', 'Chọn lại vé')}
               </p>
             </div>
@@ -181,7 +185,7 @@ export default function TicketInformation({
             })
         }
         <hr className="custom-hr" />
-        <div className='row'>
+        <div className='row pt-2 pb-3'>
           <div className="col-md-8 d-flex justify-content-start">
             <p>{transWithFallback('subtotal', 'Tạm tính')}</p>
           </div>
@@ -189,29 +193,28 @@ export default function TicketInformation({
             <p>{totalAmount?.toLocaleString("vi-VN")}đ</p>
           </div>
         </div>
+
+        <div className='row pt-2 pb-3'>
+          <div className="col-md-8 d-flex justify-content-start">
+            <p style={{ color: '#0C4762' }} className='fw-bold'>Tổng tiền</p>
+          </div>
+          <div className="col-md-4 d-flex justify-content-end">
+            <p style={{ color: '#0C4762' }} className='fw-bold'>{totalAmount.toLocaleString("vi-VN")}đ</p>
+          </div>
+        </div>
+
         <div className='row mt-2 mb-4'>
-          <p>{transWithFallback('ansAllToCont', 'Vui lòng trả lời tất cả câu hỏi để tiếp tục')}</p>
+          <p>Bằng việc tiến hành đặt mua</p><br />
+          <p>Bạn đã đồng ý với các <a href='#' style={{ color: '#0C4762', textDecoration: 'underline' }}>Điều Kiện Giao Dịch Chung</a></p>
         </div>
         <div className='row'>
-          <button
-            onClick={handlePayment}
-            className={isFormValid ? 'h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]' : 'btn-order-disable'}
-            disabled={!isFormValid || loading}
-          >
-            {loading ? (
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">{transWithFallback('loading', 'Đang tải')}</span>
-              </div>
-            ) : (
-              `${transWithFallback('checkout', 'Thanh toán')} - ${totalAmount.toLocaleString("vi-VN")}đ`
-            )}
-          </button>
+          <button onClick={handlePayment} className='h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'>Thanh toán</button>
         </div>
       </div>
-      <ConfirmDialog 
-        open={openDialog} 
+      <ConfirmDialog
+        open={openUnselectSeatDialog}
         onClose={handleClose}
-        id={event?.id} 
+        id={event?.id}
         showingId={showingId ?? ""}
         seatMapId={seatMapId}
       />
@@ -221,6 +224,5 @@ export default function TicketInformation({
         onClose={() => setAlertOpen(false)}
       />
     </div>
-  );
+  )
 }
-
