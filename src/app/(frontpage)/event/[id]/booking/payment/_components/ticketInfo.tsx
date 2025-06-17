@@ -51,7 +51,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
           paymentMethod,
           paymentSuccessUrl: process.env.NODE_ENV === 'development'
             ? `http://${process.env.NEXT_PUBLIC_URL}/event/${event.id}/booking/payment/payment-success`
-            : `${process.env.NEXT_PUBLIC_API_URL}/event/${event.id}/booking/payment/payment-success`,
+            : `${process.env.NEXT_PUBLIC_URL}/event/${event.id}/booking/payment/payment-success`,
           paymentCancelUrl: window.location.href
         }, session?.user?.accessToken || "");
 
