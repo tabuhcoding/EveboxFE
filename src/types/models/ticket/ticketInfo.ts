@@ -9,6 +9,7 @@ export interface IUserEvent {
     startTime: Date;
     endTime: Date;
     title: string;
+    locationsString: string;
   }
   
   export interface IUserFormInput {

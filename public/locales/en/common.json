@@ -327,5 +327,7 @@
     "noBuyerInfo": "No buyer information available.",
     "paymentDetails": "Payment Details",
     "subTotal": "Sub Total:",
-    "total": "Total:"
+    "total": "Total:",
+    "locationString": "Location not updated",
+    "noInformation": "No information available"
 }

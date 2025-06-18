@@ -326,5 +326,7 @@
   "noBuyerInfo": "Không có thông tin người mua.",
   "paymentDetails": "Chi tiết thanh toán",
   "subTotal": "Tổng tạm tính:",
-  "total": "Tổng tiền:"
+  "total": "Tổng tiền:",
+  "locationString": "Địa điểm chưa cập nhật",
+  "noInformation": "Chưa có thông tin"
 }

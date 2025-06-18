@@ -126,11 +126,11 @@ const TicketManagement = () => {
       </div>
 
       {loading ? (
-        <p className="text-center">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
+        <p className="text-center mb-8">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
       ) : filteredTickets.length === 0 ? (
-        <p className="text-center">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
+        <p className="text-center mb-8">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-8">
           {filteredTickets.map((ticket) => (
             <div
               key={ticket.id}
@@ -138,7 +138,7 @@ const TicketManagement = () => {
               onClick={() => router.push(`/ticket/${ticket.id}`)}
             >
               {/* Ngày tháng */}
-              <div className="bg-[#08374A] text-white p-4 flex flex-col items-center justify-center w-24 border-r border-white">
+              <div className="bg-[#08374A] text-white p-4 flex flex-col items-center justify-center w-26 border-r border-white">
                 <span className="text-2xl font-bold">
                   {ticket.Showing?.startTime
                     ? new Date(ticket.Showing.startTime).getDate()
@@ -164,7 +164,7 @@ const TicketManagement = () => {
                 </h3>
                 <div className="flex gap-2 mb-2">
                   <span className={`${getStatusColor(ticket.status)} text-xs px-2 py-1 rounded-md`}>
-                    {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : "Đã hủy"}
+                    {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : ticket.status === 'CANCELLED' ? "Đã hủy" : ""}
                   </span>
                   <span className={`border border-green-500 text-green-500 text-xs px-2 py-1 rounded-md`}>
                     {ticket.type === 'E_TICKET' ? "Vé điện tử" : "Vé cứng"}
@@ -179,11 +179,11 @@ const TicketManagement = () => {
                       month: "long",
                       year: "numeric",
                     }).replace("lúc ", "")
-                    : "Chưa có thông tin"}
+                    : transWithFallback('noInformation', 'Chưa có thông tin')}
                 </p>
-                {/* <p className="text-sm font-medium">
-                  📍 {ticket.Showing?.location || "Địa điểm chưa cập nhật"}
-                </p> */}
+                <p className="text-sm font-medium">
+                  📍 {ticket.Showing?.locationsString || transWithFallback('locationString', 'Địa điểm chưa cập nhật')}
+                </p>
               </div>
             </div>
           ))}
