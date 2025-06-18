@@ -7,8 +7,9 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 /* Package Application */
-import { decrypt } from '@/utils/helpers';
 import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
+import { decrypt } from '@/utils/helpers';
+
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
@@ -55,11 +56,9 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
         : [];
 
     const totalTickets = allTickets.length;
-
     const currentTicket = allTickets[currentTicketIndex];
 
     let seatInfo = { section: "-", seat: "-" };
-    const allSeats = ticket.Ticket?.[0]?.tickets || [];
 
     if (currentTicket) {
         seatInfo = {
@@ -109,12 +108,6 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
     return (
         <div className="ticket-detail mt-8 mb-10 min-h-screen flex justify-center items-center px-4">
-            {/* <button
-                onClick={() => router.back()}
-                className="p-1.5 border-2 border-[#0C4762] rounded-md hover:bg-gray-200 absolute top-4 left-4"
-            >
-                <ArrowLeft size={20} className="text-[#0C4762]" />
-            </button> */}
             <div className="flex flex-row gap-4 w-full">
                 {/* Ticket Details */}
                 <div className="bg-[#0C4762] text-white w-1/2 p-6 rounded-lg shadow-lg">
@@ -130,7 +123,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         />
                     </div>
 
-                    <div className="mt-4 grid grid-cols-4 gap-x-4">
+                    <div className="mt-4 grid grid-cols-[1.1fr_1.1fr_1fr_1.5fr] gap-x-4">
                         <div>
                             <p className="text-sm text-gray-300">{transWithFallback('ticketType', 'Loại vé')}</p>
                             <p className="text-[#9EF5CF] font-semibold">{ticket.type}</p>
@@ -143,10 +136,10 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             <p className="text-sm text-gray-300">{transWithFallback('rowSeat', 'Hàng - Ghế')}</p>
                             <p className="text-[#9EF5CF] font-semibold">{seatInfo.seat}</p>
                         </div>
-                        <div>
+                        <div className='ml-auto text-left'>
                             <p className="text-sm text-gray-300">{transWithFallback('timeTitle', 'Thời gian')}</p>
                             <p className="text-[#9EF5CF] font-semibold">
-                                {new Date(ticket.Showing?.startTime || '').toLocaleTimeString()} - {new Date(ticket.Showing?.endTime || '').toLocaleTimeString()}
+                                {new Date(ticket.Showing?.startTime || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(ticket.Showing?.endTime || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             <p className="text-[#9EF5CF] font-semibold">
                                 {new Date(ticket.Showing?.startTime || '').toLocaleDateString()}
@@ -258,11 +251,11 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         </div>
                         <div className="border-t border-gray-400 mt-2 pt-2 text-sm">
                             <p className="text-gray-300 flex justify-between">
-                                {transWithFallback('subTotal', 'Tổng tạm tính:')}:
+                                {transWithFallback('subTotal', 'Tổng tạm tính:')}
                                 <span className="text-[#9EF5CF]">{(ticket.price * ticket.count).toLocaleString()} đ</span>
                             </p>
                             <p className="text-white flex justify-between font-bold text-lg mt-2">
-                                {transWithFallback('total', 'Tổng tiền:')}:
+                                {transWithFallback('total', 'Tổng tiền:')}
                                 <span className="text-[#00FF00]">{(ticket.price * ticket.count).toLocaleString()} đ</span>
                             </p>
                         </div>
