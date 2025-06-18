@@ -5,117 +5,34 @@ import { useTranslations } from "next-intl";
 import React, { useState, useEffect, useRef } from "react";
 
 /* Package Application */
-import AlertDialog from "components/common/alertDialog";
-import { Seat, SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
+// import AlertDialog from "components/common/alertDialog";
+import { SeatMapProps, Section } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
 export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds }: SeatMapProps) {
-  const [selectedSeats, setSelectedSeats] = useState<SelectedSeatsMap>({});
+  const t = useTranslations("common");
+
+  // const [alertOpen, setAlertOpen] = useState(false);
+  // const [alertMessage, setAlertMessage] = useState("");
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
+  const [sectionTickets, setSectionTickets] = useState<{ [ticketTypeId: string]: number }>({});
+
   const [zoom, setZoom] = useState<number>(1);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const lastMousePosition = useRef({ x: 0, y: 0 });
   // const [selectedTicketType, setSelectedTicketType] = useState<string | null>(null);
 
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const stageSections = seatMap.Section?.filter(s => s.isStage);
+  const normalSections = seatMap.Section?.filter(s => !s.isStage);
 
-
-  const t = useTranslations("common");
+  const seatmapRef = useRef<HTMLDivElement>(null);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
-
-  useEffect(() => {
-    if (!selectedSeatIds || selectedSeatIds.length === 0) {
-      setSelectedSeats({});
-    }
-  }, [selectedSeatIds]);
-
-  const handleSeatClick = (seat: Seat, sectionTicketTypeId: string, sectionId: number, status: string, rowName: string) => {
-    if (status !== 'AVAILABLE') return;
-
-    // Lấy data hiện tại của loại vé đó (ticketType)
-    const ticket = ticketType.find((t) => t.id === sectionTicketTypeId);
-    const ticketData = selectedSeats[sectionTicketTypeId] || { seatIds: [], labels: [], sectionId, quantity: 0 };
-    const seatIds = ticketData.seatIds;
-    const labels = ticketData.labels || [];
-    const cleanRowName = rowName.replace(/"/g, '');
-    const cleanSeatName = seat.name.replace(/"/g, '');
-    const seatLabel = `${cleanRowName}-${cleanSeatName}`;
-    const exists = seatIds.includes(seat.id);
-    const maxQty = ticket?.maxQtyPerOrder ?? Infinity
-
-    let newSeatIds: number[];
-    let newLabels: string[] = [];
-    let isSelected: boolean;
-
-    if (exists) {
-      newSeatIds = seatIds.filter(id => id !== seat.id);
-      newLabels = labels.filter(label => label !== seatLabel);
-      isSelected = false;
-    } else {
-      if (seatIds.length + 1 > maxQty) {
-        setAlertMessage(
-          `${transWithFallback('ticketQuantity', 'Số lượng vé')} ${ticket?.name} ${transWithFallback('mustMax', 'không được vượt quá')} ${maxQty}`
-        );
-        setAlertOpen(true);
-        return;
-      }
-      newSeatIds = [...seatIds, seat.id];
-      newLabels = [...labels, seatLabel];
-      isSelected = true;
-    }
-
-    // Gọi callback thông báo
-    if (onSeatSelectionChange) {
-      onSeatSelectionChange(
-        { id: seat.id, ticketTypeId: sectionTicketTypeId, label: newLabels },
-        isSelected
-      );
-    }
-
-    setSelectedSeats({
-      ...selectedSeats,
-      [sectionTicketTypeId]: {
-        seatIds: newSeatIds,
-        labels: newLabels,
-        sectionId,
-        quantity: newSeatIds.length,
-      },
-    });
-  };
-
-  const getSeatLabel = (rowName: string, seatName: string): string => {
-    const cleanRow = rowName.replace(/"/g, '');
-    const cleanSeat = seatName.replace(/"/g, '');
-    return `${cleanRow}-${cleanSeat}`;
-  }
-
-  // const selectedSeatLabels: string[] = [];
-  // if (seatMap.Section) {
-  //   seatMap?.Section?.forEach((section) => {
-  //     section?.Row?.forEach((row) => {
-  //       row.Seat.forEach((seat) => {
-  //         const isSeatSelected = Object.values(selectedSeats).some(ticketInfo =>
-  //           ticketInfo.seatIds.includes(seat.id)
-  //         );
-  //         if (isSeatSelected) {
-  //           selectedSeatLabels.push(getSeatLabel(row.name, seat.name));
-  //         }
-
-  //       });
-  //     });
-  //   });
-  // }
-
-  const stageSections = seatMap.Section?.filter(s => s.isStage);
-  const normalSections = seatMap.Section?.filter(s => !s.isStage);
-
-  const seatmapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = seatmapRef.current;
@@ -181,18 +98,64 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
     };
   }, []);
 
+  const handleSectionClick = (section: Section) => {
+    setSelectedSection(section);
+    // Khởi tạo số lượng về 0 cho từng loại vé thuộc section này
+    const sectionTypes = ticketType.filter(tt => !tt.isHidden && (section.ticketTypeId ? section.ticketTypeId === tt.id : true));
+    const defaultQty: { [ticketTypeId: string]: number } = {};
+    sectionTypes.forEach(tt => {
+      defaultQty[tt.id] = 0;
+    });
+    setSectionTickets(defaultQty);
+  };
+
+  const handleIncrease = (ticketTypeId: string, maxQty: number) => {
+    setSectionTickets(prev => ({
+      ...prev,
+      [ticketTypeId]: Math.min((prev[ticketTypeId] || 0) + 1, maxQty)
+    }));
+  };
+
+  const handleDecrease = (ticketTypeId: string) => {
+    setSectionTickets(prev => ({
+      ...prev,
+      [ticketTypeId]: Math.max((prev[ticketTypeId] || 0) - 1, 0)
+    }));
+  };
+
+  const handleConfirm = () => {
+    if (!selectedSection) return;
+    Object.entries(sectionTickets).forEach(([ticketTypeId, qty]) => {
+      if (qty > 0 && onSeatSelectionChange) {
+        // Truyền 1 lần duy nhất (không lặp seatId), vì chỉ cần tổng quantity + sectionId
+        onSeatSelectionChange({
+          id: selectedSection.id,
+          ticketTypeId,
+          label: [selectedSection.name]
+        }, true, qty, selectedSection.id);
+      }
+    });
+    setSelectedSection(null);
+  };
+
+
+  const handleCancel = () => {
+    setSelectedSection(null);
+  };
+
   return (
     <div className="seatmap-container relative overflow-hidden" ref={seatmapRef}>
+      {/* Legend */}
       <div className="seatmap-legend-container absolute top-0 left-[50%] transform -translate-x-1/2 z-10 bg-white bg-opacity-80 w-full">
         <div className="mb-3 seatmap-legend justify-between">
           <div className="legend-item">
-            <span className="seat available"></span> {transWithFallback('availableSeat', 'Ghế có sẵn')}
+            <span className="seat available"></span> {t('availableSeat', { defaultValue: 'Ghế có sẵn' })}
           </div>
           <div className="legend-item">
-            <span className="seat booked"></span> {transWithFallback('bookedSeat', 'Ghế đã đặt')}
+            <span className="seat booked"></span> {t('bookedSeat', { defaultValue: 'Ghế đã đặt' })}
           </div>
           <div className="legend-item">
-            <span className="seat selected"></span> {transWithFallback('selectedSeat', 'Ghế đang chọn')}
+            <span className="seat selected"></span> {t('selectedSeat', { defaultValue: 'Ghế đang chọn' })}
           </div>
         </div>
       </div>
@@ -208,63 +171,57 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
           }}
         >
           <svg viewBox={seatMap.viewBox} className="seatmap">
+            {/* Vẽ stage section */}
             {stageSections?.map((section) => (
               <g key={section.id}>
                 {section.element?.map((el, index) => (
                   el.type === 'path' ? (
-                  <path
-                    key={index}
-                    d={el.data}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : el.type === 'rect' ? (
-                  <rect
-                    key={index}
-                    x={el.x}
-                    y={el.y}
-                    width={el.width}
-                    height={el.height}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : <h1>DUUDUDUDUDUDUD</h1>
+                    <path
+                      key={index}
+                      d={el.data}
+                      style={{ fill: el.fill }}
+                      transform={`translate(${el.x}, ${el.y})`}
+                    />
+                  ) : el.type === 'rect' ? (
+                    <rect
+                      key={index}
+                      x={el.x}
+                      y={el.y}
+                      width={el.width}
+                      height={el.height}
+                      style={{ fill: el.fill }}
+                      transform={`translate(${el.x}, ${el.y})`}
+                    />
+                  ) : <h1>DUUDUDUDUDUDUD</h1>
                 ))}
               </g>
             ))}
-
+            {/* Vẽ section thường, click để chọn */}
             {normalSections?.map((section) => (
-              <g key={section.id}
-              onClick={() => {
-                setAlertMessage(
-                  `Làm tiếp đi tưởng xong à mà chọn?`
-                );
-                setAlertOpen(true);
-              }}
+              <g
+                key={section.id}
+                onClick={() => handleSectionClick(section)}
+                style={{ cursor: "pointer" }}
               >
                 {section.element?.map((el, index) => (
                   el.type === 'path' ? (
-                  <path
-                    key={index}
-                    d={el.data}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : el.type === 'rect' ? (
-                  <rect
-                    key={index}
-                    x={el.x}
-                    y={el.y}
-                    width={el.width}
-                    height={el.height}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : <h1>DUUDUDUDUDUDUD</h1>
+                    <path
+                      key={index}
+                      d={el.data}
+                      style={{ fill: el.fill }}
+                      transform={`translate(${el.x}, ${el.y})`}
+                    />
+                  ) : el.type === 'rect' ? (
+                    <rect
+                      key={index}
+                      x={el.x}
+                      y={el.y}
+                      width={el.width}
+                      height={el.height}
+                      style={{ fill: el.fill }}
+                      transform={`translate(${el.x}, ${el.y})`}
+                    />
+                  ) : <h1>DUUDUDUDUDUDUD</h1>
                 ))}
               </g>
             ))}
@@ -272,11 +229,59 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
         </div>
       </div>
 
-      <AlertDialog
+      {/* Modal chọn vé (opacity 0.4) */}
+      {selectedSection && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50"
+          style={{ background: 'rgba(0,0,0,0.4)' }}>
+          <div className="bg-white p-6 rounded-lg shadow-lg min-w-[340px] relative">
+            <button
+              className="absolute right-2 top-2 px-2 py-1 rounded hover:bg-gray-100"
+              onClick={handleCancel}
+              title="Đóng"
+            >✕</button>
+            <h2 className="font-bold text-xl mb-4">{selectedSection.name}</h2>
+            {ticketType
+              .filter(tt => !tt.isHidden && (!selectedSection.ticketTypeId || selectedSection.ticketTypeId === tt.id))
+              .map(tt => (
+                <div key={tt.id} className="flex justify-between items-center mb-3">
+                  <div>
+                    <div className="font-semibold">{tt.name}</div>
+                    <div className="text-gray-500">{tt.price?.toLocaleString('vi-VN')}đ</div>
+                  </div>
+                  <div className="flex items-center">
+                    <button
+                      className="bg-gray-200 px-2 py-1 rounded-l"
+                      onClick={() => handleDecrease(tt.id)}
+                      disabled={sectionTickets[tt.id] <= 0}
+                    >-</button>
+                    <span className="px-3">{sectionTickets[tt.id] || 0}</span>
+                    <button
+                      className="bg-gray-200 px-2 py-1 rounded-r"
+                      onClick={() => handleIncrease(tt.id, tt.maxQtyPerOrder)}
+                      disabled={(sectionTickets[tt.id] || 0) >= tt.maxQtyPerOrder}
+                    >+</button>
+                  </div>
+                </div>
+              ))}
+            <div className="flex justify-end mt-4 gap-2">
+              <button
+                className="bg-gray-300 px-4 py-1 rounded hover:bg-gray-400"
+                onClick={handleCancel}
+              >{t('cancel', { defaultValue: 'Hủy' })}</button>
+              <button
+                className="bg-[#0C4762] text-white px-4 py-1 rounded hover:bg-[#3BB8AE]"
+                onClick={handleConfirm}
+              >{t('confirm', { defaultValue: 'Xác nhận' })}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* <AlertDialog
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
-      />
+      /> */}
     </div>
   );
 }

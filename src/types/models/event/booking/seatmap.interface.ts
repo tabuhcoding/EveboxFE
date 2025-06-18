@@ -37,7 +37,9 @@ export interface SeatMapProps {
       ticketTypeId: string
       label: string[];
     },
-    isSelected: boolean
+    isSelected: boolean,
+    quantity?: number,
+    sectionId?: number
   ) => void;
   selectedSeatIds?: number[];
 }

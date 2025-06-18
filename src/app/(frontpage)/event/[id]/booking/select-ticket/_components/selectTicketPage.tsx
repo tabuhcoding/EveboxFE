@@ -100,11 +100,6 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
 
   const totalTickets = Object.values(selectedTickets).reduce((a, b) => a + (b.quantity || 0), 0);
 
-  // const selectedTicketType =
-  //   Object.keys(selectedTickets).length === 1
-  //     ? ticketType.find((t) => t.id === Object.keys(selectedTickets)[0])
-  //     : undefined;
-
   useEffect(() => {
     if (!seatMapData) return;
 
@@ -125,47 +120,54 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
     }
   }, [selectedTickets, seatMapData, ticketType]);
 
-  // const handleSeatSelectionChange = (seat: { id: number; ticketTypeId: string }, isSelected: boolean) => {
-  //   setSelectedTickets((prev) => {
-  //     const ticketTypeId = seat.ticketTypeId;
-  //     const currentCount = prev[ticketTypeId] || 0;
-  //     return {
-  //       ...prev,
-  //       [ticketTypeId]: isSelected ? currentCount + 1 : Math.max(currentCount - 1, 0)
-  //     };
-  //   });
-
-  //   setSelectedSeatIds((prev) =>
-  //     isSelected ? [...prev, seat.id] : prev.filter((id) => id !== seat.id)
-  //   );
-  // };
-
-  const handleSeatSelectionChange = (seat: { id: number; ticketTypeId: string; label: string[] }, isSelected: boolean) => {
+  const handleSeatSelectionChange = (
+    seat: { id: number; ticketTypeId: string; label: string[] },
+    isSelected: boolean,
+    quantity?: number,
+    sectionId?: number
+  ) => {
     setSelectedTickets((prev) => {
       const ticketTypeId = seat.ticketTypeId;
-      const current = prev[ticketTypeId] || { quantity: 0, seatIds: [] };
-      const newQuantity = isSelected ? current.quantity + 1 : Math.max(current.quantity - 1, 0);
-      // Nếu có seatId thì nên quản lý seatIds mảng cho chuẩn
-      let newSeatIds = current.seatIds || [];
-      if (isSelected) {
-        newSeatIds = [...newSeatIds, seat.id];
+      if (quantity && sectionId) {
+        // Dạng SELECT_SECTION: quantity và sectionId là cố định, không có seatIds
+        return {
+          ...prev,
+          [ticketTypeId]: {
+            ...prev[ticketTypeId],
+            quantity,
+            sectionId,
+            seatIds: [],    // hoặc undefined cũng được
+            name: seat.label
+          },
+        };
       } else {
-        newSeatIds = newSeatIds.filter((id) => id !== seat.id);
+        // Dạng chọn ghế bình thường (SELECT_SEAT)
+        const current = prev[ticketTypeId] || { quantity: 0, seatIds: [] };
+        const newQuantity = isSelected ? current.quantity + 1 : Math.max(current.quantity - 1, 0);
+        let newSeatIds = current.seatIds || [];
+        if (isSelected) {
+          newSeatIds = [...newSeatIds, seat.id];
+        } else {
+          newSeatIds = newSeatIds.filter((id) => id !== seat.id);
+        }
+        return {
+          ...prev,
+          [ticketTypeId]: {
+            ...current,
+            quantity: newQuantity,
+            seatIds: newSeatIds,
+            name: seat.label
+          },
+        };
       }
-      return {
-        ...prev,
-        [ticketTypeId]: {
-          ...current,
-          quantity: newQuantity,
-          seatIds: newSeatIds,
-          name: seat.label
-        },
-      };
     });
 
-    setSelectedSeatIds((prev) =>
-      isSelected ? [...prev, seat.id] : prev.filter((id) => id !== seat.id)
-    );
+    // update selectedSeatIds chỉ cho SELECT_SEAT
+    if (!quantity && !sectionId) {
+      setSelectedSeatIds((prev) =>
+        isSelected ? [...prev, seat.id] : prev.filter((id) => id !== seat.id)
+      );
+    }
   };
 
   return (
@@ -243,35 +245,35 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
             </div>
           </>
         ) :
-        (
-          <>
-          <SeatMapSectionComponent
-            seatMap={seatMapData as SeatMap}
-            onSeatSelectionChange={handleSeatSelectionChange}
-            ticketType={ticketType}
-            selectedSeatIds={selectedSeatIds}
-          />
-          <div className='w-[30%] pl-4'>
-              {ticketType.length > 0 && (
-                <div className='ticket-type-list'>
-                  <h2 className='font-bold text-lg mb-2'>{t("ticketPrice") ?? "Giá vé"}</h2>
-                  {ticketType.map((type) => (
-                    <div key={type.id} className='ticket-type-item flex justify-between items-center mb-2'>
-                      <div className='flex items-center'>
-                        <span
-                          className="inline-block ticket-type-color w-10 h-6 rounded mr-2"
-                          style={{ backgroundColor: type.color }}
-                        ></span>
-                        <span className='ticket-type-name'>{type.name}</span>
+          (
+            <>
+              <SeatMapSectionComponent
+                seatMap={seatMapData as SeatMap}
+                onSeatSelectionChange={handleSeatSelectionChange}
+                ticketType={ticketType}
+                selectedSeatIds={selectedSeatIds}
+              />
+              <div className='w-[30%] pl-4'>
+                {ticketType.length > 0 && (
+                  <div className='ticket-type-list'>
+                    <h2 className='font-bold text-lg mb-2'>{t("ticketPrice") ?? "Giá vé"}</h2>
+                    {ticketType.map((type) => (
+                      <div key={type.id} className='ticket-type-item flex justify-between items-center mb-2'>
+                        <div className='flex items-center'>
+                          <span
+                            className="inline-block ticket-type-color w-10 h-6 rounded mr-2"
+                            style={{ backgroundColor: type.color }}
+                          ></span>
+                          <span className='ticket-type-name'>{type.name}</span>
+                        </div>
+                        <span className='ticket-type-price text-[#0C4762] font-semibold'>{type.price?.toLocaleString("vi-VN")}đ</span>
                       </div>
-                      <span className='ticket-type-price text-[#0C4762] font-semibold'>{type.price?.toLocaleString("vi-VN")}đ</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </>
-        )}
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
       </div>
     </div>
   );
