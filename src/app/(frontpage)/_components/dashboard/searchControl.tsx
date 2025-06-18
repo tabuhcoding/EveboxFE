@@ -9,15 +9,14 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from 'react';
 
 /* Package Application */
-import mapCategoryName from 'app/(frontpage)/_components/libs/functions/mapCategoryName';
 import { getAllCategories } from 'services/event.service';
 import { Category } from 'types/models/dashboard/frontDisplay';
 
+import { mapCategoryName } from "../libs/functions/mapCategoryName";
 import { fetchProvinces } from '../libs/server/fetchData';
 
 import DatePicker from './datePicker';
 import '../../../../styles/global.css';
-// import 'tailwindcss/tailwind.css';
 
 export default function SearchControls() {
   const [searchText, setSearchText] = useState('');
@@ -34,8 +33,8 @@ export default function SearchControls() {
 
   const queryParams: Record<string, string> = {};
 
-  if (searchText) queryParams.q = searchText;
-  if (selectedOptions.length > 0) queryParams.types = selectedOptions.join(',');
+  if (searchText) queryParams.title = searchText;
+  if (selectedOptions.length > 0) queryParams.type = selectedOptions.join(',');
   if (dateRange?.start) queryParams.startDate = dateRange.start.toString();
   if (dateRange?.end) queryParams.endDate = dateRange.end.toString();
 
@@ -64,12 +63,21 @@ export default function SearchControls() {
     }
   };
 
+const transWithFallback = (key: string, fallback: string) => {
+  const msg = t(key);
+  if (!msg || msg.startsWith('common.')) return fallback;
+  return msg;
+};
+
   return (
     <div className="absolute left-0 right-0 -bottom-20 mx-auto w-full md:w-11/12 px-4">
       <div className="bg-sky-900 text-white p-4 md:p-6 rounded-lg shadow-lg">
-        <div className="flex flex-col md:flex-row gap-4 w-full">
-          <div className="flex-[1.5] text-left">
-            <label className="text-sm font-medium mb-2"> {t("searchTitle") || "Fallback Text"}</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex gap-4 w-full">
+
+          <div className=" min-w-[150px] w-full">
+            <label className="text-sm md:text-sm text-xs font-medium mb-2 whitespace-nowrap">
+
+              {t("searchTitle") || "Fallback Text"}</label>
             <div className="mt-2 relative">
               <input className="w-full bg-white text-gray-800 rounded p-2 appearance-none pr-8 small-text" type="text"
                 placeholder={t('searchHint')}
@@ -78,7 +86,7 @@ export default function SearchControls() {
               </input>
             </div>
           </div>
-          <div className="md:w-48 sm:flex-1 text-left">
+          <div className="min-w-[150px] w-full">
             <label className="text-sm font-medium mb-2">{t('categoryTitle')}</label>
             <div className="mt-2 relative w-full" ref={dropdownEventRef}>
               <button
@@ -107,15 +115,16 @@ export default function SearchControls() {
                         onChange={() => toggleOption(option.name)}
                         className="mr-2"
                       />
-                      {mapCategoryName(option.name)}
+                      {mapCategoryName(option.name, transWithFallback)}
                     </label>
                   ))}
                 </div>
               )}
             </div>
           </div>
-          <div className="md:w-48 sm:flex-1 text-left">
-            <label className="text-sm font-medium mb-2">{t('locationTitle')}</label>
+          <div className=" min-w-[150px] w-full">
+            <label className="text-xs md:text-sm font-medium mb-2 whitespace-nowrap">
+              {t('locationTitle')}</label>
             <div className="mt-2 relative" ref={dropdownLocationRef}>
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
@@ -129,7 +138,8 @@ export default function SearchControls() {
 
               {/* Dropdown menu */}
               {isLocationOpen && (
-                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] small-text max-h-64 overflow-y-auto">                                    {locations.map((location) => (
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] small-text max-h-64 overflow-y-auto">                                    
+                {locations.map((location) => (
                   <div
                     role="button"
                     tabIndex={0}
@@ -154,25 +164,26 @@ export default function SearchControls() {
               )}
             </div>
           </div>
-          <div className="flex-[1.5] text-left">
+          <div className="min-w-[180px] w-full">
             <label className="text-sm font-medium mb-2">{t('timeTitle')}</label>
             <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
               <DatePicker onDateRangeChange={setDateRange} />
             </div>
           </div>
-          <div className="flex md:items-end justify-center md:justify-start">
-          <Link
-            href={{
-              pathname: "/search",
-              query: queryParams,
-            }}
-            className="w-full md:w-auto"
-          >
-            <button className="w-full h-10 md:w-14 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200">
-              <Search size={20} className="text-white" />
-            </button>
-          </Link>
-        </div>
+          <div className="flex w-full md:w-auto md:items-end justify-center md:justify-start">
+
+            <Link
+              href={{
+                pathname: "/search",
+                query: queryParams,
+              }}
+              className="w-full md:w-auto flex"
+            >
+              <button className="h-10 w-full md:w-auto md:min-w-[56px] px-4 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200">
+                <Search size={20} className="text-white" />
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

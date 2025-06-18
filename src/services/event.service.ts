@@ -1,11 +1,15 @@
 /* Package Application */
+import { SearchEventsResponse } from "@/types/models/dashboard/searchEvents.interface";
 import { IForm } from "@/types/models/event/booking/questionForm.interface";
 import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
+import { SearchEventsParams } from "types/models/dashboard/searchEventParams.interface";
 import { SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
+
+
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
@@ -81,3 +85,32 @@ export async function getFormOfShowing(showingId: string): Promise<BaseApiRespon
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
+
+export async function getSearchEvents({
+  title,
+  type,
+  startDate,
+  endDate,
+  minPrice,
+  maxPrice,
+}: SearchEventsParams): Promise<SearchEventsResponse> {
+  try {
+    const params = new URLSearchParams();
+    params.append("title", title);
+    if (type) params.append("type", type);
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
+    if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
+
+    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_SEARCH_EVENT}?${params.toString()}`);
+
+    if (!res) throw new Error('Failed to search events, please try again later');
+    return res.data;
+
+  } catch (error: any) {
+    console.error("Error search: ", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+

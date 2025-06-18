@@ -1,4 +1,8 @@
-{
+{ "search": "Áp dụng",
+  "priceRange": "Khoảng giá: ",
+  "searchPlaceholder":"Tìm kiếm sự kiện, ...",
+  "searchResult":"Kết quả tìm kiếm:",
+  "noResults": "Không tìm thấy sự kiện nào phù hợp.",
   "updateSuccessfully": "Cập nhật thông tin thành công!",
   "updateFailed": "Cập nhật thông tin thất bại!",
   "liked": "Đã thêm vào danh sách yêu thích!",

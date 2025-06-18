@@ -27,6 +27,7 @@ export class END_POINT_LIST {
     ALL_CATEGORIES: "/api/categories",
     GET_FRONT_DISPLAY: "/api/event/front-display",
     GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids",
+    GET_SEARCH_EVENT: "/api/event/search"
   };
 
   static readonly SHOWING = {
