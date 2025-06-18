@@ -8,7 +8,7 @@ export interface IUserEvent {
   export interface IUserShowing {
     startTime: Date;
     endTime: Date;
-    Events: IUserEvent;
+    title: string;
   }
   
   export interface IUserFormInput {
@@ -37,7 +37,7 @@ export interface IUserEvent {
   export interface IUserTicket {
     id: string; //order code
     showingId: string;
-    status: number;
+    status: string;
     type: string;
     price: number;
     PaymentInfo?: IPaymentInfo;

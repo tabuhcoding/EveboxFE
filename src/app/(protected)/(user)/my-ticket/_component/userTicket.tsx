@@ -9,7 +9,7 @@ import createApiClient from '@/services/apiClient';
 import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticketInfo';
 import { useRouter } from 'next/navigation';
 
-const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_TICKET_SVC_URL || "");
+const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
 
 const TicketManagement = () => {
   const [ticketInfo, setTicketInfo] = useState<IUserTicket[]>([]);
@@ -50,18 +50,24 @@ const TicketManagement = () => {
 
   const filteredTickets = ticketInfo.filter(ticket => {
     const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
-    const statusFilter = selectedTab === 0 || ticket.status === selectedTab;
+    const statusMap: Record<number, string | null> = {
+      0: null, // All
+      1: 'SUCCESS',
+      2: 'PENDING',
+      3: 'CANCELED',
+    };
+    const statusFilter = selectedTab === 0 || ticket.status === statusMap[selectedTab];
     const timeFilter = selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
     return statusFilter && timeFilter;
   });
 
-  const getStatusColor = (status: number) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 1:
+      case 'SUCCESS':
         return 'bg-green-500 text-black';
-      case 2:
+      case 'PENDING':
         return 'bg-yellow-500 text-white';
-      case 0:
+      case 'CANCELED':
         return 'bg-red-500 text-white';
       default:
         return 'bg-gray-500 text-white';
@@ -154,14 +160,14 @@ const TicketManagement = () => {
               {/* Thông tin sự kiện */}
               <div className="flex-1 p-4">
                 <h3 className="text-lg font-semibold mb-2">
-                  {ticket.Showing?.Events.title}
+                  {ticket.Showing?.title}
                 </h3>
                 <div className="flex gap-2 mb-2">
                   <span className={`${getStatusColor(ticket.status)} text-xs px-2 py-1 rounded-md`}>
-                    {ticket.status === 1 ? "Thành công" : ticket.status === 2 ? "Đang xử lý" : "Đã hủy"}
+                    {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : "Đã hủy"}
                   </span>
                   <span className={`border border-green-500 text-green-500 text-xs px-2 py-1 rounded-md`}>
-                    {ticket.type === 'electronic' ? "Vé điện tử" : "Vé cứng"}
+                    {ticket.type === 'E_TICKET' ? "Vé điện tử" : "Vé cứng"}
                   </span>
                 </div>
                 <p className="text-sm font-medium">
