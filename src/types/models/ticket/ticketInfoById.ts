@@ -11,7 +11,6 @@ export interface IImagesResponseData {
 export interface IUserEvent {
   title: string;
   venue: string;
-  Images_Events_imgPosterIdToImages?: IImagesResponseData; 
 }
 
 export interface IUserShowing {
@@ -21,7 +20,6 @@ export interface IUserShowing {
   venue: string;
   locationsString: string;
   imageUrl: string;
-  Events?: IUserEvent; // optional nếu cần mở rộng
 }
 
 export interface IPaymentInfo {
@@ -31,8 +29,8 @@ export interface IPaymentInfo {
 
 export interface IUserTicketSeat {
   id: string;
-  seatname: string;
-  sectionname: string;
+  seatname?: string;
+  sectionname?: string; 
   description: string;
   qrCode?: string;
   seatID?: string;      

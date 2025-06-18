@@ -315,7 +315,7 @@
     "notFoundQRData": "No QR data found",
     "errorLoadQRImage": "Error loading QR image:",
     "area": "Area",
-    "rowSeat": "Row: Seat",
+    "rowSeat": "Row - Seat",
     "qrCode": "QR Code",
     "decodeQR": "Decode QR Code",
     "qrContent": "QR Content:",

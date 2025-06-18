@@ -314,7 +314,7 @@
   "notFoundQRData": "Không tìm thấy dữ liệu QR.",
   "errorLoadQRImage": "Lỗi khi load ảnh QR:",
   "area": "Khu vực",
-  "rowSeat": "Hàng: Ghế",
+  "rowSeat": "Hàng - Ghế",
   "qrCode": "Mã QR vé",
   "decodeQR": "Giải mã QR",
   "qrContent": "Nội dung QR:",

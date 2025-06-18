@@ -60,13 +60,12 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
     const currentTicket = allTickets[currentTicketIndex];
 
-    let seatInfo = { section: "-", row: "-", seat: "-" };
+    let seatInfo = { section: "-", seat: "-" };
     const allSeats = ticket.Ticket?.[0]?.tickets || [];
 
     if (currentTicket) {
         seatInfo = {
             section: currentTicket.sectionname || "-",
-            row: "-",
             seat: currentTicket.seatname || "-"
         };
     }
@@ -111,7 +110,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     }
 
     return (
-        <div className="ticket-detail mt-8 min-h-screen flex justify-center items-center px-4">
+        <div className="ticket-detail mt-8 mb-10 min-h-screen flex justify-center items-center px-4">
             {/* <button
                 onClick={() => router.back()}
                 className="p-1.5 border-2 border-[#0C4762] rounded-md hover:bg-gray-200 absolute top-4 left-4"
@@ -125,7 +124,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
                     <div className="w-full rounded-lg overflow-hidden border border-white">
                         <Image
-                            src={ticket.Showing?.Events?.Images_Events_imgPosterIdToImages?.imageUrl || "/images/event.png"}
+                            src={ticket.Showing?.imageUrl || "/images/event.png"}
                             alt="Poster"
                             width={700}
                             height={300}
@@ -143,8 +142,8 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             <p className="text-[#9EF5CF] font-semibold">{seatInfo.section}</p>
                         </div>
                         <div>
-                            <p className="text-sm text-gray-300">{transWithFallback('rowSeat', 'Hàng: Ghế')}</p>
-                            <p className="text-[#9EF5CF] font-semibold">{seatInfo.row} : {seatInfo.seat}</p>
+                            <p className="text-sm text-gray-300">{transWithFallback('rowSeat', 'Hàng - Ghế')}</p>
+                            <p className="text-[#9EF5CF] font-semibold">{seatInfo.seat}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-300">{transWithFallback('timeTitle', 'Thời gian')}</p>
