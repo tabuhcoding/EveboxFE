@@ -1,7 +1,7 @@
 import { BaseApiResponse } from "@/types/baseApiResponse";
 
 export interface TicketDetailProps {
-    ticketId: string;
+  ticketId: string;
 }
 
 export interface IImagesResponseData {
@@ -11,74 +11,59 @@ export interface IImagesResponseData {
 export interface IUserEvent {
   title: string;
   venue: string;
-  Images_Events_imgPosterIdToImages: IImagesResponseData;
+  Images_Events_imgPosterIdToImages?: IImagesResponseData; 
 }
 
 export interface IUserShowing {
-  startTime: Date;
-  endTime: Date;
-  Events: IUserEvent;
-}
-
-export interface IUserFormInput {
-  fieldName: string;
-}
-
-export interface IUserFormAnswer {
-  FormInput: IUserFormInput;
-  value: string;
-}
-
-export interface IUserFormResponse {
-  FormAnswer: IUserFormAnswer[];
+  startTime: string;
+  endTime: string;
+  title: string;
+  venue: string;
+  locationsString: string;
+  imageUrl: string;
+  Events?: IUserEvent; // optional nếu cần mở rộng
 }
 
 export interface IPaymentInfo {
-  paidAt: Date;
+  paidAt: string;
   method: string;
 }
 
-export interface ITicketQRCode {
-  qrCode: string;
-  ticketTypeId: string;
-  seatId?: number;
+export interface IUserTicketSeat {
+  id: string;
+  seatname: string;
+  sectionname: string;
+  description: string;
+  qrCode?: string;
+  seatID?: string;      
+  sectionID?: string;
 }
 
-export interface ITicketType {
+export interface IUserTicketType {
+  id: string;
   name: string;
+  description: string;
   price: number;
+  tickets: IUserTicketSeat[];
 }
 
-export interface ISection {
-  name: string;
-  id: number;
-}
-
-export interface IRow {
-  id: number;
-  name: string;
-  Section: ISection;
-}
-
-export interface ISeat {
-  id: number;
-  name: string;
-  Row: IRow;
+export interface IUserFormFieldAnswer {
+  fieldName: string;
+  value: string;
 }
 
 export interface IUserTicketById {
   id: string;
   showingId: string;
-  status: number;
+  status: string;
   type: string;
   price: number;
+  createdAt: string;
   PaymentInfo?: IPaymentInfo;
-  TicketQRCode?: ITicketQRCode[];
   Showing?: IUserShowing;
-  FormResponse: IUserFormResponse;
-  ticketType: ITicketType;
-  seats: ISeat[];
+  Ticket: IUserTicketType[];
   count: number;
+  formResponse: IUserFormFieldAnswer[];
 }
 
 export interface IGetUserTicketByIdResponse {

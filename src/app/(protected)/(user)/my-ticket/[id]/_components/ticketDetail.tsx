@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 /* Package Application */
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 import { decrypt } from '@/utils/helpers';
-import {TicketDetailProps} from '@/types/models/ticket/ticketInfoById';
+import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
@@ -36,11 +36,11 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
         return <div className="text-white text-center">{transWithFallback('notFoundTicket', 'Không tìm thấy vé')}</div>;
     }
 
-    const getStatusInfo = (status: number) => {
+    const getStatusInfo = (status: string) => {
         switch (status) {
-            case 0: return { text: 'Đã hủy', color: 'text-red-500' };
-            case 1: return { text: 'Thành công', color: 'text-green-500' };
-            case 2: return { text: 'Đang chờ xử lý', color: 'text-yellow-500' };
+            case 'CANCELED': return { text: 'Đã hủy', color: 'text-red-500' };
+            case 'SUCCESS': return { text: 'Thành công', color: 'text-green-500' };
+            case 'PENDING': return { text: 'Đang chờ xử lý', color: 'text-yellow-500' };
             default: return { text: 'Không xác định', color: 'text-white' };
         }
     };
@@ -51,27 +51,34 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
     const { text, color } = getStatusInfo(ticket.status);
 
-    const allTickets = ticket.TicketQRCode || [];
+    // const allTickets = ticket.TicketQRCode || [];
+    const allTickets = ticket.Ticket
+        ? ticket.Ticket.flatMap(t => t.tickets || [])
+        : [];
+
     const totalTickets = allTickets.length;
 
     const currentTicket = allTickets[currentTicketIndex];
 
     let seatInfo = { section: "-", row: "-", seat: "-" };
-    if (currentTicket?.seatId) {
-        const seat = ticket.seats.find(seat => seat.id === currentTicket.seatId);
-        if (seat) {
-            seatInfo = {
-                section: seat.Row?.Section?.name || "-",
-                row: seat.Row?.name || "-",
-                seat: seat.name || "-",
-            };
-        }
+    const allSeats = ticket.Ticket?.[0]?.tickets || [];
+
+    if (currentTicket) {
+        seatInfo = {
+            section: currentTicket.sectionname || "-",
+            row: "-",
+            seat: currentTicket.seatname || "-"
+        };
     }
 
     const handleDecodeQR = () => {
-        const base64 = currentTicket?.qrCode.startsWith('data:image')
+        if (!currentTicket || !currentTicket.qrCode) {
+            alert(transWithFallback('notFoundQRData', 'Không tìm thấy dữ liệu QR.'));
+            return;
+        }
+        const base64 = currentTicket.qrCode.startsWith('data:image')
             ? currentTicket.qrCode
-            : `data:image/png;base64,${currentTicket?.qrCode}`;
+            : `data:image/png;base64,${currentTicket.qrCode}`;
 
         const img = document.createElement('img');
         img.src = base64;
@@ -114,11 +121,11 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
             <div className="flex flex-row gap-4 w-full">
                 {/* Ticket Details */}
                 <div className="bg-[#0C4762] text-white w-1/2 p-6 rounded-lg shadow-lg">
-                    <h2 className="text-lg font-bold mb-4 text-gray-300">{ticket.Showing?.Events.title}</h2>
+                    <h2 className="text-lg font-bold mb-4 text-gray-300">{ticket.Showing?.title}</h2>
 
                     <div className="w-full rounded-lg overflow-hidden border border-white">
                         <Image
-                            src={ticket.Showing?.Events.Images_Events_imgPosterIdToImages.imageUrl || "/images/event.png"}
+                            src={ticket.Showing?.Events?.Images_Events_imgPosterIdToImages?.imageUrl || "/images/event.png"}
                             alt="Poster"
                             width={700}
                             height={300}
@@ -129,7 +136,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     <div className="mt-4 grid grid-cols-4 gap-x-4">
                         <div>
                             <p className="text-sm text-gray-300">{transWithFallback('ticketType', 'Loại vé')}</p>
-                            <p className="text-[#9EF5CF] font-semibold">{ticket.ticketType.name}</p>
+                            <p className="text-[#9EF5CF] font-semibold">{ticket.type}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-300">{transWithFallback('area', 'Khu vực')}</p>
@@ -229,10 +236,10 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     <div className="mt-4 bg-[#083A4F] p-4 rounded-lg">
                         <h3 className="text-lg font-bold mb-2">{transWithFallback('buyerInfo', 'Thông tin người mua')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
-                            {ticket?.FormResponse?.FormAnswer.length ? (
-                                ticket.FormResponse.FormAnswer.map((answer, index) => (
+                            {ticket?.formResponse?.length ? (
+                                ticket.formResponse.map((answer, index) => (
                                     <div key={index} className="contents">
-                                        <p className="text-gray-300">{answer.FormInput.fieldName}:</p>
+                                        <p className="text-gray-300">{answer.fieldName}:</p>
                                         <p className="text-[#9EF5CF]">{answer.value || "-"}</p>
                                     </div>
                                 ))
@@ -248,7 +255,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             <p className="text-gray-300">{transWithFallback('ticketType', 'Loại vé')}</p>
                             <p className="text-gray-300 text-center">{transWithFallback('quantity', 'Số lượng')}</p>
                             <p className="text-gray-300 text-right">{transWithFallback('totalAmount', 'Thành tiền')}</p>
-                            <p className="text-[#9EF5CF]">{ticket.ticketType.name}</p>
+                            <p className="text-[#9EF5CF]">{ticket.Ticket[0]?.name}</p>
                             <p className="text-[#9EF5CF] text-center">{ticket.count}</p>
                             <p className="text-[#9EF5CF] text-right">{(ticket.price * ticket.count).toLocaleString()} đ</p>
                         </div>

@@ -74,22 +74,6 @@ const TicketManagement = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await apiClient.get<IGetUserTicketResponse>("/api/ticket/getUserOrder");
-        setTicketInfo(response.data.data);
-      } catch (error) {
-        console.error("Error fetching tickets:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTickets();
-    console.log(ticketInfo)
-  }, [setTicketInfo]);
-
   return (
     <div className="ticket-management mt-2 mx-auto px-4">
       <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('managementTicket', 'Quản lý vé đã mua')}</h2>
@@ -135,7 +119,7 @@ const TicketManagement = () => {
             <div
               key={ticket.id}
               className="flex border rounded-lg shadow-md overflow-hidden bg-[#0C4762] text-white"
-              onClick={() => router.push(`/ticket/${ticket.id}`)}
+              onClick={() => router.push(`/my-ticket/${ticket.id}`)}
             >
               {/* Ngày tháng */}
               <div className="bg-[#08374A] text-white p-4 flex flex-col items-center justify-center w-26 border-r border-white">
