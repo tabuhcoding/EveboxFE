@@ -299,5 +299,6 @@
   "time": "Thời gian",
   "redirectToMyTicket": "Sẽ chuyển về trang Vé của tôi trong",
   "seconds": "giây",
-  "supportLongWait": "Nếu chờ quá lâu, vui lòng liên hệ hỗ trợ để được giải quyết nhanh nhất"
+  "supportLongWait": "Nếu chờ quá lâu, vui lòng liên hệ hỗ trợ để được giải quyết nhanh nhất",
+  "selectedTickets": "Các vé đã chọn"
 }
