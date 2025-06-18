@@ -17,9 +17,9 @@ import { EventDetail } from 'types/models/event/eventdetail/event.interface';
 import Navigation from '../../_components/navigation';
 
 import SeatMapComponent from './seatmap';
+import SeatMapSectionComponent from './seatmapSection';
 import SelectTicket from './selectTicket';
 import TicketInfor from './ticketInfo';
-import SeatMapSectionComponent from './seatmapSection';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
@@ -216,7 +216,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
             selectedTicket={selectedTicket}
             setSelectedTicket={setSelectedTicket}
           />
-        ) : seatmapType == SeatmapType.SELECT_SEAT ? (
+        ) : seatmapType === SeatmapType.SELECT_SEAT ? (
           <>
             <SeatMapComponent
               seatMap={seatMapData as SeatMap}

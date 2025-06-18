@@ -10,6 +10,7 @@ import { SeatMapProps, Section } from "types/models/event/booking/seatmap.interf
 import '@/styles/event/seatmap.css';
 
 export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds }: SeatMapProps) {
+  console.log("🚀 ~ SeatMapSectionComponent ~ selectedSeatIds:", selectedSeatIds)
   const t = useTranslations("common");
 
   // const [alertOpen, setAlertOpen] = useState(false);
@@ -149,13 +150,13 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
       <div className="seatmap-legend-container absolute top-0 left-[50%] transform -translate-x-1/2 z-10 bg-white bg-opacity-80 w-full">
         <div className="mb-3 seatmap-legend justify-between">
           <div className="legend-item">
-            <span className="seat available"></span> {t('availableSeat', { defaultValue: 'Ghế có sẵn' })}
+            <span className="seat available"></span> {transWithFallback('availableSeat', 'Ghế có sẵn')}
           </div>
           <div className="legend-item">
-            <span className="seat booked"></span> {t('bookedSeat', { defaultValue: 'Ghế đã đặt' })}
+            <span className="seat booked"></span> {transWithFallback('bookedSeat', 'Ghế đã đặt')}
           </div>
           <div className="legend-item">
-            <span className="seat selected"></span> {t('selectedSeat', { defaultValue: 'Ghế đang chọn' })}
+            <span className="seat selected"></span> {transWithFallback('selectedSeat', 'Ghế đang chọn')}
           </div>
         </div>
       </div>
