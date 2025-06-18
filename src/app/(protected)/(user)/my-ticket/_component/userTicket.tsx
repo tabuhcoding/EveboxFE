@@ -35,8 +35,9 @@ const TicketManagement = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await apiClient.get<IGetUserTicketResponse>("/api/ticket/getUserTicket");
+        const response = await apiClient.get<IGetUserTicketResponse>("/api/ticket/getUserOrder");
         setTicketInfo(response.data.data);
+        console.log("Fetched tickets:", response.data.data);
       } catch (error) {
         console.error("Error fetching tickets:", error);
       } finally {
@@ -70,7 +71,7 @@ const TicketManagement = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await apiClient.get<IGetUserTicketResponse>("/api/ticket/getUserTicket");
+        const response = await apiClient.get<IGetUserTicketResponse>("/api/ticket/getUserOrder");
         setTicketInfo(response.data.data);
       } catch (error) {
         console.error("Error fetching tickets:", error);
