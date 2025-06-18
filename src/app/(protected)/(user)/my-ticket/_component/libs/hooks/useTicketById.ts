@@ -1,8 +1,13 @@
 'use client';
 
+/* Package System */
 import { useEffect, useState } from 'react';
-import { fetchTicketById } from '../server/fetchTicketById';
+
+/* Package Application */
 import { IUserTicketById } from '@/types/models/ticket/ticketInfoById';
+
+import { fetchTicketById } from '../server/fetchTicketById';
+
 
 export function useTicketById(id: string) {
   const [ticket, setTicket] = useState<IUserTicketById | null>(null);
@@ -16,6 +21,7 @@ export function useTicketById(id: string) {
         const data = await fetchTicketById(id);
         setTicket(data);
       } catch (err) {
+        console.error('Lỗi khi fetch ticket:', err);
         setError('Không thể tải dữ liệu vé.');
       } finally {
         setLoading(false);

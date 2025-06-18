@@ -1,17 +1,15 @@
 'use client';
 
 /* Package System */
-// import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Image from 'next/image';
-// import { ArrowLeft } from 'lucide-react';
 import jsQR from 'jsqr';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 /* Package Application */
-import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 import { decrypt } from '@/utils/helpers';
 import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
+import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
