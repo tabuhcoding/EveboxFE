@@ -10,6 +10,7 @@ import { useRouter, useParams } from 'next/navigation';
 /* Package Application */
 import Navigation from '../../common/navigation';
 import FormQuestionClient from './formQuestion';
+import NotificationDialog from './dialog/notifiDialog';
 
 interface QuestionsPageProps {
     showingIds: string[];
@@ -21,6 +22,8 @@ export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
     const router = useRouter();
     const [step] = useState(4);
     const [btnValidate4, setBtnValidte4] = useState("");
+    const [open, setOpen] = useState(false); //Notification Dialog 
+    const [shouldProceed, setShouldProceed] = useState(false); // Trạng thái kiểm tra khi đóng Dialog
 
     const handleSave = () => {
         setBtnValidte4("Save");
@@ -28,11 +31,21 @@ export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
 
     const handleContinue = () => {
         setBtnValidte4("Continue");
+        setOpen(true);
+        setShouldProceed(true);   
     }
 
     const handleNextStep = () => {
-        router.push(`/organizer/create-event/${eventId}?step=payment`);
+        router.push(`/organizer/events`);
     };
+
+    const handleCloseDialog = () => {
+            setOpen(false);
+            if (shouldProceed) {
+                handleNextStep(); 
+                setShouldProceed(false); 
+            }
+        };
 
     return (
         <>
@@ -63,6 +76,7 @@ export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
 
             <div className="flex justify-center">
                 <FormQuestionClient onNextStep={handleNextStep} btnValidate4={btnValidate4} showingIds={showingIds}/>
+                {open && <NotificationDialog open={open} onClose={handleCloseDialog} />}
             </div>
         </>
     );

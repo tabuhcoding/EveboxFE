@@ -1,12 +1,8 @@
 "use client";
 
 import { Showtime } from "../../../libs/interface/idevent.interface";
-import { BaseApiResponse } from "@/types/BaseApiResponse";
-import createApiClient from '@/services/apiClient';
 import toast from "react-hot-toast";
-
-
-const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
+import { deleteTicketType } from "services/org.service";
 
 export const handleDeleteTicket = async (
     showtimeId: string,
@@ -20,20 +16,16 @@ export const handleDeleteTicket = async (
             if (showtime.id === showtimeId) {
                 const ticketToDelete = showtime.tickets[ticketIndex];
 
-                if (ticketToDelete?.id) {
-                    // Call API to delete ticket
-                    apiClient.delete<BaseApiResponse>(`/api/org/ticketType/${ticketToDelete.id}`)
-                        .then((response) => {
-                            if (response.status === 200) {
-                                toast.success(`Ticket ${ticketToDelete.id} deleted successfully.`);
-                            } else {
-                                toast.error(`Failed to delete ticket: ${response.statusText}`);
-                            }
-                        })
-                        .catch((error) => {
-                            toast.error("Error deleting ticket:"+error);
-                        });
-                }
+                 if (ticketToDelete?.id) {
+          // Use shared deleteTicketType service
+          deleteTicketType(ticketToDelete.id)
+            .then(() => {
+              toast.success(`Ticket ${ticketToDelete.id} deleted successfully.`);
+            })
+            .catch((error) => {
+              toast.error("Error deleting ticket: " + error.message);
+            });
+        }
 
                 return {
                     ...showtime,

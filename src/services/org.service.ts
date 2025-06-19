@@ -1,11 +1,10 @@
 /* Package Application */
 import { BaseApiResponse } from "types/baseApiResponse";
-import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 
 import { END_POINT_LIST } from "./endpoint";
 import { orgService } from "./instance.service";
 import { CreateOrgPaymentInfoDto, OrgPaymentInfoData } from "types/models/org/orgPaymentInfo.interface";
-import { CreateShowingDto, CreateShowingResponseDto, DeleteShowingResponseDto, UpdateShowingDto, UpdateShowingResponseDto } from "types/models/showing/createShowing.dto";
+import { CreateShowingDto, CreateShowingResponseDto, DeleteShowingResponseDto, GetAllShowingDetailOfEventResponseDto, UpdateShowingDto, UpdateShowingResponseDto } from "types/models/showing/createShowing.dto";
 import { CreateTicketTypeDto, CreateTicketTypeResponseDto, DeleteTicketTypeResponseDto, UpdateTicketTypeDto, UpdateTicketTypeResponseDto } from "types/models/ticketType/ticketType.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
@@ -262,6 +261,37 @@ export async function deleteTicketType(id: string): Promise<DeleteTicketTypeResp
 
     if (!res || res.status !== 200) {
       throw new Error(res?.data?.message || "Failed to delete ticket type");
+    }
+
+    return res.data.data;
+  }
+}
+
+export async function getAllShowingDetailOfEvent(
+  eventId: number
+): Promise<GetAllShowingDetailOfEventResponseDto['data']> {
+  const url = `${END_POINT_LIST.ORG_SHOWING.SHOWING}/${eventId}`;
+
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Failed to fetch showing details");
+    }
+
+    const json: BaseApiResponse<GetAllShowingDetailOfEventResponseDto['data']> = await res.json();
+    return json.data;
+  } else {
+    const res = await orgService.get<BaseApiResponse<GetAllShowingDetailOfEventResponseDto['data']>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch showing details");
     }
 
     return res.data.data;

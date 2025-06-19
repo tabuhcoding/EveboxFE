@@ -11,12 +11,9 @@ import { useRouter, useParams } from 'next/navigation';
 import Navigation from '../common/navigation';
 import FormTimeTypeTicketClient from './components/formTimeType';
 // import { Showtime, TimeAndTypeTicketsProps } from '../../libs/interface/idevent.interface';
-import createApiClient from '@/services/apiClient';
-import { BaseApiResponse } from '@/types/BaseApiResponse';
 import { Showtime } from '../../libs/interface/idevent.interface';
 import toast from 'react-hot-toast';
-import { CreateShowingResponse } from '@/types/model/CreateShowingResponse';
-import { ShowingOrgResponse } from '@/types/model/showingOrganizer';
+import { createShowing, createTicketType, getAllShowingDetailOfEvent, updateShowing, updateTicketType } from 'services/org.service';
 
 async function urlToFile(url: string, filename: string): Promise<File> {
     const response = await fetch(url);
@@ -30,7 +27,6 @@ interface TimeAndTypeTicketsProps {
 export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTicketsProps) {
     const params = useParams();
     const eventId = parseInt(params?.id?.toString() || "");
-    const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
     const router = useRouter();
     const [step] = useState(2);
     const [btnValidate2, setBtnValidte2] = useState("");
@@ -39,66 +35,63 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
     // New state to store showtimes received from FormTimeTypeTicketClient
     const [showingList, setShowingList] = useState<Showtime[]>([]);
 
-    const fetchShowtimes = async () => {
-       try {
-                   const response = await apiClient.get<ShowingOrgResponse>(`/api/org/showing/${eventId}`);
-                   if (!response.data) {
-                     toast.error("Failed to fetch showtimes");
-                     return;
-                   }
-                   const data = response.data.data;
-                   if (data.length === 0) {
-                     setShowingList([{
-                       id: "",
-                       startDate: null,
-                       endDate: null,
-                       tickets: [],
-                       isExpanded: true,
-                       showDialog: false,
-                       showEditDialog: false,
-                       showCopyTicketDialog: false,
-                       showConfirmDeleteDialog: false,
-                       showDeleteShow: false
-                     }]);
-                   } else {
-                     const formattedShowtimes: Showtime[] = data.map((show) => ({
-                       id: show.id,
-                       startDate: new Date(show.startTime),
-                       endDate: new Date(show.endTime),
-                       tickets: show.TicketType
-                         .map((ticket) => ({
-                           id: ticket.id,
-                           name: ticket.name,
-                           price: ticket.originalPrice.toString(),
-                           quantity: ticket.quantity.toString(),
-                           min: ticket.minQtyPerOrder.toString(),
-                           max: ticket.maxQtyPerOrder.toString(),
-                           startDate: new Date(ticket.startTime),
-                           endDate: new Date(ticket.endTime),
-                           setSelectedStartDate: () => { }, // Placeholder function
-                           setSelectedEndDate: () => { }, // Placeholder function
-                           information: ticket.description,
-                           image: ticket.imageUrl || null,
-                           free: ticket.isFree,
-                           position: ticket.position // Ensure position is included
-                         }))
-                         .sort((a, b) => a.position - b.position), // Sort tickets by position
-                       isExpanded: true,
-                       showDialog: false,
-                       showEditDialog: true,
-                       showCopyTicketDialog: false,
-                       showConfirmDeleteDialog: false,
-                       showDeleteShow: false,
-                     }));
-             
-                     setShowingList(formattedShowtimes);
-                     localStorage.setItem("showtimes", JSON.stringify(formattedShowtimes));
-                     console.log("Showtimes saved to local storage", formattedShowtimes);
-                   }
-                 } catch (error) {
-                   toast.error("Error fetching showtimes: " + error);
-                 }
-    };
+   const fetchShowtimes = async () => {
+  try {
+    const data = await getAllShowingDetailOfEvent(eventId); // <-- new method
+
+    if (!data || data.length === 0) {
+      setShowingList([{
+        id: "",
+        startDate: null,
+        endDate: null,
+        tickets: [],
+        isExpanded: true,
+        showDialog: false,
+        showEditDialog: false,
+        showCopyTicketDialog: false,
+        showConfirmDeleteDialog: false,
+        showDeleteShow: false
+      }]);
+    } else {
+      const formattedShowtimes: Showtime[] = data.map((show) => ({
+        id: show.id,
+        startDate: new Date(show.startTime),
+        endDate: new Date(show.endTime),
+        tickets: show.TicketType
+          .map((ticket) => ({
+            id: ticket.id,
+            name: ticket.name,
+            price: ticket.originalPrice.toString(),
+            quantity: ticket.quantity.toString(),
+            min: ticket.minQtyPerOrder.toString(),
+            max: ticket.maxQtyPerOrder.toString(),
+            startDate: new Date(ticket.startTime),
+            endDate: new Date(ticket.endTime),
+            setSelectedStartDate: () => { }, // Placeholder
+            setSelectedEndDate: () => { },
+            information: ticket.description,
+            image: ticket.imageUrl || null,
+            free: ticket.isFree,
+            position: ticket.position
+          }))
+          .sort((a, b) => a.position - b.position),
+        isExpanded: true,
+        showDialog: false,
+        showEditDialog: true,
+        showCopyTicketDialog: false,
+        showConfirmDeleteDialog: false,
+        showDeleteShow: false,
+      }));
+
+      setShowingList(formattedShowtimes);
+      localStorage.setItem("showtimes", JSON.stringify(formattedShowtimes));
+      console.log("Showtimes saved to local storage", formattedShowtimes);
+    }
+  } catch (error) {
+    toast.error("Error fetching showtimes: " + error);
+  }
+};
+
     
     const processShowtimeAndTickets = async (showing: Showtime, newShowId?: string) => {
         try {
@@ -106,36 +99,23 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
             let showtimeId = showing.id; // Use existing ID or new one
     
             // Handle Showtime creation or update
-            if (!newShowId) {
-                // Create new showing (POST)
-                response = await apiClient.post<CreateShowingResponse>(`/api/org/showing/${eventId}`, {
-                    startTime: showing.startDate,
-                    endTime: showing.endDate,
-                });
-    
-                if (response.status === 201) {
-                    console.log("------",response.data);
-                    showtimeId = response.data.data; // Extract new Showtime ID from response
-                    setShowingIds([...showingList.map(show => show.id), showtimeId]); // Update showing IDs state
-                    console.log(`Showtime created successfully! ID: ${showtimeId}`);
-                } else {
-                    toast.error(`Error creating showtime: ${response.statusText}`);
-                    return;
-                }
-            } else {
-                // Update existing showing (PUT)
-                response = await apiClient.put<BaseApiResponse>(`/api/org/showing/${showing.id}`, {
-                    startTime: showing.startDate,
-                    endTime: showing.endDate,
-                });
-    
-                if (response.status === 200) {
-                    console.log(`Showtime ${showing.id} updated successfully!`);
-                } else {
-                    toast.error(`Error updating showtime: ${response.statusText}`);
-                    return;
-                }
-            }
+             if (!newShowId) {
+      const result = await createShowing(eventId, {
+        startTime: showing.startDate?.toISOString() || "",
+        endTime: showing.endDate?.toISOString() || "",
+      });
+
+      showtimeId = result.showingId;
+      setShowingIds([...showingList.map(show => show.id), showtimeId]);
+      console.log(`Showtime created successfully! ID: ${showtimeId}`);
+    } else {
+      await updateShowing(showing.id, {
+        startTime: showing.startDate?.toISOString() || "",
+        endTime: showing.endDate?.toISOString() || ""
+      });
+
+      console.log(`Showtime ${showing.id} updated successfully!`);
+    }
     
             // Ensure `showtimeId` is valid
             if (!showtimeId) {
@@ -147,59 +127,33 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
             await Promise.all(
                 showing.tickets.map(async (ticket, index) => {
                     try {
-                        let ticketResponse;
-                        const formData = new FormData();
-                        formData.append("name", ticket.name);
-                        formData.append("description", ticket.information);
-                        formData.append("color", "#000000"); // Placeholder
-                        formData.append("isFree", String(ticket.free));
-                        formData.append("originalPrice", ticket.price);
-                        formData.append("startTime", (ticket.startDate ?? new Date()).toISOString());
-                        formData.append("endTime", (ticket.endDate ?? new Date()).toISOString());
-                        formData.append("position", String(index)); // Placeholder
-                        formData.append("quantity", ticket.quantity);
-                        formData.append("maxQtyPerOrder", ticket.max);
-                        formData.append("minQtyPerOrder", ticket.min);
-                        formData.append("isHidden", "false"); // Placeholder
-    
-                        if (typeof ticket.image === "string" && ticket.image.startsWith("http")) {
-                            ticket.image = await urlToFile(ticket.image, "ticket-image.png");
-                        }
-    
-                        if (ticket.image instanceof File) {
-                            formData.append("file", ticket.image);
-                        } else {
-                            console.warn("Skipping image upload: ticket.image is not a File");
-                        }
+                        const ticketPayload = {
+            status: 'BOOK_NOW',
+            name: ticket.name,
+            description: ticket.information,
+            color: '#000000',
+            isFree: ticket.free,
+            originalPrice: Number(ticket.price),
+            startTime: (ticket.startDate ?? new Date()).toISOString(),
+            endTime: (ticket.endDate ?? new Date()).toISOString(),
+            position: index,
+            quantity: ticket.quantity ? Number(ticket.quantity) : undefined,
+            maxQtyPerOrder: Number(ticket.max),
+            minQtyPerOrder: Number(ticket.min),
+            imageUrl: typeof ticket.image === 'string' ? ticket.image : '', // Only accept string URL here
+            isHidden: false,
+          };
+                    
     
                         if (!ticket.id) {
-                            // Create new ticket (POST)
-                            console.log("New showtime ID:", showtimeId);
-                            ticketResponse = await apiClient.post<BaseApiResponse>(
-                                `/api/org/ticketType/create/${showtimeId}`, // Use updated ID
-                                formData,
-                                { headers: { "Content-Type": "multipart/form-data" } }
-                            );
-    
-                            if (ticketResponse.status === 201) {
-                                console.log(`Ticket created successfully!`);
-                            } else {
-                                toast.error(`Error creating ticket: ${ticketResponse.statusText}`);
-                            }
-                        } else {
-                            // Update existing ticket (PUT)
-                            ticketResponse = await apiClient.put<BaseApiResponse>(
-                                `/api/org/ticketType/${ticket.id}`,
-                                formData,
-                                { headers: { "Content-Type": "multipart/form-data" } }
-                            );
-    
-                            if (ticketResponse.status === 200) {
-                                console.log(`Ticket ${ticket.id} updated successfully!`);
-                            } else {
-                                toast.error(`Error updating ticket: ${ticketResponse.statusText}`);
-                            }
-                        }
+            // Create
+            await createTicketType(showtimeId, ticketPayload);
+            console.log(`Ticket created successfully`);
+          } else {
+            // Update
+            await updateTicketType(ticket.id, ticketPayload);
+            console.log(`Ticket ${ticket.id} updated successfully`);
+          }
                     } catch (error) {
                         console.error(`Failed to process ticket:`, error);
                         toast.error(`Error saving ticket data.`);

@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 /* Package Application */
 import SelectField from "../../common/form/selectField";
 import TextEditor from "./textEditor";
-import { handleImageUpload } from "../../../libs/functions/imageUploadUtils";
 import OrganizationInfoForm from "./organizationInfoForm";
 import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
