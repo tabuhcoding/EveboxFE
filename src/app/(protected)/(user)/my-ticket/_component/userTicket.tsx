@@ -54,7 +54,7 @@ const TicketManagement = () => {
       0: null, // All
       1: 'SUCCESS',
       2: 'PENDING',
-      3: 'CANCELED',
+      3: 'CANCELLED',
     };
     const statusFilter = selectedTab === 0 || ticket.status === statusMap[selectedTab];
     const timeFilter = selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
@@ -67,7 +67,7 @@ const TicketManagement = () => {
         return 'bg-green-500 text-black';
       case 'PENDING':
         return 'bg-yellow-500 text-white';
-      case 'CANCELED':
+      case 'CANCELLED':
         return 'bg-red-500 text-white';
       default:
         return 'bg-gray-500 text-white';
