@@ -30,7 +30,7 @@ const TicketManagement = () => {
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
-  
+
   useEffect(() => {
     setCurrentTime(Date.now());
 
@@ -100,16 +100,18 @@ const TicketManagement = () => {
       <hr className="my-6 border-gray-800 font-bold" />
 
       {/* Tabs */}
-      <div className="grid grid-cols-4 gap-20 mb-4">
-        {[transWithFallback('allTab', 'Tất cả'), transWithFallback('successTitle', 'Thành công'), transWithFallback('processingTab', 'Đang xử lý'), transWithFallback('canceledTab', 'Đã hủy')].map((tab, index) => (
-          <button
-            key={index}
-            className={`px-8 py-2 rounded-full ${selectedTab === index ? 'bg-[#51DACF] text-black font-bold' : 'bg-gray-300 text-gray-700'}`}
-            onClick={() => setSelectedTab(index)}
-          >
-            {tab}
-          </button>
-        ))}
+      <div className="w-full mb-4 overflow-x-auto">
+        <div className="flex min-w-max sm:min-w-full justify-between gap-4 sm:gap-8 md:gap-12 lg:gap-20">
+          {[transWithFallback('allTab', 'Tất cả'), transWithFallback('successTitle', 'Thành công'), transWithFallback('processingTab', 'Đang xử lý'), transWithFallback('canceledTab', 'Đã hủy')].map((tab, index) => (
+            <button
+              key={index}
+              className={`flex-1 text-center whitespace-nowrap px-6 py-2 rounded-full ${selectedTab === index ? 'bg-[#51DACF] text-black font-bold' : 'bg-gray-300 text-gray-700'}`}
+              onClick={() => setSelectedTab(index)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Sub-tabs */}
@@ -133,7 +135,7 @@ const TicketManagement = () => {
       ) : filteredTickets.length === 0 ? (
         <p className="text-center mb-8">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-10">
           {filteredTickets.map((ticket) => (
             <div
               key={ticket.id}
