@@ -1,7 +1,6 @@
 'use client';
 
 /* Package System */
-import jsQR from 'jsqr';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -9,7 +8,6 @@ import { useState } from 'react';
 
 /* Package Application */
 import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
-import { decrypt } from '@/utils/helpers';
 
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 import { ChevronLeft } from 'lucide-react';
@@ -71,7 +69,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
     return (
         <div className="ticket-detail mt-8 mb-10 min-h-screen flex justify-center items-center px-4">
-            <div className="flex flex-row gap-4 w-full">
+            <div className="flex flex-col md:flex-row gap-4 w-full">
                 <button
                     onClick={() => router.back()}
                     className="p-2 border-2 border-[#0C4762] rounded-md hover:bg-gray-200 absolute top-10 left-4 mt-10 mb-10"
@@ -79,7 +77,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     <ChevronLeft size={20} />
                 </button>
                 {/* Ticket Details */}
-                <div className="bg-[#0C4762] text-white w-1/2 p-6 rounded-lg shadow-lg mt-10">
+                <div className="bg-[#0C4762] text-white md:w-1/2 w-full p-6 rounded-lg shadow-lg mt-10">
                     <h2 className="text-lg font-bold mb-4 text-gray-300">{ticket.Showing?.title}</h2>
 
                     <div className="w-full rounded-lg overflow-hidden border border-white">
@@ -116,20 +114,6 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         </div>
                     </div>
 
-                    {/* Hiển thị dữ liệu giải mã được dưới dạng danh sách */}
-                    {qrDecodedData && (
-                        <div className="mt-4 bg-gray-800 p-4 rounded-lg">
-                            <h3 className="text-white font-semibold mb-2">{transWithFallback('qrContent', 'Nội dung QR:')}</h3>
-                            <ul className="text-white text-sm list-disc pl-5">
-                                {Object.entries(qrDecodedData).map(([key, value]) => (
-                                    <li key={key}>
-                                        <strong>{key}:</strong> {String(value)}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
                     {/* Điều hướng giữa các vé */}
                     {totalTickets > 1 && (
                         <div className="flex justify-between mt-8">
@@ -154,7 +138,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                 </div>
 
                 {/* Order Details */}
-                <div className="bg-[#0C4762] text-white w-1/2 p-6 rounded-lg shadow-lg mt-10">
+                <div className="bg-[#0C4762] text-white md:w-1/2 w-full p-6 rounded-lg shadow-lg mt-10">
                     <div className="bg-[#083A4F] p-4 rounded-lg">
                         <h3 className="text-lg font-bold mb-2">{transWithFallback('orderInfo', 'Thông tin đơn hàng')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
