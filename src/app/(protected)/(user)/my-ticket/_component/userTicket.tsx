@@ -15,7 +15,6 @@ const TicketManagement = () => {
   const [successTickets, setSuccessTickets] = useState<IUserTicket[]>([]);
   const [pendingTickets, setPendingTickets] = useState<IUserTicket[]>([]);
   const [cancelledTickets, setCancelledTickets] = useState<IUserTicket[]>([]);
-  const [ticketInfo, setTicketInfo] = useState<IUserTicket[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedSubTab, setSelectedSubTab] = useState<number>(0);

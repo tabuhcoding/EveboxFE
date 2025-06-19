@@ -1,6 +1,7 @@
 'use client';
 
 /* Package System */
+import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -10,12 +11,10 @@ import { useState } from 'react';
 import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
 
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
-import { ChevronLeft } from 'lucide-react';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
     const [currentTicketIndex, setCurrentTicketIndex] = useState(0);
-    const [qrDecodedData, setQrDecodedData] = useState(null);
     const router = useRouter();
 
     const t = useTranslations('common');
