@@ -12,6 +12,9 @@ import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticke
 const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
 
 const TicketManagement = () => {
+  const [successTickets, setSuccessTickets] = useState<IUserTicket[]>([]);
+  const [pendingTickets, setPendingTickets] = useState<IUserTicket[]>([]);
+  const [cancelledTickets, setCancelledTickets] = useState<IUserTicket[]>([]);
   const [ticketInfo, setTicketInfo] = useState<IUserTicket[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedTab, setSelectedTab] = useState<number>(0);
@@ -27,17 +30,27 @@ const TicketManagement = () => {
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
-
+  
   useEffect(() => {
-    setCurrentTime(Date.now()); // Cập nhật giờ hiện tại khi client render
-  }, []);
+    setCurrentTime(Date.now());
 
-  useEffect(() => {
-    const fetchTickets = async () => {
+    const fetchTicketsByStatus = async (status: string): Promise<IUserTicket[]> => {
+      const response = await apiClient.get<IGetUserTicketResponse>(
+        `/api/ticket/getUserOrder?page=1&limit=10&status=${status}`
+      );
+      return response.data.data;
+    };
+
+    const fetchAllTickets = async () => {
       try {
-        const response = await apiClient.get<IGetUserTicketResponse>("/api/ticket/getUserOrder");
-        setTicketInfo(response.data.data);
-        console.log("Fetched tickets:", response.data.data);
+        const [success, pending, cancelled] = await Promise.all([
+          fetchTicketsByStatus("SUCCESS"),
+          fetchTicketsByStatus("PENDING"),
+          fetchTicketsByStatus("CANCELLED")
+        ]);
+        setSuccessTickets(success);
+        setPendingTickets(pending);
+        setCancelledTickets(cancelled);
       } catch (error) {
         console.error("Error fetching tickets:", error);
       } finally {
@@ -45,20 +58,26 @@ const TicketManagement = () => {
       }
     };
 
-    fetchTickets();
+    fetchAllTickets();
   }, []);
 
-  const filteredTickets = ticketInfo.filter(ticket => {
+  const getAllTickets = (): IUserTicket[] => {
+    return [...successTickets, ...pendingTickets, ...cancelledTickets];
+  };
+
+  const getTicketsByTab = (): IUserTicket[] => {
+    switch (selectedTab) {
+      case 1: return successTickets;
+      case 2: return pendingTickets;
+      case 3: return cancelledTickets;
+      default: return getAllTickets();
+    }
+  };
+
+  const filteredTickets = getTicketsByTab().filter(ticket => {
     const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
-    const statusMap: Record<number, string | null> = {
-      0: null, // All
-      1: 'SUCCESS',
-      2: 'PENDING',
-      3: 'CANCELLED',
-    };
-    const statusFilter = selectedTab === 0 || ticket.status === statusMap[selectedTab];
     const timeFilter = selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
-    return statusFilter && timeFilter;
+    return timeFilter;
   });
 
   const getStatusColor = (status: string) => {
