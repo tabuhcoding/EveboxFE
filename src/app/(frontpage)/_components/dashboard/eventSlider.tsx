@@ -263,14 +263,15 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                         <h3 className="font-bold text-left text-sm mb-2 text-white line-clamp-2 min-h-[36px] leading-tight">
                           {event.title}
                         </h3>
-                        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-2 text-[14px]">
+                        <div className={`flex flex-col ${windowWidth > 1024 ? 'md:flex-row md:justify-between md:items-center' : 'flex-col'} gap-2 mb-2 text-[14px]`}>
+
                           <time className="text-left text-teal-200">
                             <span>
                               {new Date(event.startDate).toLocaleDateString()}
                             </span>
                           </time>
                           <span
-                            className={`rounded-lg px-2 font-medium text-sky-950 text-center md:text-left ${event.status.toUpperCase() === 'EVENT_OVER' ? 'bg-red-300' : 'bg-emerald-200'
+                            className={`rounded-lg px-2 font-medium text-sky-950 text-center ${event.status.toUpperCase() === 'EVENT_OVER' ? 'bg-red-300' : 'bg-emerald-200'
                               }`}
                           >
                             {event.status.toUpperCase() === 'AVAILABLE'

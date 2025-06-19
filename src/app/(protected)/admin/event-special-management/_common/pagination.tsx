@@ -12,7 +12,7 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage, tota
         <>
             {/* Phân trang */}
             <div className="paging-event-special flex items-center justify-between mt-4 px-2 text-sm text-gray-500">
-                <p>Hiển thị {startItem}-{endItem} của {totalItems}</p>
+                <p>{startItem}-{endItem}/{totalItems}</p>
 
                 <div className="inline-flex items-center rounded-full border border-gray-300 overflow-hidden">
                     {/* Nút Previous */}

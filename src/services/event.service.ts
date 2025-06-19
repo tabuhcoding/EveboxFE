@@ -93,6 +93,8 @@ export async function getSearchEvents({
   endDate,
   minPrice,
   maxPrice,
+  pages = 1, 
+  limit = 10
 }: SearchEventsParams): Promise<SearchEventsResponse> {
   try {
     const params = new URLSearchParams();
@@ -103,7 +105,7 @@ export async function getSearchEvents({
     if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
     if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
 
-    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_SEARCH_EVENT}?${params.toString()}`);
+    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_SEARCH_EVENT}?${params.toString()}&page=${pages}&limit=${limit}`);
 
     if (!res) throw new Error('Failed to search events, please try again later');
     return res.data;

@@ -14,4 +14,15 @@ export interface Event {
   minTicketPrice: number;
 }
 
+export interface SearchEvent {
+  events: SearchEventsResponse;
+  pages: number;
+  limit: number;
+  totalPages: number;
+  totalItems: number;
+  isLoading?: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+}
+
 export type SearchEventsResponse = BaseApiResponse<Event[]>;

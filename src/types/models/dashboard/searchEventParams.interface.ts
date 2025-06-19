@@ -5,4 +5,6 @@ export interface SearchEventsParams {
   endDate?: string;    // in YYYY-MM-DD format
   minPrice?: number;
   maxPrice?: number;
+  pages:number;
+  limit: number
 }
