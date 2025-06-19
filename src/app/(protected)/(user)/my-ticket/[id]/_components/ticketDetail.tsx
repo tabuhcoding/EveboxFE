@@ -69,45 +69,6 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
         };
     }
 
-    const handleDecodeQR = () => {
-        if (!currentTicket || !currentTicket.qrCode) {
-            alert(transWithFallback('notFoundQRData', 'Không tìm thấy dữ liệu QR.'));
-            return;
-        }
-        const base64 = currentTicket.qrCode.startsWith('data:image')
-            ? currentTicket.qrCode
-            : `data:image/png;base64,${currentTicket.qrCode}`;
-
-        const img = document.createElement('img');
-        img.src = base64;
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            ctx.drawImage(img, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const qr = jsQR(imageData.data, imageData.width, imageData.height);
-            if (qr) {
-                try {
-                    const encryptedText = qr.data;
-                    const decryptedContent = decrypt(encryptedText);
-                    const parsedData = JSON.parse(decryptedContent);
-                    setQrDecodedData(parsedData);
-                } catch (error) {
-                    console.error(transWithFallback('errorDecodeQR', 'Lỗi khi giải mã hoặc parse QR:'), error);
-                    alert(transWithFallback('errorDecodeQRAlert', 'Có lỗi xảy ra khi giải mã QR.'));
-                }
-            } else {
-                alert(transWithFallback('notFoundQRData', 'Không tìm thấy dữ liệu QR.'));
-            }
-        };
-        img.onerror = (event: string | Event) => {
-            console.error(transWithFallback('errorLoadQRImage', 'Lỗi khi load ảnh QR:'), event);
-        };
-    }
-
     return (
         <div className="ticket-detail mt-8 mb-10 min-h-screen flex justify-center items-center px-4">
             <div className="flex flex-row gap-4 w-full">
@@ -155,31 +116,6 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         </div>
                     </div>
 
-                    {/* QR Code */}
-                    {currentTicket?.qrCode && currentTicket.qrCode !== "Unknow" && (
-                        <div className="mt-6 flex justify-center">
-                            <div className="bg-[#9EF5CF] p-2 rounded-lg flex flex-col items-center gap-2">
-                                <span className="text-sm text-[#0C4762] font-semibold">{transWithFallback('qrCode', 'Mã QR vé')}</span>
-                                <Image
-                                    src={currentTicket.qrCode.startsWith('data:image') ? currentTicket.qrCode : `data:image/png;base64,${currentTicket.qrCode}`}
-                                    alt="QR Code"
-                                    width={100}
-                                    height={100}
-                                    className="border border-gray-400 rounded-lg"
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Nút giải mã QR */}
-                    <div className="mt-4 flex justify-center">
-                        <button
-                            onClick={handleDecodeQR}
-                            className="bg-[#51DACF] text-[#0C4762] px-4 py-2 rounded-lg"
-                        >
-                            {transWithFallback('decodeQR', 'Giải mã QR')}
-                        </button>
-                    </div>
                     {/* Hiển thị dữ liệu giải mã được dưới dạng danh sách */}
                     {qrDecodedData && (
                         <div className="mt-4 bg-gray-800 p-4 rounded-lg">
@@ -196,7 +132,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
                     {/* Điều hướng giữa các vé */}
                     {totalTickets > 1 && (
-                        <div className="flex justify-between mt-4">
+                        <div className="flex justify-between mt-8">
                             <button
                                 className="bg-[#51DACF] text-[#0C4762] px-4 py-2 rounded-lg disabled:opacity-50"
                                 onClick={() => setCurrentTicketIndex((prev) => Math.max(0, prev - 1))}

@@ -32,7 +32,6 @@ export interface IUserTicketSeat {
   seatname?: string;
   sectionname?: string; 
   description: string;
-  qrCode?: string;
   seatID?: string;      
   sectionID?: string;
 }
