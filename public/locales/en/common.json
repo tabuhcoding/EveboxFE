@@ -1,4 +1,6 @@
-{   "search": "Search",
+{   "recieveNoti":"Recieve notification",
+    "addtoFav":"Add to favorite",
+    "search": "Search",
     "priceRange": "Price range: ",
     "searchPlaceholder":"Search events, ...",
     "searchResult":"Search result:",

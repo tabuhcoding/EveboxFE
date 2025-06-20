@@ -73,21 +73,19 @@ const transWithFallback = (key: string, fallback: string) => {
     <div className="absolute left-0 right-0 -bottom-20 mx-auto w-full md:w-11/12 px-4">
       <div className="bg-sky-900 text-white p-4 md:p-6 rounded-lg shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:flex gap-4 w-full">
-
           <div className=" min-w-[150px] w-full">
             <label className="text-sm md:text-sm text-xs font-medium mb-2 whitespace-nowrap">
-
-              {t("searchTitle") || "Fallback Text"}</label>
+              {transWithFallback("searchTitle", "Tên sự kiện, ...")}</label>
             <div className="mt-2 relative">
               <input className="w-full bg-white text-gray-800 rounded p-2 appearance-none pr-8 small-text" type="text"
-                placeholder={t('searchHint')}
+                placeholder={transWithFallback('searchHint',"Nhập tên sự kiện, ...")}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}>
               </input>
             </div>
           </div>
           <div className="min-w-[150px] w-full">
-            <label className="text-sm font-medium mb-2">{t('categoryTitle')}</label>
+            <label className="text-sm font-medium mb-2">{transWithFallback('categoryTitle', "Loại sự kiện")}</label>
             <div className="mt-2 relative w-full" ref={dropdownEventRef}>
               <button
                 onClick={() => setIsEventTypeOpen(!isEventTypeOpen)}
@@ -96,7 +94,7 @@ const transWithFallback = (key: string, fallback: string) => {
                 <span className='truncate'>
                   {selectedOptions.length > 0
                     ? selectedOptions.join(", ")
-                    : t('categoryHint')}
+                    : transWithFallback('categoryHint', "Loại sự kiện")}
                 </span>
                 <ChevronDown size={16} className="text-gray-500" />
               </button>
@@ -124,14 +122,14 @@ const transWithFallback = (key: string, fallback: string) => {
           </div>
           <div className=" min-w-[150px] w-full">
             <label className="text-xs md:text-sm font-medium mb-2 whitespace-nowrap">
-              {t('locationTitle')}</label>
+              {transWithFallback('locationTitle', "Địa điểm")}</label>
             <div className="mt-2 relative" ref={dropdownLocationRef}>
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
                 className="w-full bg-white border border-gray-300 rounded p-2 flex justify-between items-center text-gray-500 small-text"
               >
                 <span>
-                  {selectedLocation ? selectedLocation : t('locationHint')}
+                  {selectedLocation ? selectedLocation : transWithFallback('locationHint', "Chọn địa điểm")}
                 </span>
                 <ChevronDown size={16} className="text-gray-500" />
               </button>
@@ -165,7 +163,7 @@ const transWithFallback = (key: string, fallback: string) => {
             </div>
           </div>
           <div className="min-w-[180px] w-full">
-            <label className="text-sm font-medium mb-2">{t('timeTitle')}</label>
+            <label className="text-sm font-medium mb-2">{transWithFallback('timeTitle', "Thời gian")}</label>
             <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
               <DatePicker onDateRangeChange={setDateRange} />
             </div>

@@ -1,4 +1,6 @@
-{ "search": "Áp dụng",
+{ "recieveNoti": "Nhận thông báo",
+    "addToFav":"Thêm vào yêu thích",
+    "search": "Áp dụng",
   "priceRange": "Khoảng giá: ",
   "searchPlaceholder":"Tìm kiếm sự kiện, ...",
   "searchResult":"Kết quả tìm kiếm:",

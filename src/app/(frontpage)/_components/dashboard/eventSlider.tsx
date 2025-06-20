@@ -231,7 +231,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                               toggleLike(event.id);
                             }}
                           >
-                            <div title='Thêm vào yêu thích'>
+                            <div title= {transWithFallback("addToFav",'Thêm vào yêu thích')}>
                               <Heart className={`w-4 h-4 ${currentState.isUserFavorite ? "text-red-500 fill-red-500" : "text-gray-500"}`} />
                             </div>
                           </button>
@@ -242,7 +242,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                               toggleNotify(event.id);
                             }}
                           >
-                            <div title='Nhận thông báo'>
+                            <div title={transWithFallback('recieveNoti','Nhận thông báo')}>
                               <Bell className={`w-4 h-4 ${currentState.isUserNotice ? "text-yellow-500 fill-yellow-500" : "text-gray-500"}`} />
                             </div>
                           </button>
