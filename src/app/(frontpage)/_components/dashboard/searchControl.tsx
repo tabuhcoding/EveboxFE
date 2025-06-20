@@ -3,7 +3,7 @@
 /* Package System */
 import { CalendarDate } from "@internationalized/date";
 import { RangeValue } from "@react-types/shared";
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from 'react';
@@ -29,6 +29,7 @@ export default function SearchControls() {
   const [locations, setLocations] = useState<{ name: string; code: number }[]>([]);
   const dropdownEventRef = useRef(null);
   const dropdownLocationRef = useRef(null);
+  const [isSearching, setIsSearching] = useState(false);
   const t = useTranslations("common");
 
   const queryParams: Record<string, string> = {};
@@ -63,11 +64,11 @@ export default function SearchControls() {
     }
   };
 
-const transWithFallback = (key: string, fallback: string) => {
-  const msg = t(key);
-  if (!msg || msg.startsWith('common.')) return fallback;
-  return msg;
-};
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   return (
     <div className="absolute left-0 right-0 -bottom-20 mx-auto w-full md:w-11/12 px-4">
@@ -78,7 +79,7 @@ const transWithFallback = (key: string, fallback: string) => {
               {transWithFallback("searchTitle", "Tên sự kiện, ...")}</label>
             <div className="mt-2 relative">
               <input className="w-full bg-white text-gray-800 rounded p-2 appearance-none pr-8 small-text" type="text"
-                placeholder={transWithFallback('searchHint',"Nhập tên sự kiện, ...")}
+                placeholder={transWithFallback('searchHint', "Nhập tên sự kiện, ...")}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}>
               </input>
@@ -136,28 +137,28 @@ const transWithFallback = (key: string, fallback: string) => {
 
               {/* Dropdown menu */}
               {isLocationOpen && (
-                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] small-text max-h-64 overflow-y-auto">                                    
-                {locations.map((location) => (
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    key={location.code}
-                    className="p-2 hover:bg-[#0C4762] hover:bg-opacity-[0.31] cursor-pointer"
-                    onClick={() => {
-                      setSelectedLocation(location.name);
-                      setIsLocationOpen(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] small-text max-h-64 overflow-y-auto">
+                  {locations.map((location) => (
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      key={location.code}
+                      className="p-2 hover:bg-[#0C4762] hover:bg-opacity-[0.31] cursor-pointer"
+                      onClick={() => {
                         setSelectedLocation(location.name);
                         setIsLocationOpen(false);
-                      }
-                    }}
-                    aria-pressed={selectedLocation === location.name}
-                  >
-                    {location.name}
-                  </div>
-                ))}
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setSelectedLocation(location.name);
+                          setIsLocationOpen(false);
+                        }
+                      }}
+                      aria-pressed={selectedLocation === location.name}
+                    >
+                      {location.name}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -177,8 +178,13 @@ const transWithFallback = (key: string, fallback: string) => {
               }}
               className="w-full md:w-auto flex"
             >
-              <button className="h-10 w-full md:w-auto md:min-w-[56px] px-4 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200">
-                <Search size={20} className="text-white" />
+              <button onClick={() => setIsSearching(true)}
+                className="h-10 w-full md:w-auto md:min-w-[56px] px-4 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200">
+                {isSearching ? (
+                  <Loader2 size={20} className="text-white animate-spin" />
+                ) : (
+                  <Search size={20} className="text-white" />
+                )}
               </button>
             </Link>
           </div>
