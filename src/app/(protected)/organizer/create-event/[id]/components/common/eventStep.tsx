@@ -10,7 +10,6 @@ import InformationEventClientPage from '../info-event/page';
 import TimeAndTypeTickets from '../time-type/page';
 // import Setting from '../info-setting/page';
 import CreateQuestions from '../info-regis/page';
-import InformationPaymentClient from '../info-payment/page';
 
 interface EventStepProps {
     eventId: number;
@@ -25,7 +24,7 @@ export default function EventStep({ eventId, setEventId }: EventStepProps) {
     const [showingIds, setShowingIds] = useState<string[]>([]);
 
     useEffect(() => {
-        const validSteps = ["info", "showing", "setting", "questions", "payment"];
+        const validSteps = ["info", "showing", "setting", "questions"];
         if (step && !validSteps.includes(step)) {
             router.replace(`/organizer/create-event/${eventId}?step=info`);
         }
@@ -37,7 +36,6 @@ export default function EventStep({ eventId, setEventId }: EventStepProps) {
             {step === 'showing' && <TimeAndTypeTickets setShowingIds={setShowingIds} />}
             {/* {step === 'setting' && <Setting eventId={eventId} />} */}
             {step === 'questions' && <CreateQuestions showingIds={showingIds} />}
-            {step === 'payment' && <InformationPaymentClient />}
         </>
     );
 }

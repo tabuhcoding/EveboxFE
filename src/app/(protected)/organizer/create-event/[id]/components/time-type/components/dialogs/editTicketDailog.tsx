@@ -12,11 +12,13 @@ import InputCountField from "../../../common/form/inputCountField";
 import ImageUpload from "../../../common/form/imageUpload";
 import InputNumberField from "../../../common/form/inputNumberField";
 import { EditTypeTicketDailogProps } from "../../../../libs/interface/dialog.interface";
+import { useEventImageUpload } from "../../../../libs/hooks/useEventImageUpload";
 
 export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, updateTicket }: EditTypeTicketDailogProps) {
     const [startDate, setStartDate] = useState<Date | null>(ticket.startDate || null);
     const [endDate, setEndDate] = useState<Date | null>(ticket.endDate || null);
     const [dateErrors, setDateErrors] = useState<{ startDate?: string, endDate?: string }>({});
+        const [imageTicket, setImageTicket] = useState<string | null>(null);
 
     const validateStartDate = (date: Date | null) => {
         if (!date || !endDate) return true;
@@ -73,26 +75,27 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
         }
     };
 
-    const handleUpload = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
+    const { uploadImage } = useEventImageUpload();
+    
+    const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const file = event.target.files?.[0];
-
-        if (file) {
-            // Kiểm tra dung lượng file (1MB = 1024 * 1024 bytes)
-            if (file.size > 1 * 1024 * 1024) {
-                setImageErrors((prev) => ({ ...prev, [type]: "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB" }));
-                toast.error("Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!", { duration: 5000 });
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImageErrors((prev) => ({ ...prev, [type]: "" }));
-                setTicketData((prev) => ({ ...prev, image: reader.result as string }));
-            };
-
-            reader.readAsDataURL(file);
+        if (!file) return;
+    
+        if (file.size > 1 * 1024 * 1024) {
+            setImageErrors((prev) => ({ ...prev, [type]: "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB" }));
+            toast.error("Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!", { duration: 5000 });
+            return;
+        }
+    
+        try {
+            const { imageUrl } = await uploadImage(file);
+            setImageTicket(imageUrl);
+            setImageErrors((prev) => ({ ...prev, [type]: "" }));
+        } catch {
+            toast.error("Tải ảnh vé thất bại");
         }
     };
+    
 
     //Lưu vé
     const handleSaveTicket = (e: React.FormEvent) => {
@@ -122,7 +125,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
             setSelectedStartDate: setStartDate,
             setSelectedEndDate: setEndDate,
             information: ticketData.info,
-            image: ticketData.image,
+            image: imageTicket,
             free: ticketData.isFree,
         });
 
@@ -290,13 +293,13 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                                 </label>
                                 <div className="h-full flex items-center justify-center">
                                 <ImageUpload
-    image={""}
-    onUpload={(e) => handleUpload(e, "image")}
-    placeholderText="Thêm"
-    dimensions="1MB"
-    height="h-32"
-    error={imageErrors.image}
-/>
+                                                                        image={imageTicket}
+                                                                        onUpload={(e) => handleUpload(e, "imageTicket")}
+                                                                        placeholderText="Thêm"
+                                                                        dimensions="1MB"
+                                                                        height="h-32"
+                                                                        error={imageErrors.imageTicket}
+                                                                    />
 
                                 </div>
                             </div>

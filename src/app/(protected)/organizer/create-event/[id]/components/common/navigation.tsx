@@ -17,8 +17,7 @@ export default function Navigation({ step }: { step: number }) {
         { number: 1, label: "Thông tin sự kiện", key: "info" },
         { number: 2, label: "Thời gian & loại vé", key: "showing" },
         // { number: 3, label: "Cài đặt", key: "setting" },
-        { number: 4, label: "Thông tin đăng ký", key: "questions" },
-        { number: 5, label: "Thông tin thanh toán", key: "payment" },
+        { number: 3, label: "Thông tin đăng ký", key: "questions" },
     ];
 
     const handleStepClick = (targetStep: number, stepKey: string) => {

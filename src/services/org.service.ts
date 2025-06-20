@@ -171,7 +171,7 @@ export async function createTicketType(
   showingId: string,
   payload: CreateTicketTypeDto
 ): Promise<CreateTicketTypeResponseDto> {
-  const url = `${END_POINT_LIST.ORG_TICKETTYPE.TICKET_TYPE}/${showingId}`;
+  const url = `${END_POINT_LIST.ORG_TICKETTYPE.TICKET_TYPE}/create/${showingId}`;
 
   if (typeof window === "undefined") {
     const res = await fetch(

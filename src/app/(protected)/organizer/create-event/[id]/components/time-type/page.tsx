@@ -142,7 +142,7 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
             minQtyPerOrder: Number(ticket.min),
             imageUrl: typeof ticket.image === 'string' ? ticket.image : '', // Only accept string URL here
             isHidden: false,
-          };
+                     };
                     
     
                         if (!ticket.id) {

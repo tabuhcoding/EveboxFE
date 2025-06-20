@@ -208,7 +208,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                         <ChevronDown size={20} className="cursor-pointer" onClick={() => toggleExpanded(showtime.id, setShowtimes)} />
                                         <div>
                                             <label className={`text-base font-medium ml-2 ${showtime.tickets.length === 0 ? "text-red-500" : "text-black"}`}>
-                                                {showtime.startDate ? `${showtime.startDate.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })} - ${showtime.startDate.toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit" })}`
+                                                {showtime.startDate ? `${showtime.startDate.toLocaleDateString("vi-VN", {timeZone: "UTC",  day: "2-digit", month: "2-digit", year: "numeric" })} - ${showtime.startDate.toLocaleString("vi-VN", { timeZone: "UTC", hour: "2-digit", minute: "2-digit" })}`
                                                     : "Vui lòng chọn thông tin xuất diễn"}
                                             </label>
                                             <br />

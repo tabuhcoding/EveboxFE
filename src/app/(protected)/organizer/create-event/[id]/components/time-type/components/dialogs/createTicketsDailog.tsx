@@ -12,6 +12,7 @@ import InputCountField from "../../../common/form/inputCountField";
 import ImageUpload from "../../../common/form/imageUpload";
 import InputNumberField from "../../../common/form/inputNumberField";
 import { CreateTypeTicketDailogProps } from "../../../../libs/interface/dialog.interface";
+import { useEventImageUpload } from "../../../../libs/hooks/useEventImageUpload";
 
 export default function CreateTypeTicketDailog({ open, onClose, startDate, endDate, addTicket }: CreateTypeTicketDailogProps) {
     const [ticketName, setTicketName] = useState("");
@@ -75,26 +76,26 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
         }
     };
 
-    const handleUpload = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
-        const file = event.target.files?.[0];
+    const { uploadImage } = useEventImageUpload();
 
-        if (file) {
-            // Kiểm tra dung lượng file (1MB = 1024 * 1024 bytes)
-            if (file.size > 1 * 1024 * 1024) {
-                setImageErrors((prev) => ({ ...prev, [type]: "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB" }));
-                toast.error("Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!", { duration: 5000 });
-                return;
-            }
+const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImageErrors((prev) => ({ ...prev, [type]: "" }));
-                setImageTicket(reader.result as string);
-            };
+    if (file.size > 1 * 1024 * 1024) {
+        setImageErrors((prev) => ({ ...prev, [type]: "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB" }));
+        toast.error("Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!", { duration: 5000 });
+        return;
+    }
 
-            reader.readAsDataURL(file);
-        }
-    };
+    try {
+        const { imageUrl } = await uploadImage(file);
+        setImageErrors((prev) => ({ ...prev, [type]: "" }));
+        setImageTicket(imageUrl);
+    } catch {
+        toast.error("Tải ảnh vé thất bại");
+    }
+};
 
     //Lưu vé
     const handleSaveTicket = (e: React.FormEvent) => {

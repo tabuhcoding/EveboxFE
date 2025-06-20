@@ -51,12 +51,12 @@ export interface RadioOptionProps {
 }
 
 export interface SelectFieldProps {
-    label: string;
-    options: string[];
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    error?: boolean;
-    required?: boolean;
+  label: string;
+  options: (string | { en: string; vi: string })[];
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  error?: boolean;
+  required?: boolean;
 }
 
 interface EventCategory {
