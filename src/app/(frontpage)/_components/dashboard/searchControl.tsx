@@ -5,8 +5,10 @@ import { CalendarDate } from "@internationalized/date";
 import { RangeValue } from "@react-types/shared";
 import { ChevronDown, Search, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from 'react';
+
 
 /* Package Application */
 import { getAllCategories } from 'services/event.service';
@@ -30,6 +32,7 @@ export default function SearchControls() {
   const dropdownEventRef = useRef(null);
   const dropdownLocationRef = useRef(null);
   const [isSearching, setIsSearching] = useState(false);
+  const router = useRouter();
   const t = useTranslations("common");
 
   const queryParams: Record<string, string> = {};
@@ -38,6 +41,14 @@ export default function SearchControls() {
   if (selectedOptions.length > 0) queryParams.type = selectedOptions.join(',');
   if (dateRange?.start) queryParams.startDate = dateRange.start.toString();
   if (dateRange?.end) queryParams.endDate = dateRange.end.toString();
+
+
+  const handleSearch = () => {
+    setIsSearching(true);
+
+    const params = new URLSearchParams(queryParams).toString();
+    router.push(`/search?${params}`);
+  };
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -78,11 +89,18 @@ export default function SearchControls() {
             <label className="text-sm md:text-sm text-xs font-medium mb-2 whitespace-nowrap">
               {transWithFallback("searchTitle", "Tên sự kiện, ...")}</label>
             <div className="mt-2 relative">
-              <input className="w-full bg-white text-gray-800 rounded p-2 appearance-none pr-8 small-text" type="text"
+              <input
+                className="w-full bg-white text-gray-800 rounded p-2 appearance-none pr-8 small-text"
+                type="text"
                 placeholder={transWithFallback('searchHint', "Nhập tên sự kiện, ...")}
                 value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}>
-              </input>
+                onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
+              />
             </div>
           </div>
           <div className="min-w-[150px] w-full">
