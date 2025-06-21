@@ -30,22 +30,106 @@ const TicketManagement = () => {
     return msg;
   };
 
+  //Pagination
+  const [pagination, setPagination] = useState({
+    SUCCESS: { page: 1, totalPages: 0 },
+    PENDING: { page: 1, totalPages: 0 },
+    CANCELLED: { page: 1, totalPages: 0 }
+  });
+
+  const fetchTicketsByStatus = async (status: string, page = 1): Promise<IUserTicket[]> => {
+    const response = await apiClient.get<IGetUserTicketResponse>(
+      `/api/ticket/getUserOrder?page=${page}&limit=10&status=${status}`
+    );
+
+    setPagination(prev => ({
+      ...prev,
+      [status]: {
+        page,
+        totalPages: response.data.pagination.totalPages,
+      }
+    }));
+
+    return response.data.data;
+  };
+  const handlePageChange = async (status: string, newPage: number) => {
+    try {
+      const tickets = await fetchTicketsByStatus(status, newPage);
+      if (status === 'SUCCESS') setSuccessTickets(tickets);
+      if (status === 'PENDING') setPendingTickets(tickets);
+      if (status === 'CANCELLED') setCancelledTickets(tickets);
+    } catch (err) {
+      console.error("Error changing page", err);
+    }
+  };
+
+  const currentStatus = selectedTab === 1 ? 'SUCCESS' :
+    selectedTab === 2 ? 'PENDING' :
+      selectedTab === 3 ? 'CANCELLED' : null;
+
+  const renderPagination = () => {
+    if (!currentStatus) return null;
+    const { page, totalPages } = pagination[currentStatus];
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex justify-center mt-6 gap-4">
+        <button
+          onClick={() => handlePageChange(currentStatus, page - 1)}
+          disabled={page === 1}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Trang trước
+        </button>
+        <span className="px-4 py-2 font-bold">{page} / {totalPages}</span>
+        <button
+          onClick={() => handlePageChange(currentStatus, page + 1)}
+          disabled={page === totalPages}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Trang sau
+        </button>
+      </div>
+    );
+  };
+
+  const fetchAllPagesByStatus = async (status: string): Promise<IUserTicket[]> => {
+    const firstPageResponse = await apiClient.get<IGetUserTicketResponse>(
+      `/api/ticket/getUserOrder?page=1&limit=10&status=${status}`
+    );
+
+    const totalPages = firstPageResponse.data.pagination.totalPages;
+    const allTickets = [...firstPageResponse.data.data];
+
+    // Nếu có nhiều hơn 1 trang thì gọi tiếp
+    if (totalPages > 1) {
+      const requests = [];
+      for (let page = 2; page <= totalPages; page++) {
+        requests.push(
+          apiClient.get<IGetUserTicketResponse>(
+            `/api/ticket/getUserOrder?page=${page}&limit=10&status=${status}`
+          )
+        );
+      }
+
+      const responses = await Promise.all(requests);
+      responses.forEach(res => {
+        allTickets.push(...res.data.data);
+      });
+    }
+
+    return allTickets;
+  };
+
   useEffect(() => {
     setCurrentTime(Date.now());
-
-    const fetchTicketsByStatus = async (status: string): Promise<IUserTicket[]> => {
-      const response = await apiClient.get<IGetUserTicketResponse>(
-        `/api/ticket/getUserOrder?page=1&limit=10&status=${status}`
-      );
-      return response.data.data;
-    };
 
     const fetchAllTickets = async () => {
       try {
         const [success, pending, cancelled] = await Promise.all([
-          fetchTicketsByStatus("SUCCESS"),
-          fetchTicketsByStatus("PENDING"),
-          fetchTicketsByStatus("CANCELLED")
+          fetchAllPagesByStatus("SUCCESS"),
+          fetchAllPagesByStatus("PENDING"),
+          fetchAllPagesByStatus("CANCELLED")
         ]);
         setSuccessTickets(success);
         setPendingTickets(pending);
@@ -59,6 +143,7 @@ const TicketManagement = () => {
 
     fetchAllTickets();
   }, []);
+
 
   const getAllTickets = (): IUserTicket[] => {
     return [...successTickets, ...pendingTickets, ...cancelledTickets];
@@ -191,6 +276,8 @@ const TicketManagement = () => {
               </div>
             </div>
           ))}
+          {renderPagination()}
+
         </div>
       )}
     </div>
