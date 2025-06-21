@@ -16,7 +16,6 @@ import { useEventImageUpload } from "../../../../libs/hooks/useEventImageUpload"
 
 export default function CreateTypeTicketDailog({ open, onClose, startDate, endDate, addTicket }: CreateTypeTicketDailogProps) {
     const [ticketName, setTicketName] = useState("");
-    const [ticketPrice, setTicketPrice] = useState("");
     const [ticketNum, setTicketNum] = useState("");
     const [ticketNumMin, setTicketNumMin] = useState("1");
     const [ticketNumMax, setTicketNumMax] = useState("10");
@@ -24,7 +23,10 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
     const [infoTicket, setInfoTicket] = useState("");
     const [imageTicket, setImageTicket] = useState<string | null>(null);
     const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
-    const [isFree, setIsFree] = useState(false);
+    const isRegisterPayment = typeof window !== 'undefined' ? localStorage.getItem("isRegisterPayment") != "true" : false;
+        const [ticketPrice, setTicketPrice] = useState(isRegisterPayment?"0":"");
+    console.log("-------",isRegisterPayment);
+    const [isFree, setIsFree] = useState(isRegisterPayment);
     const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(new Date());
     const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(startDate);
     
@@ -166,35 +168,40 @@ const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: st
                                 </label>
                                 <div className="relative">
                                     <input
-                                        className={`w-full p-2 border rounded-md text-sm 
-                                            ${isFree ? 'bg-red-100 text-red-500 border-red-500 cursor-not-allowed' : 'border-gray-300'}`}
-                                        type="number"
-                                        value={isFree ? "0" : ticketPrice}
-                                        placeholder="0"
-                                        onChange={(e) => {
-                                            setTicketPrice(e.target.value);
-                                            if (errors.ticketPrice) {
-                                                setErrors((prev) => ({ ...prev, ticketPrice: false }));
-                                            }
-                                        }}
-                                        disabled={isFree}
-                                    />
+  type="number"
+  className={`w-full p-2 border rounded-md text-sm 
+    ${isFree ? 'bg-red-100 text-red-500 border-red-500 cursor-not-allowed' : 'border-gray-300'}`}
+  value={isFree ? "0" : ticketPrice}
+  placeholder="0"
+  onChange={(e) => {
+    setTicketPrice(e.target.value);
+    if (errors.ticketPrice) {
+      setErrors((prev) => ({ ...prev, ticketPrice: false }));
+    }
+  }}
+  disabled={isFree}
+/>
                                 </div>
-                                {errors.ticketPrice && <p className="text-red-500 text-sm mt-1">Vui lòng nhập giá vé</p>}
+                                {!isFree && errors.ticketPrice && <p className="text-red-500 text-sm mt-1">Vui lòng nhập giá vé</p>}
                             </div>
 
                             {/* Vé miễn phí */}
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0 flex items-center">
-                                <label className="flex items-center gap-2 cursor-pointer">
+                                <label className={`flex items-center gap-2 ${isRegisterPayment ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}>
                                     <input
-                                        type="checkbox" name="fee" className="peer hidden"
-                                        checked={isFree}
-                                        onChange={() => {
-                                            const newValue = !isFree;
-                                            setIsFree(newValue);
-                                            setTicketPrice(newValue ? "0" : "");
-                                        }}
-                                    />
+  type="checkbox"
+  name="fee"
+  className="peer hidden"
+  checked={isFree}
+  onChange={() => {
+    if (!isRegisterPayment) {
+      const newValue = !isFree;
+      setIsFree(newValue);
+      setTicketPrice(newValue ? "0" : "");
+    }
+  }}
+  disabled={isRegisterPayment}
+/>
                                     <div className={`w-4 h-4 rounded-full border border-black flex items-center justify-center 
                                                     ${isFree ? "bg-[#9EF5CF] border-green-700" : "bg-white "}`}>
                                         {isFree && <div className="w-2 h-2 rounded-full bg-white"></div>}

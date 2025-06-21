@@ -1,7 +1,17 @@
+export interface FormInputDto {
+  id: number;
+  fieldName: string;
+  type: string;
+  required: boolean;
+  regex?: string;
+  options?: any;
+}
+
 export interface BasicFormDto {
   id: number;
   name: string;
   createdBy: string;
+  FormInput: FormInputDto[];
 }
 
 export interface GetAllFormForOrgResponseDto {

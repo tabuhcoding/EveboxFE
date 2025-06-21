@@ -300,10 +300,10 @@ export async function getAllShowingDetailOfEvent(
 }
 
 export async function getAllFormForOrg(): Promise<BasicFormDto[]> {
-  const url = END_POINT_LIST.ORG_SHOWING.SHOWING_FORM;
+  const url = END_POINT_LIST.ORG_SHOWING.FORM_ALL;
 
   if (typeof window === "undefined") {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}/all`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
@@ -331,10 +331,10 @@ export async function getAllFormForOrg(): Promise<BasicFormDto[]> {
 export async function connectForm(
   dto: ConnectFormDto
 ): Promise<ConnectFormResponseData> {
-  const url = END_POINT_LIST.ORG_SHOWING.SHOWING_FORM;
+  const url = END_POINT_LIST.ORG_SHOWING.FORM_CONNECT;
 
   if (typeof window === "undefined") {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}/connect-form`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

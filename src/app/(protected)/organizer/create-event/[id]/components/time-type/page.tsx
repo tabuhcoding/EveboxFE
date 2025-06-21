@@ -106,6 +106,8 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
       });
 
       showtimeId = result.showingId;
+      console.log(showingList[0])
+
       setShowingIds([...showingList.map(show => show.id), showtimeId]);
       console.log(`Showtime created successfully! ID: ${showtimeId}`);
     } else {

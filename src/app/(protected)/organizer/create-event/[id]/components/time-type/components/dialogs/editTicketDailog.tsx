@@ -19,6 +19,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
     const [endDate, setEndDate] = useState<Date | null>(ticket.endDate || null);
     const [dateErrors, setDateErrors] = useState<{ startDate?: string, endDate?: string }>({});
     const [imageTicket, setImageTicket] = useState<string | null>(ticket.image || null);
+    const isRegisterPayment = typeof window !== 'undefined' && localStorage.getItem("isRegisterPayment") === "true";
 
     const validateStartDate = (date: Date | null) => {
         if (!date || !endDate) return true;
@@ -53,16 +54,16 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
 
 
     const [ticketData, setTicketData] = useState({
-        id: ticket.id,
-        name: ticket.name,
-        price: ticket.price,
-        quantity: ticket.quantity,
-        min: ticket.min,
-        max: ticket.max,
-        info: ticket.information,
-        image: ticket.image,
-        isFree: ticket.free,
-    });
+  id: ticket.id,
+  name: ticket.name,
+  price: ticket.price,
+  quantity: ticket.quantity,
+  min: ticket.min,
+  max: ticket.max,
+  info: ticket.information,
+  image: ticket.image,
+  isFree: isRegisterPayment ? true : ticket.free,
+});
 
     const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
     const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
@@ -168,19 +169,19 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                                 </label>
                                 <div className="relative">
                                     <input
-                                        className={`w-full p-2 border rounded-md text-sm 
-                                            ${ticketData.isFree ? 'bg-red-100 text-red-500 border-red-500 cursor-not-allowed' : 'border-gray-300'}`}
-                                        type="number"
-                                        value={ticketData.isFree ? 0 : ticketData.price}
-                                        placeholder="0"
-                                        onChange={(e) => {
-                                            setTicketData((prev) => ({ ...prev, price: e.target.value }));
-                                            if (errors.price) {
-                                                setErrors((prev) => ({ ...prev, price: false }));
-                                            }
-                                        }}
-                                        disabled={ticketData.isFree}
-                                    />
+  className={`w-full p-2 border rounded-md text-sm 
+    ${(ticketData.isFree || isRegisterPayment) ? 'bg-red-100 text-red-500 border-red-500 cursor-not-allowed' : 'border-gray-300'}`}
+  type="number"
+  value={ticketData.isFree || isRegisterPayment ? 0 : ticketData.price}
+  placeholder="0"
+  onChange={(e) => {
+    setTicketData((prev) => ({ ...prev, price: e.target.value }));
+    if (errors.price) {
+      setErrors((prev) => ({ ...prev, price: false }));
+    }
+  }}
+  disabled={ticketData.isFree || isRegisterPayment}
+/>
                                 </div>
                                 {errors.ticketPrice && <p className="text-red-500 text-sm mt-1">Vui lòng nhập giá vé</p>}
                             </div>
@@ -189,10 +190,17 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0 flex items-center">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
-                                        type="checkbox" name="fee" className="peer hidden"
-                                        checked={ticketData.isFree}
-                                        onChange={() => setTicketData((prev) => ({ ...prev, isFree: !prev.isFree, price: "0" }))}
-                                    />
+  type="checkbox"
+  name="fee"
+  className="peer hidden"
+  checked={ticketData.isFree}
+  onChange={() => {
+    if (!isRegisterPayment) {
+      setTicketData((prev) => ({ ...prev, isFree: !prev.isFree, price: "0" }));
+    }
+  }}
+  disabled={isRegisterPayment}
+/>
                                     <div className={`w-4 h-4 rounded-full border border-black flex items-center justify-center 
                                                     ${ticketData.isFree ? "bg-[#9EF5CF] border-green-700" : "bg-white "}`}>
                                         {ticketData.isFree && <div className="w-2 h-2 rounded-full bg-white"></div>}

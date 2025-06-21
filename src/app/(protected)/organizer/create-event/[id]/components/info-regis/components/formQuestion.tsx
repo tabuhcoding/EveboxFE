@@ -10,7 +10,7 @@ import FilterForm from "./filterForm";
 import CreateNewForm from "./createNewForm";
 import FormList from "./formTemplate/formList";
 import { Form } from "../../../libs/interface/question.interface";
-import { connectForm } from "services/org.service";
+import { connectForm, getAllFormForOrg } from "services/org.service";
 import { ConnectFormDto } from "types/models/form/form.interface";
 
 interface FormQuestionClientProps {
@@ -34,34 +34,23 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchForms = async () => {
-        setIsLoading(true);
+  setIsLoading(true);
 
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/org/showing/form/all`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                }
-            })
+  try {
+    const fetchedForms = await getAllFormForOrg(); // ← Replaces fetch()
 
-            if (!res.ok) {
-                const errorData = await res.json();
-                toast.error(errorData.message || "Có lỗi xảy ra trong quá trình tải form. Vui lòng thử lại sau.");
-                return;
-            }
-            const data = await res.json();
-            const fetchedForms: Form[] = data?.data?.forms || [];
-            const sampleFormsData = fetchedForms.filter((form) => form.createdBy === null);
-            const createdFormsData = fetchedForms.filter((form) => form.createdBy !== null);
-            setSampleForms(sampleFormsData);
-            setCreatedForms(createdFormsData);
-        } catch (error) {
-            toast.error("Có lỗi xảy ra trong quá trình tải form. Vui lòng thử lại sau.");
-            console.error("Error fetching forms:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const sampleFormsData = fetchedForms.filter((form) => form.createdBy === null);
+    const createdFormsData = fetchedForms.filter((form) => form.createdBy !== null);
+
+    setSampleForms(sampleFormsData);
+    setCreatedForms(createdFormsData);
+  } catch (error: any) {
+    toast.error(error?.message || "Có lỗi xảy ra trong quá trình tải form. Vui lòng thử lại sau.");
+    console.error("Error fetching forms:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
     useEffect(() => {
         fetchForms();
@@ -134,6 +123,8 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
             // Nếu nút là "Save"
             if (btnValidate4 === "Save") {
                 toast.success("Form hợp lệ, đã tạo và lưu thông tin form");
+                await handleConnectFormToShowing();
+
             }
             // Nếu nút là "Continue"
             else if (btnValidate4 === "Continue") {

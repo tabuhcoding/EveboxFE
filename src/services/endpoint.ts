@@ -29,6 +29,8 @@ export class END_POINT_LIST {
   }
 
   static readonly ORG_SHOWING = {
+    FORM_ALL:"/api/org/showing/form/all",
+    FORM_CONNECT:"/api/org/showing/connect-form",
     SHOWING_FORM: "/api/org/showing/form",
     SHOWING: "/api/org/showing",
     SHOWING_TIME: "/api/org/showing/showingTime",

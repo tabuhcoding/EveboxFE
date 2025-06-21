@@ -26,7 +26,7 @@ export default function FormItem ({ form, isExpanded, toggleExpand, selectedForm
                 <div className="flex items-center w-full ml-4">
                     <span className="text-sm ml-4">{form.FormInput.length} Câu hỏi</span>
                 </div>
-            )}
+            )} 
 
             {isExpanded && (
                 <div>

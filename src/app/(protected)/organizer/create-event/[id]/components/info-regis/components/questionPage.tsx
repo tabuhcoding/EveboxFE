@@ -17,6 +17,13 @@ interface QuestionsPageProps {
 }
 
 export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
+const showtimes =
+  typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("showtimes") || "[]")
+    : [];
+
+const showtimeIds = showtimes.map((show: { id: string }) => show.id);    
+console.log("showtimes",showtimeIds);
     const params = useParams();
     const eventId = parseInt(params?.id?.toString() || "");
     const router = useRouter();
@@ -75,7 +82,7 @@ export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
             </div>
 
             <div className="flex justify-center">
-                <FormQuestionClient onNextStep={handleNextStep} btnValidate4={btnValidate4} showingIds={showingIds}/>
+                <FormQuestionClient onNextStep={handleNextStep} btnValidate4={btnValidate4} showingIds={showtimeIds}/>
                 {open && <NotificationDialog open={open} onClose={handleCloseDialog} />}
             </div>
         </>

@@ -57,6 +57,9 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         setShowPaymentWarning(true);
         return;
       }
+      else{
+        localStorage.setItem("isRegisterPayment", "true");
+      }
     } catch (err) {
       console.error("Failed to check organizer payment info:", err);
       // Optionally show an error dialog
@@ -177,6 +180,7 @@ const transWithFallback = (key: string, fallback: string) => {
         <button
           onClick={() => {
             setShowPaymentWarning(false);
+            localStorage.setItem("isRegisterPayment", "false");
             if (pendingNavigation) window.location.href = pendingNavigation;
           }}
           className="px-4 py-2 bg-teal-500 text-white rounded"
@@ -208,6 +212,7 @@ const transWithFallback = (key: string, fallback: string) => {
         onClose={() => setShowOrgRegisterPopup(false)}
         onSuccess={() => {
           setShowOrgRegisterPopup(false);
+          localStorage.setItem("isRegisterPayment", "true");
           if (pendingNavigation) window.location.href = pendingNavigation;
         }}
       />
