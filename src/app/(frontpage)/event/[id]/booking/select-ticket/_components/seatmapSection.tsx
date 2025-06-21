@@ -266,11 +266,11 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
               <button
                 className="bg-gray-300 px-4 py-1 rounded hover:bg-gray-400"
                 onClick={handleCancel}
-              >{t('cancel', { defaultValue: 'Hủy' })}</button>
+              >{transWithFallback('cancel', 'Hủy')}</button>
               <button
                 className="bg-[#0C4762] text-white px-4 py-1 rounded hover:bg-[#3BB8AE]"
                 onClick={handleConfirm}
-              >{t('confirm', { defaultValue: 'Xác nhận' })}</button>
+              >{transWithFallback('confirm', 'Xác nhận')}</button>
             </div>
           </div>
         </div>

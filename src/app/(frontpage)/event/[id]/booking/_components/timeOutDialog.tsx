@@ -2,8 +2,8 @@
 
 import { Icon } from "@iconify/react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from 'next-intl';
 
 interface TimeOutDialogProps {
   open: boolean;

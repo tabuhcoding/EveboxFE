@@ -1,6 +1,7 @@
 'use client';
 
 /* Package System */
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,7 +22,6 @@ import SeatMapComponent from './seatmap';
 import SeatMapSectionComponent from './seatmapSection';
 import SelectTicket from './selectTicket';
 import TicketInfor from './ticketInfo';
-import { useSession } from 'next-auth/react';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
