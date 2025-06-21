@@ -154,21 +154,6 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
 
   return (
     <div className="seatmap-container relative overflow-hidden" ref={seatmapRef}>
-      {/* Legend */}
-      <div className="seatmap-legend-container absolute top-0 left-[50%] transform -translate-x-1/2 z-10 bg-white bg-opacity-80 w-full">
-        <div className="mb-3 seatmap-legend justify-between">
-          <div className="legend-item">
-            <span className="seat available"></span> {transWithFallback('availableSeat', 'Ghế có sẵn')}
-          </div>
-          <div className="legend-item">
-            <span className="seat booked"></span> {transWithFallback('bookedSeat', 'Ghế đã đặt')}
-          </div>
-          <div className="legend-item">
-            <span className="seat selected"></span> {transWithFallback('selectedSeat', 'Ghế đang chọn')}
-          </div>
-        </div>
-      </div>
-
       <div className="seatmap-wrapper relative">
         <div
           className="seatmap-zoom"
