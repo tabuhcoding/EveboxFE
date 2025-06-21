@@ -3,8 +3,7 @@
 /* Package Application */
 import { PaginationProps } from "services/interface/eventSpecialTable";
 
-export default function Pagination({ currentPage, totalItems, itemsPerPage, onPrevious, onNext } : PaginationProps) {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+export default function Pagination({ currentPage, totalItems, itemsPerPage, totalPages, onPrevious, onNext } : PaginationProps) {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const startItem = totalItems === 0 ? 0 : startIndex + 1;
     const endItem = Math.min(startIndex + itemsPerPage, totalItems);
@@ -13,7 +12,7 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage, onPr
         <>
             {/* Phân trang */}
             <div className="paging-event-special flex items-center justify-between mt-4 px-2 text-sm text-gray-500">
-                <p>Hiển thị {startItem}-{endItem} của {totalItems}</p>
+                <p>{startItem}-{endItem}/{totalItems}</p>
 
                 <div className="inline-flex items-center rounded-full border border-gray-300 overflow-hidden">
                     {/* Nút Previous */}

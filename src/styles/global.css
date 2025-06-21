@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer utilities {
+  [data-selected="true"] {
+    @apply bg-teal-200 rounded;
+  }
+}

@@ -65,3 +65,16 @@ export interface ChangePasswordResponse {
   statusCode: number;
   message: string;
 }
+
+export interface ToggleNotificationResponse {
+  success: boolean;
+}
+
+export interface EventOrOrgFavouriteData {
+    success: boolean;
+}
+
+export interface AddEventOrOrgFavouritePayload {
+    itemId: string;
+    itemType: string;
+}

@@ -3,4 +3,12 @@ export interface BaseApiResponse<T = unknown> {
   message: string;
   data: T;
   status?: number;
+  pagination?: PaginationData;
+}
+
+export interface PaginationData {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
 }

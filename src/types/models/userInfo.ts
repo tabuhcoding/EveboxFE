@@ -7,6 +7,7 @@ export interface UserInfo {
   phone: string;
   role: number;
   avatar_id?: number;
+  receiveNoti: boolean;
 }
 
 export type UserInfoResponse = BaseApiResponse<UserInfo>;

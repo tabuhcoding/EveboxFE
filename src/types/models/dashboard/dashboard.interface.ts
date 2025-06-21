@@ -22,6 +22,8 @@ export interface Event {
   totalClicks: number;
   imgPosterUrl: string;
   minTicketPrice: number;
+  isUserFavorite?: boolean;
+  isUserNotice?: boolean;
 }
 
 export interface EventSliderProps {

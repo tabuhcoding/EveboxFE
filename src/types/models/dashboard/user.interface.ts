@@ -8,6 +8,15 @@ export interface UserInfo {
   role: number;
   avatar_id?: number;
 }
-
 // Response for API api/user/me
 export type UserInfoResponse = BaseApiResponse<UserInfo>;
+
+export interface UserFavEvent {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+}
+
+export type UserFavEventResponse = BaseApiResponse<UserFavEvent[]>;
+
