@@ -10,6 +10,8 @@ import FilterForm from "./filterForm";
 import CreateNewForm from "./createNewForm";
 import FormList from "./formTemplate/formList";
 import { Form } from "../../../libs/interface/question.interface";
+import { connectForm } from "services/org.service";
+import { ConnectFormDto } from "types/models/form/form.interface";
 
 interface FormQuestionClientProps {
     onNextStep: () => void;
@@ -104,23 +106,18 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
 
         try {
             await Promise.all(
-                validShowingIds.map(async (showingId) => {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/org/showing/connect-form`, {
-                        method: 'POST',
-                        headers: {
-                            "Content-type": "application/json",
-                            Authorization: `Bearer ${access_token}`,
-                        },
-                        body: JSON.stringify({ showingId, formId: Number(selectedForm) })
-                    });
-
-                    if (!res.ok) {
-                        const errorData = await res.json();
-                        toast.error("Lỗi kết nối form với showing.", errorData.message);
-                        throw new Error(errorData.message || "Lỗi kết nối form với showing.");
-                    }
-                })
-            );
+  validShowingIds.map(async (showingId) => {
+    try {
+      await connectForm({
+        showingId,
+        formId: Number(selectedForm),
+      } as ConnectFormDto);
+    } catch (error) {
+      toast.error("Lỗi kết nối form với showing: " + (error as Error).message);
+      throw error; // optionally let it bubble up
+    }
+  })
+);
 
             toast.success("Kết nối form thành công!");
             onNextStep();

@@ -20,7 +20,7 @@ export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
     const params = useParams();
     const eventId = parseInt(params?.id?.toString() || "");
     const router = useRouter();
-    const [step] = useState(4);
+    const [step] = useState(3);
     const [btnValidate4, setBtnValidte4] = useState("");
     const [open, setOpen] = useState(false); //Notification Dialog 
     const [shouldProceed, setShouldProceed] = useState(false); // Trạng thái kiểm tra khi đóng Dialog

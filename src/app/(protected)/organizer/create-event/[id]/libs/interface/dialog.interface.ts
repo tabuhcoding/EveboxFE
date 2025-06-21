@@ -32,7 +32,7 @@ export interface TicketProps {
     setSelectedStartDate: (date: Date | null) => void;
     setSelectedEndDate: (date: Date | null) => void;
     information: string;
-    image?: string | File | null;
+    image?: string | null;
     free: boolean;
 }
 

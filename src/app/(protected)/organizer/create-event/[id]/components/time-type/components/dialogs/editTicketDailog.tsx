@@ -18,7 +18,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
     const [startDate, setStartDate] = useState<Date | null>(ticket.startDate || null);
     const [endDate, setEndDate] = useState<Date | null>(ticket.endDate || null);
     const [dateErrors, setDateErrors] = useState<{ startDate?: string, endDate?: string }>({});
-        const [imageTicket, setImageTicket] = useState<string | null>(null);
+    const [imageTicket, setImageTicket] = useState<string | null>(ticket.image || null);
 
     const validateStartDate = (date: Date | null) => {
         if (!date || !endDate) return true;
