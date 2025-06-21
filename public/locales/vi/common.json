@@ -300,5 +300,6 @@
   "redirectToMyTicket": "Sẽ chuyển về trang Vé của tôi trong",
   "seconds": "giây",
   "supportLongWait": "Nếu chờ quá lâu, vui lòng liên hệ hỗ trợ để được giải quyết nhanh nhất",
-  "selectedTickets": "Các vé đã chọn"
+  "selectedTickets": "Các vé đã chọn",
+  "ticketQuantityExceed": "Số lượng được chọn vượt quá vé có sẵn cho loại vé này trong phần được chỉ định"
 }
