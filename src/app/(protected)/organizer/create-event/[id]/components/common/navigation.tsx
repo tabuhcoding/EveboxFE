@@ -33,9 +33,13 @@ export default function Navigation({ step }: { step: number }) {
                 const isCompleted = s.number < step; // Bước đã hoàn thành
                 const isActive = s.number === step; // Kiểm tra bước hiện tại
                 return (
-                    <li key={index} className={`flex items-center space-x-2.5 ${isActive ? 'text-black-600' : 'text-gray-500'}`}
-                        onClick={() => handleStepClick(s.number, s.key)}
-                    >
+                    <li
+  key={index}
+  className={`flex items-center space-x-2.5 transition-colors duration-200
+              ${isActive ? 'text-black-600' : 'text-gray-500'} 
+              ${s.number <= step ? 'cursor-pointer hover:text-[#51DACF] hover:font-semibold' : 'cursor-not-allowed'}`}
+  onClick={() => handleStepClick(s.number, s.key)}
+>
                         <span className={`text-xs mb-2 flex items-center justify-center w-8 h-8 border rounded-full 
                                     ${isActive ? 'border-[#51DACF] bg-[#51DACF] text-white' : 'border-gray-500'}
                                     ${isCompleted ? 'border-green-500 bg-green-100 text-green-600' : ''}`}>
