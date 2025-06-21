@@ -1,0 +1,15 @@
+.info-dialog {
+  width: 35%;
+  justify-self: center;
+  border-radius: 20px;
+}
+
+.close-btn:hover {
+  background-color: white;
+  color: #0C4762;
+  border-radius: 50%;
+}
+
+.css-10d30g3-MuiPaper-root-MuiDialog-paper {
+  border-radius: 20px !important;
+}

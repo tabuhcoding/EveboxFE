@@ -147,6 +147,54 @@
     margin-right: auto;
 }
 
+.event-html-content * {
+  font-size: 1rem;      
+  line-height: 1.6;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+/* Căn giữa các phần tử có style text-align center */
+.event-html-content [style*="text-align:center"],
+.event-html-content h1[style*="text-align:center"],
+.event-html-content p[style*="text-align:center"],
+.event-html-content div[style*="text-align:center"] {
+  text-align: center !important;
+}
+
+/* Màu sắc từ inline-style */
+.event-html-content *[style*="color"] {
+  color: inherit !important;
+}
+
+/* Xử lý ảnh */
+.event-html-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0.5rem auto !important;
+  object-fit: contain !important;
+}
+
+.event-html-content img[width],
+.event-html-content img[height] {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+.event-html-content ul,
+.event-html-content ol {
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-html-content li {
+  margin-bottom: 0.25rem;
+  list-style-type: disc;
+}
+
 /*---------------------------------------------------------------------------------------------------*/
 /* Ticket details */
 .custom-col-left {
@@ -192,6 +240,14 @@
 .btn-sold-out {
     width: 156px;
     height: 34px;
+    background-color: #FFC9C9;
+    color: #FF0000;
+    border-radius: 5px;
+}
+
+.btn-sold-out-box {
+    width: 325px;
+    height: 52px;
     background-color: #FFC9C9;
     color: #FF0000;
     border-radius: 5px;

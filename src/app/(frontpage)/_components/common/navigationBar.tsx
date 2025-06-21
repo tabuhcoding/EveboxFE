@@ -4,15 +4,13 @@
 import { Menu, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 /* Package Application */
 import useAvatar from "app/(protected)/(user)/my-profile/_components/libs/hooks/useAvatar";
+import { useUserInfo } from "lib/swr/useUserInfo";
 
-import { gatewayService } from "../../../../services/instance.service";
-import { UserInfo, UserInfoResponse } from "../../../../types/models/userInfo";
 import { useI18n } from "../../../providers/i18nProvider";
 import LanguageSwitcher from "../common/languageSwitcher";
 
@@ -21,40 +19,11 @@ import Sidebar from "./sidebar";
 const NavigationBar = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const [userInfoFetched, setUserInfoFetched] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const { data: session } = useSession();
   const { locale } = useI18n();
   const t = useTranslations("common");
+  
+  const { userInfo, isLoading, userInfoFetched } = useUserInfo();
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      setLoading(true);
-      setUserInfoFetched(false);
-      try {
-        const response = await gatewayService.get<UserInfoResponse>("/api/user/me");
-        setUserInfo(response.data.data);
-        setUserInfoFetched(true);
-        if (response?.data?.data?.name) {
-          localStorage.setItem("name", response.data.data.name);
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        setUserInfoFetched(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Only fetch if session exists
-    if (session?.user?.accessToken) {
-      fetchUserInfo();
-    } else {
-      setUserInfo(null);
-      setUserInfoFetched(false);
-    }
-  }, [session]);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
