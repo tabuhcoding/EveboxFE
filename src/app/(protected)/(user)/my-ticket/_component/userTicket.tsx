@@ -34,39 +34,61 @@ const TicketManagement = () => {
     setCurrentTime(Date.now());
   }, []);
 
+  //Pagination
   type TicketStatus = 'SUCCESS' | 'PENDING' | 'CANCELLED';
 
-  //Pagination
   const [pagination, setPagination] = useState<Record<TicketStatus, { page: number; totalPages: number }[]>>({
     SUCCESS: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
     PENDING: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
     CANCELLED: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
   });
 
-  const fetchTicketsByStatus = async (status: TicketStatus, page = 1, subTab = 0): Promise<IUserTicket[]> => {
-    const response = await apiClient.get<IGetUserTicketResponse>(
-      `/api/ticket/getUserOrder?page=${page}&limit=10&status=${status}`
-    );
+  const fetchAllTicketsByStatus = async (status: TicketStatus): Promise<IUserTicket[]> => {
+    let allTickets: IUserTicket[] = [];
+    let currentPage = 1;
+    let totalPages = 1;
 
+    try {
+      while (currentPage <= totalPages) {
+        const response = await apiClient.get<IGetUserTicketResponse>(
+          `/api/ticket/getUserOrder?page=${currentPage}&limit=10&status=${status}`
+        );
+        allTickets = [...allTickets, ...response.data.data];
+        totalPages = response.data.pagination.totalPages;
+        currentPage++;
+      }
+    } catch (error) {
+      console.error(`Error fetching tickets for ${status}`, error);
+    }
+
+    return allTickets;
+  };
+
+  useEffect(() => {
+    const fetchAllTickets = async () => {
+      setLoading(true);
+      const [success, pending, cancelled] = await Promise.all([
+        fetchAllTicketsByStatus('SUCCESS'),
+        fetchAllTicketsByStatus('PENDING'),
+        fetchAllTicketsByStatus('CANCELLED'),
+      ]);
+
+      setSuccessTickets(success);
+      setPendingTickets(pending);
+      setCancelledTickets(cancelled);
+      setLoading(false);
+    };
+
+    fetchAllTickets();
+  }, []);
+
+  const handlePageChange = (status: TicketStatus, newPage: number, subTab: number) => {
     setPagination(prev => ({
       ...prev,
       [status]: prev[status].map((entry, index) =>
-        index === subTab ? { page, totalPages: response.data.pagination.totalPages } : entry
+        index === subTab ? { ...entry, page: newPage } : entry
       ),
     }));
-
-    return response.data.data;
-  };
-
-  const handlePageChange = async (status: string, newPage: number, subTab: number) => {
-    try {
-      const tickets = await fetchTicketsByStatus(status as TicketStatus, newPage, subTab);
-      if (status === 'SUCCESS') setSuccessTickets(tickets);
-      if (status === 'PENDING') setPendingTickets(tickets);
-      if (status === 'CANCELLED') setCancelledTickets(tickets);
-    } catch (err) {
-      console.error("Error changing page", err);
-    }
   };
 
   const currentStatus = selectedTab === 1 ? 'SUCCESS'
@@ -80,23 +102,21 @@ const TicketManagement = () => {
   }
 
   const renderPagination = () => {
-    if (!currentStatus) return null;
-    const { page, totalPages } = pagination[currentStatus][selectedSubTab];
-    if (totalPages <= 1) return null;
+    if (!currentStatus || totalPages <= 1) return null;
 
     return (
-      <div className="flex justify-center mt-6 gap-4">
+      <div className="flex justify-center mt-6 gap-4 mb-10">
         <button
-          onClick={() => handlePageChange(currentStatus, page - 1, selectedSubTab)}
-          disabled={page === 1}
+          onClick={() => handlePageChange(currentStatus, currentPage - 1, selectedSubTab)}
+          disabled={currentPage === 1}
           className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
         >
           Trang trước
         </button>
-        <span className="px-4 py-2 font-bold">{page} / {totalPages}</span>
+        <span className="px-4 py-2 font-bold">{currentPage} / {totalPages}</span>
         <button
-          onClick={() => handlePageChange(currentStatus, page + 1, selectedSubTab)}
-          disabled={page === totalPages}
+          onClick={() => handlePageChange(currentStatus, currentPage + 1, selectedSubTab)}
+          disabled={currentPage === totalPages}
           className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
         >
           Trang sau
@@ -104,38 +124,6 @@ const TicketManagement = () => {
       </div>
     );
   };
-
-  useEffect(() => {
-    if (!currentStatus) return;
-
-    const currentPage = pagination[currentStatus as TicketStatus][selectedSubTab].page;
-
-    const fetchTickets = async () => {
-      setLoading(true);
-      try {
-        const tickets = await fetchTicketsByStatus(currentStatus as TicketStatus, currentPage, selectedSubTab);
-        if (currentStatus === 'SUCCESS') setSuccessTickets(tickets);
-        if (currentStatus === 'PENDING') setPendingTickets(tickets);
-        if (currentStatus === 'CANCELLED') setCancelledTickets(tickets);
-      } catch (error) {
-        console.error('Error fetching tickets:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTickets();
-  }, [
-    currentStatus,
-    selectedSubTab,
-    pagination.SUCCESS[0].page,
-    pagination.SUCCESS[1].page,
-    pagination.PENDING[0].page,
-    pagination.PENDING[1].page,
-    pagination.CANCELLED[0].page,
-    pagination.CANCELLED[1].page
-  ]);
-
 
   const getAllTickets = (): IUserTicket[] => {
     return [...successTickets, ...pendingTickets, ...cancelledTickets];
@@ -150,11 +138,17 @@ const TicketManagement = () => {
     }
   };
 
-  const filteredTickets = getTicketsByTab().filter(ticket => {
+  const TICKETS_PER_PAGE = 10;
+
+  const allFilteredTickets = getTicketsByTab().filter(ticket => {
     const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
     const timeFilter = selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
     return timeFilter;
   });
+
+  const currentPage = pagination[currentStatus as TicketStatus]?.[selectedSubTab]?.page || 1;
+  const pagedTickets = allFilteredTickets.slice((currentPage - 1) * TICKETS_PER_PAGE, currentPage * TICKETS_PER_PAGE);
+  const totalPages = Math.ceil(allFilteredTickets.length / TICKETS_PER_PAGE);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -170,109 +164,110 @@ const TicketManagement = () => {
   };
 
   return (
-    <div className="ticket-management mt-2 mx-auto px-4">
-      <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('managementTicket', 'Quản lý vé đã mua')}</h2>
-      <h5 className="text-sm text-gray-700">{transWithFallback('managementTicketSubtitle', 'Quản lý tiến trình tham gia sự kiện qua các vé')}</h5>
-      <hr className="my-6 border-gray-800 font-bold" />
+    <>
+      <div className="ticket-management mt-2 mx-auto px-4">
+        <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('managementTicket', 'Quản lý vé đã mua')}</h2>
+        <h5 className="text-sm text-gray-700">{transWithFallback('managementTicketSubtitle', 'Quản lý tiến trình tham gia sự kiện qua các vé')}</h5>
+        <hr className="my-6 border-gray-800 font-bold" />
 
-      {/* Tabs */}
-      <div className="w-full mb-4 overflow-x-auto">
-        <div className="flex min-w-max sm:min-w-full justify-between gap-4 sm:gap-8 md:gap-12 lg:gap-20">
-          {[transWithFallback('allTab', 'Tất cả'), transWithFallback('successTitle', 'Thành công'), transWithFallback('processingTab', 'Đang xử lý'), transWithFallback('canceledTab', 'Đã hủy')].map((tab, index) => (
-            <button
-              key={index}
-              className={`flex-1 text-center whitespace-nowrap px-6 py-2 rounded-full ${selectedTab === index ? 'bg-[#51DACF] text-black font-bold' : 'bg-gray-300 text-gray-700'}`}
-              onClick={() => setSelectedTab(index)}
-            >
-              {tab}
-            </button>
-          ))}
+        {/* Tabs */}
+        <div className="w-full mb-4 overflow-x-auto">
+          <div className="flex min-w-max sm:min-w-full justify-between gap-4 sm:gap-8 md:gap-12 lg:gap-20">
+            {[transWithFallback('allTab', 'Tất cả'), transWithFallback('successTitle', 'Thành công'), transWithFallback('processingTab', 'Đang xử lý'), transWithFallback('canceledTab', 'Đã hủy')].map((tab, index) => (
+              <button
+                key={index}
+                className={`flex-1 text-center whitespace-nowrap px-6 py-2 rounded-full ${selectedTab === index ? 'bg-[#51DACF] text-black font-bold' : 'bg-gray-300 text-gray-700'}`}
+                onClick={() => setSelectedTab(index)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Sub-tabs */}
-      <div className="flex justify-center mb-4">
-        <div className="flex w-full max-w-md justify-between">
-          {[transWithFallback('upcomingTab', 'Sắp diễn ra'), transWithFallback('showingOver', 'Đã kết thúc')].map((subTab, index) => (
-            <button
-              key={index}
-              className={`relative px-10 py-2 font-medium ${selectedSubTab === index ? 'text-black font-bold' : 'text-gray-700'}`}
-              onClick={() => setSelectedSubTab(index)}
-            >
-              {subTab}
-              <div className={`absolute rounded-full bottom-0 left-0 w-full h-1 ${selectedSubTab === index ? 'bg-[#51DACF]' : 'bg-transparent'}`} />
-            </button>
-          ))}
+        {/* Sub-tabs */}
+        <div className="flex justify-center mb-4">
+          <div className="flex w-full max-w-md justify-between">
+            {[transWithFallback('upcomingTab', 'Sắp diễn ra'), transWithFallback('showingOver', 'Đã kết thúc')].map((subTab, index) => (
+              <button
+                key={index}
+                className={`relative px-10 py-2 font-medium ${selectedSubTab === index ? 'text-black font-bold' : 'text-gray-700'}`}
+                onClick={() => setSelectedSubTab(index)}
+              >
+                {subTab}
+                <div className={`absolute rounded-full bottom-0 left-0 w-full h-1 ${selectedSubTab === index ? 'bg-[#51DACF]' : 'bg-transparent'}`} />
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {loading ? (
-        <p className="text-center mb-8">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
-      ) : filteredTickets.length === 0 ? (
-        <p className="text-center mb-8">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-10">
-          {filteredTickets.map((ticket) => (
-            <div
-              key={ticket.id}
-              className="flex border rounded-lg shadow-md overflow-hidden bg-[#0C4762] text-white"
-              onClick={() => router.push(`/my-ticket/${ticket.id}`)}
-            >
-              {/* Ngày tháng */}
-              <div className="bg-[#08374A] text-white p-4 flex flex-col items-center justify-center w-26 border-r border-white">
-                <span className="text-2xl font-bold">
-                  {ticket.Showing?.startTime
-                    ? new Date(ticket.Showing.startTime).getDate()
-                    : "--"}
-                </span>
-                <span className="text-sm uppercase">
-                  {ticket.Showing?.startTime
-                    ? new Date(ticket.Showing.startTime).toLocaleString("vi-VN", {
-                      month: "long",
-                    })
-                    : "---"}
-                </span>
-                <span className="text-sm">
-                  {ticket.Showing?.startTime
-                    ? new Date(ticket.Showing.startTime).getFullYear()
-                    : "----"}
-                </span>
-              </div>
-              {/* Thông tin sự kiện */}
-              <div className="flex-1 p-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  {ticket.Showing?.title}
-                </h3>
-                <div className="flex gap-2 mb-2">
-                  <span className={`${getStatusColor(ticket.status)} text-xs px-2 py-1 rounded-md`}>
-                    {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : ticket.status === 'CANCELLED' ? "Đã hủy" : ""}
+        {loading ? (
+          <p className="text-center mb-8">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
+        ) : pagedTickets.length === 0 ? (
+          <p className="text-center mb-8">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-10">
+            {pagedTickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                className="flex border rounded-lg shadow-md overflow-hidden bg-[#0C4762] text-white"
+                onClick={() => router.push(`/my-ticket/${ticket.id}`)}
+              >
+                {/* Ngày tháng */}
+                <div className="bg-[#08374A] text-white p-4 flex flex-col items-center justify-center w-26 border-r border-white">
+                  <span className="text-2xl font-bold">
+                    {ticket.Showing?.startTime
+                      ? new Date(ticket.Showing.startTime).getDate()
+                      : "--"}
                   </span>
-                  <span className={`border border-green-500 text-green-500 text-xs px-2 py-1 rounded-md`}>
-                    {ticket.type === 'E_TICKET' ? "Vé điện tử" : "Vé cứng"}
+                  <span className="text-sm uppercase">
+                    {ticket.Showing?.startTime
+                      ? new Date(ticket.Showing.startTime).toLocaleString("vi-VN", {
+                        month: "long",
+                      })
+                      : "---"}
+                  </span>
+                  <span className="text-sm">
+                    {ticket.Showing?.startTime
+                      ? new Date(ticket.Showing.startTime).getFullYear()
+                      : "----"}
                   </span>
                 </div>
-                <p className="text-sm font-medium">
-                  🕒 {ticket.Showing?.startTime
-                    ? new Date(ticket.Showing.startTime).toLocaleString("vi-VN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    }).replace("lúc ", "")
-                    : transWithFallback('noInformation', 'Chưa có thông tin')}
-                </p>
-                <p className="text-sm font-medium">
-                  📍 {ticket.Showing?.locationsString || transWithFallback('locationString', 'Địa điểm chưa cập nhật')}
-                </p>
+                {/* Thông tin sự kiện */}
+                <div className="flex-1 p-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    {ticket.Showing?.title}
+                  </h3>
+                  <div className="flex gap-2 mb-2">
+                    <span className={`${getStatusColor(ticket.status)} text-xs px-2 py-1 rounded-md`}>
+                      {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : ticket.status === 'CANCELLED' ? "Đã hủy" : ""}
+                    </span>
+                    <span className={`border border-green-500 text-green-500 text-xs px-2 py-1 rounded-md`}>
+                      {ticket.type === 'E_TICKET' ? "Vé điện tử" : "Vé cứng"}
+                    </span>
+                  </div>
+                  <p className="text-sm font-medium">
+                    🕒 {ticket.Showing?.startTime
+                      ? new Date(ticket.Showing.startTime).toLocaleString("vi-VN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      }).replace("lúc ", "")
+                      : transWithFallback('noInformation', 'Chưa có thông tin')}
+                  </p>
+                  <p className="text-sm font-medium">
+                    📍 {ticket.Showing?.locationsString || transWithFallback('locationString', 'Địa điểm chưa cập nhật')}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-          {renderPagination()}
-
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {renderPagination()}
+    </>
   );
 };
 
