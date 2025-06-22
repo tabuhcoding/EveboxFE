@@ -101,10 +101,12 @@ const TicketManagement = () => {
     }
   };
 
-  const allFilteredTickets = getTicketsByTab().filter(ticket => {
-    const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
-    return selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
-  });
+  // const allFilteredTickets = getTicketsByTab().filter(ticket => {
+  //   const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
+  //   return selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
+  // });
+
+  const allFilteredTickets = getTicketsByTab();
 
   const currentStatus = selectedTab === 1 ? 'SUCCESS' : selectedTab === 2 ? 'PENDING' : selectedTab === 3 ? 'CANCELLED' : null;
   const currentPage = currentStatus === null
