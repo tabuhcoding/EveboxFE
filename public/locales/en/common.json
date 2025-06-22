@@ -329,5 +329,6 @@
     "subTotal": "Sub Total:",
     "total": "Total:",
     "locationString": "Location not updated",
-    "noInformation": "No information available"
+    "noInformation": "No information available",
+    "numTicketPage": "Tickets/page"
 }

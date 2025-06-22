@@ -61,6 +61,14 @@ export interface IGetUserTicketResponse {
   pagination: IPagination;
 }
 
+//TicketPagination
+export interface TicketPaginationProps {
+  currentPage: number;
+  totalPages: number;
+  ticketsPerPage: number;
+  onPageChange: (page: number) => void;
+  setTicketsPerPage: (num: number) => void;
+}
 
 // Response cho API /ticket/getUserTicket
 export type TicketInfoResponse = BaseApiResponse<IGetUserTicketResponse>;

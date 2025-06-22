@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 /* Package Application */
 import createApiClient from '@/services/apiClient';
 import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticketInfo';
+import TicketPagination from './ticketPagination';
 
 const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
 
@@ -109,59 +110,10 @@ const TicketManagement = () => {
     ? allTabPagination[selectedSubTab].page
     : pagination[currentStatus][selectedSubTab].page;
   const totalPages = Math.ceil(allFilteredTickets.length / ticketsPerPage);
-  const pagedTickets = allFilteredTickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage);
-
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-
-    const handleDirectPageClick = (page: number) => {
-      handlePageChange(currentStatus, page, selectedSubTab);
-    };
-
-    const getPageNumbers = () => {
-      const pages: (number | string)[] = [];
-      const maxDisplay = 5;
-      if (totalPages <= maxDisplay) {
-        for (let i = 1; i <= totalPages; i++) pages.push(i);
-      } else {
-        if (currentPage <= 3) pages.push(1, 2, 3, '...', totalPages);
-        else if (currentPage >= totalPages - 2) pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
-        else pages.push(1, '...', currentPage, '...', totalPages);
-      }
-      return pages;
-    };
-
-    return (
-      <div className="flex flex-col items-center gap-4 mb-10">
-        <div className="flex items-center gap-2">
-          <label className="text-sm">Số vé/trang:</label>
-          <select
-            className="px-2 py-1 border rounded"
-            value={ticketsPerPage}
-            onChange={(e) => {
-              setTicketsPerPage(Number(e.target.value));
-              handlePageChange(currentStatus, 1, selectedSubTab);
-            }}
-          >
-            {[10, 20, 50].map(n => <option key={n} value={n}>{n}</option>)}
-          </select>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button disabled={currentPage === 1} onClick={() => handlePageChange(currentStatus, currentPage - 1, selectedSubTab)} className="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">&laquo;</button>
-          {getPageNumbers().map((p, i) => typeof p === 'number' ? (
-            <button
-              key={i}
-              onClick={() => handleDirectPageClick(p)}
-              className={`px-3 py-1 border rounded ${p === currentPage ? 'bg-[#51DACF] text-black font-bold' : 'bg-white hover:bg-gray-100'}`}
-            >
-              {p}
-            </button>
-          ) : <span key={i} className="px-3 py-1 text-gray-500">...</span>)}
-          <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentStatus, currentPage + 1, selectedSubTab)} className="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">&raquo;</button>
-        </div>
-      </div>
-    );
-  };
+  const pagedTickets = allFilteredTickets.slice(
+    (currentPage - 1) * ticketsPerPage,
+    currentPage * ticketsPerPage
+  );
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -279,7 +231,14 @@ const TicketManagement = () => {
           </div>
         )}
       </div>
-      {renderPagination()}
+      <TicketPagination currentPage={currentPage} totalPages={totalPages}
+        onPageChange={(page) => handlePageChange(currentStatus, page, selectedSubTab)} 
+        ticketsPerPage={ticketsPerPage}
+        setTicketsPerPage={(num) => {
+          setTicketsPerPage(num);
+          handlePageChange(currentStatus, 1, selectedSubTab);
+        }}
+      />
     </>
   );
 };
