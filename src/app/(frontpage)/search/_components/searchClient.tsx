@@ -2,19 +2,21 @@
 
 /* Package System */
 import { CalendarDate, RangeValue } from '@nextui-org/react';
-import { ChevronDown, MousePointerClick } from 'lucide-react';
+import { ChevronDown, MousePointerClick, Bell, Heart, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect, useRef } from 'react';
-
+import toast from 'react-hot-toast';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
 import '@/styles/admin/pages/Dashboard.css';
-import { useCategories } from '@/lib/swr/useCategories';
-import { getSearchEvents } from '@/services/event.service';
+import AlertDialog from '@/components/common/alertDialog';
+import { addEventOrOrgFavourite, removeEventFavourite, removeOrgFavourite } from '@/services/auth.service';
+import { getAllCategories, getSearchEvents } from '@/services/event.service';
 import { Category } from '@/types/models/dashboard/frontDisplay';
 import { SearchEventsResponse } from '@/types/models/dashboard/searchEvents.interface';
 import Pagination from 'app/(protected)/admin/event-special-management/_common/pagination';
@@ -22,7 +24,9 @@ import Pagination from 'app/(protected)/admin/event-special-management/_common/p
 import DatePicker from '../../_components/dashboard/datePicker';
 import { mapCategoryName } from '../../_components/libs/functions/mapCategoryName';
 
+
 import RangeSlider from './range-slider';
+
 
 export default function SearchClient() {
   const [searchText, setSearchText] = useState('');
@@ -34,12 +38,17 @@ export default function SearchClient() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, _setLimit] = useState(10);
+  const [localEventStates, setLocalEventStates] = useState<Record<number, { isUserFavorite?: boolean; isUserNotice?: boolean }>>({});
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [href, setHref] = useState("");
+  const { data: session } = useSession();
+  const [isSearching, setIsSearching] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const dropdownEventRef = useRef<HTMLDivElement | null>(null);
   const t = useTranslations('common');
-  const { categories: catData } = useCategories();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -59,7 +68,7 @@ export default function SearchClient() {
         pages: page,
         limit: limit,
       });
-      
+
       setEvents(response);
     } catch (error) {
       console.error('Error loading events:', error);
@@ -72,7 +81,7 @@ export default function SearchClient() {
     loadEvents();
   }, [page]);
 
-  const applyFilters = () => {
+  const applyFilters = async () => {
     const query: Record<string, string> = {
       title: searchText.trim(),
       minPrice: priceRange[0].toString(),
@@ -84,9 +93,12 @@ export default function SearchClient() {
     if (dateRange?.start) query.startDate = dateRange.start.toString();
     if (dateRange?.end) query.endDate = dateRange.end.toString();
 
+    setIsSearching(true);
     const queryString = new URLSearchParams(query).toString();
     router.push(`/search?${queryString}`);
-    loadEvents();
+
+    await loadEvents();
+    setIsSearching(false);
   };
 
   const handlePrevious = () => {
@@ -103,8 +115,13 @@ export default function SearchClient() {
   };
 
   useEffect(() => {
-    if (catData) setCategories(catData);
-  }, []);
+      const loadCategories = async () => {
+        const data = await getAllCategories();
+        setCategories(data);
+      };
+  
+      loadCategories();
+    }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -124,23 +141,142 @@ export default function SearchClient() {
     );
   };
 
+  const getCurrentEventState = (eventId: number) => {
+    const event = events?.data?.find(e => e.id === eventId);
+    const localState = localEventStates[eventId];
+
+    return {
+      isUserFavorite: localState?.isUserFavorite ?? event?.isUserFavorite ?? false,
+      isUserNotice: localState?.isUserNotice ?? event?.isUserNotice ?? false
+    };
+  };
+
+  const toggleLike = async (id: number) => {
+    const currentState = getCurrentEventState(id);
+    const newFavoriteState = !currentState.isUserFavorite;
+
+    try {
+      if (!session?.user?.accessToken) {
+        setAlertMessage(transWithFallback("signInToAddFavNoti", "Vui lòng đăng nhập để thêm sự kiện yêu thích!"));
+        setHref("/login");
+        setAlertOpen(true);
+        return;
+      }
+      const result = await updateFavorite(id, newFavoriteState, true);
+
+      if (result) {
+        setLocalEventStates(prev => ({
+          ...prev,
+          [id]: {
+            ...prev[id],
+            isUserFavorite: newFavoriteState
+          }
+        }));
+
+        toast.success(
+          newFavoriteState
+            ? transWithFallback("liked", "Đã thêm vào danh sách yêu thích!")
+            : transWithFallback("unliked", "Đã bỏ khỏi danh sách yêu thích!")
+        );
+      } else {
+        toast.error(transWithFallback("error", "Có lỗi xảy ra, vui lòng thử lại!"));
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      toast.error(transWithFallback("error", "Có lỗi xảy ra, vui lòng thử lại!"));
+    }
+  };
+
+  const toggleNotify = async (id: number) => {
+    const currentState = getCurrentEventState(id);
+    const newNoticeState = !currentState.isUserNotice;
+
+    try {
+      if (!session?.user?.accessToken) {
+        setAlertMessage(transWithFallback("signInToAddNoti", "Vui lòng đăng nhập để thêm thông báo cho sự kiện!"));
+        setHref("/login");
+        setAlertOpen(true);
+        return;
+      }
+
+      const result = await updateFavorite(id, newNoticeState, false);
+
+      if (result) {
+        setLocalEventStates(prev => ({
+          ...prev,
+          [id]: {
+            ...prev[id],
+            isUserNotice: newNoticeState
+          }
+        }));
+
+        toast.success(
+          newNoticeState
+            ? transWithFallback("noticed", "Bạn sẽ được nhận thông báo về sự kiện!")
+            : transWithFallback("unnoticed", "Bạn đã tắt thông báo về sự kiện này!")
+        );
+      } else {
+        toast.error(transWithFallback("error", "Có lỗi xảy ra, vui lòng thử lại!"));
+      }
+    } catch (error) {
+      console.error("Error toggling notification:", error);
+      toast.error(transWithFallback("error", "Có lỗi xảy ra, vui lòng thử lại!"));
+    }
+  };
+
+  const updateFavorite = async (id: number, newStatus: boolean, isEvent: boolean) => {
+    if (newStatus) {
+      const response = await addEventOrOrgFavourite(
+        {
+          itemType: isEvent ? 'EVENT' : 'ORG',
+          itemId: id.toString(),
+        }
+      );
+
+      if (response.data.success) {
+        return true;
+      }
+      return false;
+    } else {
+      if (isEvent) {
+        const response = await removeEventFavourite(id.toString());
+        if (response.data.success) {
+          return true;
+        }
+      }
+      else {
+        const response = await removeOrgFavourite(id.toString());
+        if (response.data.success) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col mb-8">
-       <main className="flex-1">
-         <div className="flex justify-center mt-8 px-4">
-           <div className="w-full md:w-5/6">
-             <div className="flex flex-col gap-4 mb-8">
-               <h2 className="text-xl md:text-2xl font-bold whitespace-nowrap">{transWithFallback("searchResult","Kết quả tìm kiếm" )} </h2>
+      <main className="flex-1">
+        <div className="flex justify-center mt-8 px-4">
+          <div className="w-full md:w-5/6">
+            <div className="flex flex-col gap-4 mb-8">
+              <h2 className="text-xl md:text-2xl font-bold whitespace-nowrap">{transWithFallback("searchResult", "Kết quả tìm kiếm")} </h2>
 
-               <div className="flex flex-wrap md:flex-row justify-between items-start md:items-center gap-4">
-                 <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
-                   <div className="w-full md:w-60">
-                     <input
+              <div className="flex flex-wrap md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
+                  <div className="w-full md:w-60">
+                    <input
                       type="text"
-                      placeholder={transWithFallback("searchPlaceholder","Tìm kiếm sự kiện...")}
+                      placeholder={transWithFallback("searchPlaceholder", "Tìm kiếm sự kiện...")}
                       className="w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          applyFilters();
+                        }
+                      }}
                     />
                   </div>
 
@@ -164,13 +300,13 @@ export default function SearchClient() {
                       <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
                         {selectedOptions.length > 0
                           ? selectedOptions.map((name) => mapCategoryName(name, transWithFallback)).join(', ')
-                          : transWithFallback("categoryHint",'Loại sự kiện')}
+                          : transWithFallback("categoryHint", 'Loại sự kiện')}
                       </span>
                       <ChevronDown size={16} className="text-gray-500" />
                     </button>
 
                     {isEventTypeOpen && (
-                      <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] max-h-64 overflow-y-auto">
+                      <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] max-h-64 overflow-y-auto z-20">
                         {categories.map((category) => (
                           <label
                             key={category.id}
@@ -200,7 +336,12 @@ export default function SearchClient() {
                     className="bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-6 rounded-lg shadow"
                     onClick={applyFilters}
                   >
-                    {transWithFallback("search","Áp dụng")}
+                    {isSearching ? (
+                  <Loader2 size={20} className="text-white animate-spin" />
+                ) : (
+                  transWithFallback("search", "Áp dụng")
+                )}
+                    
                   </button>
                 </div>
               </div>
@@ -217,22 +358,24 @@ export default function SearchClient() {
               </div>
             ) : events?.data.length === 0 ? (
               <p className="text-center text-gray-500 mt-10">
-                {transWithFallback("noResults","Không tìm thấy sự kiện nào phù hợp.")}
+                {transWithFallback("noResults", "Không tìm thấy sự kiện nào phù hợp.")}
               </p>
             ) : (
               <div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {events?.data.map((event) => (
-                  <div key={event.id}>
-                    <Link href={`/event/${event.id}`} className='no-underline'>
-                      <div className="bg-[#0C4762] relative rounded-lg overflow-hidden shadow-md transition-shadow flex flex-col h-full">
-                        <div className="flex items-center justify-center p-2 w-full h-auto overflow-hidden">
-                          <div className='absolute top-2 left-2 flex items-center gap-2 '>
-                            <span className="text-xs text-teal-800 bg-white/80 px-2 py-1 rounded-full flex items-center gap-1">
-                              <MousePointerClick className="w-3 h-3" /> {event?.totalClicks?.toLocaleString() ?? '0'}
-                            </span>
-                          </div>
-                          {/* <div className="favorite-heart-btn absolute top-2 right-2 flex items-center gap-2 z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {events?.data.map((event) => {
+                    const currentState = getCurrentEventState(event.id);
+                    return (
+                      <div key={event.id}>
+                        <Link href={`/event/${event.id}`} className='no-underline'>
+                          <div className="bg-[#0C4762] relative rounded-lg overflow-hidden shadow-md transition-shadow flex flex-col h-full">
+                            <div className="flex items-center justify-center p-2 w-full h-auto overflow-hidden">
+                              <div className='absolute top-2 left-2 flex items-center gap-2 z-10'>
+                                <span className="text-xs text-teal-800 bg-white/80 px-2 py-1 rounded-full flex items-center gap-1">
+                                  <MousePointerClick className="w-3 h-3" /> {event?.totalClicks?.toLocaleString() ?? '0'}
+                                </span>
+                              </div>
+                              <div className="favorite-heart-btn absolute top-2 right-2 flex items-center gap-2 z-10">
                                 <button className="bg-white p-1 rounded-full hover:bg-red-100 transition"
                                   onClick={(e) => {
                                     e.preventDefault();
@@ -255,44 +398,52 @@ export default function SearchClient() {
                                     <Bell className={`w-4 h-4 ${currentState.isUserNotice ? "text-yellow-500 fill-yellow-500" : "text-gray-500"}`} />
                                   </div>
                                 </button>
-                              </div> */}
+                              </div>
+                              <Image
+                                src={
+                                  event?.imgPosterUrl ||
+                                  '/images/dashboard/card_pic.png'
+                                }
+                                alt={event.title}
+                                className="w-full aspect-video object-cover rounded-lg hover:scale-110 transition-transform duration-300 padding-30"
+                                width={140}
+                                height={100}
+                              />
+                            </div>
+                            <div className="p-3 flex flex-col flex-grow">
+                              <h3 className="font-bold text-left text-sm mb-2 text-white line-clamp-2 min-h-[36px] leading-tight">
+                                {event.title}
+                              </h3>
+                              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-2 text-[14px]">
+                                {event.startDate !== "9999-12-31T23:59:59.999Z" && (
+                                  <>
+                                    <time className="text-left text-teal-200">
+                                      <span>
+                                        {new Date(event.startDate).toLocaleDateString()}
+                                      </span>
+                                    </time>
+                                    {event.minTicketPrice !== undefined && (
+                                      <span className="rounded-lg px-2 font-medium text-sky-950 text-center md:text-left bg-emerald-200">
+                                        {`${transWithFallback("from", "Từ")} ${event.minTicketPrice.toLocaleString('vi-VN')}đ`}
+                                      </span>
+                                    )}
+                                  </>
+                                )}
 
-                          <Image
-                            src={
-                              event?.imgPosterUrl ||
-                              '/images/dashboard/card_pic.png'
-                            }
-                            alt={event.title}
-                            className="w-full aspect-video object-cover rounded-lg hover:scale-110 transition-transform duration-300 padding-30"
-                            width={140}
-                            height={100}
-                          />
-                        </div>
-                        <div className="p-3 flex flex-col flex-grow">
-                          <h3 className="font-bold text-left text-sm mb-2 text-white line-clamp-2 min-h-[36px] leading-tight">
-                            {event.title}
-                          </h3>
-                          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-2 text-[14px]">
-                            {/* <time className="text-left text-teal-200">
-                            <span>
-                              {new Date(event.startDate).toLocaleDateString()}
-                            </span>
-                          </time> */}
-                            {/* <span
-                                  className={`rounded-lg px-2 font-medium text-sky-950 text-center md:text-left ${event.status.toUpperCase() === 'EVENT_OVER' ? 'bg-red-300' : 'bg-emerald-200'
-                                    }`}
-                                >
-                                  {event.status.toUpperCase() === 'AVAILABLE'
-                                    ? transWithFallback("from", "Từ") + " " + event.minTicketPrice?.toLocaleString('vi-VN') + 'đ'
-                                    : mapEventStatus(event.status.toUpperCase())}
-                                </span> */}
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        </Link>
                       </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                    );
+                  })}
+                </div>
+                <AlertDialog
+                  message={alertMessage}
+                  open={alertOpen}
+                  onClose={() => setAlertOpen(false)}
+                  {...href ? { href } : {}}
+                />
                 <Pagination
                   currentPage={events?.pagination?.page || 1}
                   totalItems={events?.pagination?.totalItems || 0}

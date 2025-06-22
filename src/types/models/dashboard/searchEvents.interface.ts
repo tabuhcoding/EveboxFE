@@ -12,6 +12,8 @@ export interface Event {
   imgLogoUrl: string;
   totalClicks: number;
   minTicketPrice: number;
+  isUserFavorite: boolean;
+  isUserNotice: boolean
 }
 
 export interface SearchEvent {

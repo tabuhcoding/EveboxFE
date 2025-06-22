@@ -4,6 +4,7 @@
 import { Bell, ChevronLeft, ChevronRight, Heart, MousePointerClick } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from "next-intl";
 import { useRef, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -14,6 +15,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 /* Package Application */
+import AlertDialog from '@/components/common/alertDialog';
 import { addEventOrOrgFavourite, removeEventFavourite, removeOrgFavourite } from '@/services/auth.service';
 import { EventSliderProps } from 'types/models/dashboard/dashboard.interface';
 
@@ -41,6 +43,11 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
 
   const [windowWidth, setWindowWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
   const [localEventStates, setLocalEventStates] = useState<Record<number, { isUserFavorite?: boolean; isUserNotice?: boolean }>>({});
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [href, setHref] = useState("");
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -75,6 +82,12 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
     const newFavoriteState = !currentState.isUserFavorite;
 
     try {
+      if (!session?.user?.accessToken) {
+        setAlertMessage(transWithFallback("signInToAddFavNoti", "Vui lòng đăng nhập để thêm sự kiện yêu thích!"));
+        setHref("/login");
+        setAlertOpen(true);
+        return;
+      }
       const result = await updateFavorite(id, newFavoriteState, true);
 
       if (result) {
@@ -105,6 +118,12 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
     const newNoticeState = !currentState.isUserNotice;
 
     try {
+      if (!session?.user?.accessToken) {
+        setAlertMessage(transWithFallback("signInToAddNoti", "Vui lòng đăng nhập để thêm thông báo!"));
+        setHref("/login");
+        setAlertOpen(true);
+        return;
+      }
       const result = await updateFavorite(id, newNoticeState, false);
 
       if (result) {
@@ -231,7 +250,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                               toggleLike(event.id);
                             }}
                           >
-                            <div title= {transWithFallback("addToFav",'Thêm vào yêu thích')}>
+                            <div title={transWithFallback("addToFav", 'Thêm vào yêu thích')}>
                               <Heart className={`w-4 h-4 ${currentState.isUserFavorite ? "text-red-500 fill-red-500" : "text-gray-500"}`} />
                             </div>
                           </button>
@@ -242,7 +261,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
                               toggleNotify(event.id);
                             }}
                           >
-                            <div title={transWithFallback('recieveNoti','Nhận thông báo')}>
+                            <div title={transWithFallback('recieveNoti', 'Nhận thông báo')}>
                               <Bell className={`w-4 h-4 ${currentState.isUserNotice ? "text-yellow-500 fill-yellow-500" : "text-gray-500"}`} />
                             </div>
                           </button>
@@ -298,6 +317,12 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
               </button>
             </>
           )}
+          <AlertDialog
+            message={alertMessage}
+            open={alertOpen}
+            onClose={() => setAlertOpen(false)}
+            {...href ? { href } : {}}
+          />
         </div>
       )}
     </>

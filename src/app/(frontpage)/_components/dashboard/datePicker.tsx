@@ -29,7 +29,7 @@ export default function DatePicker({ onDateRangeChange }: DatePickerProps) {
           selectorButton:
             "h-[30px] py-0 bg-white text-sm text-left flex items-center gap-2",
           selectorIcon:
-            "text-gray-500 border-none outline-none shadow-none p-0 m-0 h-5 w-5",
+            "text-gray-500 border-none outline-none shadow-none p-0 m-0 h-4 w-4",
           popoverContent: "bg-white rounded-lg shadow-lg p-2 z-50",
         }}
       />

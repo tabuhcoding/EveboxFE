@@ -1,4 +1,7 @@
-{ "recieveNoti": "Nhận thông báo",
+{ 
+  "signInToAddNoti": "Đăng nhập để thêm thông báo cho sự kiện!",
+  "signInToAddFavNoti": "Đăng nhập để thêm sự kiện vào danh sách yêu thích!",
+  "recieveNoti": "Nhận thông báo",
     "addToFav":"Thêm vào yêu thích",
     "search": "Áp dụng",
   "priceRange": "Khoảng giá: ",

@@ -1,4 +1,7 @@
-{   "recieveNoti":"Recieve notification",
+{   
+    "signInToAddNoti": "Please sign in to add notification for event!",
+    "signInToAddFavNoti": "Please sign in to add favorist event!",
+    "recieveNoti":"Recieve notification",
     "addtoFav":"Add to favorite",
     "search": "Search",
     "priceRange": "Price range: ",
