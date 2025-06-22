@@ -19,6 +19,7 @@ const TicketManagement = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [ticketsPerPage, setTicketsPerPage] = useState<number>(10);
 
   const router = useRouter();
 
@@ -104,23 +105,86 @@ const TicketManagement = () => {
   const renderPagination = () => {
     if (!currentStatus || totalPages <= 1) return null;
 
+    const typedStatus = currentStatus as TicketStatus;
+
+    const handleDirectPageClick = (page: number) => {
+      handlePageChange(typedStatus, page, selectedSubTab);
+    };
+
+    const getPageNumbers = () => {
+      const pages: (number | string)[] = [];
+      const maxDisplay = 5;
+
+      if (totalPages <= maxDisplay) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+      } else {
+        if (currentPage <= 3) {
+          pages.push(1, 2, 3, '...', totalPages);
+        } else if (currentPage >= totalPages - 2) {
+          pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+        } else {
+          pages.push(1, '...', currentPage, '...', totalPages);
+        }
+      }
+
+      return pages;
+    };
+
     return (
-      <div className="flex justify-center mt-6 gap-4 mb-10">
-        <button
-          onClick={() => handlePageChange(currentStatus, currentPage - 1, selectedSubTab)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-        >
-          Trang trước
-        </button>
-        <span className="px-4 py-2 font-bold">{currentPage} / {totalPages}</span>
-        <button
-          onClick={() => handlePageChange(currentStatus, currentPage + 1, selectedSubTab)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-        >
-          Trang sau
-        </button>
+      <div className="flex flex-col items-center gap-4 mt-6 mb-10">
+        {/* Combo chọn số vé / trang */}
+        <div className="flex items-center gap-2">
+          <label htmlFor="perPage" className="text-sm font-medium">Số vé/trang:</label>
+          <select
+            id="perPage"
+            className="px-2 py-1 rounded border text-sm"
+            value={ticketsPerPage}
+            onChange={(e) => {
+              setTicketsPerPage(Number(e.target.value));
+              handlePageChange(typedStatus, 1, selectedSubTab); // reset về trang 1
+            }}
+          >
+            {[10, 20, 50].map((size) => (
+              <option key={size} value={size}>{size}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Phân trang nút số */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => handlePageChange(typedStatus, currentPage - 1, selectedSubTab)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded border bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            &laquo;
+          </button>
+
+          {getPageNumbers().map((p, i) => (
+            typeof p === 'number' ? (
+              <button
+                key={i}
+                onClick={() => handleDirectPageClick(p)}
+                className={`px-3 py-1 rounded border ${p === currentPage
+                    ? 'bg-[#51DACF] text-black font-bold'
+                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                  }`}
+              >
+                {p}
+              </button>
+            ) : (
+              <span key={i} className="px-3 py-1 text-gray-500">...</span>
+            )
+          ))}
+
+          <button
+            onClick={() => handlePageChange(typedStatus, currentPage + 1, selectedSubTab)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded border bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            &raquo;
+          </button>
+        </div>
       </div>
     );
   };
@@ -147,8 +211,11 @@ const TicketManagement = () => {
   });
 
   const currentPage = pagination[currentStatus as TicketStatus]?.[selectedSubTab]?.page || 1;
-  const pagedTickets = allFilteredTickets.slice((currentPage - 1) * TICKETS_PER_PAGE, currentPage * TICKETS_PER_PAGE);
-  const totalPages = Math.ceil(allFilteredTickets.length / TICKETS_PER_PAGE);
+  const totalPages = Math.ceil(allFilteredTickets.length / ticketsPerPage);
+  const pagedTickets = allFilteredTickets.slice(
+    (currentPage - 1) * ticketsPerPage,
+    currentPage * ticketsPerPage
+  );
 
   const getStatusColor = (status: string) => {
     switch (status) {
