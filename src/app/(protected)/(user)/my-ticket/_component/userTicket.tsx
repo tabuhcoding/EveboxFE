@@ -22,20 +22,13 @@ const TicketManagement = () => {
   const [ticketsPerPage, setTicketsPerPage] = useState<number>(10);
 
   const router = useRouter();
-
   const t = useTranslations('common');
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
-    if (!msg || msg.startsWith('common.')) return fallback;
-    return msg;
+    return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  useEffect(() => {
-    setCurrentTime(Date.now());
-  }, []);
-
-  //Pagination
   type TicketStatus = 'SUCCESS' | 'PENDING' | 'CANCELLED';
 
   const [pagination, setPagination] = useState<Record<TicketStatus, { page: number; totalPages: number }[]>>({
@@ -44,11 +37,15 @@ const TicketManagement = () => {
     CANCELLED: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
   });
 
+  const [allTabPagination, setAllTabPagination] = useState<{ page: number }[]>([
+    { page: 1 },
+    { page: 1 },
+  ]);
+
   const fetchAllTicketsByStatus = async (status: TicketStatus): Promise<IUserTicket[]> => {
     let allTickets: IUserTicket[] = [];
     let currentPage = 1;
     let totalPages = 1;
-
     try {
       while (currentPage <= totalPages) {
         const response = await apiClient.get<IGetUserTicketResponse>(
@@ -61,11 +58,11 @@ const TicketManagement = () => {
     } catch (error) {
       console.error(`Error fetching tickets for ${status}`, error);
     }
-
     return allTickets;
   };
 
   useEffect(() => {
+    setCurrentTime(Date.now());
     const fetchAllTickets = async () => {
       setLoading(true);
       const [success, pending, cancelled] = await Promise.all([
@@ -73,126 +70,26 @@ const TicketManagement = () => {
         fetchAllTicketsByStatus('PENDING'),
         fetchAllTicketsByStatus('CANCELLED'),
       ]);
-
       setSuccessTickets(success);
       setPendingTickets(pending);
       setCancelledTickets(cancelled);
       setLoading(false);
     };
-
     fetchAllTickets();
   }, []);
 
-  const handlePageChange = (status: TicketStatus, newPage: number, subTab: number) => {
-    setPagination(prev => ({
-      ...prev,
-      [status]: prev[status].map((entry, index) =>
-        index === subTab ? { ...entry, page: newPage } : entry
-      ),
-    }));
+  const handlePageChange = (status: TicketStatus | null, newPage: number, subTab: number) => {
+    if (status === null) {
+      setAllTabPagination(prev => prev.map((e, i) => (i === subTab ? { ...e, page: newPage } : e)));
+    } else {
+      setPagination(prev => ({
+        ...prev,
+        [status]: prev[status].map((e, i) => (i === subTab ? { ...e, page: newPage } : e)),
+      }));
+    }
   };
 
-  const currentStatus = selectedTab === 1 ? 'SUCCESS'
-    : selectedTab === 2 ? 'PENDING'
-      : selectedTab === 3 ? 'CANCELLED'
-        : null;
-
-  if (currentStatus) {
-    const typedStatus = currentStatus as TicketStatus;
-    pagination[typedStatus][selectedSubTab];
-  }
-
-  const renderPagination = () => {
-    if (!currentStatus || totalPages <= 1) return null;
-
-    const typedStatus = currentStatus as TicketStatus;
-
-    const handleDirectPageClick = (page: number) => {
-      handlePageChange(typedStatus, page, selectedSubTab);
-    };
-
-    const getPageNumbers = () => {
-      const pages: (number | string)[] = [];
-      const maxDisplay = 5;
-
-      if (totalPages <= maxDisplay) {
-        for (let i = 1; i <= totalPages; i++) pages.push(i);
-      } else {
-        if (currentPage <= 3) {
-          pages.push(1, 2, 3, '...', totalPages);
-        } else if (currentPage >= totalPages - 2) {
-          pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
-        } else {
-          pages.push(1, '...', currentPage, '...', totalPages);
-        }
-      }
-
-      return pages;
-    };
-
-    return (
-      <div className="flex flex-col items-center gap-4 mt-6 mb-10">
-        {/* Combo chọn số vé / trang */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="perPage" className="text-sm font-medium">Số vé/trang:</label>
-          <select
-            id="perPage"
-            className="px-2 py-1 rounded border text-sm"
-            value={ticketsPerPage}
-            onChange={(e) => {
-              setTicketsPerPage(Number(e.target.value));
-              handlePageChange(typedStatus, 1, selectedSubTab); // reset về trang 1
-            }}
-          >
-            {[10, 20, 50].map((size) => (
-              <option key={size} value={size}>{size}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Phân trang nút số */}
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => handlePageChange(typedStatus, currentPage - 1, selectedSubTab)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 rounded border bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-          >
-            &laquo;
-          </button>
-
-          {getPageNumbers().map((p, i) => (
-            typeof p === 'number' ? (
-              <button
-                key={i}
-                onClick={() => handleDirectPageClick(p)}
-                className={`px-3 py-1 rounded border ${p === currentPage
-                    ? 'bg-[#51DACF] text-black font-bold'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
-                  }`}
-              >
-                {p}
-              </button>
-            ) : (
-              <span key={i} className="px-3 py-1 text-gray-500">...</span>
-            )
-          ))}
-
-          <button
-            onClick={() => handlePageChange(typedStatus, currentPage + 1, selectedSubTab)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded border bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-          >
-            &raquo;
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  const getAllTickets = (): IUserTicket[] => {
-    return [...successTickets, ...pendingTickets, ...cancelledTickets];
-  };
-
+  const getAllTickets = () => [...successTickets, ...pendingTickets, ...cancelledTickets];
   const getTicketsByTab = (): IUserTicket[] => {
     switch (selectedTab) {
       case 1: return successTickets;
@@ -202,20 +99,69 @@ const TicketManagement = () => {
     }
   };
 
-  const TICKETS_PER_PAGE = 10;
-
   const allFilteredTickets = getTicketsByTab().filter(ticket => {
     const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
-    const timeFilter = selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
-    return timeFilter;
+    return selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
   });
 
-  const currentPage = pagination[currentStatus as TicketStatus]?.[selectedSubTab]?.page || 1;
+  const currentStatus = selectedTab === 1 ? 'SUCCESS' : selectedTab === 2 ? 'PENDING' : selectedTab === 3 ? 'CANCELLED' : null;
+  const currentPage = currentStatus === null
+    ? allTabPagination[selectedSubTab].page
+    : pagination[currentStatus][selectedSubTab].page;
   const totalPages = Math.ceil(allFilteredTickets.length / ticketsPerPage);
-  const pagedTickets = allFilteredTickets.slice(
-    (currentPage - 1) * ticketsPerPage,
-    currentPage * ticketsPerPage
-  );
+  const pagedTickets = allFilteredTickets.slice((currentPage - 1) * ticketsPerPage, currentPage * ticketsPerPage);
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const handleDirectPageClick = (page: number) => {
+      handlePageChange(currentStatus, page, selectedSubTab);
+    };
+
+    const getPageNumbers = () => {
+      const pages: (number | string)[] = [];
+      const maxDisplay = 5;
+      if (totalPages <= maxDisplay) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+      } else {
+        if (currentPage <= 3) pages.push(1, 2, 3, '...', totalPages);
+        else if (currentPage >= totalPages - 2) pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+        else pages.push(1, '...', currentPage, '...', totalPages);
+      }
+      return pages;
+    };
+
+    return (
+      <div className="flex flex-col items-center gap-4 mb-10">
+        <div className="flex items-center gap-2">
+          <label className="text-sm">Số vé/trang:</label>
+          <select
+            className="px-2 py-1 border rounded"
+            value={ticketsPerPage}
+            onChange={(e) => {
+              setTicketsPerPage(Number(e.target.value));
+              handlePageChange(currentStatus, 1, selectedSubTab);
+            }}
+          >
+            {[10, 20, 50].map(n => <option key={n} value={n}>{n}</option>)}
+          </select>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button disabled={currentPage === 1} onClick={() => handlePageChange(currentStatus, currentPage - 1, selectedSubTab)} className="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">&laquo;</button>
+          {getPageNumbers().map((p, i) => typeof p === 'number' ? (
+            <button
+              key={i}
+              onClick={() => handleDirectPageClick(p)}
+              className={`px-3 py-1 border rounded ${p === currentPage ? 'bg-[#51DACF] text-black font-bold' : 'bg-white hover:bg-gray-100'}`}
+            >
+              {p}
+            </button>
+          ) : <span key={i} className="px-3 py-1 text-gray-500">...</span>)}
+          <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentStatus, currentPage + 1, selectedSubTab)} className="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">&raquo;</button>
+        </div>
+      </div>
+    );
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
