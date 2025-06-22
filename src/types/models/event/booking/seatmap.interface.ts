@@ -42,6 +42,7 @@ export interface SeatMapProps {
     sectionId?: number
   ) => void;
   selectedSeatIds?: number[];
+  selectedTickets?: SelectedTicketsState;
 }
 
 export interface SeatMapElement {

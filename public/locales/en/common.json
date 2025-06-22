@@ -330,5 +330,7 @@
     "total": "Total:",
     "locationString": "Location not updated",
     "noInformation": "No information available",
-    "numTicketPage": "Tickets/page"
+    "numTicketPage": "Tickets/page",
+    "selectedTickets": "Selected tickets",
+    "ticketQuantityExceed": "Selected quantity exceeds available tickets for this ticket type in the specified section"
 }

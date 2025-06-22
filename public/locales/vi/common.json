@@ -329,5 +329,7 @@
   "total": "Tổng tiền:",
   "locationString": "Địa điểm chưa cập nhật",
   "noInformation": "Chưa có thông tin",
-  "numTicketPage": "Số vé/trang"
+  "numTicketPage": "Số vé/trang",
+  "selectedTickets": "Các vé đã chọn",
+  "ticketQuantityExceed": "Số lượng được chọn vượt quá vé có sẵn cho loại vé này trong phần được chỉ định"
 }

@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { SeatMapProps, Section } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds }: SeatMapProps) {
+export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds, selectedTickets = {} }: SeatMapProps) {
   console.log("🚀 ~ SeatMapSectionComponent ~ selectedSeatIds:", selectedSeatIds)
   const t = useTranslations("common");
 
@@ -101,14 +101,22 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
 
   const handleSectionClick = (section: Section) => {
     setSelectedSection(section);
-    // Khởi tạo số lượng về 0 cho từng loại vé thuộc section này
+    // Chỉ lấy ticketType hợp lệ trong section này
     const sectionTypes = ticketType.filter(tt => !tt.isHidden && (section.ticketTypeId ? section.ticketTypeId === tt.id : true));
     const defaultQty: { [ticketTypeId: string]: number } = {};
     sectionTypes.forEach(tt => {
-      defaultQty[tt.id] = 0;
+      // Tìm số lượng đã chọn trước đó cho section + ticketType
+      let value = 0;
+      const selected = selectedTickets?.[tt.id];
+      // sectionId phải khớp mới lấy quantity, nếu không là 0
+      if (selected && selected.sectionId === section.id) {
+        value = selected.quantity;
+      }
+      defaultQty[tt.id] = value;
     });
     setSectionTickets(defaultQty);
   };
+
 
   const handleIncrease = (ticketTypeId: string, maxQty: number) => {
     setSectionTickets(prev => ({
@@ -146,21 +154,6 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
 
   return (
     <div className="seatmap-container relative overflow-hidden" ref={seatmapRef}>
-      {/* Legend */}
-      <div className="seatmap-legend-container absolute top-0 left-[50%] transform -translate-x-1/2 z-10 bg-white bg-opacity-80 w-full">
-        <div className="mb-3 seatmap-legend justify-between">
-          <div className="legend-item">
-            <span className="seat available"></span> {transWithFallback('availableSeat', 'Ghế có sẵn')}
-          </div>
-          <div className="legend-item">
-            <span className="seat booked"></span> {transWithFallback('bookedSeat', 'Ghế đã đặt')}
-          </div>
-          <div className="legend-item">
-            <span className="seat selected"></span> {transWithFallback('selectedSeat', 'Ghế đang chọn')}
-          </div>
-        </div>
-      </div>
-
       <div className="seatmap-wrapper relative">
         <div
           className="seatmap-zoom"
@@ -248,6 +241,11 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                   <div>
                     <div className="font-semibold">{tt.name}</div>
                     <div className="text-gray-500">{tt.price?.toLocaleString('vi-VN')}đ</div>
+                    {tt.description && (
+                      <div className="text-xs text-gray-600 mt-1">
+                        {tt.description}
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <button
@@ -268,11 +266,11 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
               <button
                 className="bg-gray-300 px-4 py-1 rounded hover:bg-gray-400"
                 onClick={handleCancel}
-              >{t('cancel', { defaultValue: 'Hủy' })}</button>
+              >{transWithFallback('cancel', 'Hủy')}</button>
               <button
                 className="bg-[#0C4762] text-white px-4 py-1 rounded hover:bg-[#3BB8AE]"
                 onClick={handleConfirm}
-              >{t('confirm', { defaultValue: 'Xác nhận' })}</button>
+              >{transWithFallback('confirm', 'Xác nhận')}</button>
             </div>
           </div>
         </div>

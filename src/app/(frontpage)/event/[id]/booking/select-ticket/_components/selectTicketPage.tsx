@@ -1,12 +1,14 @@
 'use client';
 
 /* Package System */
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
+import AlertDialog from '@/components/common/alertDialog';
 import Error from 'app/(frontpage)/error';
 import Loading from 'app/(protected)/(user)/my-profile/loading';
 import { getSeatMap, getShowingData } from 'services/event.service';
@@ -23,6 +25,8 @@ import TicketInfor from './ticketInfo';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
+  const { data: session } = useSession();
+
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicketsState>({});
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -35,6 +39,19 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
   const [isLoadingSeatmap, setIsLoadingSeatmap] = useState(true);
   const [seatmapError, setSeatmapError] = useState<string | "">("");
   const [selectedSeatIds, setSelectedSeatIds] = useState<number[]>([]);
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [href, setHref] = useState("");
+  
+
+  useEffect(() => {
+    if (!session?.user?.accessToken) {
+      setAlertMessage(transWithFallback("pleaseLogin", "Vui lòng đăng nhập để truy cập vào trang này!"));
+      setHref("/login");
+      setAlertOpen(true);
+    }
+  })
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -171,83 +188,55 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
   };
 
   return (
-    <div>
-      <Navigation title={transWithFallback('chooseTicket', 'Chọn vé')} />
-      {(event) ? (
-        <TicketInfor
-          event={event}
-          totalTickets={totalTickets}
-          totalAmount={totalAmount}
-          hasSelectedTickets={totalTickets > 0}
-          selectedTickets={selectedTickets}     // <-- truyền object selectedTickets mới
-          ticketType={ticketType}               // <-- truyền array ticketType
-          selectedSeatIds={selectedSeatIds}
-          showingId={showingId}
-          onClearSelection={clearSelection}
-          seatMapId={seatMapId}
-        />
-      ) : (
-        <Loading />
-      )}
-      <div className="showing-seatmap-container flex flex-row justify-center my-4 mx-0">
-        {isLoadingSeatmap ? (
-          <Loading />
-        ) : seatmapError ? (
-          <Error />
-        ) : isShowingData(seatMapData) ? (
-          <SelectTicket
-            tickets={
-              (seatMapData?.TicketType || [])
-                .slice()
-                .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-                .map((ticket) => ({
-                  id: ticket.id,
-                  name: ticket.name,
-                  price: ticket.price,
-                  available: ticket.status !== "sold_out",
-                  description: ticket.description,
-                  position: ticket.position,
-                  minQtyPerOrder: ticket.minQtyPerOrder,
-                  maxQtyPerOrder: ticket.maxQtyPerOrder
-                }))
-            }
-            selectedTickets={selectedTickets}
-            setSelectedTickets={setSelectedTickets}
-            selectedTicket={selectedTicket}
-            setSelectedTicket={setSelectedTicket}
+    <>
+      <div>
+        <Navigation title={transWithFallback('chooseTicket', 'Chọn vé')} />
+        {(event) ? (
+          <TicketInfor
+            event={event}
+            totalTickets={totalTickets}
+            totalAmount={totalAmount}
+            hasSelectedTickets={totalTickets > 0}
+            selectedTickets={selectedTickets}     // <-- truyền object selectedTickets mới
+            ticketType={ticketType}               // <-- truyền array ticketType
+            selectedSeatIds={selectedSeatIds}
+            showingId={showingId}
+            onClearSelection={clearSelection}
+            seatMapId={seatMapId}
           />
-        ) : seatmapType === SeatmapType.SELECT_SEAT ? (
-          <>
-            <SeatMapComponent
-              seatMap={seatMapData as SeatMap}
-              onSeatSelectionChange={handleSeatSelectionChange}
-              ticketType={ticketType}
-              selectedSeatIds={selectedSeatIds}
+        ) : (
+          <Loading />
+        )}
+        <div className="showing-seatmap-container flex flex-row justify-center my-4 mx-0">
+          {isLoadingSeatmap ? (
+            <Loading />
+          ) : seatmapError ? (
+            <Error />
+          ) : isShowingData(seatMapData) ? (
+            <SelectTicket
+              tickets={
+                (seatMapData?.TicketType || [])
+                  .slice()
+                  .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+                  .map((ticket) => ({
+                    id: ticket.id,
+                    name: ticket.name,
+                    price: ticket.price,
+                    available: ticket.status !== "sold_out",
+                    description: ticket.description,
+                    position: ticket.position,
+                    minQtyPerOrder: ticket.minQtyPerOrder,
+                    maxQtyPerOrder: ticket.maxQtyPerOrder
+                  }))
+              }
+              selectedTickets={selectedTickets}
+              setSelectedTickets={setSelectedTickets}
+              selectedTicket={selectedTicket}
+              setSelectedTicket={setSelectedTicket}
             />
-            <div className='w-[30%] pl-4'>
-              {ticketType.length > 0 && (
-                <div className='ticket-type-list'>
-                  <h2 className='font-bold text-lg mb-2'>{t("ticketPrice") ?? "Giá vé"}</h2>
-                  {ticketType.map((type) => (
-                    <div key={type.id} className='ticket-type-item flex justify-between items-center mb-2'>
-                      <div className='flex items-center'>
-                        <span
-                          className="inline-block ticket-type-color w-10 h-6 rounded mr-2"
-                          style={{ backgroundColor: type.color }}
-                        ></span>
-                        <span className='ticket-type-name'>{type.name}</span>
-                      </div>
-                      <span className='ticket-type-price text-[#0C4762] font-semibold'>{type.price?.toLocaleString("vi-VN")}đ</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </>
-        ) :
-          (
+          ) : seatmapType === SeatmapType.SELECT_SEAT ? (
             <>
-              <SeatMapSectionComponent
+              <SeatMapComponent
                 seatMap={seatMapData as SeatMap}
                 onSeatSelectionChange={handleSeatSelectionChange}
                 ticketType={ticketType}
@@ -273,8 +262,45 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                 )}
               </div>
             </>
-          )}
+          ) :
+            (
+              <>
+                <SeatMapSectionComponent
+                  seatMap={seatMapData as SeatMap}
+                  onSeatSelectionChange={handleSeatSelectionChange}
+                  ticketType={ticketType}
+                  selectedSeatIds={selectedSeatIds}
+                  selectedTickets={selectedTickets}
+                />
+                <div className='w-[30%] pl-4'>
+                  {ticketType.length > 0 && (
+                    <div className='ticket-type-list'>
+                      <h2 className='font-bold text-lg mb-2'>{t("ticketPrice") ?? "Giá vé"}</h2>
+                      {ticketType.map((type) => (
+                        <div key={type.id} className='ticket-type-item flex justify-between items-center mb-2'>
+                          <div className='flex items-center'>
+                            <span
+                              className="inline-block ticket-type-color w-10 h-6 rounded mr-2"
+                              style={{ backgroundColor: type.color }}
+                            ></span>
+                            <span className='ticket-type-name'>{type.name}</span>
+                          </div>
+                          <span className='ticket-type-price text-[#0C4762] font-semibold'>{type.price?.toLocaleString("vi-VN")}đ</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+        </div>
       </div>
-    </div>
+      <AlertDialog
+        message={alertMessage}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        {...href ? { href } : {}}
+      />
+    </>
   );
 }

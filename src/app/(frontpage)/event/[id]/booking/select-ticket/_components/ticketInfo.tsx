@@ -99,8 +99,12 @@ export default function TicketInfor({
       }
     } catch (error: any) {
       console.error('Lỗi khi gọi API lock-seat:', error);
-      // setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
-      setAlertMessage(error.toString());
+      const errorString = error.toString();
+      let errorNoti = errorString;
+      if (errorString.includes("quantity exceeds")) {
+        errorNoti = transWithFallback('ticketQuantityExceed', 'Số lượng được chọn vượt quá vé có sẵn cho loại vé này trong phần được chỉ định')
+      }
+      setAlertMessage(errorNoti);
       setAlertOpen(true);
       onClearSelection?.();
     } finally {
