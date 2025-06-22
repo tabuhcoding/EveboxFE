@@ -1,10 +1,15 @@
-interface District {
+export interface TranslatedName {
+  vi: string;
+  en: string;
+}
+
+export interface District {
   id: number;
-  name: string;
+  name: TranslatedName;
 }
 
 export interface Province {
   id: number;
-  name: string;
+  name: TranslatedName;
   districts: District[];
 }

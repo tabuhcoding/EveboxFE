@@ -146,18 +146,22 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     }, []);
 
     useEffect(() => {
-         const fetchProvinces = async () => {
+  const fetchProvinces = async () => {
     try {
       const data = await getAllDistricts();
-      setAllProvinces(data);
+      setAllProvinces(data); // ✅ This works fine
     } catch (error) {
       console.error("Error fetching provinces:", error);
-      toast.error("Lỗi khi tải danh sách tỉnh thành phố!", { duration: 5000 });
     }
   };
 
   fetchProvinces();
-    }, []);
+}, []);
+
+useEffect(() => {
+  // ✅ This will log when allProvinces changes
+  console.log("✅ Updated allProvinces:", allProvinces);
+}, [allProvinces]);
 
     useEffect(() => {
         if (currentEventId) {
@@ -417,8 +421,8 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                 if (eventTypeSelected === "offline" || eventTypeSelected === "Offline") {
                     formData.append("wardString", ward);
                     formData.append("streetString", street);
-                    const selectedProvince = allProvinces.find((p) => p.name === province);
-                    const selectedDistrict = selectedProvince?.districts.find((d) => d.name === district);
+                    const selectedProvince = allProvinces.find((p) => p.name.vi === province);
+                    const selectedDistrict = selectedProvince?.districts.find((d) => d.name.vi === district);
                     if (selectedDistrict) {
                         formData.append("districtId", selectedDistrict.id.toString());
                     } else {
@@ -435,8 +439,9 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                 if (eventTypeSelected === "offline" || eventTypeSelected === "Offline") {
                     formData.append("wardString", ward);
                     formData.append("streetString", street);
-                    const selectedProvince = allProvinces.find((p) => p.name === province);
-                    const selectedDistrict = selectedProvince?.districts.find((d) => d.name === district);
+                    
+                    const selectedProvince = allProvinces.find((p) => p.name.vi === province);
+                    const selectedDistrict = selectedProvince?.districts.find((d) => d.name.vi === district);
                     if (selectedDistrict) {
                         formData.append("districtId", selectedDistrict.id.toString());
                     } else {
@@ -460,8 +465,8 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   streetString: street,
   districtId:
     allProvinces
-      .find((p) => p.name === province)
-      ?.districts.find((d) => d.name === district)?.id ?? undefined,
+      .find((p) => p.name.vi === province)
+      ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
 });
                     toast.success("Đã lưu thông tin sự kiện!", { duration: 5000 });
                 } else if (btnValidate === "Continue") {
@@ -480,8 +485,8 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   streetString: street,
   districtId:
     allProvinces
-      .find((p) => p.name === province)
-      ?.districts.find((d) => d.name === district)?.id ?? undefined,
+      .find((p) => p.name.vi === province)
+      ?.districts.find((d) => d.name.vi == district)?.id ?? undefined,
 });
                 }
             }
@@ -517,10 +522,10 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                     <EventLocationInput
                         eventTypeSelected={eventTypeSelected} eventAddress={eventAddress}
                         province={province} district={district} ward={ward} street={street}
-                        errors={errors} provinces={allProvinces.map((p) => p.name)}
+                        errors={errors} provinces={allProvinces.map((p) => p.name.vi)}
                         districts={
                             province
-                                ? allProvinces.find((p) => p.name === province)?.districts.map((d) => d.name) || []
+                                ? allProvinces.find((p) => p.name.vi === province)?.districts.map((d) => d.name.vi) || []
                                 : []
                         }
                         createdLocations={createdLocations}

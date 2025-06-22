@@ -116,7 +116,7 @@ export async function createEvent(payload: CreateEventDto, accessToken?: string)
   }
 }
 
-export async function getAllDistricts(): Promise<BaseApiResponse<Province[]>> {
+export async function getAllDistricts(): Promise<Province[]> {
   if (typeof window === "undefined") {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/location/all-districts`,
@@ -127,10 +127,10 @@ export async function getAllDistricts(): Promise<BaseApiResponse<Province[]>> {
 
     if (!res.ok) throw new Error("Failed to fetch all districts");
 
-    const json: BaseApiResponse<Province[]> = await res.json();
+    const json: Province[] = await res.json();
     return json;
   } else {
-    const res = await eventService.get<BaseApiResponse<Province[]>>(
+    const res = await eventService.get<Province[]>(
       END_POINT_LIST.LOCATION.GET_ALL_DISTRICTS
     );
 

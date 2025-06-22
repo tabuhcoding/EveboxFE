@@ -25,6 +25,7 @@ export default function EventLocationInput({
   updateGenerationForm,
 }: EventLocationInputProps) {
   const [selectedLocation, setSelectedLocation] = useState("");
+  console.log("all district:--------",districts)
 
   const setFormField = (field: string, value: string) => {
     if (["eventAddress", "ward", "street"].includes(field)) {
