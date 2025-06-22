@@ -176,7 +176,7 @@ const TicketManagement = () => {
             {pagedTickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="flex border rounded-lg shadow-md overflow-hidden bg-[#0C4762] text-white"
+                className="flex border rounded-lg shadow-md overflow-hidden bg-[#0C4762] text-white cursor-pointer transform transition duration-200 hover:scale-105 hover:bg-[#125b7e] active:scale-95"
                 onClick={() => router.push(`/my-ticket/${ticket.id}`)}
               >
                 {/* Ngày tháng */}
