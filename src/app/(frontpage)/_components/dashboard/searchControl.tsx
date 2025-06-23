@@ -4,7 +4,6 @@
 import { CalendarDate } from "@internationalized/date";
 import { RangeValue } from "@react-types/shared";
 import { ChevronDown, Search, Loader2 } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from 'react';
@@ -35,20 +34,21 @@ export default function SearchControls() {
   const router = useRouter();
   const t = useTranslations("common");
 
-  const queryParams: Record<string, string> = {};
-
-  if (searchText) queryParams.title = searchText;
-  if (selectedOptions.length > 0) queryParams.type = selectedOptions.join(',');
-  if (dateRange?.start) queryParams.startDate = dateRange.start.toString();
-  if (dateRange?.end) queryParams.endDate = dateRange.end.toString();
-
-
   const handleSearch = () => {
     setIsSearching(true);
+
+    const queryParams: Record<string, string> = {};
+
+    if (searchText) queryParams.title = searchText;
+    if (selectedOptions.length > 0) queryParams.type = selectedOptions.join(',');
+    if (selectedLocation) queryParams.location = selectedLocation;
+    if (dateRange?.start) queryParams.startDate = dateRange.start.toString();
+    if (dateRange?.end) queryParams.endDate = dateRange.end.toString();
 
     const params = new URLSearchParams(queryParams).toString();
     router.push(`/search?${params}`);
   };
+
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -184,27 +184,23 @@ export default function SearchControls() {
           <div className="min-w-[180px] w-full">
             <label className="text-sm font-medium mb-2">{transWithFallback('timeTitle', "Thời gian")}</label>
             <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
-              <DatePicker onDateRangeChange={setDateRange} />
+              <DatePicker
+                value={dateRange}
+                onDateRangeChange={setDateRange}
+              />
             </div>
           </div>
           <div className="flex w-full md:w-auto md:items-end justify-center md:justify-start">
-
-            <Link
-              href={{
-                pathname: "/search",
-                query: queryParams,
-              }}
-              className="w-full md:w-auto flex"
+            <button
+              onClick={handleSearch}
+              className="h-10 w-full md:w-auto md:min-w-[56px] px-4 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200"
             >
-              <button onClick={() => setIsSearching(true)}
-                className="h-10 w-full md:w-auto md:min-w-[56px] px-4 bg-teal-400 hover:bg-teal-300 rounded flex items-center justify-center shadow-md transition-colors duration-200">
-                {isSearching ? (
-                  <Loader2 size={20} className="text-white animate-spin" />
-                ) : (
-                  <Search size={20} className="text-white" />
-                )}
-              </button>
-            </Link>
+              {isSearching ? (
+                <Loader2 size={20} className="text-white animate-spin" />
+              ) : (
+                <Search size={20} className="text-white" />
+              )}
+            </button>
           </div>
         </div>
       </div>

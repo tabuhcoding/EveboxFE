@@ -115,13 +115,13 @@ export default function SearchClient() {
   };
 
   useEffect(() => {
-      const loadCategories = async () => {
-        const data = await getAllCategories();
-        setCategories(data);
-      };
-  
-      loadCategories();
-    }, []);
+    const loadCategories = async () => {
+      const data = await getAllCategories();
+      setCategories(data);
+    };
+
+    loadCategories();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -255,6 +255,14 @@ export default function SearchClient() {
     }
   }
 
+  const resetFilters = async () => {
+  setSearchText('');
+  setDateRange(null);
+  setSelectedOptions([]);
+  setPriceRange([0, 20000000]);
+  setPage(1);
+};
+
   return (
     <div className="min-h-screen flex flex-col mb-8">
       <main className="flex-1">
@@ -281,7 +289,10 @@ export default function SearchClient() {
                   </div>
 
                   <div className="relative w-full md:w-60 flex-shrink-0 bg-white border border-gray-300 rounded-lg p-1 ">
-                    <DatePicker onDateRangeChange={setDateRange} />
+                    <DatePicker 
+  value={dateRange} 
+  onDateRangeChange={setDateRange} 
+/>
                   </div>
 
                   <div
@@ -327,23 +338,46 @@ export default function SearchClient() {
                   </div>
 
                   <div className="w-full items-center md:w-80 flex-shrink-0">
-                    <RangeSlider onChange={setPriceRange} />
+                    {/* <RangeSlider onChange={setPriceRange} /> */}
+                    <RangeSlider 
+  value={priceRange}
+  onChange={setPriceRange}
+/>
                   </div>
                 </div>
 
-                <div className="w-full md:w-auto">
+                {/* <div className="w-full md:w-auto">
                   <button
                     className="bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-6 rounded-lg shadow"
                     onClick={applyFilters}
                   >
                     {isSearching ? (
-                  <Loader2 size={20} className="text-white animate-spin" />
-                ) : (
-                  transWithFallback("search", "Áp dụng")
-                )}
-                    
+                      <Loader2 size={20} className="text-white animate-spin" />
+                    ) : (
+                      transWithFallback("search", "Áp dụng")
+                    )}
+
                   </button>
-                </div>
+                </div> */}
+                <div className="w-full md:w-auto flex gap-2">
+  <button
+    className="bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-6 rounded-lg shadow"
+    onClick={applyFilters}
+  >
+    {isSearching ? (
+      <Loader2 size={20} className="text-white animate-spin" />
+    ) : (
+      transWithFallback("search", "Áp dụng")
+    )}
+  </button>
+  <button
+    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow"
+    onClick={resetFilters}
+  >
+    {transWithFallback("reset", "Thiết lập lại")}
+  </button>
+</div>
+
               </div>
             </div>
 

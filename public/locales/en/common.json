@@ -1,4 +1,5 @@
 {   
+    "reset": "Reset filter",
     "signInToAddNoti": "Please sign in to add notification for event!",
     "signInToAddFavNoti": "Please sign in to add favorist event!",
     "recieveNoti":"Recieve notification",
