@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
 
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
+import TicketDetailLoading from '../loading';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
@@ -27,7 +28,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
 
     if (loading) {
-        return <div className="text-white text-center">{transWithFallback('uploading', 'Đang tải...')}</div>;
+        return <TicketDetailLoading />;
     }
 
     if (error || !ticket) {
