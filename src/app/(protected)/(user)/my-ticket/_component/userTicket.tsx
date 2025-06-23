@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 /* Package Application */
 import createApiClient from '@/services/apiClient';
 import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticketInfo';
-
 import TicketPagination from './ticketPagination';
 
 const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
@@ -17,11 +16,13 @@ const TicketManagement = () => {
   const [successTickets, setSuccessTickets] = useState<IUserTicket[]>([]);
   const [pendingTickets, setPendingTickets] = useState<IUserTicket[]>([]);
   const [cancelledTickets, setCancelledTickets] = useState<IUserTicket[]>([]);
+  const [allTickets, setAllTickets] = useState<IUserTicket[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [selectedTab, setSelectedTab] = useState<number>(0); // 0: All, 1: Success, 2: Pending, 3: Cancelled
   const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
-  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [ticketsPerPage, setTicketsPerPage] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const router = useRouter();
   const t = useTranslations('common');
@@ -31,92 +32,66 @@ const TicketManagement = () => {
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  type TicketStatus = 'SUCCESS' | 'PENDING' | 'CANCELLED';
-
-  const [pagination, setPagination] = useState<Record<TicketStatus, { page: number; totalPages: number }[]>>({
-    SUCCESS: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
-    PENDING: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
-    CANCELLED: [{ page: 1, totalPages: 0 }, { page: 1, totalPages: 0 }],
-  });
-
-  const [allTabPagination, setAllTabPagination] = useState<{ page: number }[]>([
-    { page: 1 },
-    { page: 1 },
-  ]);
-
-  const fetchAllTicketsByStatus = async (status: TicketStatus): Promise<IUserTicket[]> => {
-    let allTickets: IUserTicket[] = [];
-    let currentPage = 1;
-    let totalPages = 1;
+  const fetchTicketsByPage = async (page = 1, status?: string) => {
+    setLoading(true);
     try {
-      while (currentPage <= totalPages) {
-        const response = await apiClient.get<IGetUserTicketResponse>(
-          `/api/ticket/getUserOrder?page=${currentPage}&limit=10&status=${status}`
-        );
-        allTickets = [...allTickets, ...response.data.data];
-        totalPages = response.data.pagination.totalPages;
-        currentPage++;
+      const url = status
+        ? `/api/ticket/getUserOrder?page=${page}&limit=${ticketsPerPage}&status=${status}`
+        : `/api/ticket/getUserOrder?page=${page}&limit=${ticketsPerPage}`;
+      const response = await apiClient.get<IGetUserTicketResponse>(url);
+
+      const fetchedTickets = response.data.data;
+      const totalPageCount = response.data.pagination.totalPages;
+
+      if (!status) {
+        setAllTickets(fetchedTickets);
       }
+      if (status === 'SUCCESS') setSuccessTickets(fetchedTickets);
+      if (status === 'PENDING') setPendingTickets(fetchedTickets);
+      if (status === 'CANCELLED') setCancelledTickets(fetchedTickets);
+
+      setTotalPages(totalPageCount);
+
     } catch (error) {
-      console.error(`Error fetching tickets for ${status}`, error);
+      console.error('Error fetching tickets:', error);
     }
-    return allTickets;
+    setLoading(false);
   };
 
+  // Khi vào trang, chỉ fetch All trang 1
   useEffect(() => {
-    setCurrentTime(Date.now());
-    const fetchAllTickets = async () => {
-      setLoading(true);
-      const [success, pending, cancelled] = await Promise.all([
-        fetchAllTicketsByStatus('SUCCESS'),
-        fetchAllTicketsByStatus('PENDING'),
-        fetchAllTicketsByStatus('CANCELLED'),
-      ]);
-      setSuccessTickets(success);
-      setPendingTickets(pending);
-      setCancelledTickets(cancelled);
-      setLoading(false);
-    };
-    fetchAllTickets();
+    fetchTicketsByPage(1);
   }, []);
 
-  const handlePageChange = (status: TicketStatus | null, newPage: number, subTab: number) => {
-    if (status === null) {
-      setAllTabPagination(prev => prev.map((e, i) => (i === subTab ? { ...e, page: newPage } : e)));
-    } else {
-      setPagination(prev => ({
-        ...prev,
-        [status]: prev[status].map((e, i) => (i === subTab ? { ...e, page: newPage } : e)),
-      }));
-    }
+  const handleTabChange = (index: number) => {
+    setSelectedTab(index);
+    setSelectedSubTab(0);
+    setCurrentPage(1);
+    setTotalPages(1);
+
+    if (index === 1) fetchTicketsByPage(1, 'SUCCESS');
+    if (index === 2) fetchTicketsByPage(1, 'PENDING');
+    if (index === 3) fetchTicketsByPage(1, 'CANCELLED');
+    if (index === 0) fetchTicketsByPage(1);
   };
 
-  const getAllTickets = () => [...successTickets, ...pendingTickets, ...cancelledTickets];
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+    if (selectedTab === 1) fetchTicketsByPage(page, 'SUCCESS');
+    else if (selectedTab === 2) fetchTicketsByPage(page, 'PENDING');
+    else if (selectedTab === 3) fetchTicketsByPage(page, 'CANCELLED');
+    else fetchTicketsByPage(page);
+  };
+
   const getTicketsByTab = (): IUserTicket[] => {
     switch (selectedTab) {
       case 1: return successTickets;
       case 2: return pendingTickets;
       case 3: return cancelledTickets;
-      default: return getAllTickets();
+      default: return allTickets;
     }
   };
-
-  // const allFilteredTickets = getTicketsByTab().filter(ticket => {
-  //   const eventTime = ticket.Showing?.startTime ? new Date(ticket.Showing.startTime).getTime() : 0;
-  //   return selectedSubTab === 0 ? eventTime >= currentTime : eventTime < currentTime;
-  // });
-
-  const allFilteredTickets = getTicketsByTab();
-
-  const currentStatus = selectedTab === 1 ? 'SUCCESS' : selectedTab === 2 ? 'PENDING' : selectedTab === 3 ? 'CANCELLED' : null;
-  const currentPage = currentStatus === null
-    ? allTabPagination[selectedSubTab].page
-    : pagination[currentStatus][selectedSubTab].page;
-  const totalPages = Math.ceil(allFilteredTickets.length / ticketsPerPage);
-  const pagedTickets = allFilteredTickets.slice(
-    (currentPage - 1) * ticketsPerPage,
-    currentPage * ticketsPerPage
-  );
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -145,7 +120,7 @@ const TicketManagement = () => {
               <button
                 key={index}
                 className={`flex-1 text-center whitespace-nowrap px-6 py-2 rounded-full ${selectedTab === index ? 'bg-[#51DACF] text-black font-bold' : 'bg-gray-300 text-gray-700'}`}
-                onClick={() => setSelectedTab(index)}
+                onClick={() => handleTabChange(index)}
               >
                 {tab}
               </button>
@@ -171,11 +146,11 @@ const TicketManagement = () => {
 
         {loading ? (
           <p className="text-center mb-8">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
-        ) : pagedTickets.length === 0 ? (
+        ) : getTicketsByTab().length === 0 ? (
           <p className="text-center mb-8">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 mb-10">
-            {pagedTickets.map((ticket) => (
+            {getTicketsByTab().map(ticket => (
               <div
                 key={ticket.id}
                 className="flex border rounded-lg shadow-md overflow-hidden bg-[#0C4762] text-white cursor-pointer transform transition duration-200 hover:scale-105 hover:bg-[#125b7e] active:scale-95"
@@ -234,12 +209,16 @@ const TicketManagement = () => {
           </div>
         )}
       </div>
-      <TicketPagination currentPage={currentPage} totalPages={totalPages}
-        onPageChange={(page) => handlePageChange(currentStatus, page, selectedSubTab)} 
+
+      <TicketPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
         ticketsPerPage={ticketsPerPage}
         setTicketsPerPage={(num) => {
           setTicketsPerPage(num);
-          handlePageChange(currentStatus, 1, selectedSubTab);
+          setCurrentPage(1);
+          handlePageChange(1);
         }}
       />
     </>
