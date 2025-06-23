@@ -32,26 +32,23 @@ const TicketManagement = () => {
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  const fetchTicketsByPage = async (page = 1, status?: string) => {
+  const fetchTicketsByPage = async (page = 1, status?: string, limit = ticketsPerPage) => {
     setLoading(true);
     try {
       const url = status
-        ? `/api/ticket/getUserOrder?page=${page}&limit=${ticketsPerPage}&status=${status}`
-        : `/api/ticket/getUserOrder?page=${page}&limit=${ticketsPerPage}`;
+        ? `/api/ticket/getUserOrder?page=${page}&limit=${limit}&status=${status}`
+        : `/api/ticket/getUserOrder?page=${page}&limit=${limit}`;
       const response = await apiClient.get<IGetUserTicketResponse>(url);
 
       const fetchedTickets = response.data.data;
       const totalPageCount = response.data.pagination.totalPages;
 
-      if (!status) {
-        setAllTickets(fetchedTickets);
-      }
+      if (!status) setAllTickets(fetchedTickets);
       if (status === 'SUCCESS') setSuccessTickets(fetchedTickets);
       if (status === 'PENDING') setPendingTickets(fetchedTickets);
       if (status === 'CANCELLED') setCancelledTickets(fetchedTickets);
 
       setTotalPages(totalPageCount);
-
     } catch (error) {
       console.error('Error fetching tickets:', error);
     }
@@ -218,7 +215,12 @@ const TicketManagement = () => {
         setTicketsPerPage={(num) => {
           setTicketsPerPage(num);
           setCurrentPage(1);
-          handlePageChange(1);
+
+          // Gọi lại API với limit mới
+          if (selectedTab === 1) fetchTicketsByPage(1, 'SUCCESS', num);
+          else if (selectedTab === 2) fetchTicketsByPage(1, 'PENDING', num);
+          else if (selectedTab === 3) fetchTicketsByPage(1, 'CANCELLED', num);
+          else fetchTicketsByPage(1, undefined, num);
         }}
       />
     </>
