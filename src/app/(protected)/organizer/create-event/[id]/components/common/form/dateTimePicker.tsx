@@ -36,31 +36,35 @@ export default function DateTimePicker({
                 {required && <span className="text-red-500">* </span>} {label}
             </label>
             <div className="relative">
-                <input
-                    type="text"
-                    value={selectedDate ? format(selectedDate, "dd-MM-yyyy HH:mm") : ""}
-                    placeholder="Chọn thời gian"
-                    readOnly
-                    className="text-sm text-gray-900 border py-3 px-4 w-full rounded leading-tight focus:outline-black-400 cursor-pointer"
-                    onClick={() => datePickerRef.current?.setOpen(true)}
-                />
-                <CalendarRange
-                    size={20}
-                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                    onClick={() => datePickerRef.current?.setOpen(true)}
-                />
-                <DatePicker
-                    selected={selectedDate}
-                    onChange={handleChange}
-                    showTimeSelect
-                    dateFormat="dd-MM-yyyy HH:mm"
-                    ref={datePickerRef}
-                    className="hidden"
-                    popperPlacement={popperPlacement}
-                />
+  <div className="relative">
+    <input
+      type="text"
+      value={selectedDate ? format(selectedDate, "dd-MM-yyyy HH:mm") : ""}
+      placeholder="Chọn thời gian"
+      readOnly
+      className="text-sm text-gray-900 border py-3 px-4 w-full rounded leading-tight focus:outline-black-400 cursor-pointer"
+      onClick={() => datePickerRef.current?.setOpen(true)}
+    />
+    <CalendarRange
+      size={20}
+      className="absolute right-3 top-3.5 text-gray-400 cursor-pointer"
+      onClick={() => datePickerRef.current?.setOpen(true)}
+    />
+  </div>
 
-                {error && <p className="text-red-500 text-sm mt-1 ml-1">{error}</p>}
-            </div>
+  <DatePicker
+    selected={selectedDate}
+    onChange={handleChange}
+    showTimeSelect
+    dateFormat="dd-MM-yyyy HH:mm"
+    ref={datePickerRef}
+    className="hidden"
+    popperPlacement={popperPlacement}
+  />
+
+  {error && <p className="text-red-500 text-sm mt-1 ml-1">{error}</p>}
+</div>
+
 
         </>
     );
