@@ -306,7 +306,7 @@ export default function SearchClient() {
                     </button>
 
                     {isEventTypeOpen && (
-                      <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] max-h-64 overflow-y-auto z-20">
+                      <div className="absolute w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] max-h-64 overflow-y-auto z-20">
                         {categories.map((category) => (
                           <label
                             key={category.id}

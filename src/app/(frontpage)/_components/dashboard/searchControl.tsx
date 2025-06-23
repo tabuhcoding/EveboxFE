@@ -86,7 +86,7 @@ export default function SearchControls() {
       <div className="bg-sky-900 text-white p-4 md:p-6 rounded-lg shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:flex gap-4 w-full">
           <div className=" min-w-[150px] w-full">
-            <label className="text-sm md:text-sm text-xs font-medium mb-2 whitespace-nowrap">
+            <label className="md:text-sm text-xs font-medium mb-2 whitespace-nowrap">
               {transWithFallback("searchTitle", "Tên sự kiện, ...")}</label>
             <div className="mt-2 relative">
               <input
