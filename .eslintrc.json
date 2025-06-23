@@ -56,14 +56,6 @@
     // Import Rules
     "import/prefer-default-export": "off",           // Không bắt buộc export default nếu chỉ có 1 hàm export
     "import/no-anonymous-default-export": "warn",    // Cảnh báo export default vô danh (giúp debug tốt hơn)
-    "import/order": [                                // Quy tắc import: group, cách dòng, sắp xếp alphabet
-      "error",
-      {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-        "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true }
-      }
-    ],
 
     // JS/ES Rules
     "no-console": ["warn", { "allow": ["warn", "error"] }],  // Cảnh báo dùng console.log (cho phép warn/error)
