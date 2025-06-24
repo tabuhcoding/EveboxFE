@@ -327,10 +327,7 @@ useEffect(() => {
 
     const handleUpdateEvent = async () => {
   try {
-    // Step 1: Convert FormData to plain object
-    
 
-    // Step 2: Call updateEvent
     await updateEvent(Number(currentEventId), {
   title: eventName,
   description: post,
@@ -349,7 +346,6 @@ useEffect(() => {
       ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
 });
 
-    // Step 3: Success feedback and navigate
     toast.success("Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!", { duration: 5000 });
     router.push(`/organizer/create-event/${currentEventId}?step=showing`);
   } catch (error: any) {
