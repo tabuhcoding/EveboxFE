@@ -9,6 +9,8 @@ import { eventService } from "./instance.service";
 import { CreateEventDto } from "types/models/event/createEvent.dto";
 import { Province } from "types/models/event/location.interface";
 import { resendOtp } from "./auth.service";
+import { EventDetailResponse } from "@/types/models/event/eventdetail/event.interface";
+import { UpdateEventDto, UpdateEventResponseDto } from "@/types/models/event/updateEvent.interface";
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
@@ -75,7 +77,6 @@ export async function getFormOfShowing(showingId: string): Promise<BaseApiRespon
   try {
     const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_FORM}?showingId=${showingId}`);
 
-    console.log("🚀 ~ getFormOfShowing ~ res:", res)
     if (!res) throw new Error('Failed to get form of showing, please try again later');
 
     return res.data;
@@ -116,6 +117,27 @@ export async function createEvent(payload: CreateEventDto, accessToken?: string)
   }
 }
 
+export async function updateEvent(
+  eventId: number,
+  payload: UpdateEventDto,
+): Promise<BaseApiResponse<UpdateEventResponseDto["data"]>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.EVENT}/${eventId}`;
+
+  try {
+    const res = await eventService.put<BaseApiResponse<UpdateEventResponseDto["data"]>>(url, payload);
+
+    if (res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to update event");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error updating event:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while updating event");
+  }
+}
+
 export async function getAllDistricts(): Promise<Province[]> {
   if (typeof window === "undefined") {
     const res = await fetch(
@@ -140,3 +162,35 @@ export async function getAllDistricts(): Promise<Province[]> {
     return res.data;
   }
 }
+
+export const getEventDetail = async (
+  eventId: number,
+): Promise<EventDetailResponse> => {
+  const url = `${END_POINT_LIST.EVENT.GET_EVENT_DETAIL}?eventId=${eventId}`;
+
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
+        "Content-Type": "application/json",
+      },
+      next: { revalidate: 60 }, // optional SSR caching
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Failed to fetch event details");
+    }
+
+    return res.json() as Promise<EventDetailResponse>;
+  } else {
+    const res = await eventService.get<EventDetailResponse>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch event details");
+    }
+
+    return res.data;
+  }
+};

@@ -13,24 +13,17 @@ import OrganizationInfoForm from "./organizationInfoForm";
 import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
 import { GenerationProps } from "./descriptionWithAI";
-import { getAllDistricts } from "services/event.service";
+import { getAllCategories, getAllDistricts, getEventDetail, updateEvent } from "services/event.service";
 import { Province } from "types/models/event/location.interface";
 import { CreateEventDto } from "types/models/event/createEvent.dto";
 import { useEventImageUpload } from "../../../libs/hooks/useEventImageUpload";
-
-interface Category {
-    id: number;
-    name: string;
-}
+import { Category } from "@/types/models/dashboard/frontDisplay";
+import { user } from "@nextui-org/react";
+import { UpdateEventDto } from "@/types/models/event/updateEvent.interface";
 
 interface FormInformationEventClientProps {
     onNextStep: (payload: CreateEventDto) => void;
     btnValidate: string;
-}
-
-interface EventType {
-    id: number;
-    name: string;
 }
 
 export default function FormInformationEventClient({ onNextStep, btnValidate }: FormInformationEventClientProps) {
@@ -122,34 +115,32 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
     const [imageLogoErrors, setImageLogoErrors] = useState<{ [key: string]: string }>({});
 
-    useEffect(() => {
-        const fetchEventTypes = async () => {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
-                if (!res.ok) {
-                    throw new Error("Failed to fetch event types");
-                }
+   useEffect(() => {
+  const fetchEventTypes = async () => {
+    try {
+      const data = await getAllCategories();
 
-                const data = await res.json();
-                const eventTypes = data.map((item: EventType) => ({
-                    id: item.id,
-                    name: item.name,
-                }));
-                setCategories(eventTypes);
-            } catch (error) {
-                console.error("Error fetching event types:", error);
-                toast.error("Lỗi khi tải danh sách thể loại sự kiện!", { duration: 5000 });
-            }
-        }
+      const eventTypes = data.map((item: Category) => ({
+        id: item.id,
+        name: item.name,
+        createAt: item.createAt
+      }));
 
-        fetchEventTypes();
-    }, []);
+      setCategories(eventTypes);
+    } catch (error) {
+      console.error("Error fetching event types:", error);
+      toast.error("Lỗi khi tải danh sách thể loại sự kiện!", { duration: 5000 });
+    }
+  };
+
+  fetchEventTypes();
+}, []);
 
     useEffect(() => {
   const fetchProvinces = async () => {
     try {
       const data = await getAllDistricts();
-      setAllProvinces(data); // ✅ This works fine
+      setAllProvinces(data); 
     } catch (error) {
       console.error("Error fetching provinces:", error);
     }
@@ -158,77 +149,83 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   fetchProvinces();
 }, []);
 
+
 useEffect(() => {
-  // ✅ This will log when allProvinces changes
-  console.log("✅ Updated allProvinces:", allProvinces);
-}, [allProvinces]);
+  if (currentEventId) {
+    const fetchEventDetail = async () => {
+      try {
+        const res = await getEventDetail(parseInt(params?.id as string));
+        const eventData = res.data;
 
-    useEffect(() => {
-        if (currentEventId) {
-            const fetchEventDetail = async () => {
-                try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/event/detail?eventId=${currentEventId}`);
-                    if (!res.ok) {
-                        throw new Error("Failed to fetch event details");
-                    }
-                    const data = await res.json();
-                    const eventData = data.data;
+        setEventName(eventData.title);
+        setPost(eventData.description);
+        setEventTypeSelected(eventData.isOnline ? "online" : "offline");
+        setNameOrg(eventData.orgName);
+        setInfoOrg(eventData.orgDescription);
 
-                    setEventName(eventData.title);
-                    setPost(eventData.description);
-                    setEventTypeSelected(eventData.isOnline ? "online" : "offline");
-                    setNameOrg(eventData.orgName);
-                    setInfoOrg(eventData.orgDescription);
+        if (eventData.isOnline === false) {
+          setEventAddress(eventData.venue);
 
-                    if (eventTypeSelected === "offline" || eventTypeSelected === "Offline") {
-                        setEventAddress(eventData.venue);
-                        if (eventData.locations) {
-                            setStreet(eventData.locations.street);
-                            setWard(eventData.locations.ward);
+          if (eventData) {
+            const locationParts = eventData.locationsString?.split(",").map(part => part.trim());
 
-                            if (eventData.locations.districts) {
-                                setDistrict(eventData.locations.districts.name);
-                                setProvince(eventData.locations.districts.province.name);
-                            }
-                        }
-                    } else {
-                        setEventAddress("");
-                        setStreet("");
-                        setWard("");
-                        setDistrict("");
-                        setProvince("");
-                    }
-                    if (eventData.Images_Events_imgPosterIdToImages) {
-                        setBackground(eventData.Images_Events_imgPosterIdToImages.imageUrl);
-                    }
-                    if (eventData.Images_Events_imgLogoIdToImages) {
-                        setLogoOrg(eventData.Images_Events_imgLogoIdToImages.imageUrl);
-                    }
-                    // Nếu có category, bạn có thể set selectedCategory theo thông tin từ BE
-                    if (eventData.EventCategories && eventData.EventCategories.length > 0) {
-                        const cat = eventData.EventCategories[0].Categories;
-                        setSelectedCategory({ id: cat.id, name: cat.name });
-                    }
+            if (locationParts.length >= 4) {
+  setStreet(locationParts[0]);
+  setWard(locationParts[1]);
+  setDistrict(locationParts[2]);
+  setProvince(locationParts.slice(3).join(", ")); // In case province name has commas
+} else {
+  // fallback if missing parts
+  setStreet("");
+  setWard("");
+  setDistrict("");
+  setProvince("");
+}
+          }
+        } else {
+          setEventAddress("");
+          setStreet("");
+          setWard("");
+          setDistrict("");
+          setProvince("");
+        }
 
-                    setGenerationForm({
-                        name: eventData.title || "",
-                        description: eventData.description || "",
-                        isOnlineEvent: eventData.isOnline ? true : false,
-                        location: `${eventData.locations?.street || ''}, ${eventData.locations?.ward || ''}, ${eventData.locations?.districts?.name}, ${eventData.locations?.districts?.province?.name}`,
-                        venue: eventData.venue || "",
-                        organizer: eventData.orgName || "",
-                        organizerDescription: eventData.orgDescription || "",
-                        categoryIds: selectedCategory?.id ? [selectedCategory.id] : [],
-                    });
-                } catch (error) {
-                    console.error("Error fetching event detail:", error);
-                    toast.error("Lỗi khi tải thông tin sự kiện!", { duration: 5000 });
-                }
-            }
+        if (eventData.imgPosterUrl) {
+          setBackground(eventData.imgPosterUrl);
+        }
 
-            fetchEventDetail();
-        };
-    }, [currentEventId]);
+        if (eventData.imgLogoUrl) {
+          setLogoOrg(eventData.imgLogoUrl);
+        }
+
+        if (eventData.categories && eventData.categories.length > 0) {
+          const cat = eventData.categories[0];
+          setSelectedCategory({ id: cat.id, name: cat.name, createAt: "" });
+        }
+
+        const locationParts = eventData.locationsString?.split(",").map(part => part.trim());
+
+        setGenerationForm({
+          name: eventData.title || "",
+          description: eventData.description || "",
+          isOnlineEvent: eventData.isOnline,
+          location: `${locationParts[0] || ''}, ${locationParts[1] || ''}, ${locationParts[2] || ''}, ${locationParts[3] || ''}`,
+          venue: eventData.venue || "",
+          organizer: eventData.orgName || "",
+          organizerDescription: eventData.orgDescription || "",
+          categoryIds: eventData.categories?.length? eventData.categories.map((c: { id: number }) => c.id) : []
+        });
+
+      } catch (error) {
+        console.error("Error fetching event detail:", error);
+        toast.error("Lỗi khi tải thông tin sự kiện!", { duration: 5000 });
+      }
+    };
+
+    fetchEventDetail();
+  }
+}, [currentEventId]);
+
 
     useEffect(() => {
         updateGenerationForm("isOnlineEvent", eventTypeSelected === "offline" ? false : true);
@@ -322,40 +319,44 @@ useEffect(() => {
         }
         if (field === "ward") setWard(value);
         if (field === "logoOrg") setLogoOrg(value);
-        // if (field === "logoOrgFile") setLogoOrgFile(value);
-        // if (field === "background") setBackground(value);
-        // if (field === "backgroundFile") setBackgroundFile(value);
 
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: false }));
         }
     };
 
-    const handleUpdateEvent = async (formData: FormData) => {
-        const accessToken = session?.user?.accessToken;
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/org/event/${currentEventId}`, {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    // Không set Content-Type khi gửi FormData
-                },
-                body: formData,
-            });
+    const handleUpdateEvent = async () => {
+  try {
+    // Step 1: Convert FormData to plain object
+    
 
-            if (!res.ok) {
-                const errorData = await res.json();
-                toast.error(errorData.message || "Có lỗi xảy ra khi cập nhật sự kiện. Vui lòng thử lại sau.");
-                return;
-            }
+    // Step 2: Call updateEvent
+    await updateEvent(Number(currentEventId), {
+  title: eventName,
+  description: post,
+  isOnline: eventTypeSelected === "online" || eventTypeSelected === "Online",
+  venue: eventAddress,
+  orgName: nameOrg,
+  orgDescription: infoOrg,
+  categoryIds: selectedCategory ? [selectedCategory.id] : [],
+  imgLogoUrl: logoOrg || "",            // use default image URL if needed
+  imgPosterUrl: background || "",       // use default image URL if needed
+  wardString: ward,
+  streetString: street,
+  districtId:
+    allProvinces
+      .find((p) => p.name.vi === province)
+      ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
+});
 
-            toast.success("Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!", { duration: 5000 });
-            router.push(`/organizer/create-event/${currentEventId}?step=showing`);
-        } catch (error) {
-            console.error("Error updating event:", error);
-            toast.error("Lỗi khi cập nhật sự kiện!", { duration: 5000 });
-        }
-    }
+    // Step 3: Success feedback and navigate
+    toast.success("Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!", { duration: 5000 });
+    router.push(`/organizer/create-event/${currentEventId}?step=showing`);
+  } catch (error: any) {
+    console.error("Error updating event:", error);
+    toast.error(error.message || "Lỗi khi cập nhật sự kiện!", { duration: 5000 });
+  }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -433,7 +434,7 @@ useEffect(() => {
                     formData.append("streetString", "");
                     formData.append("districtId", "");
                 }
-                await handleUpdateEvent(formData);
+                await handleUpdateEvent();
             }
             else {
                 if (eventTypeSelected === "offline" || eventTypeSelected === "Offline") {
