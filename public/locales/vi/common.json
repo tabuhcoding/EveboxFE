@@ -331,5 +331,7 @@
   "noInformation": "Chưa có thông tin",
   "numTicketPage": "Số vé/trang",
   "selectedTickets": "Các vé đã chọn",
-  "ticketQuantityExceed": "Số lượng được chọn vượt quá vé có sẵn cho loại vé này trong phần được chỉ định"
+  "ticketQuantityExceed": "Số lượng được chọn vượt quá vé có sẵn cho loại vé này trong phần được chỉ định",
+  "searchPlaceholder": "Tìm theo tên sự kiện hoặc nhà tổ chức",
+  "searchButton": "Tìm kiếm"
 }
