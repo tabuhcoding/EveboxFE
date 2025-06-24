@@ -342,5 +342,7 @@
     "noInformation": "No information available",
     "numTicketPage": "Tickets/page",
     "selectedTickets": "Selected tickets",
-    "ticketQuantityExceed": "Selected quantity exceeds available tickets for this ticket type in the specified section"
+    "ticketQuantityExceed": "Selected quantity exceeds available tickets for this ticket type in the specified section",
+    "searchPlaceholder": "Search by event name or organizer",
+    "searchButton": "Search"
 }

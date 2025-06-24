@@ -1,17 +1,10 @@
 /* Package System */
 import { useTranslations } from 'next-intl';
-import { FC } from 'react';
 
 /* Package Application */
 import { TicketPaginationProps } from '@/types/models/ticket/ticketInfo';
 
-const TicketPagination: FC<TicketPaginationProps> = ({
-    currentPage,
-    totalPages,
-    ticketsPerPage,
-    onPageChange,
-    setTicketsPerPage,
-}) => {
+export default function TicketPagination({ currentPage, totalPages, ticketsPerPage, onPageChange, setTicketsPerPage }: TicketPaginationProps) {
     const t = useTranslations('common');
 
     const transWithFallback = (key: string, fallback: string) => {
@@ -86,5 +79,3 @@ const TicketPagination: FC<TicketPaginationProps> = ({
         </div>
     );
 };
-
-export default TicketPagination;

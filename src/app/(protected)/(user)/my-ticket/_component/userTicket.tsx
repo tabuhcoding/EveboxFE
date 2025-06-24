@@ -2,17 +2,16 @@
 
 /* Package System */
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 /* Package Application */
-import createApiClient from '@/services/apiClient';
-import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticketInfo';
+import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
+import { getUserTicketResponse } from '@/services/booking.service';
 
-const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
-
-const TicketManagement = () => {
+export default function TicketManagement() {
   const [successTickets, setSuccessTickets] = useState<IUserTicket[]>([]);
   const [pendingTickets, setPendingTickets] = useState<IUserTicket[]>([]);
   const [cancelledTickets, setCancelledTickets] = useState<IUserTicket[]>([]);
@@ -23,6 +22,8 @@ const TicketManagement = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [ticketsPerPage, setTicketsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+  const { data: session } = useSession();
 
   const router = useRouter();
   const t = useTranslations('common');
@@ -32,23 +33,39 @@ const TicketManagement = () => {
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  const fetchTicketsByPage = async (page = 1, status?: string, limit = ticketsPerPage) => {
+  const fetchTicketsByPage = async (page = 1, status?: string, limit = ticketsPerPage, keyword = searchKeyword) => {
     setLoading(true);
     try {
-      const url = status
-        ? `/api/ticket/getUserOrder?page=${page}&limit=${limit}&status=${status}`
-        : `/api/ticket/getUserOrder?page=${page}&limit=${limit}`;
-      const response = await apiClient.get<IGetUserTicketResponse>(url);
+      const params = new URLSearchParams();
+      params.append('page', page.toString());
+      params.append('limit', limit.toString());
+      params.append('timeStamp', selectedSubTab === 0 ? 'UPCOMING' : 'PAST');
+      if (status) params.append('status', status);
+      if (keyword) params.append('title', keyword);
 
-      const fetchedTickets = response.data.data;
-      const totalPageCount = response.data.pagination.totalPages;
+      const token = session?.user?.accessToken || "";
 
-      if (!status) setAllTickets(fetchedTickets);
-      if (status === 'SUCCESS') setSuccessTickets(fetchedTickets);
-      if (status === 'PENDING') setPendingTickets(fetchedTickets);
-      if (status === 'CANCELLED') setCancelledTickets(fetchedTickets);
+      const url = `/api/ticket/getUserOrder?${params.toString()}`;
+      const response = await getUserTicketResponse(url, token);
 
-      setTotalPages(totalPageCount);
+      if (response?.statusCode === 200) {
+        const fetchedTickets = response.data;
+        const totalPageCount = response.pagination.totalPages;
+
+        if (!status) setAllTickets(fetchedTickets);
+        if (status === 'SUCCESS') setSuccessTickets(fetchedTickets);
+        if (status === 'PENDING') setPendingTickets(fetchedTickets);
+        if (status === 'CANCELLED') setCancelledTickets(fetchedTickets);
+
+        setTotalPages(totalPageCount);
+      }
+      else {
+        console.error('Error fetching tickets:', response.message);
+        setAllTickets([]);
+        setSuccessTickets([]);
+        setPendingTickets([]);
+        setCancelledTickets([]);
+      }
     } catch (error) {
       console.error('Error fetching tickets:', error);
     }
@@ -66,19 +83,19 @@ const TicketManagement = () => {
     setCurrentPage(1);
     setTotalPages(1);
 
-    if (index === 1) fetchTicketsByPage(1, 'SUCCESS');
-    if (index === 2) fetchTicketsByPage(1, 'PENDING');
-    if (index === 3) fetchTicketsByPage(1, 'CANCELLED');
-    if (index === 0) fetchTicketsByPage(1);
+    if (index === 1) fetchTicketsByPage(1, 'SUCCESS', ticketsPerPage, searchKeyword);
+    else if (index === 2) fetchTicketsByPage(1, 'PENDING', ticketsPerPage, searchKeyword);
+    else if (index === 3) fetchTicketsByPage(1, 'CANCELLED', ticketsPerPage, searchKeyword);
+    else fetchTicketsByPage(1, undefined, ticketsPerPage, searchKeyword);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
-    if (selectedTab === 1) fetchTicketsByPage(page, 'SUCCESS');
-    else if (selectedTab === 2) fetchTicketsByPage(page, 'PENDING');
-    else if (selectedTab === 3) fetchTicketsByPage(page, 'CANCELLED');
-    else fetchTicketsByPage(page);
+    if (selectedTab === 1) fetchTicketsByPage(page, 'SUCCESS', ticketsPerPage, searchKeyword);
+    else if (selectedTab === 2) fetchTicketsByPage(page, 'PENDING', ticketsPerPage, searchKeyword);
+    else if (selectedTab === 3) fetchTicketsByPage(page, 'CANCELLED', ticketsPerPage, searchKeyword);
+    else fetchTicketsByPage(page, undefined, ticketsPerPage, searchKeyword);
   };
 
   const getTicketsByTab = (): IUserTicket[] => {
@@ -109,6 +126,31 @@ const TicketManagement = () => {
         <h2 className="text-2xl font-bold mt-8 mb-4">{transWithFallback('managementTicket', 'Quản lý vé đã mua')}</h2>
         <h5 className="text-sm text-gray-700">{transWithFallback('managementTicketSubtitle', 'Quản lý tiến trình tham gia sự kiện qua các vé')}</h5>
         <hr className="my-6 border-gray-800 font-bold" />
+
+        <div className="flex items-center my-4 gap-4 flex-col sm:flex-row">
+          <input
+            type="text"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setCurrentPage(1);
+                handleTabChange(selectedTab);
+              }
+            }}
+            placeholder={transWithFallback('searchPlaceholder', 'Tìm theo tên sự kiện hoặc nhà tổ chức')}
+            className="w-full sm:max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#51DACF]"
+          />
+          <button
+            onClick={() => {
+              setCurrentPage(1);
+              handleTabChange(selectedTab);
+            }}
+            className="bg-[#51DACF] text-black font-bold px-4 py-2 rounded"
+          >
+            {transWithFallback('searchButton', 'Tìm kiếm')}
+          </button>
+        </div>
 
         {/* Tabs */}
         <div className="w-full mb-4 overflow-x-auto">
@@ -226,5 +268,3 @@ const TicketManagement = () => {
     </>
   );
 };
-
-export default TicketManagement;

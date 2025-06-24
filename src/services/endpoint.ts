@@ -41,7 +41,9 @@ export class END_POINT_LIST {
     SUBMIT_FORM: '/api/booking/submitForm',
     GET_REDIS_SEAT: "/api/booking/getRedisSeat",
     UNSELECT_SEAT: "/api/booking/unSelectSeat",
-    GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId"
+    GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
+    GET_ORDER_BY_ID: "/api/ticket/getOrderById",
+    GET_USER_ORDER: "/api/ticket/getUserOrder",
   }
 
   static readonly ORG_EVENT = {
