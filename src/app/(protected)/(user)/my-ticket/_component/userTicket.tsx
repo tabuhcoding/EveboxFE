@@ -7,7 +7,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 /* Package Application */
-import createApiClient from '@/services/apiClient';
 import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
