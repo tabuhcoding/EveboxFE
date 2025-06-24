@@ -1,6 +1,5 @@
 /* Package System */
 import { useTranslations } from 'next-intl';
-import { FC } from 'react';
 
 /* Package Application */
 import { TicketPaginationProps } from '@/types/models/ticket/ticketInfo';

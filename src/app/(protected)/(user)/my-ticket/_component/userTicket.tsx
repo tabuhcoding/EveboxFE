@@ -8,11 +8,9 @@ import { useEffect, useState } from 'react';
 
 /* Package Application */
 import createApiClient from '@/services/apiClient';
-import { IGetUserTicketResponse, IUserTicket } from '@/types/models/ticket/ticketInfo';
+import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
-
-const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
 
 export default function TicketManagement() {
   const [successTickets, setSuccessTickets] = useState<IUserTicket[]>([]);

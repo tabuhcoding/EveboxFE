@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 /* Package Application */
 import { IUserTicketById } from '@/types/models/ticket/ticketInfoById';
 
-import { fetchTicketById } from '../server/fetchTicketById';
+// import { fetchTicketById } from '../server/fetchTicketById';
 import { getTicketById } from '@/services/booking.service';
 
 
