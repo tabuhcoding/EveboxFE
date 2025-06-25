@@ -378,5 +378,19 @@
     "deleted": "Deleted",
     "action": "Action",
     "searchPlaceholder": "Search by event name or organizer",
-    "searchButton": "Search"
+    "searchButton": "Search",
+    "subscribed": "Subscribed",
+    "eventInfo": "Information of event",
+    "description": "Description",
+    "eventID": "Event ID",
+    "eventType": "Event type",
+    "startDateTime": "Start date-time",
+    "endDateTime": "End date-time",
+    "seatmap": "Seat map",
+    "numTicketTypes": "Amount of ticket types",
+    "ticketTypes": "ticket types",
+    "viewDetail": "View detail",
+    "yes": "Yes",
+    "no": "No",
+    "findByNameOrIdEvent": "Find by event name or id"
 }

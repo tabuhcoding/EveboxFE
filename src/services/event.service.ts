@@ -100,11 +100,11 @@ export async function getEventsAdmin(params: EventAdminParams, accessToken: stri
       page: params.page,
       limit: params.limit
     } as EventAdminParams;
-
+    
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
     };
-
+    
     if (accessToken && accessToken !== "") {
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -146,7 +146,7 @@ export async function updateEventAdmin (eventId: number, payload: UpdateEventAdm
   }
 }
 
-export async function getEventDetail(eventId: number, accessToken?: string): Promise<BaseApiResponse<EventDetailAdmin>> {
+export async function getEventDetailAdmin(eventId: number, accessToken?: string): Promise<BaseApiResponse<EventDetailAdmin>> {
   try {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export async function getEventDetail(eventId: number, accessToken?: string): Pro
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_EVENT_DETAIL}?eventId=${eventId}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.EVENT_DETAIL}?eventId=${eventId}`, {
       headers: headers,
     });
 
