@@ -30,7 +30,6 @@ export default function EventDetailPage({ eventId }: { eventId: number }) {
         const res = await getEventDetailAdmin(eventId, session?.user?.accessToken);
 
         if (res.statusCode === 200) {
-          console.log("🚀 ~ fetchEventDetail ~ res.data:", res.data)
           setEvent(res.data);
         }
         else {
@@ -132,7 +131,7 @@ export default function EventDetailPage({ eventId }: { eventId: number }) {
             </div>
           </div>
           <h2 className="text-xl font-semibold mt-6 mb-3 px-8">{transWithFallback('showingManagement', 'Quản lý suất diễn sự kiện')}</h2>
-          
+
           {event && event.showing && (
             <ShowingTable showings={event.showing} />
           )}

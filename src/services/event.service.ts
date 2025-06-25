@@ -156,7 +156,7 @@ export async function getEventDetailAdmin(eventId: number, accessToken?: string)
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_EVENT_DETAIL}?eventId=${eventId}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.EVENT_DETAIL}?eventId=${eventId}`, {
       headers: headers,
     });
 
