@@ -374,5 +374,19 @@
   "deleted": "Đã xóa",
   "action": "Thao tác",
   "searchPlaceholder": "Tìm theo tên sự kiện hoặc nhà tổ chức",
-  "searchButton": "Tìm kiếm"
+  "searchButton": "Tìm kiếm",
+  "subscribed": "Đã đăng ký",
+  "eventInfo": "Thông tin sự kiện",
+  "description": "Mô tả",
+  "eventID": "ID sự kiện",
+  "eventType": "Loại sự kiện",
+  "startDateTime": "Ngày-giờ bắt đầu",
+  "endDateTime": "Ngày-giờ kết thúc",
+  "seatmap": "Sơ đồ chỗ ngồi",
+  "numTicketTypes": "Số loại vé",
+  "ticketTypes": "loại vé",
+  "viewDetail": "Xem chi tiết",
+  "yes": "Có",
+  "no": "Không",
+  "findByNameOrIdEvent": "Tìm kiếm theo tên hoặc ID sự kiện"
 }

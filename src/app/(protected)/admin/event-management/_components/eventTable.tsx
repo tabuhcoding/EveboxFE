@@ -73,7 +73,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
         isApproved: activeTab === "approved" ? true : activeTab === "pending" ? false : undefined,
         categoryId: categoryFilter ? mapCategoryNameToId(categoryFilter) : undefined,
         isDeleted: activeTab === "deleted" ? true : undefined,
-        search: searchKeyword ?? "",
+        title: searchKeyword ?? "",
       }, session?.user?.accessToken || "");
 
       if (res.statusCode === 200) {
