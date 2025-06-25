@@ -32,9 +32,11 @@ export default function AlertDialog({ message, onClose, open, href }: AlertDialo
     <Dialog open={open} onClose={onClose}>
       <div className="text-white dialog-header px-6 py-4 justify-center items-center flex relative" style={{ background: '#0C4762' }}>
         <DialogTitle className="!m-0 !p-0 text-lg text-center font-bold">{transWithFallback('notify', 'Thông báo')}</DialogTitle>
-        <button onClick={onClose} className="absolute right-2 top-2 px-1 py-1 close-btn">
-          <Icon icon="ic:baseline-close" width="20" height="20" />
-        </button>
+        {!href && (
+          <button onClick={onClose} className="absolute right-2 top-2 px-1 py-1 close-btn">
+            <Icon icon="ic:baseline-close" width="20" height="20" />
+          </button>
+        )}
       </div>
 
       <DialogContent className="p-6 flex flex-col justify-center items-center">

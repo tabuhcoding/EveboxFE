@@ -37,9 +37,12 @@ export interface SeatMapProps {
       ticketTypeId: string
       label: string[];
     },
-    isSelected: boolean
+    isSelected: boolean,
+    quantity?: number,
+    sectionId?: number
   ) => void;
   selectedSeatIds?: number[];
+  selectedTickets?: SelectedTicketsState;
 }
 
 export interface SeatMapElement {
@@ -48,6 +51,8 @@ export interface SeatMapElement {
   fill: string;
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 export interface Row {
@@ -76,8 +81,8 @@ export interface SeatMap {
   createdAt: Date;
   viewBox: string;
   status: number;
-  hasSeat: boolean;
   Section?: Section[];
+  seatMapType: SeatmapType;
 }
 
 export interface TicketType {
@@ -138,7 +143,7 @@ export interface ShowingData {
   }
 }
 
-export type SeatMapResponse = BaseApiResponse<ShowingData>;
+export type SeatMapResponse = BaseApiResponse<SeatMap>;
 
 export interface EventProps {
   id: number;

@@ -2,9 +2,11 @@ import { BaseApiResponse } from "@/types/baseApiResponse";
 import { AnswersFormPayload, AnswerFormRespone } from "@/types/models/event/booking/questionForm.interface";
 import { SelectSeatPayload } from "@/types/models/event/booking/seatmap.interface";
 import { RedisInfo } from "@/types/models/event/redisSeat";
+import { IGetUserTicketByIdResponse } from "@/types/models/ticket/ticketInfoById";
 
 import { END_POINT_LIST } from "./endpoint";
 import { bookingService } from "./instance.service";
+import { IGetUserTicketResponse } from "@/types/models/ticket/ticketInfo";
 
 export async function selectSeat(payload: SelectSeatPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
   try {
@@ -68,7 +70,43 @@ export async function unselectSeat(showingId: string, accessToken: string): Prom
 
     return res.data as BaseApiResponse<boolean>;
   } catch (error: any) {
-    console.error("Error unselect seat seat:", error?.response?.data?.message);
+    console.error("Error unselect seat:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getTicketById(id: string, accessToken: string): Promise<IGetUserTicketByIdResponse> {
+  try {
+    const res = await bookingService.get(`${END_POINT_LIST.BOOKING.GET_ORDER_BY_ID}?orderId=${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      }
+    });
+
+    if (!res) throw new Error('Failed to get ticket by id');
+
+    return res.data as IGetUserTicketByIdResponse;
+  } catch (error: any) {
+    console.error("Error get ticket by id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getUserTicketResponse(params: string, accessToken: string): Promise<IGetUserTicketResponse> {
+  try {
+    const res = await bookingService.get(`${END_POINT_LIST.BOOKING.GET_USER_ORDER}?${params}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      }
+    });
+
+    if (!res)  throw new Error('Failed to get user order');
+
+    return res.data as IGetUserTicketResponse;
+  } catch (error: any) {
+    console.error("Error get ticket by id:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }

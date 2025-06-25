@@ -99,8 +99,12 @@ export default function TicketInfor({
       }
     } catch (error: any) {
       console.error('Lỗi khi gọi API lock-seat:', error);
-      // setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
-      setAlertMessage(error.toString());
+      const errorString = error.toString();
+      let errorNoti = errorString;
+      if (errorString.includes("quantity exceeds")) {
+        errorNoti = transWithFallback('ticketQuantityExceed', 'Số lượng được chọn vượt quá vé có sẵn cho loại vé này trong phần được chỉ định')
+      }
+      setAlertMessage(errorNoti);
       setAlertOpen(true);
       onClearSelection?.();
     } finally {
@@ -147,6 +151,35 @@ export default function TicketInfor({
           </div>
 
           <div className='action-wrapper pb-4'>
+            {/* Selected tickets */}
+            {Object.entries(selectedTickets).filter(([_, info]) => info.quantity > 0).length > 0 && (
+              <div className="mb-2">
+                <div className="text-sm font-semibold text-[#0C4762] mb-1">{transWithFallback('selectedTickets', 'Các vé đã chọn')}:</div>
+                <ul className="space-y-1">
+                  {Object.entries(selectedTickets).map(([ticketTypeId, info]) => {
+                    if (!info.quantity || info.quantity === 0) return null;
+                    
+                    const ticketTypeObj = ticketType?.find(tt => tt.id === ticketTypeId);
+                    return (
+                      <li key={ticketTypeId} className="flex items-center gap-2 text-sm">
+                        <span className="inline-block w-3 h-3 rounded mr-1" style={{ background: ticketTypeObj?.color }} />
+                        <span className="font-semibold">{ticketTypeObj?.name || ticketTypeId}</span>
+                        {info.sectionId && info.name && (
+                          <span className="ml-1 text-xs text-gray-500">
+                            (
+                            {Array.isArray(info.name) ? info.name.join(', ') : info.name}
+                            )
+                          </span>
+                        )}
+                        <span className="ml-auto">×{info.quantity}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
+            {/* Total amount of selected tickets */}
             <div className="flex justify-between items-center mt-4 px-2 py-2 bg-gray-50 rounded-lg shadow-sm">
               <div className="flex items-center space-x-2">
                 <Ticket size={28} />
@@ -160,7 +193,7 @@ export default function TicketInfor({
                 onClick={() => setShowConfirmDialog(true)}
                 disabled={!hasSelectedTickets}
               >
-                {t("clearTicket") ?? "Hủy chọn vé"}
+                {transWithFallback('clearTicket', 'Hủy chọn vé')}
               </button>
             </div>
 

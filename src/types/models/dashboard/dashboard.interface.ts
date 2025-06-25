@@ -22,6 +22,8 @@ export interface Event {
   totalClicks: number;
   imgPosterUrl: string;
   minTicketPrice: number;
+  isUserFavorite?: boolean;
+  isUserNotice?: boolean;
 }
 
 export interface EventSliderProps {
@@ -36,7 +38,8 @@ export interface ImageSliderProps {
 }
 
 export interface DatePickerProps {
-  onDateRangeChange: (range: RangeValue<CalendarDate> | null) => void;
+  value: RangeValue<CalendarDate> | null;
+  onDateRangeChange: (value: RangeValue<CalendarDate> | null) => void;
 }
 
 export interface TabSwitcherProps {

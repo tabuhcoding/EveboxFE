@@ -211,6 +211,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
             {stageSections?.map((section) => (
               <g key={section.id}>
                 {section.element?.map((el, index) => (
+                  el.type === 'path' ? (
                   <path
                     key={index}
                     d={el.data}
@@ -218,6 +219,18 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                     style={{ fill: el.fill }}
                     transform={`translate(${el.x}, ${el.y})`}
                   />
+                ) : el.type === 'rect' ? (
+                  <rect
+                    key={index}
+                    x={el.x}
+                    y={el.y}
+                    width={el.width}
+                    height={el.height}
+                    // fill={el.fill}
+                    style={{ fill: el.fill }}
+                    transform={`translate(${el.x}, ${el.y})`}
+                  />
+                ) : <h1>DUUDUDUDUDUDUD</h1>
                 ))}
               </g>
             ))}
@@ -225,6 +238,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
             {normalSections?.map((section) => (
               <g key={section.id}>
                 {section.element?.map((el, index) => (
+                  el.type === 'path' ? (
                   <path
                     key={index}
                     d={el.data}
@@ -232,6 +246,18 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                     style={{ fill: el.fill }}
                     transform={`translate(${el.x}, ${el.y})`}
                   />
+                ) : el.type === 'rect' ? (
+                  <rect
+                    key={index}
+                    x={el.x}
+                    y={el.y}
+                    width={el.width}
+                    height={el.height}
+                    // fill={el.fill}
+                    style={{ fill: el.fill }}
+                    transform={`translate(${el.x}, ${el.y})`}
+                  />
+                ) : <h1>DUUDUDUDUDUDUD</h1>
                 ))}
 
                 {section.Row?.map((row) =>
