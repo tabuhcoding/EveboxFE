@@ -12,6 +12,11 @@ export class END_POINT_LIST {
     GET_USER_INFO: "/api/user/me",
     GOOGLE: "/api/user/google",
     GOOGLE_CALLBACK: "/api/user/google/callback",
+    TOGGLE_NOTIFICATION: "/api/user/notification/all",
+    ADD_FAVORITE_EVENT: "/api/user/favorite",
+    FAVORITE_EVENT: "/api/user/favorite/event",
+    REMOVE_FAV_EVENT: "/api/user/favorite/event",
+    REMOVE_FAV_ORG: "/api/user/favorite/org",
   };
 
   static readonly EVENT = {
@@ -22,6 +27,7 @@ export class END_POINT_LIST {
     ALL_CATEGORIES: "/api/categories",
     GET_FRONT_DISPLAY: "/api/event/front-display",
     GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids",
+    GET_SEARCH_EVENT: "/api/event/search",
   };
 
   static readonly SHOWING = {
@@ -35,7 +41,9 @@ export class END_POINT_LIST {
     SUBMIT_FORM: '/api/booking/submitForm',
     GET_REDIS_SEAT: "/api/booking/getRedisSeat",
     UNSELECT_SEAT: "/api/booking/unSelectSeat",
-    GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId"
+    GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
+    GET_ORDER_BY_ID: "/api/ticket/getOrderById",
+    GET_USER_ORDER: "/api/ticket/getUserOrder",
   }
 
   static readonly ORG_EVENT = {
@@ -73,6 +81,7 @@ export class END_POINT_LIST {
 
   static readonly ADMIN = {
     EVENTS: "/api/admin/event",
+    EVENT_DETAIL: "/api/admin/event/detail",
     SHOWINGS: "/api/admin/showing",
     EVENTS_SPECIAL: "api/admin/event-special"
   };

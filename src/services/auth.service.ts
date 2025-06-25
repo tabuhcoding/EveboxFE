@@ -1,4 +1,5 @@
 /* Package Application */
+import { UserFavEvent } from "@/types/models/dashboard/user.interface";
 import { BaseApiResponse } from "types/baseApiResponse";
 
 import { END_POINT_LIST } from "./endpoint";
@@ -14,7 +15,10 @@ import {
   ResetPasswordPayloadProps,
   ResetPasswordResponse,
   ChangePasswordPayloadProps,
-  ChangePasswordResponse
+  ChangePasswordResponse,
+  ToggleNotificationResponse,
+  EventOrOrgFavouriteData,
+  AddEventOrOrgFavouritePayload,
 }
   from "./interface/auth.interface";
 
@@ -47,3 +51,30 @@ export const changePassword = async (payload: ChangePasswordPayloadProps): Promi
   const result = await authService.post<BaseApiResponse<ChangePasswordResponse>>(END_POINT_LIST.USER.CHANGE_PASSWORD, payload);
   return result.data;
 };
+
+export const toggleNotification = async (isReceived: boolean): Promise<BaseApiResponse<ToggleNotificationResponse>> => {
+  const result = await authService.post(
+    `${END_POINT_LIST.USER.TOGGLE_NOTIFICATION}?isReceived=${isReceived}`,
+  );
+  return result.data;
+};
+
+export async function addEventOrOrgFavourite(payload: AddEventOrOrgFavouritePayload): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
+    const res = await authService.post(`${END_POINT_LIST.USER.ADD_FAVORITE_EVENT}`, payload);
+    return res.data;
+}
+
+export async function removeEventFavourite(eventId: string): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
+    const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_EVENT}/${eventId}`);
+    return res.data;
+}
+
+export async function removeOrgFavourite(orgId: string): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
+    const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_ORG}/${orgId}`);
+    return res.data;
+}
+
+export async function getUserFavouriteEvents(page: number = 1, limit: number = 10): Promise<BaseApiResponse<UserFavEvent[]>> {
+    const res = await authService.get(`${END_POINT_LIST.USER.FAVORITE_EVENT}?page=${page}&limit=${limit}`);
+    return res.data;
+}

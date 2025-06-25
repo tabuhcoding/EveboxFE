@@ -5,20 +5,19 @@ import { useTranslations } from 'next-intl';
 import { useState, useEffect } from "react";
 
 /* Package Application */
+import { getUserFavouriteEvents } from '@/services/auth.service';
+import { UserFavEventResponse } from '@/types/models/dashboard/user.interface';
 import AlertDialog from 'components/common/alertDialog';
 import { useUserInfo } from 'lib/swr/useUserInfo';
 
 import AvatarUpload from "./avatarUpload";
 import useAvatar from "./libs/hooks/useAvatar";
 import useProfile from "./libs/hooks/useProfile";
-import { OrganizerDetail } from "./libs/interface/favorite.interface";
 import MyFavoritePage from "./myFavoritePage";
 import OrganizerRegistrationPopup from './orgRegisterPopup';
 
-export default function ProfileForm() {
+export default  function ProfileForm() {
     const [activeTab, setActiveTab] = useState("info");
-    const [currentPage, setCurrentPage] = useState(1);
-
     const { updateProfile } = useProfile();
     const { userInfo, userInfoFetched, refetch } = useUserInfo();
 
@@ -83,46 +82,41 @@ export default function ProfileForm() {
 
     const imageUrl = useAvatar({ avatar_id: form.avatar_id })?.imageUrl || "/images/default_avt.png";
 
-    const events = {
-        favoriteEvents: [],
+    // Handle favorite events
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10); 
+    const [userFavEvents, setUserFavEvents] = useState<UserFavEventResponse | null>(null);
+    const [isLoadingFavEvents, setIsLoadingFavEvents] = useState(false);
+    useEffect(() => {
+        if (activeTab === "favorites") {
+            loadFavoriteEvents(currentPage);
+        }
+    }, [activeTab, currentPage]);
+    const loadFavoriteEvents = async (page: number) => {
+        setIsLoadingFavEvents(true);
+        try {
+            const response = await getUserFavouriteEvents(page, itemsPerPage);
+            setUserFavEvents(response);
+        } catch (error) {
+            console.error('Error loading favorite events:', error);
+            setUserFavEvents(null);
+        } finally {
+            setIsLoadingFavEvents(false);
+        }
     };
 
-    const favoriteOrganizers: OrganizerDetail[] = [
-        {
-            id: 1,
-            Images_Events_imgLogoIdToImages: {
-                imageUrl: "https://images.tkbcdn.com/2/608/332/ts/ds/03/21/08/2aff26681043246ebef537f075e2f861.png",
-            },
-            orgName: "TechFest Vietnam",
-            orgDescription: "<p>TechFest Vietnam là nơi quy tụ những startup hàng đầu Việt Nam và khu vực.</p>",
-        },
-        {
-            id: 2,
-            Images_Events_imgLogoIdToImages: {
-                imageUrl: "https://images.tkbcdn.com/2/608/332/ts/ds/03/21/08/2aff26681043246ebef537f075e2f861.png",
-            },
-            orgName: "UX Lovers",
-            orgDescription: "<p>UX Lovers là cộng đồng dành cho các nhà thiết kế đam mê trải nghiệm người dùng.</p>",
-        }
-    ];
-
-    //Pagination
-    const itemsPerPage = 10;
-
-    const totalItems = favoriteOrganizers.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const startItem = (currentPage - 1) * itemsPerPage + 1;
-    const endItem = Math.min(startItem + itemsPerPage - 1, totalItems);
-
     const handlePrevious = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
     };
 
     const handleNext = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+        const totalPages = userFavEvents?.pagination?.totalPages || 0;
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
     };
-
-    const paginatedData = favoriteOrganizers.slice(startItem - 1, endItem);
 
     const t = useTranslations('common');
 
@@ -247,11 +241,12 @@ export default function ProfileForm() {
 
             {activeTab === "favorites" && (
                 <MyFavoritePage
-                    events={events}
-                    favoriteOrganizers={favoriteOrganizers}
-                    paginatedData={paginatedData}
-                    currentPage={currentPage}
-                    itemsPerPage={itemsPerPage}
+                    events={userFavEvents?.data || []}
+                    currentPage={userFavEvents?.pagination?.page || 1}
+                    itemsPerPage={userFavEvents?.pagination?.limit || itemsPerPage}
+                    totalPages={userFavEvents?.pagination?.totalPages || 0}
+                    totalItems={userFavEvents?.pagination?.totalItems || 0}
+                    isLoading={isLoadingFavEvents}
                     onPrevious={handlePrevious}
                     onNext={handleNext}
                 />

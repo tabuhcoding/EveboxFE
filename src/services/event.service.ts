@@ -1,11 +1,21 @@
 /* Package Application */
+import { SearchEventsResponse } from "@/types/models/dashboard/searchEvents.interface";
 import { IForm } from "@/types/models/event/booking/questionForm.interface";
 import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
+import { SearchEventsParams } from "types/models/dashboard/searchEventParams.interface";
 import { SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
+import { 
+  EventAdminParams,
+  EventManagementApiResponse,
+  UpdateEventAdminPayload,
+  EventDetailAdmin
+} from "@/types/models/admin/eventManagement.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
+
+
 import { CreateEventDto } from "types/models/event/createEvent.dto";
 import { Province } from "types/models/event/location.interface";
 import { resendOtp } from "./auth.service";
@@ -81,10 +91,119 @@ export async function getFormOfShowing(showingId: string): Promise<BaseApiRespon
 
     return res.data;
   } catch (error: any) {
-    console.error("Error selecting seat:", error?.response?.data?.message);
+    console.error("Error get form of showing:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
+
+export async function getEventsAdmin(params: EventAdminParams, accessToken: string): Promise<BaseApiResponse<EventManagementApiResponse>> {
+  try {
+    const cleanedEntries = Object.entries(params).filter(([_, value]) => value !== undefined);
+    const cleanedParams = {
+      ...Object.fromEntries(cleanedEntries),
+      page: params.page,
+      limit: params.limit
+    } as EventAdminParams;
+    
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(END_POINT_LIST.ADMIN.EVENTS, {
+      params: cleanedParams,
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get events by admin');
+
+    return res.data as BaseApiResponse<EventManagementApiResponse>;
+  } catch (error: any) {
+    console.error("Error get events by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function updateEventAdmin (eventId: number, payload: UpdateEventAdminPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.put(`${END_POINT_LIST.ADMIN.EVENTS}/${eventId}`, payload, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to update event by admin');
+
+    return res.data as BaseApiResponse<boolean>;
+  } catch (error: any) {
+    console.error("Error update event by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getEventDetailAdmin(eventId: number, accessToken?: string): Promise<BaseApiResponse<EventDetailAdmin>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.EVENT_DETAIL}?eventId=${eventId}`, {
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get event detail');
+
+    return res.data as BaseApiResponse<EventDetailAdmin>;
+  } catch (error: any) {
+    console.error("Error get event detail by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getSearchEvents({
+  title,
+  type,
+  startDate,
+  endDate,
+  minPrice,
+  maxPrice,
+  pages = 1, 
+  limit = 10
+}: SearchEventsParams): Promise<SearchEventsResponse> {
+  try {
+    const params = new URLSearchParams();
+    params.append("title", title);
+    if (type) params.append("type", type);
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
+    if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
+
+    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_SEARCH_EVENT}?${params.toString()}&page=${pages}&limit=${limit}`);
+
+    if (!res) throw new Error('Failed to search events, please try again later');
+    return res.data;
+
+  } catch (error: any) {
+    console.error("Error search: ", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+
 
 export async function createEvent(payload: CreateEventDto, accessToken?: string): Promise<{ id: number }> {
   if (typeof window === "undefined") {
