@@ -1,7 +1,6 @@
 'use client';
 
-import { SortConfig } from "@/types/models/admin/eventManagement.interface";
-import { Category } from "@/types/models/admin/eventManagement.interface";
+import { SortConfig, Category } from "@/types/models/admin/eventManagement.interface";
 
 export function sortEvents<T extends { categories?: Category[] }>(data: T[], sortConfig: SortConfig<T> | null): T[] {
   if (!sortConfig) return data;

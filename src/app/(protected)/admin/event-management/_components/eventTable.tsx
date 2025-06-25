@@ -174,14 +174,6 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
     }
   };
 
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
   const handleTransferCategory = (cat: string): string => {
     switch (cat) {
       case 'music': return transWithFallback('music', 'Âm nhạc')

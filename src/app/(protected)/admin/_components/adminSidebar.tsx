@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, TicketPercent, CircleDollarSign, ChartColumnIncreasing } from 'lucide-react';
+import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, CircleDollarSign, ChartColumnIncreasing } from 'lucide-react';
 
 export default function AdminSidebar() {
   const t = useTranslations('common');
