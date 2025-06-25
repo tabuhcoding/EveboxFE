@@ -33,13 +33,13 @@ export default function TicketManagement() {
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  const fetchTicketsByPage = async (page = 1, status?: string, limit = ticketsPerPage, keyword = searchKeyword) => {
+  const fetchTicketsByPage = async (page = 1, status?: string, limit = ticketsPerPage, keyword = searchKeyword, selectedSubTabParam = selectedSubTab) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       params.append('page', page.toString());
       params.append('limit', limit.toString());
-      params.append('timeStamp', selectedSubTab === 0 ? 'UPCOMING' : 'PAST');
+      params.append('timeStamp', selectedSubTabParam === 0 ? 'UPCOMING' : 'PAST');
       if (status) params.append('status', status);
       if (keyword) params.append('title', keyword);
 
@@ -68,8 +68,9 @@ export default function TicketManagement() {
       }
     } catch (error) {
       console.error('Error fetching tickets:', error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Khi vào trang, chỉ fetch All trang 1
@@ -83,9 +84,9 @@ export default function TicketManagement() {
     setCurrentPage(1);
     setTotalPages(1);
 
-    if (index === 1) fetchTicketsByPage(1, 'SUCCESS', ticketsPerPage, searchKeyword);
-    else if (index === 2) fetchTicketsByPage(1, 'PENDING', ticketsPerPage, searchKeyword);
-    else if (index === 3) fetchTicketsByPage(1, 'CANCELLED', ticketsPerPage, searchKeyword);
+    if (index === 1) fetchTicketsByPage(1, 'SUCCESS', ticketsPerPage, searchKeyword, 0);
+    else if (index === 2) fetchTicketsByPage(1, 'PENDING', ticketsPerPage, searchKeyword, 0);
+    else if (index === 3) fetchTicketsByPage(1, 'CANCELLED', ticketsPerPage, searchKeyword, 0);
     else fetchTicketsByPage(1, undefined, ticketsPerPage, searchKeyword);
   };
 
@@ -97,6 +98,17 @@ export default function TicketManagement() {
     else if (selectedTab === 3) fetchTicketsByPage(page, 'CANCELLED', ticketsPerPage, searchKeyword);
     else fetchTicketsByPage(page, undefined, ticketsPerPage, searchKeyword);
   };
+
+  const handleSubTabChange = (index: number) => {
+    setSelectedSubTab(index);
+    setCurrentPage(1);
+    setTotalPages(1);
+
+    if (selectedTab === 1) fetchTicketsByPage(1, 'SUCCESS', ticketsPerPage, searchKeyword, index);
+    else if (selectedTab === 2) fetchTicketsByPage(1, 'PENDING', ticketsPerPage, searchKeyword, index);
+    else if (selectedTab === 3) fetchTicketsByPage(1, 'CANCELLED', ticketsPerPage, searchKeyword, index);
+    else fetchTicketsByPage(1, undefined, ticketsPerPage, searchKeyword, index);
+  }
 
   const getTicketsByTab = (): IUserTicket[] => {
     switch (selectedTab) {
@@ -174,7 +186,7 @@ export default function TicketManagement() {
               <button
                 key={index}
                 className={`relative px-10 py-2 font-medium ${selectedSubTab === index ? 'text-black font-bold' : 'text-gray-700'}`}
-                onClick={() => setSelectedSubTab(index)}
+                onClick={() => handleSubTabChange(index)}
               >
                 {subTab}
                 <div className={`absolute rounded-full bottom-0 left-0 w-full h-1 ${selectedSubTab === index ? 'bg-[#51DACF]' : 'bg-transparent'}`} />
