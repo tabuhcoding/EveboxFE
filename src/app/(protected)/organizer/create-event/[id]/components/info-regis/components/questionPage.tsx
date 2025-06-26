@@ -35,13 +35,14 @@ const showtimes =
     }
 
     const handleNextStep = () => {
-        router.push(`/organizer/events`);
+               setOpen(true);
     };
 
     const handleCloseDialog = () => {
             setOpen(false);
             if (shouldProceed) {
-                handleNextStep(); 
+                console.log("-------Here")
+                router.push(`/organizer/events`); 
                 setShouldProceed(false); 
             }
         };

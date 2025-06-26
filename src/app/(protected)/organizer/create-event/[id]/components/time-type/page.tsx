@@ -93,8 +93,9 @@ export default function TimeAndTypeTickets() {
         endTime: showing.endDate?.toISOString() || "",
       });
 
-      showtimeId = result.showingId;
-      console.log(showingList[0])
+      console.log(result.toString());
+
+      showtimeId = result.toString();
 
       console.log(`Showtime created successfully! ID: ${showtimeId}`);
     } else {

@@ -4,7 +4,7 @@ export interface CreateShowingDto {
 }
 
 export interface CreateShowingResponseDto {
-  showingId: string;
+  data: string;
 }
 
 export interface DeleteShowingResponseDto {

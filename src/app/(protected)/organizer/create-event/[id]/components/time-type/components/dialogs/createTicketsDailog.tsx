@@ -50,7 +50,7 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
             return false;
         }
 
-        if (startDate && endDate && date > startDate && date > endDate) {
+        if (startDate && endDate && date >= startDate && date >= endDate) {
             setDateErrors((prev) => ({ ...prev, selectedEndDate: "Hạn cuối bán vé phải trước thời gian sự kiện bắt đầu" }));
             return false;
         }

@@ -20,7 +20,7 @@ export interface FormInput {
     type: string;
     required?: boolean;
     regex?: string | null;
-    options?: { optionText: string }[] | null;
+    options?: string[] | null;
 }
 
 export interface FormInputItemProps {

@@ -44,7 +44,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
     // const [texts, setTexts] = useState<string[]>(["", "", ""]);
     // const [checkedItems, setCheckedItems] = useState<boolean[]>([false, false, false]); // Trạng thái checked của mỗi input
 
-    const updateQuestionOptions = (questionId: number, newOptions: { optionText: string }[]) => {
+    const updateQuestionOptions = (questionId: number, newOptions: string[]) => {
         setCurrentForm(prev => ({
             ...prev,
             FormInput: prev.FormInput.map(q =>
@@ -92,7 +92,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
             required: true,
             regex: null,
             options: (quesText === "oneAns" || quesText === "multiAns")
-                ? Array(3).fill(null).map(() => ({ optionText: "" }))
+                ? Array(3).fill(null).map(() => (""))
                 : null,
         };
 
@@ -256,11 +256,11 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                                         {(question.options || []).map((opt, optIdx) => (
                                                             <OneAnswer
                                                                 key={optIdx}
-                                                                value={opt.optionText}
+                                                                value={opt}
                                                                 checked={false} // hoặc để UI highlight tạm nếu muốn
                                                                 onChange={(newVal) => {
                                                                     const updatedOptions = [...(question.options || [])];
-                                                                    updatedOptions[optIdx].optionText = newVal;
+                                                                    updatedOptions[optIdx] = newVal;
                                                                     updateQuestionOptions(question.id, updatedOptions);
                                                                 }}
                                                                 onToggle={() => { }}
@@ -274,7 +274,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                                         <button
                                                             className="text-[#2DC275] mt-2 flex items-center gap-1"
                                                             onClick={() => {
-                                                                const updated = [...(question.options || []), { optionText: "" }];
+                                                                const updated = [...(question.options || []),""];
                                                                 updateQuestionOptions(question.id, updated);
                                                             }}
                                                         >
@@ -288,11 +288,11 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                                         {(question.options || []).map((opt, optIdx) => (
                                                             <MultipleAnswer
                                                                 key={optIdx}
-                                                                value={opt.optionText}
+                                                                value={opt}
                                                                 checked={false}
                                                                 onChange={(newVal) => {
                                                                     const updatedOptions = [...(question.options || [])];
-                                                                    updatedOptions[optIdx].optionText = newVal;
+                                                                    updatedOptions[optIdx] = newVal;
                                                                     updateQuestionOptions(question.id, updatedOptions);
                                                                 }}
                                                                 onToggle={() => { }} // Có thể bỏ nếu không cần chọn checkbox
@@ -306,7 +306,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                                         <button
                                                             className="text-[#2DC275] mt-2 flex items-center gap-1"
                                                             onClick={() => {
-                                                                const updated = [...(question.options || []), { optionText: "" }];
+                                                                const updated = [...(question.options || []), ""];
                                                                 updateQuestionOptions(question.id, updated);
                                                             }}
                                                         >

@@ -63,7 +63,7 @@ export async function createOrgPaymentInfo(
 export async function createShowing(
   eventId: number,
   payload: CreateShowingDto
-): Promise<CreateShowingResponseDto> {
+): Promise<String> {
   if (typeof window === "undefined") {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/org/showing/${eventId}`,
@@ -83,9 +83,9 @@ export async function createShowing(
     }
 
     const json: BaseApiResponse<CreateShowingResponseDto> = await res.json();
-    return json.data;
+    return json.data.data;
   } else {
-    const res = await orgService.post<BaseApiResponse<CreateShowingResponseDto>>(
+    const res = await orgService.post<BaseApiResponse<String>>(
       `${END_POINT_LIST.ORG_SHOWING.SHOWING}/${eventId}`,
       payload
     );
@@ -93,6 +93,8 @@ export async function createShowing(
     if (!res || res.status !== 201) {
       throw new Error(res?.data?.message || "Failed to create showing");
     }
+
+    console.log("------",res.data);
 
     return res.data.data;
   }
