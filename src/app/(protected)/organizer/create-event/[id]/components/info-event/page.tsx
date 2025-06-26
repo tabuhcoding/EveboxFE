@@ -17,11 +17,7 @@ import { useAuth } from '../../../../../../../contexts/auth.context';
 import { CreateEventDto } from 'types/models/event/createEvent.dto';
 import { createEvent } from 'services/event.service';
 
-interface InformationEventClientPageProps {
-    setEventId?: (id: number) => void;
-}
-
-export default function InformationEventClientPage({ setEventId } : InformationEventClientPageProps) {
+export default function InformationEventClientPage() {
     // const { data: session } = useSession();
     const { user } = useAuth();
     const router = useRouter();
@@ -52,7 +48,6 @@ export default function InformationEventClientPage({ setEventId } : InformationE
     const result = await createEvent(payload, access_token);
 
     const newEventId = result.id;
-    if (setEventId) setEventId(newEventId);
 
     if (btnValidate === "Continue") {
       router.push(`/organizer/create-event/${newEventId}?step=showing`);

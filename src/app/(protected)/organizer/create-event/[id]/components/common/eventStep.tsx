@@ -12,18 +12,14 @@ import CreateQuestions from '../info-regis/page';
 
 interface EventStepProps {
     eventId: number;
-    setEventId: (id: number) => void;
 }
 
-export default function EventStep({ eventId, setEventId }: EventStepProps) {
+export default function EventStep({ eventId }: EventStepProps) {
     const searchParams = useSearchParams();
     const step = searchParams?.get('step') || 'info';
     const router = useRouter();
 
-    const [showingIds, setShowingIds] = useState<string[]>([]);
-
     useEffect(() => {
-        console.log(showingIds);
         const validSteps = ["info", "showing", "setting", "questions"];
         if (step && !validSteps.includes(step)) {
             router.replace(`/organizer/create-event/${eventId}?step=info`);
@@ -32,8 +28,8 @@ export default function EventStep({ eventId, setEventId }: EventStepProps) {
 
     return (
         <>
-            {step === 'info' && <InformationEventClientPage setEventId={setEventId} />}
-            {step === 'showing' && <TimeAndTypeTickets setShowingIds={setShowingIds} />}
+            {step === 'info' && <InformationEventClientPage/>}
+            {step === 'showing' && <TimeAndTypeTickets />}
             {/* {step === 'setting' && <Setting eventId={eventId} />} */}
             {step === 'questions' && <CreateQuestions/>}
         </>

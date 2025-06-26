@@ -14,11 +14,7 @@ import { Showtime } from '../../libs/interface/idevent.interface';
 import toast from 'react-hot-toast';
 import { createShowing, createTicketType, getAllShowingDetailOfEvent, updateShowing, updateTicketType } from 'services/org.service';
 
-interface TimeAndTypeTicketsProps {
-    setShowingIds: (ids: string[]) => void;
-}
-
-export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTicketsProps) {
+export default function TimeAndTypeTickets() {
     const params = useParams();
     const eventId = parseInt(params?.id?.toString() || "");
     const router = useRouter();
@@ -100,7 +96,6 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
       showtimeId = result.showingId;
       console.log(showingList[0])
 
-      setShowingIds([...showingList.map(show => show.id), showtimeId]);
       console.log(`Showtime created successfully! ID: ${showtimeId}`);
     } else {
       await updateShowing(showing.id, {
