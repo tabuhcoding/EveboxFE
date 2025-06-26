@@ -388,5 +388,19 @@
   "viewDetail": "Xem chi tiết",
   "yes": "Có",
   "no": "Không",
-  "findByNameOrIdEvent": "Tìm kiếm theo tên hoặc ID sự kiện"
+  "findByNameOrIdEvent": "Tìm kiếm theo tên hoặc ID sự kiện",
+  "errorWhenUpdate": "Có lỗi xảy ra khi cập nhật",
+  "addedIsSpecial": "Đã thêm vào sự kiện đặc biệt",
+  "removedIsSpecial": "Đã bỏ khỏi sự kiện đặc biệt",
+  "select": "Chọn",
+  "reject": "Bỏ chọn",
+  "addedIsOnlyOnEve": "Đã thêm vào sự kiện chỉ có trên EveBox",
+  "removedIsOnlyOnEve": "Đã bỏ khỏi sự kiện chỉ có trên EveBox",
+  "addedTo": "Đã thêm vào thể loại",
+  "removedFrom": "Đã bỏ khỏi thể loại",
+  "loadingRequest": "Đang xử lý yêu cầu...",
+  "errorWhenFetchEvents": "Lỗi khi tải dữ liệu sự kiện",
+  "isSpecialEvent": "Sự kiện đặc biệt",
+  "isOnlyOnEve": "Chỉ có trên EveBox",
+  "noEventMatchForKeyword": "Không có sự kiện nào khớp với từ khóa tìm kiếm"
 }

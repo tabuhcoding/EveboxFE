@@ -82,7 +82,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
         setTotalPages(res.data.pagination.totalPages);
       }
     } catch (error) {
-      toast.error(`Lỗi khi tải dữ liệu sự kiện: ${error}`);
+      toast.error(`${transWithFallback('errorWhenFetchEvents', 'Lỗi khi tải dữ liệu sự kiện')}: ${error}`);
       setEvents([]);
     } finally {
       setIsLoadingEvents(false);
