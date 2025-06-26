@@ -4,9 +4,9 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 
 export default function GlobalLoading({ visible }: { visible: boolean }) {
-  if (!visible) return null;
-
   const t = useTranslations('common');
+  
+  if (!visible) return null;
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
