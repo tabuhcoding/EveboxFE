@@ -13,9 +13,9 @@ export default function EventImageUpload ({
 }: EventImageUploadProps) {
     return (
         <div className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
-            <label className="block text-sm font-bold mb-2">
+            <p className="block text-sm font-bold mb-2">
                 <span className="text-red-500">* </span> Upload hình ảnh
-            </label>
+            </p>
 
             <div className="flex flex-wrap -mx-3 mb-6">
                 {/* Upload Background */}

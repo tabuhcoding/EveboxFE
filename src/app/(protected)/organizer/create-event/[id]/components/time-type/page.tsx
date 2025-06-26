@@ -1,9 +1,8 @@
 "use client";
 
 /* Package System */
-import React from 'react';
+import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
-import { useState } from 'react';
 import { Divider } from '@nextui-org/react';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -15,11 +14,6 @@ import { Showtime } from '../../libs/interface/idevent.interface';
 import toast from 'react-hot-toast';
 import { createShowing, createTicketType, getAllShowingDetailOfEvent, updateShowing, updateTicketType } from 'services/org.service';
 
-async function urlToFile(url: string, filename: string): Promise<File> {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new File([blob], filename, { type: blob.type });
-}
 interface TimeAndTypeTicketsProps {
     setShowingIds: (ids: string[]) => void;
 }
@@ -95,9 +89,7 @@ export default function TimeAndTypeTickets({ setShowingIds }: TimeAndTypeTickets
     
     const processShowtimeAndTickets = async (showing: Showtime, newShowId?: string) => {
         try {
-            let response;
             let showtimeId = showing.id; // Use existing ID or new one
-    
             // Handle Showtime creation or update
              if (!newShowId) {
       const result = await createShowing(eventId, {

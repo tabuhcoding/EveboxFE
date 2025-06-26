@@ -1,6 +1,5 @@
 /* Package System */
-import React from 'react';
-import { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 
 /* Package Application */
 import InputField from '../../common/form/inputCountField';
@@ -63,9 +62,9 @@ export default function EventLocationInput({
 
   return (
     <div className="mt-3 p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
-      <label className="block text-sm font-bold mb-2">
+      <p className="block text-sm font-bold mb-2">
         <span className="text-red-500">* </span> Địa điểm sự kiện
-      </label>
+      </p>
 
       {/* Radio buttons */}
       <div className="flex items-center gap-6 mt-2 text-sm mb-4">

@@ -103,9 +103,9 @@ export default function FormSettingClientTemp() {
                     <div className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto mt-3 mb-6" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
                         <div className="relative flex items-center space-x-2">
                             <LayoutList size={20} />
-                            <label className="text-base font-bold">
+                            <p className="text-base font-bold">
                                 Tạo bảng câu hỏi cho người tham gia
-                            </label>
+                            </p>
                         </div>
 
                         <span className="text-sm mt-3">
@@ -117,9 +117,9 @@ export default function FormSettingClientTemp() {
 
                         <div className="relative flex items-center space-x-2 ">
                             {isToggleOn ? <ToggleRight size={30} onClick={() => setIsToggleOn(false)} className="cursor-pointer text-[#51DACF]" /> : <ToggleLeft size={30} onClick={() => setIsToggleOn(true)} className="cursor-pointer text-gray-500" />}
-                            <label className="text-sm cursor-pointer" onClick={() => setIsToggleOn(!isToggleOn)}>
+                            <p className="text-sm cursor-pointer" onClick={() => setIsToggleOn(!isToggleOn)}>
                                 Mở chức năng này (tạo câu hỏi ở bước sau)
-                            </label>
+                            </p>
                         </div>
                     </div>
                 </form>

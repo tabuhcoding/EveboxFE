@@ -4,7 +4,6 @@
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 /* Package Application */
 import SelectField from "../../common/form/selectField";
@@ -18,8 +17,6 @@ import { Province } from "types/models/event/location.interface";
 import { CreateEventDto } from "types/models/event/createEvent.dto";
 import { useEventImageUpload } from "../../../libs/hooks/useEventImageUpload";
 import { Category } from "@/types/models/dashboard/frontDisplay";
-import { user } from "@nextui-org/react";
-import { UpdateEventDto } from "@/types/models/event/updateEvent.interface";
 
 interface FormInformationEventClientProps {
     onNextStep: (payload: CreateEventDto) => void;
@@ -30,8 +27,6 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     const router = useRouter();
     const params = useParams();
     const currentEventId = params?.id;
-
-    const { data: session } = useSession();
 
     const [background, setBackground] = useState<string | null>(null);
     const [logoOrg, setLogoOrg] = useState<string | null>(null);
@@ -483,7 +478,7 @@ useEffect(() => {
   districtId:
     allProvinces
       .find((p) => p.name.vi === province)
-      ?.districts.find((d) => d.name.vi == district)?.id ?? undefined,
+      ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
 });
                 }
             }
@@ -553,9 +548,9 @@ useEffect(() => {
                         {/* Thông tin sự kiện */}
                         <div className="flex flex-wrap -mx-3 mb-6">
                             <div className="w-full px-3">
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     <span className="text-red-500">* </span> Thông tin sự kiện
-                                </label>
+                                </p>
 
                                 <div className="boder ">
                                     <TextEditor generationForm={generationForm} content={post} onChange={onChange} isValidDescription={isFormValid} />

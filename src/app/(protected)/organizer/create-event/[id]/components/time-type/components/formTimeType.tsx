@@ -4,8 +4,7 @@
 import { ChevronDown, ChevronUp, CirclePlus, X, PencilLine, Ticket, Trash2 } from "lucide-react";
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Toaster } from "react-hot-toast";
-import { toast } from "react-hot-toast";
+import { Toaster,toast } from "react-hot-toast";
 
 /* Package Application */
 import DateTimePicker from "../../common/form/dateTimePicker";
@@ -159,7 +158,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
             <div className="w-full mt-6">
                 <form className="w-full max-w-4xl mx-auto mb-6" onSubmit={handleSubmit} id="ticket-form">
                     <div className="relative flex items-center">
-                        <label className="text-xl font-bold mr-4">Thời gian</label>
+                        <p className="text-xl font-bold mr-4">Thời gian</p>
                         <div className="relative ml-auto">
                             <select
                                 className={`text-base block appearance-none w-40 border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400 
@@ -194,7 +193,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                     <>
                                         <div className="flex items-center">
                                             <ChevronUp size={20} className="cursor-pointer" onClick={() => toggleExpanded(showtime.id, setShowtimes)} />
-                                            <label className="text-base font-medium ml-2">Ngày sự kiện</label>
+                                            <p className="text-base font-medium ml-2">Ngày sự kiện</p>
                                         </div>
 
                                         <X className="ml-auto text-red-500 rounded w-5 h-5 cursor-pointer hover:bg-red-100"
@@ -256,9 +255,10 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                     </div>
                                 </div>
 
-                                <label className="block text-base font-medium mb-2">
-                                    <span className="text-red-500">* </span>Loại vé
-                                </label>
+                                <p className="block text-base font-medium mb-2">
+  <span className="text-red-500">*</span> Loại vé
+</p>
+
 
                                 {showtimes.length >= 2 && showtime.tickets.length === 0 && (
                                     <div className="flex gap-4 mt-4 mb-4 ml-2">

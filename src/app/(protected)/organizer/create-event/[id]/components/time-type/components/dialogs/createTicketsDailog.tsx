@@ -23,9 +23,8 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
     const [infoTicket, setInfoTicket] = useState("");
     const [imageTicket, setImageTicket] = useState<string | null>(null);
     const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
-    const isRegisterPayment = typeof window !== 'undefined' ? localStorage.getItem("isRegisterPayment") != "true" : false;
-        const [ticketPrice, setTicketPrice] = useState(isRegisterPayment?"0":"");
-    console.log("-------",isRegisterPayment);
+    const isRegisterPayment = typeof window !== 'undefined' ? localStorage.getItem("isRegisterPayment") !== "true" : false;
+     const [ticketPrice, setTicketPrice] = useState(isRegisterPayment?"0":"");
     const [isFree, setIsFree] = useState(isRegisterPayment);
     const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(new Date());
     const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(startDate);
@@ -163,9 +162,9 @@ const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: st
                         <div className="flex flex-wrap -mx-3 mb-6">
                             {/* Giá vé */}
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     <span className="text-red-500">* </span> Giá vé
-                                </label>
+                                </p>
                                 <div className="relative">
                                     <input
   type="number"
@@ -278,9 +277,9 @@ const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: st
                         <div className="flex flex-wrap -mx-3 mb-6">
                             <div className="w-3/4 px-3 flex flex-col h-full">
                                 {/* Thông tin vé */}
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     Thông tin vé
-                                </label>
+                                </p>
                                 <div className="relative">
                                     <textarea
                                         className="w-full h-32 text-sm block appearance-none border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400"
@@ -296,9 +295,9 @@ const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: st
 
                             {/* Hình ảnh vé */}
                             <div className="w-1/4 px-3 flex flex-col h-full">
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     Hình ảnh vé
-                                </label>
+                                </p>
                                 <div className="h-full flex items-center justify-center">
                                     <ImageUpload
                                         image={imageTicket}

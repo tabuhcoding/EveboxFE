@@ -31,9 +31,9 @@ export default function CopyTicketDailog({ open, onClose, showtimes, currentShow
                 <DialogContent sx={{ overflowY: "auto", maxHeight: "70vh" }}>
                     <div className="content mx-4">
                         <div className="flex flex-wrap -mx-3 mb-6">
-                            <label className="block text-sm font-bold mb-2">
+                            <p className="block text-sm font-bold mb-2">
                                 Chọn suất diễn muốn copy loại vé
-                            </label>
+                            </p>
                             <div className="relative w-full">
                                 <select
                                     className="text-sm block w-full border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400 appearance-none text-gray-500"

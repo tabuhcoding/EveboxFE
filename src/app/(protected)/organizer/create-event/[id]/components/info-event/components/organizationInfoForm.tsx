@@ -16,9 +16,9 @@ export default function OrganizationInfoForm({
             <div className="flex flex-wrap -mx-3 mb-6">
                 {/* Logo ban tổ chức */}
                 <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                    <label className="block text-sm font-bold mb-2">
+                    <p className="block text-sm font-bold mb-2">
                         <span className="text-red-500">* </span> Upload hình ảnh
-                    </label>
+                    </p>
                     <div className=" text-center">
                         <ImageUpload
                             image={logoOrg}
@@ -46,9 +46,9 @@ export default function OrganizationInfoForm({
 
                     {/* Thông tin ban tổ chức */}
                     <div className="mt-5">
-                        <label className="block text-sm font-bold mb-2">
+                        <p className="block text-sm font-bold mb-2">
                             <span className="text-red-500">* </span> Thông tin ban tổ chức
-                        </label>
+                        </p>
                         <div className="relative">
                             <textarea
                                 className={`w-full h-32 text-sm block appearance-none border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400 ${errors.infoOrg ? "border-red-500" : "border-gray-400"}`}

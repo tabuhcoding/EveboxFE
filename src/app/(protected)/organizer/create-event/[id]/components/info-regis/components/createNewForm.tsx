@@ -16,8 +16,7 @@ import OneAnswer from "../../common/form/oneAns";
 // import { handleAddOption, handleDelete, toggleChecked } from "../../../libs/functions/question/multipleAnswer";
 import GroupRadioButton from "./groupRadioButton";
 import GroupRadioOption from "./groupRadioOption";
-import { FormInput } from "../../../libs/interface/question.interface";
-import { Form } from "../../../libs/interface/question.interface";
+import { FormInput,Form } from "../../../libs/interface/question.interface";
 
 interface CreateNewFormProps {
     form: Form;
@@ -209,9 +208,9 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                         {/* Phần nhập câu hỏi */}
                                         <div className="flex flex-wrap items-center -mx-3 mt-4">
                                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
-                                                <label className="block text-sm font-bold mb-2 text-right">
+                                                <p className="block text-sm font-bold mb-2 text-right">
                                                     <span className="text-red-500">*</span> Câu hỏi
-                                                </label>
+                                                </p>
                                             </div>
                                             <div className="w-full md:w-5/6 px-3 mb-6 md:mb-0">
                                                 <InputCountField
@@ -227,9 +226,9 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                         {/* Phần nhập mô tả (sử dụng thuộc tính regex để lưu mô tả, nếu cần) */}
                                         <div className="flex flex-wrap items-center -mx-3 mt-4">
                                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
-                                                <label className="block text-sm font-bold mb-2 text-right">
+                                                <p className="block text-sm font-bold mb-2 text-right">
                                                     Mô tả
-                                                </label>
+                                                </p>
                                             </div>
                                             <div className="w-full md:w-5/6 px-3 mb-6 md:mb-0">
                                                 <InputCountField

@@ -5,9 +5,7 @@ import { CalendarRange } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
-import { useRef } from "react";
-import { useState } from "react";
-
+import { useRef, useState} from "react";
 import { DateTimePickerProps } from "../../../libs/interface/comform.interface";
 
 export default function DateTimePicker({

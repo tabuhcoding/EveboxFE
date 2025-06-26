@@ -14,7 +14,6 @@ import AvatarUpload from "./avatarUpload";
 import useAvatar from "./libs/hooks/useAvatar";
 import useProfile from "./libs/hooks/useProfile";
 import MyFavoritePage from "./myFavoritePage";
-import OrganizerRegistrationPopup from './orgRegisterPopup';
 
 export default  function ProfileForm() {
     const [activeTab, setActiveTab] = useState("info");

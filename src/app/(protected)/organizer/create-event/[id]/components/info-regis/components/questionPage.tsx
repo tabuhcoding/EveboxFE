@@ -1,31 +1,23 @@
 "use client";
 
 /* Package System */
-import React from 'react';
+import React,  { useState } from 'react';
 import 'tailwindcss/tailwind.css';
-import { useState } from 'react';
 import { Divider } from '@nextui-org/react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 /* Package Application */
 import Navigation from '../../common/navigation';
 import FormQuestionClient from './formQuestion';
 import NotificationDialog from './dialog/notifiDialog';
 
-interface QuestionsPageProps {
-    showingIds: string[];
-}
-
-export default function QuestionsPage({ showingIds }: QuestionsPageProps) {
+export default function QuestionsPage() {
 const showtimes =
   typeof window !== "undefined"
     ? JSON.parse(localStorage.getItem("showtimes") || "[]")
     : [];
 
-const showtimeIds = showtimes.map((show: { id: string }) => show.id);    
-console.log("showtimes",showtimeIds);
-    const params = useParams();
-    const eventId = parseInt(params?.id?.toString() || "");
+    const showtimeIds = showtimes.map((show: { id: string }) => show.id);    
     const router = useRouter();
     const [step] = useState(3);
     const [btnValidate4, setBtnValidte4] = useState("");

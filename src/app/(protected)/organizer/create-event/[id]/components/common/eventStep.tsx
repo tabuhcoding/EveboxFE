@@ -1,9 +1,8 @@
 'use client';
 
 /* Package System */
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 /* Package Application */
 import InformationEventClientPage from '../info-event/page';
@@ -24,6 +23,7 @@ export default function EventStep({ eventId, setEventId }: EventStepProps) {
     const [showingIds, setShowingIds] = useState<string[]>([]);
 
     useEffect(() => {
+        console.log(showingIds);
         const validSteps = ["info", "showing", "setting", "questions"];
         if (step && !validSteps.includes(step)) {
             router.replace(`/organizer/create-event/${eventId}?step=info`);
@@ -35,7 +35,7 @@ export default function EventStep({ eventId, setEventId }: EventStepProps) {
             {step === 'info' && <InformationEventClientPage setEventId={setEventId} />}
             {step === 'showing' && <TimeAndTypeTickets setShowingIds={setShowingIds} />}
             {/* {step === 'setting' && <Setting eventId={eventId} />} */}
-            {step === 'questions' && <CreateQuestions showingIds={showingIds} />}
+            {step === 'questions' && <CreateQuestions/>}
         </>
     );
 }

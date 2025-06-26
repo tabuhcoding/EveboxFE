@@ -84,7 +84,7 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
             {input.regex && (
                 <div className="w-full px-3 ml-6 mt-3">
                     <div className="mb-6 md:mb-0">
-                        <label className="block text-sm font-bold"> Mô tả: </label>
+                        <p className="block text-sm font-bold"> Mô tả: </p>
                     </div>
 
                     <div className="px-10 mb-6 md:mb-0 ml-2">

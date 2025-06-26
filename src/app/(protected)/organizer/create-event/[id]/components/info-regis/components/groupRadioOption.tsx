@@ -13,7 +13,7 @@ export default function GroupRadioOption({eventScopeSelected, setEventScopeSelec
         <>
             <div className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
                 <div className="relative flex items-center space-x-2">
-                    <label className="text-base font-bold"> Phạm vi áp dụng </label>
+                    <p className="text-base font-bold"> Phạm vi áp dụng </p>
                 </div>
 
                 <RadioOption

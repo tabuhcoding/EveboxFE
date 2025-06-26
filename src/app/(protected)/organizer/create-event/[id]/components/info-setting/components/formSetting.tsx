@@ -50,16 +50,16 @@ export default function FormSettingClient({ onNextStep, btnValidate3 }: { onNext
             <div className="flex justify-center w-full mb-6">
                 <form className="w-full max-w-4xl mx-auto mb-6" onSubmit={handleSubmit} id="setting-form">
                     <div className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
-                        <label className="block text-base font-bold mb-2">
+                        <p className="block text-base font-bold mb-2">
                             <span className="text-red-500">* </span> Link dẫn đến sự kiện
-                        </label>
+                        </p>
 
                         {/* Tùy chỉnh đường dẫn */}
                         <div className="flex flex-wrap -mx-3 mb-6">
                             <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     <span className="text-red-500">* </span> Tùy chỉnh đường dẫn:
-                                </label>
+                                </p>
                             </div>
 
                             <div className="w-full md:w-3/4 px-3 mb-6 md:mb-0">
@@ -121,9 +121,9 @@ export default function FormSettingClient({ onNextStep, btnValidate3 }: { onNext
                     <div className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto mt-3" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
                         <div className="relative flex items-center space-x-2">
                             <Mail size={20} />
-                            <label className="text-base font-bold">
+                            <p className="text-base font-bold">
                                 Tin nhắn xác nhận cho người tham gia
-                            </label>
+                            </p>
                         </div>
                         <span className="text-sm">
                             Tin nhắn xác nhận này sẽ được gửi đến cho người tham gia sau khi đặt vé thành công
@@ -145,9 +145,9 @@ export default function FormSettingClient({ onNextStep, btnValidate3 }: { onNext
                     <div className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto mt-3 mb-6" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
                         <div className="relative flex items-center space-x-2">
                             <LayoutList size={20} />
-                            <label className="text-base font-bold">
+                            <p className="text-base font-bold">
                                 Tạo bảng câu hỏi cho người tham gia
-                            </label>
+                            </p>
                         </div>
 
                         <span className="text-sm mt-3">
@@ -159,9 +159,9 @@ export default function FormSettingClient({ onNextStep, btnValidate3 }: { onNext
 
                         <div className="relative flex items-center space-x-2 ">
                             {isToggleOn ? <ToggleRight size={30} onClick={() => setIsToggleOn(false)} className="cursor-pointer text-[#51DACF]" /> : <ToggleLeft size={30} onClick={() => setIsToggleOn(true)} className="cursor-pointer text-gray-500" />}
-                            <label className="text-sm cursor-pointer" onClick={() => setIsToggleOn(!isToggleOn)}>
+                            <p className="text-sm cursor-pointer" onClick={() => setIsToggleOn(!isToggleOn)}>
                                 Mở chức năng này (tạo câu hỏi ở bước sau)
-                            </label>
+                            </p>
                         </div>
                     </div>
                 </form>

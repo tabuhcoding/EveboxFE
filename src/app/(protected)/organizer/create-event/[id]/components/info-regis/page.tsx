@@ -1,11 +1,7 @@
 import QuestionsPage from "./components/questionPage";
 
-interface CreateQuestionsProps {
-    showingIds: string[];
-}
-
-export default function CreateQuestions({ showingIds }: CreateQuestionsProps) {
+export default function CreateQuestions() {
     return(
-        <QuestionsPage showingIds={showingIds} />
+        <QuestionsPage/>
     )
 }

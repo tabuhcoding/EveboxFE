@@ -164,9 +164,9 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                         <div className="flex flex-wrap -mx-3 mb-6">
                             {/* Giá vé */}
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     <span className="text-red-500">* </span> Giá vé
-                                </label>
+                                </p>
                                 <div className="relative">
                                     <input
   className={`w-full p-2 border rounded-md text-sm 
@@ -278,9 +278,9 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                         <div className="flex flex-wrap -mx-3 mb-6">
                             <div className="w-3/4 px-3 flex flex-col h-full">
                                 {/* Thông tin vé */}
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     Thông tin vé
-                                </label>
+                                </p>
                                 <div className="relative">
                                     <textarea
                                         className="w-full h-32 text-sm block appearance-none border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400"
@@ -296,9 +296,9 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
 
                             {/* Hình ảnh vé */}
                             <div className="w-1/4 px-3 flex flex-col h-full">
-                                <label className="block text-sm font-bold mb-2">
+                                <p className="block text-sm font-bold mb-2">
                                     Hình ảnh vé
-                                </label>
+                                </p>
                                 <div className="h-full flex items-center justify-center">
                                 <ImageUpload
                                                                         image={imageTicket}

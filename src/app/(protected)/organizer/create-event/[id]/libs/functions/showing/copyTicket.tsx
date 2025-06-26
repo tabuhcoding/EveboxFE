@@ -9,7 +9,7 @@ selectedShowtimeId: string | null, showtimes: Showtime[], currentShowtimeId: str
     }
 
     const sourceShowtime = showtimes.find(show => show.id === selectedShowtimeId);
-    const targetShowtimeIndex = showtimes.findIndex(show => show.startDate?.toISOString() == startDate?.toISOString() && show.endDate?.toISOString() === endDate?.toISOString());
+    const targetShowtimeIndex = showtimes.findIndex(show => show.startDate?.toISOString() === startDate?.toISOString() && show.endDate?.toISOString() === endDate?.toISOString());
 
     if (sourceShowtime && targetShowtimeIndex !== -1) {
         const updatedShowtimes = [...showtimes];

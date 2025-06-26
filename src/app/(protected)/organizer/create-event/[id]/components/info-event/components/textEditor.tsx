@@ -16,8 +16,7 @@ import Youtube from '@tiptap/extension-youtube'
 /* Package Application */
 import MenuBar from "./menu-bar";
 // import '@/styles/admin/pages/CreateEvent.css'
-import DescriptionWithAI from "./descriptionWithAI";
-import { GenerationProps } from "./descriptionWithAI";
+import DescriptionWithAI,{ GenerationProps } from "./descriptionWithAI";
 
 interface TextEditorProps {
     content: string;

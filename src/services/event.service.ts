@@ -18,7 +18,6 @@ import { eventService } from "./instance.service";
 
 import { CreateEventDto } from "types/models/event/createEvent.dto";
 import { Province } from "types/models/event/location.interface";
-import { resendOtp } from "./auth.service";
 import { EventDetailResponse } from "@/types/models/event/eventdetail/event.interface";
 import { UpdateEventDto, UpdateEventResponseDto } from "@/types/models/event/updateEvent.interface";
 

@@ -1,8 +1,7 @@
 'use client';
 
 //Package System
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams} from 'next/navigation';
 import { Check } from 'lucide-react';
 
 //Package App
