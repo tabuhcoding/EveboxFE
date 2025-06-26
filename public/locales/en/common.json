@@ -392,5 +392,19 @@
     "viewDetail": "View detail",
     "yes": "Yes",
     "no": "No",
-    "findByNameOrIdEvent": "Find by event name or id"
+    "findByNameOrIdEvent": "Find by event name or id",
+    "errorWhenUpdate": "Error when update event",
+    "addedIsSpecial": "Added event to special event",
+    "removedIsSpecial": "Removed event from special event",
+    "select": "Select",
+    "reject": "Reject",
+    "addedIsOnlyOnEve": "Added event to only on EveBox event",
+    "removedIsOnlyOnEve": "Added event to only on EveBox event",
+    "addedTo": "Added to",
+    "removedFrom": "Removed from",
+    "loadingRequest": "Loading request...",
+    "errorWhenFetchEvents": "Error when fetch events data",
+    "isSpecialEvent": "Special event",
+    "isOnlyOnEve": "Only on EveBox",
+    "noEventMatchForKeyword": "No events match for search keyword"
 }
