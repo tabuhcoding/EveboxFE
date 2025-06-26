@@ -2,7 +2,7 @@
 
 /* Package System */
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 /* Package Application */
 import InformationEventClientPage from '../info-event/page';

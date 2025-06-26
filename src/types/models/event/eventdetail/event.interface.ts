@@ -74,3 +74,31 @@ export interface EventDetailResponse {
   message: string;
   data: EventDetailResponseDto;
 }
+
+export interface DescriptionProps {
+    description: string;
+}
+
+export interface MoreInformationProps {
+    title: string;
+    location: string;
+    locationsString: string;
+}
+
+export interface EventDetail {
+  id: number;
+  title: string;
+  description: string;
+  startDate: string;
+  venue: string;
+  showing: Showing[];
+  minPrice: number;
+  imgLogoUrl: string ;
+  imgPosterUrl: string ;
+  orgName: string;
+  locationsString: string;
+  orgDescription: string;
+  status:string;
+  totalClicks?: number;
+  lastScore?: number;
+}
