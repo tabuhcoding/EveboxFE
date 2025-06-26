@@ -9,8 +9,10 @@ import {
   EventAdminParams,
   EventManagementApiResponse,
   UpdateEventAdminPayload,
-  EventDetailAdmin
+  EventDetailAdmin,
 } from "@/types/models/admin/eventManagement.interface";
+
+import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
@@ -119,6 +121,37 @@ export async function getEventsAdmin(params: EventAdminParams, accessToken: stri
     return res.data as BaseApiResponse<EventManagementApiResponse>;
   } catch (error: any) {
     console.error("Error get events by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getSpecialEventsManagment(params: SpecialEventAdminParams, accessToken: string): Promise<BaseApiResponse<SpecialEventApiResponse>> {
+  try {
+    const cleanedEntries = Object.entries(params).filter(([_, value]) => value !== undefined);
+    const cleanedParams = {
+      ...Object.fromEntries(cleanedEntries),
+      page: params.page,
+      limit: params.limit
+    } as SpecialEventAdminParams;
+    
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(END_POINT_LIST.ADMIN.EVENTS_SPECIAL, {
+      params: cleanedParams,
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get special events by admin');
+
+    return res.data as BaseApiResponse<SpecialEventApiResponse>;
+  } catch (error: any) {
+    console.error("Error get special events by admin:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
