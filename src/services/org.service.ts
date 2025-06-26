@@ -63,7 +63,7 @@ export async function createOrgPaymentInfo(
 export async function createShowing(
   eventId: number,
   payload: CreateShowingDto
-): Promise<String> {
+): Promise<string> {
   if (typeof window === "undefined") {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/org/showing/${eventId}`,
@@ -85,7 +85,7 @@ export async function createShowing(
     const json: BaseApiResponse<CreateShowingResponseDto> = await res.json();
     return json.data.data;
   } else {
-    const res = await orgService.post<BaseApiResponse<String>>(
+    const res = await orgService.post<BaseApiResponse<string>>(
       `${END_POINT_LIST.ORG_SHOWING.SHOWING}/${eventId}`,
       payload
     );

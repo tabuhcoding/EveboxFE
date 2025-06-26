@@ -37,7 +37,7 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
                             {input.options?.map((opt, i) => (
                                 <label key={`input-${input.id}-option-${i}`} className="flex items-center mr-4">
                                     <input type="radio" name={`checkbox-group-${input.id}`} className="w-3.5 h-3.5 accent-blue-500" />
-                                    <span className="text-sm ml-2">{opt.optionText}</span>
+                                    <span className="text-sm ml-2">{opt}</span>
                                 </label>
                             ))}
                         </div>
@@ -54,7 +54,7 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
                             {input.options?.map((opt, i) => (
                                 <label key={`input-${input.id}-option-${i}`} className="flex items-center mr-4">
                                     <input type="radio" name={`checkbox-group-${input.id}`} className="w-3.5 h-3.5 accent-blue-500" />
-                                    <span className="text-sm ml-2">{opt.optionText}</span>
+                                    <span className="text-sm ml-2">{opt}</span>
                                 </label>
                             ))}
                         </div>
@@ -72,7 +72,7 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
                                 {input.options?.map((opt, i) => (
                                     <label key={`input-${input.id}-option-${i}`} className="flex items-center mr-4">
                                         <input type="checkbox" name={`checkbox-group-${input.id}`} className="w-3.5 h-3.5 accent-blue-500" />
-                                        <span className="text-sm ml-2">{opt.optionText}</span>
+                                        <span className="text-sm ml-2">{opt}</span>
                                     </label>
                                 ))}
                             </div>
