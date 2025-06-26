@@ -4,6 +4,7 @@ import { PaymentMethod, PaymentCheckoutPayload, PaymentCheckoutResponse, OrderRe
 
 import { END_POINT_LIST } from "./endpoint";
 import { bookingService, paymentService } from "./instance.service";
+import { isAxiosError } from "axios";
 
 export async function getPaymentMethodStatus(): Promise<BaseApiResponse<PaymentMethod[]>> {
   try {
@@ -16,9 +17,12 @@ export async function getPaymentMethodStatus(): Promise<BaseApiResponse<PaymentM
     if (!res) throw Error('Failed to get payment method status');
 
     return res.data as BaseApiResponse<PaymentMethod[]>;
-  } catch (error: any) {
-    console.error("Error get status of payment methods:", error?.response?.data?.message);
-    throw new Error(`${error?.response?.data?.message}`);
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error("Error get status of payment methods:", error.response?.data?.message);
+      throw new Error(`${error.response?.data?.message}`);
+    }
+    throw new Error('Unknown error occurred while getting payment method status');
   }
 }
 
@@ -34,9 +38,12 @@ export async function checkoutPayment(payload: PaymentCheckoutPayload, accessTok
     if (!res) throw new Error('Failed to checkout payment');
 
     return res.data as BaseApiResponse<PaymentCheckoutResponse>;
-  } catch (error: any) {
-    console.error("Error checkout payment:", error?.response?.data?.message);
-    throw new Error(`${error?.response?.data?.message}`);
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error("Error checkout payment:", error.response?.data?.message);
+      throw new Error(`${error.response?.data?.message}`);
+    }
+    throw new Error('Unknown error occurred during payment checkout');
   }
 }
 
@@ -52,8 +59,11 @@ export async function getUserOrderByOriginalId(orderCode: string, accessToken?: 
     if (!res) throw new Error('Failed to get user order');
 
     return res.data as BaseApiResponse<OrderResponse>;
-  } catch (error: any) {
-    console.error("Error checkout payment:", error?.response?.data?.message);
-    throw new Error('Failed to get user order');
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error("Error get user order:", error.response?.data?.message);
+      throw new Error(`${error.response?.data?.message}`);
+    }
+    throw new Error('Unknown error occurred while getting user order');
   }
 }

@@ -27,7 +27,7 @@ export class END_POINT_LIST {
     ALL_CATEGORIES: "/api/categories",
     GET_FRONT_DISPLAY: "/api/event/front-display",
     GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids",
-    GET_SEARCH_EVENT: "/api/event/search"
+    GET_SEARCH_EVENT: "/api/event/search",
   };
 
   static readonly SHOWING = {
@@ -51,6 +51,8 @@ export class END_POINT_LIST {
   }
 
   static readonly ORG_SHOWING = {
+    FORM_ALL:"/api/org/showing/form/all",
+    FORM_CONNECT:"/api/org/showing/connect-form",
     SHOWING_FORM: "/api/org/showing/form",
     SHOWING: "/api/org/showing",
     SHOWING_TIME: "/api/org/showing/showingTime",
@@ -86,7 +88,7 @@ export class END_POINT_LIST {
 
   static readonly LOCATION = {
     GET_ALL_LOCATIONS: "/api/location/all",
-    GET_ALL_DISTRICTS: "/api/all-districts"
+    GET_ALL_DISTRICTS: "/api/location/all-districts"
   };
 
   static readonly PAYMENT = {
