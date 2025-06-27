@@ -404,5 +404,15 @@
   "isOnlyOnEve": "Chỉ có trên EveBox",
   "errorWhenFetchShowings": "Lỗi khi tải dữ liệu suất diễn",
   "noShowingMatchForKeyword": "Không có suất diễn nào khớp với từ khóa tìm kiếm",
-  "showDate": "Ngày diễn"
+  "showDate": "Ngày diễn",
+  "unknownStatus": "Trạng thái không xác định",
+  "showingInfo": "Thông tin suất diễn",
+  "sale_closed": "Ngừng bán",
+  "ticketName": "Tên vé",
+  "soldTickets": "Số vé đã bán",
+  "free": "Miễn phí",
+  "detailTime": "Thời gian chi tiết",
+  "startTime": "Thời gian bắt đầu",
+  "endTime": "Thời gian kết thúc",
+  "ticketTypeManagement": "Quản lý các loại vé"
 }

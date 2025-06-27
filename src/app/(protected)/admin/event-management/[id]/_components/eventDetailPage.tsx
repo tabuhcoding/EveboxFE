@@ -33,11 +33,11 @@ export default function EventDetailPage({ eventId }: { eventId: number }) {
           setEvent(res.data);
         }
         else {
-          toast.error(`Lỗi khi tải dữ liệu sự kiện: ${res?.message}`)
+          toast.error(`${transWithFallback('errorWhenFetchEvents', 'Lỗi khi tải dữ liệu sự kiện')}: ${res?.message}`)
         }
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu sự kiện', error);
-        toast.error(`Lỗi khi tải dữ liệu sự kiện: ${error}`)
+        console.error(`${transWithFallback('errorWhenFetchEvents', 'Lỗi khi tải dữ liệu sự kiện')}`, error);
+        toast.error(`${transWithFallback('errorWhenFetchEvents', 'Lỗi khi tải dữ liệu sự kiện')}: ${error}`)
       } finally {
         setIsLoadingEvent(false);
       }
