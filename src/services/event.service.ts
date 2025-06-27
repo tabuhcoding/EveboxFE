@@ -292,6 +292,7 @@ export async function getTicketTypeDetailAdmin(showingId: string, ticketTypeId: 
 export async function getSearchEvents({
   title,
   type,
+  provinceId,
   startDate,
   endDate,
   minPrice,
@@ -303,6 +304,7 @@ export async function getSearchEvents({
     const params = new URLSearchParams();
     params.append("title", title);
     if (type) params.append("type", type);
+    if (provinceId) params.append("location", provinceId);
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
     if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
@@ -319,7 +321,32 @@ export async function getSearchEvents({
   }
 }
 
+export interface Location {
+  id: number;
+  nameVi: string;
+  nameEn: string;
+}
 
+export const getAllProvinces = async (): Promise<Location[]> => {
+  try {
+    const res = await eventService.get("/api/location/all-districts");
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch provinces");
+    }
+
+    const provinces: Location[] = res.data.map((province: any) => ({
+      id: province.id,
+      nameVi: province.name.vi,
+      nameEn: province.name.en
+    }));
+
+    return provinces;
+  } catch (error) {
+    console.error("Error fetching provinces:", error);
+    throw error;
+  }
+}
 
 export async function createEvent(payload: CreateEventDto, accessToken?: string): Promise<{ id: number }> {
   if (typeof window === "undefined") {
@@ -428,5 +455,5 @@ export const getEventDetail = async (
 
     return res.data;
   }
-};
+}
 
