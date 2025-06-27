@@ -18,7 +18,7 @@ export default function ShowingDetailLoading() {
       </div>
 
       {/* Event Date and Time */}
-      <h2 className="h-6 bg-gray-300 w-1/4 mb-3 mt-6 rounded-md"></h2>
+      <h2 className="h-6 bg-gray-300 w-1/4 mb-3 mt-6 rounded-md"><span className="sr-only">Đang tải...</span></h2>
       <div className="detail-event max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6 mt-3 mb-6">
         <p className="h-4 bg-gray-300 w-3/4 mb-2 rounded-md"></p>
         <p className="h-4 bg-gray-300 w-3/4 mb-2 rounded-md"></p>
@@ -26,7 +26,7 @@ export default function ShowingDetailLoading() {
       </div>
 
       {/* Ticket Types */}
-      <h2 className="h-6 bg-gray-300 w-1/4 mb-3 mt-6 rounded-md"></h2>
+      <h2 className="h-6 bg-gray-300 w-1/4 mb-3 mt-6 rounded-md"><span className="sr-only">Đang tải...</span></h2>
       <div className="h-40 bg-gray-300 rounded-md mb-6"></div>
     </div>
   );
