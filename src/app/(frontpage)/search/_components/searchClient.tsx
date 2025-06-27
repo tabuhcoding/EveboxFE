@@ -1,13 +1,14 @@
 'use client';
 
 /* Package System */
-import { CalendarDate, RangeValue } from '@nextui-org/react';
+import { CalendarDate } from '@internationalized/date';
+import { RangeValue } from '@react-types/shared';
 import { ChevronDown, MousePointerClick, Bell, Heart, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import 'tailwindcss/tailwind.css';
@@ -16,7 +17,7 @@ import 'tailwindcss/tailwind.css';
 import '@/styles/admin/pages/Dashboard.css';
 import AlertDialog from '@/components/common/alertDialog';
 import { addEventOrOrgFavourite, removeEventFavourite, removeOrgFavourite } from '@/services/auth.service';
-import { getAllCategories, getSearchEvents } from '@/services/event.service';
+import { getAllCategories, getAllProvinces, getSearchEvents, Province } from '@/services/event.service';
 import { Category } from '@/types/models/dashboard/frontDisplay';
 import { SearchEventsResponse } from '@/types/models/dashboard/searchEvents.interface';
 import Pagination from 'app/(protected)/admin/event-special-management/_common/pagination';
@@ -44,16 +45,93 @@ export default function SearchClient() {
   const [href, setHref] = useState("");
   const { data: session } = useSession();
   const [isSearching, setIsSearching] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<Province | null>(null);
+  const [locations, setLocations] = useState<Province[]>([]);
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const dropdownLocationRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const dropdownEventRef = useRef<HTMLDivElement | null>(null);
   const t = useTranslations('common');
+  const locale = useLocale();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      const data = await getAllProvinces();
+      setLocations(data);
+    };
+    loadLocations();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownLocationRef.current && !dropdownLocationRef.current.contains(event.target as Node)) {
+        setIsLocationOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (locations.length === 0) return;
+    const locationParam = searchParams.get('provinceId');
+    if (locationParam) {
+      const matched = locations.find(loc => loc.id.toString() === locationParam);
+      setSelectedLocation(matched || null);
+    } else {
+      setSelectedLocation(null);
+    }
+  }, [searchParams, locations]);
+
+
+  useEffect(() => {
+    const initFromParams = () => {
+      const title = searchParams.get('title') || '';
+      const type = searchParams.get('type') || '';
+      const startDate = searchParams.get('startDate');
+      const endDate = searchParams.get('endDate');
+      const minPrice = parseInt(searchParams.get('minPrice') || '0');
+      const maxPrice = parseInt(searchParams.get('maxPrice') || '20000000');
+      const pageParam = parseInt(searchParams.get('page') || '1');
+      const locationParam = searchParams.get('provinceId');
+      if (locationParam) {
+        const matched = locations.find(loc => loc.id.toString() === locationParam);
+        setSelectedLocation(matched || null);
+      } else {
+        setSelectedLocation(null);
+      }
+
+      setSearchText(title);
+      setSelectedOptions(type ? type.split(',') : []);
+      setPage(pageParam);
+      setPriceRange([minPrice, maxPrice]);
+
+      if (startDate && endDate) {
+        setDateRange({
+          start: new CalendarDate(
+            +startDate.slice(0, 4),
+            +startDate.slice(5, 7),
+            +startDate.slice(8, 10)
+          ),
+          end: new CalendarDate(
+            +endDate.slice(0, 4),
+            +endDate.slice(5, 7),
+            +endDate.slice(8, 10)
+          ),
+        });
+      } else {
+        setDateRange(null);
+      }
+    };
+    initFromParams();
+  }, [searchParams]);
 
   const loadEvents = async () => {
     setLoading(true);
@@ -61,6 +139,7 @@ export default function SearchClient() {
       const response = await getSearchEvents({
         title: searchText.trim() || searchParams.get('title') || '',
         type: selectedOptions.join(',') || searchParams.get('type') || '',
+        provinceId: selectedLocation?.id.toString() || searchParams.get('provinceId') || '',
         startDate: dateRange?.start?.toString() || searchParams.get('startDate') || undefined,
         endDate: dateRange?.end?.toString() || searchParams.get('endDate') || undefined,
         minPrice: priceRange[0],
@@ -81,36 +160,52 @@ export default function SearchClient() {
     loadEvents();
   }, [page]);
 
-  const applyFilters = async () => {
+  const applyFilters = async (customPage?: number) => {
     const query: Record<string, string> = {
       title: searchText.trim(),
       minPrice: priceRange[0].toString(),
       maxPrice: priceRange[1].toString(),
-      page: page.toString(),
+      page: (customPage ?? page).toString(),
       limit: limit.toString(),
     };
     if (selectedOptions.length > 0) query.type = selectedOptions.join(',');
+    if (selectedLocation) query.provinceId = selectedLocation.id.toString();
     if (dateRange?.start) query.startDate = dateRange.start.toString();
     if (dateRange?.end) query.endDate = dateRange.end.toString();
 
     setIsSearching(true);
-    const queryString = new URLSearchParams(query).toString();
-    router.push(`/search?${queryString}`);
+    router.push(`/search?${new URLSearchParams(query).toString()}`);
 
-    await loadEvents();
-    setIsSearching(false);
+    try {
+      const response = await getSearchEvents({
+        title: query.title,
+        type: query.type || '',
+        startDate: query.startDate,
+        endDate: query.endDate,
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+        pages: Number(query.page),
+        limit: limit,
+      });
+      setEvents(response);
+      setPage(Number(query.page));
+    } catch (err) {
+      console.error('Error searching:', err);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handlePrevious = () => {
     if (page > 1) {
-      setPage(page - 1);
+      applyFilters(page - 1);
     }
   };
 
   const handleNext = () => {
     const totalPages = events?.pagination?.totalPages || 0;
     if (page < totalPages) {
-      setPage(page + 1);
+      applyFilters(page + 1);
     }
   };
 
@@ -256,23 +351,23 @@ export default function SearchClient() {
   }
 
   const resetFilters = async () => {
-  setSearchText('');
-  setDateRange(null);
-  setSelectedOptions([]);
-  setPriceRange([0, 20000000]);
-  setPage(1);
-};
+    setSearchText('');
+    setDateRange(null);
+    setSelectedOptions([]);
+    setPriceRange([0, 20000000]);
+    setSelectedLocation(null);
+    setPage(1);
+  };
 
   return (
     <div className="min-h-screen flex flex-col mb-8">
       <main className="flex-1">
-        <div className="flex justify-center mt-8 px-4">
+        <div className="flex justify-center mt-8">
           <div className="w-full md:w-5/6">
             <div className="flex flex-col gap-4 mb-8">
               <h2 className="text-xl md:text-2xl font-bold whitespace-nowrap">{transWithFallback("searchResult", "Kết quả tìm kiếm")} </h2>
-
               <div className="flex flex-wrap md:flex-row justify-between items-start md:items-center gap-4">
-                <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
+                <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
                   <div className="w-full md:w-60">
                     <input
                       type="text"
@@ -289,14 +384,14 @@ export default function SearchClient() {
                   </div>
 
                   <div className="relative w-full md:w-60 flex-shrink-0 bg-white border border-gray-300 rounded-lg p-1 ">
-                    <DatePicker 
-  value={dateRange} 
-  onDateRangeChange={setDateRange} 
-/>
+                    <DatePicker
+                      value={dateRange}
+                      onDateRangeChange={setDateRange}
+                    />
                   </div>
 
                   <div
-                    className="relative w-full md:w-60 flex-shrink-0 bg-white border border-gray-300 p-1 rounded-lg "
+                    className="relative w-full md:w-48 flex-shrink-0 bg-white border border-gray-300 p-1 rounded-lg "
                     ref={dropdownEventRef}
                   >
                     <button
@@ -337,46 +432,74 @@ export default function SearchClient() {
                     )}
                   </div>
 
-                  <div className="w-full items-center md:w-80 flex-shrink-0">
-                    {/* <RangeSlider onChange={setPriceRange} /> */}
-                    <RangeSlider 
-  value={priceRange}
-  onChange={setPriceRange}
-/>
+                  <div className="relative w-full md:w-60 flex-shrink-0 bg-white border border-gray-300 p-1 rounded-lg" ref={dropdownLocationRef}>
+                    <button
+                      onClick={() => setIsLocationOpen(!isLocationOpen)}
+                      className="w-full bg-white rounded p-1.5 flex justify-between items-center text-gray-500"
+                      style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
+                      <span>
+                        {locale === 'en' ? selectedLocation?.nameEn : selectedLocation?.nameVi || transWithFallback('locationHint', "Chọn địa điểm")}
+                      </span>
+                      <ChevronDown size={16} className="text-gray-500" />
+                    </button>
+
+                    {isLocationOpen && (
+                      <div className="absolute w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] max-h-64 overflow-y-auto z-20">
+                        {locations.map((provinceId) => (
+                          <div
+                            key={provinceId.id}
+                            role="button"
+                            tabIndex={0}
+                            className="p-2 hover:bg-[#0C4762] hover:bg-opacity-[0.31] cursor-pointer"
+                            onClick={() => {
+                              setSelectedLocation(provinceId);
+                              setIsLocationOpen(false);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                setSelectedLocation(provinceId);
+                                setIsLocationOpen(false);
+                              }
+                            }}
+                            aria-pressed={selectedLocation?.id === provinceId.id}
+                          >
+                            {locale === 'en' ? provinceId.nameEn : provinceId.nameVi}
+                          </div>
+                        ))}
+
+
+                      </div>
+                    )}
+                  </div>
+
+
+                  <div className="w-full items-center md:w-72 flex-shrink-0">
+                    <RangeSlider
+                      value={priceRange}
+                      onChange={setPriceRange}
+                    />
                   </div>
                 </div>
 
-                {/* <div className="w-full md:w-auto">
+                <div className="w-full md:w-auto flex gap-2">
                   <button
                     className="bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-6 rounded-lg shadow"
-                    onClick={applyFilters}
+                    onClick={() => applyFilters(1)}
                   >
                     {isSearching ? (
                       <Loader2 size={20} className="text-white animate-spin" />
                     ) : (
                       transWithFallback("search", "Áp dụng")
                     )}
-
                   </button>
-                </div> */}
-                <div className="w-full md:w-auto flex gap-2">
-  <button
-    className="bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-6 rounded-lg shadow"
-    onClick={applyFilters}
-  >
-    {isSearching ? (
-      <Loader2 size={20} className="text-white animate-spin" />
-    ) : (
-      transWithFallback("search", "Áp dụng")
-    )}
-  </button>
-  <button
-    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow"
-    onClick={resetFilters}
-  >
-    {transWithFallback("reset", "Thiết lập lại")}
-  </button>
-</div>
+                  <button
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow"
+                    onClick={resetFilters}
+                  >
+                    {transWithFallback("reset", "Thiết lập lại")}
+                  </button>
+                </div>
 
               </div>
             </div>
@@ -494,4 +617,3 @@ export default function SearchClient() {
     </div>
   );
 }
-

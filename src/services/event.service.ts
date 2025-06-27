@@ -89,6 +89,7 @@ export async function getFormOfShowing(showingId: string): Promise<BaseApiRespon
 export async function getSearchEvents({
   title,
   type,
+  provinceId,
   startDate,
   endDate,
   minPrice,
@@ -100,6 +101,7 @@ export async function getSearchEvents({
     const params = new URLSearchParams();
     params.append("title", title);
     if (type) params.append("type", type);
+    if (provinceId) params.append("location", provinceId);
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
     if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
@@ -115,4 +117,31 @@ export async function getSearchEvents({
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
+
+export interface Province {
+  id: number;
+  nameVi: string;
+  nameEn: string;
+}
+
+export const getAllProvinces = async (): Promise<Province[]> => {
+  try {
+    const res = await eventService.get("/api/location/all-districts");
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch provinces");
+    }
+
+    const provinces: Province[] = res.data.map((province: any) => ({
+      id: province.id,
+      nameVi: province.name.vi,
+      nameEn: province.name.en
+    }));
+
+    return provinces;
+  } catch (error) {
+    console.error("Error fetching provinces:", error);
+    throw error;
+  }
+};
 
