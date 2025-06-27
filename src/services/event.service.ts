@@ -14,7 +14,7 @@ import {
 
 import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement.interface";
 
-import { ShowingApiResponse, ShowingAdminParams } from "@/types/models/admin/showingManagement.interface";
+import { ShowingApiResponse, ShowingAdminParams, ShowingDetail } from "@/types/models/admin/showingManagement.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
@@ -233,6 +233,29 @@ export async function getShowingsByAdmin(params: ShowingAdminParams, accessToken
     return res.data as BaseApiResponse<ShowingApiResponse>;
   } catch (error: any) {
     console.error("Error get showings by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getShowingDetailAdmin(id: string, accessToken: string): Promise<BaseApiResponse<ShowingDetail>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.SHOWINGS}/${id}`, {
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get event detail');
+
+    return res.data as BaseApiResponse<ShowingDetail>;
+  } catch (error: any) {
+    console.error("Error get showing detail by admin:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
