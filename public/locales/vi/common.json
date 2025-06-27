@@ -409,10 +409,17 @@
   "showingInfo": "Thông tin suất diễn",
   "sale_closed": "Ngừng bán",
   "ticketName": "Tên vé",
-  "soldTickets": "Số vé đã bán",
+  "soldTickets": "Số lượng vé đã bán",
   "free": "Miễn phí",
   "detailTime": "Thời gian chi tiết",
   "startTime": "Thời gian bắt đầu",
   "endTime": "Thời gian kết thúc",
-  "ticketTypeManagement": "Quản lý các loại vé"
+  "ticketTypeManagement": "Quản lý các loại vé",
+  "errorWhenFetchTicketType": "Lỗi khi tải dữ liệu loại vé",
+  "ticketTypeDetailInfo": "Thông tin chi tiết loại vé",
+  "saleOpenTime": "Thời gian mở bán",
+  "saleEndTime": "Thời gian ngừng bán",
+  "maxQtyPerOrder": "Số lượng vé mua tối đa/lần",
+  "minQtyPerOrder": "Số lượng vé mua tối thiểu/lần",
+  "totalTicketsAmount": "Tổng số lượng vé"
 }

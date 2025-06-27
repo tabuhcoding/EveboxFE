@@ -14,7 +14,12 @@ import {
 
 import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement.interface";
 
-import { ShowingApiResponse, ShowingAdminParams, ShowingDetail } from "@/types/models/admin/showingManagement.interface";
+import { 
+  ShowingApiResponse,
+  ShowingAdminParams,
+  ShowingDetail,
+  ShowingInTicketTypeDetail
+} from "@/types/models/admin/showingManagement.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
@@ -256,6 +261,30 @@ export async function getShowingDetailAdmin(id: string, accessToken: string): Pr
     return res.data as BaseApiResponse<ShowingDetail>;
   } catch (error: any) {
     console.error("Error get showing detail by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getTicketTypeDetailAdmin(showingId: string, ticketTypeId: string, accessToken: string): Promise<BaseApiResponse<ShowingInTicketTypeDetail>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.SHOWINGS}/${showingId}/${ticketTypeId}`, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to get ticket type detail by admin');
+
+    console.log("🚀 ~ getTicketTypeDetailAdmin ~ res.data:", res.data)
+    return res.data as BaseApiResponse<ShowingInTicketTypeDetail>;
+  } catch (error: any) {
+    console.error("Error get ticket type detail by admin:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }

@@ -56,7 +56,7 @@ export default function TicketTable({ showingID, ticketTypes }: TicketTableProps
           </span>
         );
       default:
-        return <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#F4EEEE] text-[#979797] border-[#F4EEEE]">Không xác định</span>;
+        return <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#F4EEEE] text-[#979797] border-[#F4EEEE]">{transWithFallback('unknownStatus', 'Trạng thái không xác định')}</span>;
     }
   };
 

@@ -94,3 +94,30 @@ export interface TicketTableProps {
   showingID: string;
   ticketTypes: TicketTypeShowingDetail[];
 }
+
+export interface TicketTypeDetailProps {
+  id: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  description: string;
+  price: number;
+  maxQtyPerOrder: number;
+  minQtyPerOrder: number;
+  quantity: number;
+  sold: number;
+  status: string;
+  imageUrl: string;
+}
+
+export interface ShowingInTicketTypeDetail {
+  id: string;
+  event: Event;
+  startTime: string;
+  endTime: string;
+  ticketType: TicketTypeDetailProps;
+}
+
+export interface TicketTypeDetailApiReponse {
+  data: ShowingInTicketTypeDetail;
+}

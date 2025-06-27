@@ -115,7 +115,7 @@ export default function ShowingDetailPage({ showingId }: { showingId: string }) 
         <div className="seat-map px-8">
           {showing?.seatMapId === 0 ? '' : (
             <>
-              <h2 className="text-xl font-semibold mt-6 mb-3">Seat map</h2>
+              <h2 className="text-xl font-semibold mt-6 mb-3">{transWithFallback('seatmap', 'Sơ đồ chỗ ngồi')}</h2>
               <div className="flex justify-center mb-6">
                 <img className="rounded-md" alt="Seat map"
                   src={"https://res.cloudinary.com/de66mx8mw/image/upload/v1743393414/background.jpg.jpg"}

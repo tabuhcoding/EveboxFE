@@ -419,5 +419,12 @@
     "detailTime": "Detail time",
     "startTime": "Start time",
     "endTime": "End time",
-    "ticketTypeManagement": "Ticket type management"
+    "ticketTypeManagement": "Ticket type management",
+    "errorWhenFetchTicketType": "Error when fetch ticket type data",
+    "ticketTypeDetailInfo": "Ticket type detail information",
+    "saleStartTime": "Sale start time",
+    "saleEndTime": "Sale end time",
+    "maxQtyPerOrder": "Max quantiy per order",
+    "minQtyPerOrder": "Min quantiy per order",
+    "totalTicketsAmount": "Total tickets amount"
 }
