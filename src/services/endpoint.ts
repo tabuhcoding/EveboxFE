@@ -27,7 +27,7 @@ export class END_POINT_LIST {
     ALL_CATEGORIES: "/api/categories",
     GET_FRONT_DISPLAY: "/api/event/front-display",
     GET_FRONT_DISPLAY_BY_IDS: "/api/event/fd-by-ids",
-    GET_SEARCH_EVENT: "/api/event/search"
+    GET_SEARCH_EVENT: "/api/event/search",
   };
 
   static readonly SHOWING = {
@@ -40,7 +40,10 @@ export class END_POINT_LIST {
     SELECT_SEAT: '/api/booking/selectSeat',
     SUBMIT_FORM: '/api/booking/submitForm',
     GET_REDIS_SEAT: "/api/booking/getRedisSeat",
-    UNSELECT_SEAT: "/api/booking/unSelectSeat"
+    UNSELECT_SEAT: "/api/booking/unSelectSeat",
+    GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
+    GET_ORDER_BY_ID: "/api/ticket/getOrderById",
+    GET_USER_ORDER: "/api/ticket/getUserOrder",
   }
 
   static readonly ORG_EVENT = {
@@ -48,6 +51,8 @@ export class END_POINT_LIST {
   }
 
   static readonly ORG_SHOWING = {
+    FORM_ALL:"/api/org/showing/form/all",
+    FORM_CONNECT:"/api/org/showing/connect-form",
     SHOWING_FORM: "/api/org/showing/form",
     SHOWING: "/api/org/showing",
     SHOWING_TIME: "/api/org/showing/showingTime",
@@ -76,12 +81,18 @@ export class END_POINT_LIST {
 
   static readonly ADMIN = {
     EVENTS: "/api/admin/event",
+    EVENT_DETAIL: "/api/admin/event/detail",
     SHOWINGS: "/api/admin/showing",
     EVENTS_SPECIAL: "api/admin/event-special"
-  }
+  };
 
   static readonly LOCATION = {
     GET_ALL_LOCATIONS: "/api/location/all",
-    GET_ALL_DISTRICTS: "/api/all-districts"
+    GET_ALL_DISTRICTS: "/api/location/all-districts"
+  };
+
+  static readonly PAYMENT = {
+    GET_METHOD_STATUS: '/api/payment/getPaymentMethodStatus',
+    CHECKOUT: '/api/payment/checkout'
   }
 }

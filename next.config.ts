@@ -9,3 +9,16 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// import type { NextConfig } from "next";
+
+// const nextConfig: NextConfig = {
+//   /* config options here */
+//   reactStrictMode: true,
+//   images: {
+//     domains: ["images.tkbcdn.com", "salt.tkbcdn.com", "res.cloudinary.com", "fastly.picsum.photos"], // Add all external domains here
+//   },
+//   output: 'standalone',
+// };
+
+// export default nextConfig;

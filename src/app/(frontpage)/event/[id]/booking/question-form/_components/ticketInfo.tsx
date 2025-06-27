@@ -74,7 +74,10 @@ export default function TicketInformation({
       if (res.statusCode === 200) {
         localStorage.setItem('submittedForm', JSON.stringify(formData));
 
-        router.push(`/event/${event.id}/booking/payment`);
+        if (seatMapId && seatMapId !== 0) {
+          router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);
+        }
+        else router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
       } else {
         setAlertMessage(transWithFallback('errorSubmitForm', 'Lỗi khi gửi form đi'));
         setAlertOpen(true);

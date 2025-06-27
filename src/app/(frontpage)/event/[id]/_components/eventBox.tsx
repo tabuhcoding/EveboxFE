@@ -187,7 +187,7 @@ export default function EventBox({ event }: { event: EventDetail }) {
 
                                                 case "SOLD_OUT":
                                                     return (
-                                                        <button type="button" className="btn-sold-out cursor-not-allowed" disabled>
+                                                        <button type="button" className="btn-sold-out-box cursor-not-allowed" disabled>
                                                             {t("soldOut") || "Hết vé"}
                                                         </button>
                                                     );
