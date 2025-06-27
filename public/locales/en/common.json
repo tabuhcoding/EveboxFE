@@ -406,5 +406,8 @@
     "errorWhenFetchEvents": "Error when fetch events data",
     "isSpecialEvent": "Special event",
     "isOnlyOnEve": "Only on EveBox",
-    "noEventMatchForKeyword": "No events match for search keyword"
+    "noEventMatchForKeyword": "No events match for search keyword",
+    "errorWhenFetchShowings": "Error when fetch showings data",
+    "noShowingMatchForKeyword": "No showings match for search keyword",
+    "showDate": "Show date"
 }

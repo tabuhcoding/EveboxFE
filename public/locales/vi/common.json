@@ -402,5 +402,7 @@
   "errorWhenFetchEvents": "Lỗi khi tải dữ liệu sự kiện",
   "isSpecialEvent": "Sự kiện đặc biệt",
   "isOnlyOnEve": "Chỉ có trên EveBox",
-  "noEventMatchForKeyword": "Không có sự kiện nào khớp với từ khóa tìm kiếm"
+  "errorWhenFetchShowings": "Lỗi khi tải dữ liệu suất diễn",
+  "noShowingMatchForKeyword": "Không có suất diễn nào khớp với từ khóa tìm kiếm",
+  "showDate": "Ngày diễn"
 }

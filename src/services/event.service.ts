@@ -5,18 +5,19 @@ import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 import { SearchEventsParams } from "types/models/dashboard/searchEventParams.interface";
 import { SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
-import { 
+import {
   EventAdminParams,
   EventManagementApiResponse,
   UpdateEventAdminPayload,
   EventDetailAdmin,
 } from "@/types/models/admin/eventManagement.interface";
 
-import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement";
+import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement.interface";
+
+import { ShowingApiResponse, ShowingAdminParams } from "@/types/models/admin/showingManagement.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
-
 
 import { CreateEventDto } from "types/models/event/createEvent.dto";
 import { Province } from "types/models/event/location.interface";
@@ -105,11 +106,11 @@ export async function getEventsAdmin(params: EventAdminParams, accessToken: stri
       page: params.page,
       limit: params.limit
     } as EventAdminParams;
-    
+
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
     };
-    
+
     if (accessToken && accessToken !== "") {
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -136,11 +137,11 @@ export async function getSpecialEventsManagment(params: SpecialEventAdminParams,
       page: params.page,
       limit: params.limit
     } as SpecialEventAdminParams;
-    
+
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
     };
-    
+
     if (accessToken && accessToken !== "") {
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -159,7 +160,7 @@ export async function getSpecialEventsManagment(params: SpecialEventAdminParams,
   }
 }
 
-export async function updateEventAdmin (eventId: number, payload: UpdateEventAdminPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
+export async function updateEventAdmin(eventId: number, payload: UpdateEventAdminPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
   try {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -205,6 +206,37 @@ export async function getEventDetailAdmin(eventId: number, accessToken?: string)
   }
 }
 
+export async function getShowingsByAdmin(params: ShowingAdminParams, accessToken: string): Promise<BaseApiResponse<ShowingApiResponse>> {
+  try {
+    const cleanedEntries = Object.entries(params).filter(([_, value]) => value !== undefined);
+    const cleanedParams = {
+      ...Object.fromEntries(cleanedEntries),
+      page: params.page,
+      limit: params.limit
+    } as ShowingAdminParams;
+
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(END_POINT_LIST.ADMIN.SHOWINGS, {
+      params: cleanedParams,
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get showings by admin');
+
+    return res.data as BaseApiResponse<ShowingApiResponse>;
+  } catch (error: any) {
+    console.error("Error get showings by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
 export async function getSearchEvents({
   title,
   type,
@@ -212,7 +244,7 @@ export async function getSearchEvents({
   endDate,
   minPrice,
   maxPrice,
-  pages = 1, 
+  pages = 1,
   limit = 10
 }: SearchEventsParams): Promise<SearchEventsResponse> {
   try {
@@ -345,3 +377,4 @@ export const getEventDetail = async (
     return res.data;
   }
 };
+
