@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 
 
 /* Package Application */
-import { getAllCategories, getAllProvinces, Province } from 'services/event.service';
+import { getAllCategories, getAllProvinces, Location } from 'services/event.service';
 import { Category } from 'types/models/dashboard/frontDisplay';
 
 import { mapCategoryName } from "../libs/functions/mapCategoryName";
@@ -25,11 +25,11 @@ export default function SearchControls() {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [locations, setLocations] = useState<Province[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const dropdownEventRef = useRef(null);
   const dropdownLocationRef = useRef(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<Province | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const router = useRouter();
   const locale = useLocale();
 

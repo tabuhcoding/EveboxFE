@@ -17,7 +17,7 @@ import 'tailwindcss/tailwind.css';
 import '@/styles/admin/pages/Dashboard.css';
 import AlertDialog from '@/components/common/alertDialog';
 import { addEventOrOrgFavourite, removeEventFavourite, removeOrgFavourite } from '@/services/auth.service';
-import { getAllCategories, getAllProvinces, getSearchEvents, Province } from '@/services/event.service';
+import { getAllCategories, getAllProvinces, getSearchEvents, Location } from '@/services/event.service';
 import { Category } from '@/types/models/dashboard/frontDisplay';
 import { SearchEventsResponse } from '@/types/models/dashboard/searchEvents.interface';
 import Pagination from 'app/(protected)/admin/event-special-management/_common/pagination';
@@ -45,8 +45,8 @@ export default function SearchClient() {
   const [href, setHref] = useState("");
   const { data: session } = useSession();
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<Province | null>(null);
-  const [locations, setLocations] = useState<Province[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const dropdownLocationRef = useRef<HTMLDivElement | null>(null);
 

@@ -269,13 +269,13 @@ export async function getSearchEvents({
   }
 }
 
-export interface Province {
+export interface Location {
   id: number;
   nameVi: string;
   nameEn: string;
 }
 
-export const getAllProvinces = async (): Promise<Province[]> => {
+export const getAllProvinces = async (): Promise<Location[]> => {
   try {
     const res = await eventService.get("/api/location/all-districts");
 
@@ -283,7 +283,7 @@ export const getAllProvinces = async (): Promise<Province[]> => {
       throw new Error("Failed to fetch provinces");
     }
 
-    const provinces: Province[] = res.data.map((province: any) => ({
+    const provinces: Location[] = res.data.map((province: any) => ({
       id: province.id,
       nameVi: province.name.vi,
       nameEn: province.name.en
@@ -293,6 +293,8 @@ export const getAllProvinces = async (): Promise<Province[]> => {
   } catch (error) {
     console.error("Error fetching provinces:", error);
     throw error;
+  }
+}
 
 export async function createEvent(payload: CreateEventDto, accessToken?: string): Promise<{ id: number }> {
   if (typeof window === "undefined") {
@@ -401,5 +403,5 @@ export const getEventDetail = async (
 
     return res.data;
   }
-};
+}
 
