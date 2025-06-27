@@ -56,3 +56,68 @@ export interface FilterProps {
   onDateToChange: (value: string) => void;
   onReset: () => void;
 }
+
+export interface TicketTypeShowingDetail {
+  id: string;
+  name: string;
+  description: string;
+  isFree: boolean;
+  price: number;
+  originalPrice: number;
+  maxQtyPerOrder: number;
+  minQtyPerOrder: number;
+  startTime: string;
+  endTime: string;
+  status: string;
+  quantity: number;
+  sold: number;
+}
+
+export interface ShowingDetail {
+  id: string;
+  eventId: number;
+  status: string;
+  isFree: boolean;
+  isSalable: boolean;
+  seatMapId: number;
+  startTime: string;
+  endTime: string;
+  event: Event;
+  ticketTypes: TicketTypeShowingDetail[];
+}
+
+export interface ShowingDetailApiResponse {
+  data: ShowingDetail;
+}
+
+export interface TicketTableProps {
+  showingID: string;
+  ticketTypes: TicketTypeShowingDetail[];
+}
+
+export interface TicketTypeDetailProps {
+  id: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  description: string;
+  price: number;
+  maxQtyPerOrder: number;
+  minQtyPerOrder: number;
+  quantity: number;
+  sold: number;
+  status: string;
+  imageUrl: string;
+}
+
+export interface ShowingInTicketTypeDetail {
+  id: string;
+  event: Event;
+  startTime: string;
+  endTime: string;
+  ticketType: TicketTypeDetailProps;
+}
+
+export interface TicketTypeDetailApiReponse {
+  data: ShowingInTicketTypeDetail;
+}

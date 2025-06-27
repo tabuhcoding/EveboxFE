@@ -409,5 +409,22 @@
     "noEventMatchForKeyword": "No events match for search keyword",
     "errorWhenFetchShowings": "Error when fetch showings data",
     "noShowingMatchForKeyword": "No showings match for search keyword",
-    "showDate": "Show date"
+    "showDate": "Show date",
+    "unknownStatus": "Unknown status",
+    "showingInfo": "Showing information",
+    "sale_closed": "Sale closed",
+    "ticketName": "Ticket name",
+    "soldTickets": "Sold tickets",
+    "free": "Free",
+    "detailTime": "Detail time",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "ticketTypeManagement": "Ticket type management",
+    "errorWhenFetchTicketType": "Error when fetch ticket type data",
+    "ticketTypeDetailInfo": "Ticket type detail information",
+    "saleStartTime": "Sale start time",
+    "saleEndTime": "Sale end time",
+    "maxQtyPerOrder": "Max quantiy per order",
+    "minQtyPerOrder": "Min quantiy per order",
+    "totalTicketsAmount": "Total tickets amount"
 }
