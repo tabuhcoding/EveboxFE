@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 /* Package Application */
-import { EventSpecial, EventSpecialTableProps, SpecialEventAdminParams } from "@/types/models/admin/eventSpecialManagement";
+import { EventSpecial, EventSpecialTableProps, SpecialEventAdminParams } from "@/types/models/admin/eventSpecialManagement.interface";
 import { Category } from "@/services/interface/eventSpecialTable";
 import ToggleSpecialButton from "./toggleSpecialButton";
 import ToggleOnlyOnEveButton from "./toggleOnlyOnEveButton";

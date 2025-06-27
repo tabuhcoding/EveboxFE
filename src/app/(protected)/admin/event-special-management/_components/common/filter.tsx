@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { Filter, RotateCcw } from "lucide-react";
 
 /* Package Application */
-import { FilterProps, OptionType } from "@/types/models/admin/eventSpecialManagement";
+import { FilterProps, OptionType } from "@/types/models/admin/eventSpecialManagement.interface";
 import { Category } from "@/types/models/admin/eventManagement.interface";
 import { getAllCategories } from "@/services/event.service";
 
