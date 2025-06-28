@@ -148,7 +148,7 @@ export default function TicketDetailPage() {
               </p>
               <p className="mt-2">
                 <span className="font-semibold">{transWithFallback('ticketPrice', 'Giá vé')}: </span>
-                {ticketType?.price === 0 ? "Miễn phí" : `${formatCurrency(ticketType?.price ?? 0)} VNĐ`}
+                {ticketType?.price === 0 ? transWithFallback('free', 'Miễn phí') : `${formatCurrency(ticketType?.price ?? 0)} VNĐ`}
               </p>
               <p className="mt-2">
                 <span className="font-semibold">{transWithFallback('saleStartTime', 'Thời gian mở bán')}: </span>
