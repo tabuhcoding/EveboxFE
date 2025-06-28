@@ -1,7 +1,7 @@
 'use client';
 
 /* Package System */
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -12,34 +12,55 @@ import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
 
 export default function TicketManagement() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const t = useTranslations('common');
+
+  const [selectedTab, setSelectedTab] = useState(Number(searchParams.get('tab')) || 0); // 0: All, 1: Success, 2: Pending, 3: Cancelled
+  const [selectedSubTab, setSelectedSubTab] = useState(Number(searchParams.get('subtab')) || 0);
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
+  const [ticketsPerPage, setTicketsPerPage] = useState(Number(searchParams.get('limit')) || 10);
+  const [searchKeyword, setSearchKeyword] = useState(searchParams.get('q') || '');
+
   const [successTickets, setSuccessTickets] = useState<IUserTicket[]>([]);
   const [pendingTickets, setPendingTickets] = useState<IUserTicket[]>([]);
   const [cancelledTickets, setCancelledTickets] = useState<IUserTicket[]>([]);
   const [allTickets, setAllTickets] = useState<IUserTicket[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedTab, setSelectedTab] = useState<number>(0); // 0: All, 1: Success, 2: Pending, 3: Cancelled
-  const [selectedSubTab, setSelectedSubTab] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [ticketsPerPage, setTicketsPerPage] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const { data: session } = useSession();
 
-  const router = useRouter();
-  const t = useTranslations('common');
+  function setUrlParams({
+    page = currentPage,
+    tab = selectedTab,
+    subtab = selectedSubTab,
+    limit = ticketsPerPage,
+    q = searchKeyword
+  }: {
+    page?: number, tab?: number, subtab?: number, limit?: number, q?: string
+  }) {
+    const params = new URLSearchParams();
+    params.set('page', String(page));
+    params.set('tab', String(tab));
+    params.set('subtab', String(subtab));
+    params.set('limit', String(limit));
+    if (q) params.set('q', q);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }
 
-  const transWithFallback = (key: string, fallback: string) => {
-    const msg = t(key);
-    return !msg || msg.startsWith('common.') ? fallback : msg;
-  };
-
-  const fetchTicketsByPage = async (page = 1, status?: string, limit = ticketsPerPage, keyword = searchKeyword, selectedSubTabParam = selectedSubTab) => {
+  const fetchTicketsByPage = async (
+    page = currentPage,
+    status?: string,
+    limit = ticketsPerPage,
+    keyword = searchKeyword,
+    subTabParam = selectedSubTab
+  ) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       params.append('page', page.toString());
       params.append('limit', limit.toString());
-      params.append('timeStamp', selectedSubTabParam === 0 ? 'UPCOMING' : 'PAST');
+      params.append('timeStamp', subTabParam === 0 ? 'UPCOMING' : 'PAST');
       if (status) params.append('status', status);
       if (keyword) params.append('title', keyword);
 
@@ -58,57 +79,67 @@ export default function TicketManagement() {
         if (status === 'CANCELLED') setCancelledTickets(fetchedTickets);
 
         setTotalPages(totalPageCount);
-      }
-      else {
-        console.error('Error fetching tickets:', response.message);
+      } else {
         setAllTickets([]);
         setSuccessTickets([]);
         setPendingTickets([]);
         setCancelledTickets([]);
       }
     } catch (error) {
-      console.error('Error fetching tickets:', error);
+      console.error("🚀 ~ TicketManagement ~ error:", error)
+      setAllTickets([]);
+      setSuccessTickets([]);
+      setPendingTickets([]);
+      setCancelledTickets([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Khi vào trang, chỉ fetch All trang 1
   useEffect(() => {
-    fetchTicketsByPage(1);
+    fetchTicketsByPage(currentPage, tabToStatus(selectedTab), ticketsPerPage, searchKeyword, selectedSubTab);
   }, []);
+
+  const tabToStatus = (tab: number) => {
+    if (tab === 1) return 'SUCCESS';
+    if (tab === 2) return 'PENDING';
+    if (tab === 3) return 'CANCELLED';
+    return undefined;
+  };
 
   const handleTabChange = (index: number) => {
     setSelectedTab(index);
     setSelectedSubTab(0);
     setCurrentPage(1);
-    setTotalPages(1);
-
-    if (index === 1) fetchTicketsByPage(1, 'SUCCESS', ticketsPerPage, searchKeyword, 0);
-    else if (index === 2) fetchTicketsByPage(1, 'PENDING', ticketsPerPage, searchKeyword, 0);
-    else if (index === 3) fetchTicketsByPage(1, 'CANCELLED', ticketsPerPage, searchKeyword, 0);
-    else fetchTicketsByPage(1, undefined, ticketsPerPage, searchKeyword);
+    setUrlParams({ tab: index, subtab: 0, page: 1 });
+    fetchTicketsByPage(1, tabToStatus(index), ticketsPerPage, searchKeyword, 0);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-
-    if (selectedTab === 1) fetchTicketsByPage(page, 'SUCCESS', ticketsPerPage, searchKeyword);
-    else if (selectedTab === 2) fetchTicketsByPage(page, 'PENDING', ticketsPerPage, searchKeyword);
-    else if (selectedTab === 3) fetchTicketsByPage(page, 'CANCELLED', ticketsPerPage, searchKeyword);
-    else fetchTicketsByPage(page, undefined, ticketsPerPage, searchKeyword);
+    setUrlParams({ page });
+    fetchTicketsByPage(page, tabToStatus(selectedTab), ticketsPerPage, searchKeyword, selectedSubTab);
   };
 
   const handleSubTabChange = (index: number) => {
     setSelectedSubTab(index);
     setCurrentPage(1);
-    setTotalPages(1);
+    setUrlParams({ subtab: index, page: 1 });
+    fetchTicketsByPage(1, tabToStatus(selectedTab), ticketsPerPage, searchKeyword, index);
+  };
 
-    if (selectedTab === 1) fetchTicketsByPage(1, 'SUCCESS', ticketsPerPage, searchKeyword, index);
-    else if (selectedTab === 2) fetchTicketsByPage(1, 'PENDING', ticketsPerPage, searchKeyword, index);
-    else if (selectedTab === 3) fetchTicketsByPage(1, 'CANCELLED', ticketsPerPage, searchKeyword, index);
-    else fetchTicketsByPage(1, undefined, ticketsPerPage, searchKeyword, index);
-  }
+  const handleTicketsPerPageChange = (num: number) => {
+    setTicketsPerPage(num);
+    setCurrentPage(1);
+    setUrlParams({ limit: num, page: 1 });
+    fetchTicketsByPage(1, tabToStatus(selectedTab), num, searchKeyword, selectedSubTab);
+  };
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    setUrlParams({ q: searchKeyword, page: 1 });
+    fetchTicketsByPage(1, tabToStatus(selectedTab), ticketsPerPage, searchKeyword, selectedSubTab);
+  };
 
   const getTicketsByTab = (): IUserTicket[] => {
     switch (selectedTab) {
@@ -132,6 +163,11 @@ export default function TicketManagement() {
     }
   };
 
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    return !msg || msg.startsWith('common.') ? fallback : msg;
+  };
+
   return (
     <>
       <div className="ticket-management mt-2 mx-auto px-4">
@@ -145,19 +181,13 @@ export default function TicketManagement() {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setCurrentPage(1);
-                handleTabChange(selectedTab);
-              }
+              if (e.key === 'Enter') handleSearch();
             }}
             placeholder={transWithFallback('searchPlaceholder', 'Tìm theo tên sự kiện hoặc nhà tổ chức')}
             className="w-full sm:max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#51DACF]"
           />
           <button
-            onClick={() => {
-              setCurrentPage(1);
-              handleTabChange(selectedTab);
-            }}
+            onClick={handleSearch}
             className="bg-[#51DACF] text-black font-bold px-4 py-2 rounded"
           >
             {transWithFallback('searchButton', 'Tìm kiếm')}
@@ -216,9 +246,7 @@ export default function TicketManagement() {
                   </span>
                   <span className="text-sm uppercase">
                     {ticket.Showing?.startTime
-                      ? new Date(ticket.Showing.startTime).toLocaleString("vi-VN", {
-                        month: "long",
-                      })
+                      ? new Date(ticket.Showing.startTime).toLocaleString("vi-VN", { month: "long" })
                       : "---"}
                   </span>
                   <span className="text-sm">
@@ -260,23 +288,13 @@ export default function TicketManagement() {
           </div>
         )}
       </div>
-
       <TicketPagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
         ticketsPerPage={ticketsPerPage}
-        setTicketsPerPage={(num) => {
-          setTicketsPerPage(num);
-          setCurrentPage(1);
-
-          // Gọi lại API với limit mới
-          if (selectedTab === 1) fetchTicketsByPage(1, 'SUCCESS', num);
-          else if (selectedTab === 2) fetchTicketsByPage(1, 'PENDING', num);
-          else if (selectedTab === 3) fetchTicketsByPage(1, 'CANCELLED', num);
-          else fetchTicketsByPage(1, undefined, num);
-        }}
+        setTicketsPerPage={handleTicketsPerPageChange}
       />
     </>
   );
-};
+}

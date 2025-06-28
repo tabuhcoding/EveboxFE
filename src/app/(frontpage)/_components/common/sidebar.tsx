@@ -78,7 +78,7 @@ const transWithFallback = (key: string, fallback: string) => {
 
   const menuItems = [
     { icon: <User size={20} />, text: t("accountManagement"), onClick: () => handleProtectedClick('/my-profile') },
-    { icon: <Ticket size={20} />, text: t("ticketManagement"), href: '/my-ticket' },
+    { icon: <Ticket size={20} />, text: t("ticketManagement"), onClick: () => handleProtectedClick('/my-ticket') },
     { icon: <Calendar size={20} />, text: t("createEvent"), onClick: () => handleProtectedClick('/organizer/create-event') },
     { icon: <Lock size={20} />, text: t("changePassword"), href: '/change-password' },
     { icon: <LogOut size={20} />, text: t("logout"), onClick: handleLogout },
