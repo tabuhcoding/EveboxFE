@@ -86,6 +86,7 @@ export default function TicketManagement() {
         setCancelledTickets([]);
       }
     } catch (error) {
+      console.error("🚀 ~ TicketManagement ~ error:", error)
       setAllTickets([]);
       setSuccessTickets([]);
       setPendingTickets([]);
