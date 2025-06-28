@@ -191,34 +191,42 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
               </g>
             ))}
             {/* Vẽ section thường, click để chọn */}
-            {normalSections?.map((section) => (
-              <g
-                key={section.id}
-                onClick={() => handleSectionClick(section)}
-                style={{ cursor: "pointer" }}
-              >
-                {section.element?.map((el, index) => (
-                  el.type === 'path' ? (
-                    <path
-                      key={index}
-                      d={el.data}
-                      style={{ fill: el.fill }}
-                      transform={`translate(${el.x}, ${el.y})`}
-                    />
-                  ) : el.type === 'rect' ? (
-                    <rect
-                      key={index}
-                      x={el.x}
-                      y={el.y}
-                      width={el.width}
-                      height={el.height}
-                      style={{ fill: el.fill }}
-                      transform={`translate(${el.x}, ${el.y})`}
-                    />
-                  ) : <h1>DUUDUDUDUDUDUD</h1>
-                ))}
-              </g>
-            ))}
+            {normalSections?.map((section) => {
+              const isSoldOut = section.status === "SOLD_OUT";
+              return (
+                <g
+                  key={section.id}
+                  onClick={() => {
+                    if (!isSoldOut) handleSectionClick(section)
+                  }}
+                  style={{ 
+                    cursor: isSoldOut ? "not-allowed" : "pointer",
+                    opacity: isSoldOut ? 0.5 : 1,
+                  }}
+                >
+                  {section.element?.map((el, index) => (
+                    el.type === 'path' ? (
+                      <path
+                        key={index}
+                        d={el.data}
+                        style={{ fill: el.fill }}
+                        transform={`translate(${el.x}, ${el.y})`}
+                      />
+                    ) : el.type === 'rect' ? (
+                      <rect
+                        key={index}
+                        x={el.x}
+                        y={el.y}
+                        width={el.width}
+                        height={el.height}
+                        style={{ fill: el.fill }}
+                        transform={`translate(${el.x}, ${el.y})`}
+                      />
+                    ) : <h1>DUUDUDUDUDUDUD</h1>
+                  ))}
+                </g>
+              )
+            })}
           </svg>
         </div>
       </div>

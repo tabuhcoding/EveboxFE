@@ -66,6 +66,7 @@ export interface Row {
 export interface Section {
   id: number;
   name: string;
+  status: string;
   seatmapId: number;
   createdAt: Date;
   isStage: boolean;
