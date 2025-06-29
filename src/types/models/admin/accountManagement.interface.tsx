@@ -12,13 +12,20 @@ export enum UserRole {
   ORGANIZER = 'ORGANIZER',
 }
 
+export enum UserRoleNum {
+  SYSTEM_ADMIN = 0,
+  ADMIN = 1,
+  ORGANIZER = 2,
+  CUSTOMER = 3,
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   phone: string;
-  role: string;
-  createAt: string;
+  role: number;
+  created_at: string;
   status: UserStatus;
   avatar_id?: number;
 };
@@ -105,4 +112,11 @@ export interface ConfirmStatusDialogProps {
   onConfirm: () => void;
   currentStatus: string;
   isLoading: boolean;
+}
+
+export interface FormInputProps {
+  label: string;
+  value: string;
+  disabled?: boolean;
+  type?: string;
 }

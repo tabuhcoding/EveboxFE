@@ -22,7 +22,7 @@ import {
 }
   from "./interface/auth.interface";
 
-import { UserAdminApiResponse, UserAdminParams } from "@/types/models/admin/accountManagement.interface";
+import { UserAdminApiResponse, UserAdminParams, User } from "@/types/models/admin/accountManagement.interface";
 
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
   const result = await authService.post<BaseApiResponse<ForgotPasswordResponse>>(END_POINT_LIST.USER.FORGOT_PASSWORD, { email });
@@ -132,6 +132,43 @@ export async function updateUserStatus(email: string, newStatus: string, accessT
     return res.data as BaseApiResponse<boolean>;
   } catch (error: any) {
     console.error("Error update user status by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function updateUserRole(userId: string, newRole: number, accessToken: string): Promise<BaseApiResponse<boolean>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    // Lưu ý: API yêu cầu truyền số, nên dùng mapping từ FE enum ra số
+    const res = await authService.put(`${END_POINT_LIST.ADMIN.USERS}/${userId}/role`, {
+      role: newRole
+    }, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to update user role by admin');
+    return res.data as BaseApiResponse<boolean>;
+  } catch (error: any) {
+    console.error("Error update user role by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getUserById(id: string): Promise<BaseApiResponse<User>> {
+  try {
+    const res = await authService.get(`${END_POINT_LIST.USER.USER}/${id}`);
+
+    if (!res) throw new Error('Failed to get user by id');
+
+    return res.data as BaseApiResponse<User>;
+  } catch (error: any) {
+    console.error("Error get user by id:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }

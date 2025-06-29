@@ -431,6 +431,16 @@
     "changeTo": "Change to",
     "noUserMatchForKeyword": "No users match for search keyword",
     "findByNameOrEmail": "Find by name or email",
-    "errorWhenUpdateAccountStatus": "Error when update accountstatus",
-    "infoAndAccStatusManagement": "Information and account status management"
+    "errorWhenUpdateAccountStatus": "Error when update account status",
+    "infoAndAccStatusManagement": "Information and account status management",
+    "detailInfo": "Detail information",
+    "unsavedChanges": "You have unsaved changes",
+    "uWantToLeave?": "Do you sure want to leave?",
+    "saveChangesSuccessfully": "Save changes successfully!",
+    "saveChanges": "Sava changes",
+    "updateRoleSuccess": "Update user role successfully!",
+    "errorWhenUpdateRole": "Error when update user role",
+    "updateStatusSuccess": "Update account status successfully!",
+    "noChangesToSave": "No changes to save",
+    "errorWhenSave": "Error when save data"
 }

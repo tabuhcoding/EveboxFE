@@ -427,5 +427,15 @@
   "noUserMatchForKeyword": "Không có tài khoản nào khớp với từ khóa tìm kiếm",
   "findByNameOrEmail": "Tìm kiếm theo tên hoặc email",
   "errorWhenUpdateAccountStatus": "Lỗi khi cập nhật trạng thái tài khoản",
-  "infoAndAccStatusManagement": "Quản lý thông tin và trạng thái tài khoản"
+  "infoAndAccStatusManagement": "Quản lý thông tin và trạng thái tài khoản",
+  "detailInfo": "Thông tin chi tiết",
+  "unsavedChanges": "Bạn có thay đổi chưa lưu",
+  "uWantToLeave?": "Bạn có chắc muốn rời đi?",
+  "saveChangesSuccessfully": "Lưu thay đổi thành công!",
+  "saveChanges": "Lưu thay đổi",
+  "updateRoleSuccess": "Cập nhật vai trò thành công!",
+  "errorWhenUpdateRole": "Lỗi khi cập nhật vai trò",
+  "updateStatusSuccess": "Cập nhật trạng thái tài khoản thành công!",
+  "noChangesToSave": "Không có thay đổi nào để lưu.",
+  "errorWhenSave": "Có lỗi khi lưu thay đổi"
 }
