@@ -431,5 +431,6 @@
     "changeTo": "Change to",
     "noUserMatchForKeyword": "No users match for search keyword",
     "findByNameOrEmail": "Find by name or email",
-    "errorWhenUpdateAccountStatus": "Error when update accountstatus"
+    "errorWhenUpdateAccountStatus": "Error when update accountstatus",
+    "infoAndAccStatusManagement": "Information and account status management"
 }
