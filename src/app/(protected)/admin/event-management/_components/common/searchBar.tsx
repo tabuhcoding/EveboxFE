@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import { Search } from 'lucide-react';
-import { SearchBarProps } from '@/types/models/admin/accountManagement';
+import { SearchBarProps } from '@/types/models/admin/accountManagement.interface';
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const t = useTranslations('common');

@@ -83,7 +83,8 @@ export class END_POINT_LIST {
     EVENTS: "/api/admin/event",
     EVENT_DETAIL: "/api/admin/event/detail",
     SHOWINGS: "/api/admin/showing",
-    EVENTS_SPECIAL: "api/admin/event-special"
+    EVENTS_SPECIAL: "api/admin/event-special",
+    USERS: "/api/admin/user",
   };
 
   static readonly LOCATION = {

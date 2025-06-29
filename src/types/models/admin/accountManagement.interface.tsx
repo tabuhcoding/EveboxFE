@@ -1,4 +1,4 @@
-import { BaseApiResponse } from "@/types/baseApiResponse";
+import { BaseApiResponse, PaginationData } from "@/types/baseApiResponse";
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
@@ -23,16 +23,33 @@ export interface User {
   avatar_id?: number;
 };
 
-export interface UserAdmin {
-  userId: string;
+export interface Role {
+  id: number;
+  role_name: string;
+}
+
+export interface UserAdminData {
+  id: string;
   name: string;
   email: string;
   status: string;
-  role_id: number;
   created_at: string;
-  role: {
-    role_name: string;
-  }
+  role: Role;
+}
+
+export interface UserAdminApiResponse {
+  data: UserAdminData[];
+  pagination: PaginationData;
+}
+
+export interface UserAdminParams {
+  page: number;
+  limit: number;
+  search?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  status?: string;
+  role_id?: number;
 }
 
 export interface UsersData {
@@ -82,16 +99,10 @@ export interface FilterProps {
   onReset: () => void;
 }
 
-export interface AccountTableProps {
-  users: User[];
-  totalItems: number;
-  currentPage: number;
-  pageSize: number;
-  onPageChange: (page: number) => void;
-  loading: boolean;
-  searchKeyword: string;
-  roleFilter: string;
-  dateFrom: string;
-  dateTo: string;
-  onStatusUpdate: (updatedUsers: User[]) => void;
+export interface ConfirmStatusDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  currentStatus: string;
+  isLoading: boolean;
 }

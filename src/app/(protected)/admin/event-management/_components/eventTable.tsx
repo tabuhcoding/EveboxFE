@@ -115,7 +115,6 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
     if (selectedEvent) {
       try {
         setIsLoadingEventAction(true);
-        console.log("🚀 ~ handleConfirmApproval ~ selectedEvent:", selectedEvent)
         const result = await updateEventAdmin(selectedEvent.id, {
           isApproved: true,
         }, session?.user?.accessToken || "");

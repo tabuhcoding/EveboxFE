@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { SortIconProps } from '@/types/models/admin/accountManagement';
+import { SortIconProps } from '@/types/models/admin/accountManagement.interface';
 
 export default function SortIcon<T,>({ field, sortConfig }: SortIconProps<T>) {
   if (sortConfig?.key !== field) return <span className="text-gray-300">⇅</span>; // Icon mặc định

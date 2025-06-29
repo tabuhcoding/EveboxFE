@@ -426,5 +426,10 @@
     "saleEndTime": "Sale end time",
     "maxQtyPerOrder": "Max quantiy per order",
     "minQtyPerOrder": "Min quantiy per order",
-    "totalTicketsAmount": "Total tickets amount"
+    "totalTicketsAmount": "Total tickets amount",
+    "errorWhenFetchUsers": "Error when fetch users data",
+    "changeTo": "Change to",
+    "noUserMatchForKeyword": "No users match for search keyword",
+    "findByNameOrEmail": "Find by name or email",
+    "errorWhenUpdateAccountStatus": "Error when update accountstatus"
 }

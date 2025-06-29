@@ -346,7 +346,7 @@
   "locationManagement": "Quản lý địa điểm",
   "paymentManagement": "Quản lý thanh toán",
   "revenueManagement": "Quản lý doanh thu",
-  "unactivateAccount": "Unactivate Account",
+  "unactivateAccount": "Vô hiệu hóa tài khoản",
   "uSureWantTo": "Bạn có chắc chắn muốn",
   "this?": " này không?",
   "userReuseSystem": "Người dùng sẽ có thể sử dụng lại hệ thống.",
@@ -421,5 +421,10 @@
   "saleEndTime": "Thời gian ngừng bán",
   "maxQtyPerOrder": "Số lượng vé mua tối đa/lần",
   "minQtyPerOrder": "Số lượng vé mua tối thiểu/lần",
-  "totalTicketsAmount": "Tổng số lượng vé"
+  "totalTicketsAmount": "Tổng số lượng vé",
+  "errorWhenFetchUsers": "Lỗi xảy ra khi lấy dữ liệu người dùng",
+  "changeTo": "Chuyển thành",
+  "noUserMatchForKeyword": "Không có tài khoản nào khớp với từ khóa tìm kiếm",
+  "findByNameOrEmail": "Tìm kiếm theo tên hoặc email",
+  "errorWhenUpdateAccountStatus": "Lỗi khi cập nhật trạng thái tài khoản"
 }
