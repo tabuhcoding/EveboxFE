@@ -149,6 +149,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
         setIsDirty(false);
       }
     } catch (error) {
+      console.log("🚀 ~ handleSave ~ error:", error)
       toast.error(transWithFallback('errorWhenSave', 'Có lỗi khi lưu thay đổi'));
     } finally {
       setLoading(false);
@@ -180,15 +181,15 @@ export default function AccountDetailPage({ id }: { id: string }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <FormInput label="Họ và tên" value={user.name} disabled type="text" />
-              <FormInput label="Địa chỉ email" value={user.email} disabled type="email" />
-              <FormInput label="Số điện thoại" value={user.phone} disabled type="phone" />
-              <FormInput label="Ngày tạo tài khoản" value={new Date(user.created_at).toLocaleDateString('vi-VN')} disabled type="text" />
+              <FormInput label={transWithFallback('fullName', 'Họ và tên')} value={user.name} disabled type="text" />
+              <FormInput label={transWithFallback('emailAddress', 'Địa chỉ email')} value={user.email} disabled type="email" />
+              <FormInput label={transWithFallback('phone', 'Số điện thoại')} value={user.phone} disabled type="phone" />
+              <FormInput label={transWithFallback('createdDate', 'Ngày tạo')} value={new Date(user.created_at).toLocaleDateString('vi-VN')} disabled type="text" />
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Vai trò</label>
+                <label htmlFor="role-select" className="block text-sm font-medium text-gray-700">{transWithFallback('role', 'Vai trò')}</label>
                 <div className="relative">
-                  <select className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
+                  <select id="role-select" className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
                     value={editedRole || ''} onChange={(e) => setEditedRole(e.target.value as UserRole)}>
                     {roles.map((role) => (
                       <option key={role} value={role}>{role}</option>
@@ -201,9 +202,9 @@ export default function AccountDetailPage({ id }: { id: string }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Trạng thái tài khoản</label>
+                <label htmlFor="status-select" className="block text-sm font-medium text-gray-700">{transWithFallback('status', 'Trạng thái')}</label>
                 <div className="relative">
-                  <select className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
+                  <select id="status-select" className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
                     value={editedStatus || ''} onChange={(e) => setEditedStatus(e.target.value as UserStatus)} >
                     {status.map(s => (
                       <option key={s}>{s}</option>

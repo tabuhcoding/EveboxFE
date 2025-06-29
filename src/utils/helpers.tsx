@@ -1,4 +1,4 @@
-import { UserRole, UserRoleNum } from "@/types/models/admin/accountManagement.interface";
+import { UserRole } from "@/types/models/admin/accountManagement.interface";
 
 export function mapRoleNumberToString(roleNum: number): UserRole {
   switch (roleNum) {
