@@ -437,5 +437,10 @@
   "errorWhenUpdateRole": "Lỗi khi cập nhật vai trò",
   "updateStatusSuccess": "Cập nhật trạng thái tài khoản thành công!",
   "noChangesToSave": "Không có thay đổi nào để lưu.",
-  "errorWhenSave": "Có lỗi khi lưu thay đổi"
+  "errorWhenSave": "Có lỗi khi lưu thay đổi",
+  "orgEmail": "Email của nhà tổ chức",
+  "taxLocation": "Địa điểm đăng ký thuế",
+  "orgName": "Tên nhà tổ chức",
+  "noStt": "STT",
+  "findByLocation": "Tìm kiếm theo tên địa điểm..."
 }

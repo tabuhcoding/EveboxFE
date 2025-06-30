@@ -14,12 +14,14 @@ import {
 
 import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement.interface";
 
-import { 
+import {
   ShowingApiResponse,
   ShowingAdminParams,
   ShowingDetail,
   ShowingInTicketTypeDetail
 } from "@/types/models/admin/showingManagement.interface";
+
+import { GetAllLocationsResponseDto } from "@/types/models/admin/locationManagement.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
@@ -457,3 +459,31 @@ export const getEventDetail = async (
   }
 }
 
+export async function getAllLocations(accessToken: string, organizerId?: string, provinceId?: number): Promise<GetAllLocationsResponseDto> {
+  const params = new URLSearchParams();
+  if (organizerId) params.append("organizerId", organizerId);
+  if (provinceId !== undefined) params.append("provinceId", provinceId.toString());
+
+  const headers: { [key: string]: string } = {
+    'Content-Type': 'application/json',
+  };
+
+  if (accessToken && accessToken !== "") {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  try {
+    const res = await eventService.get(`${END_POINT_LIST.LOCATION.GET_ALL_LOCATIONS}?${params.toString()}`, {
+      headers: headers
+    });
+
+    if (!res || !res.data) {
+      throw new Error("Failed to fetch locations");
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+    throw error;
+  }
+}

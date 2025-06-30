@@ -442,5 +442,11 @@
     "errorWhenUpdateRole": "Error when update user role",
     "updateStatusSuccess": "Update account status successfully!",
     "noChangesToSave": "No changes to save",
-    "errorWhenSave": "Error when save data"
+    "errorWhenSave": "Error when save data",
+    "orgEmail": "Organizer email",
+    "taxLocation": "Tax location",
+    "orgName": "Organizer name",
+    "noStt": "No.",
+    "city": "City",
+    "findByLocation": "Find by location..."
 }
