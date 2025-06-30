@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from "next-intl";
-import { Venue, Location, LocationTableProps } from "@/types/models/admin/locationManagement.interface";
+import { LocationTableProps } from "@/types/models/admin/locationManagement.interface";
 
 export default function LocationTable({ locations }: LocationTableProps) {
   const t = useTranslations('common');

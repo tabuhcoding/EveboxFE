@@ -11,7 +11,7 @@ import LocationTable from "./locationTable";
 import FilterDropdown from "./filter";
 import { useI18n } from "@/app/providers/i18nProvider";
 import { Province } from "@/types/models/event/location.interface";
-import { OrganizerLocationGroup, Venue, Location, ProvinceManagement } from "@/types/models/admin/locationManagement.interface";
+import { OrganizerLocationGroup, Venue, Location } from "@/types/models/admin/locationManagement.interface";
 import { getAllDistricts, getAllLocations } from "@/services/event.service";
 
 export default function LocationManagementClient() {
