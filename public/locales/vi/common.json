@@ -442,5 +442,14 @@
   "taxLocation": "Địa điểm đăng ký thuế",
   "orgName": "Tên nhà tổ chức",
   "noStt": "STT",
-  "findByLocation": "Tìm kiếm theo tên địa điểm..."
+  "findByLocation": "Tìm kiếm theo tên địa điểm...",
+  "errorWhenFetchChatBoxContent": "Lỗi khi lấy dữ liệu của chat bot",
+  "goToSearchResultPage": "Đi tới trang kết quả tìm kiếm",
+  "goToPage": "Đi tới trang",
+  "errorSendToBot": "Lỗi khi gửi tin nhắn tới chatbot",
+  "eveBoxAssistant": "Trợ lý EveBox",
+  "failedToFetchContent": "Lấy dữ liệu thất bại",
+  "errorHappened": "Có lỗi xảy ra",
+  "typing": "Đang nhập",
+  "enterYourMessage": "Nhập tin nhắn của bạn"
 }

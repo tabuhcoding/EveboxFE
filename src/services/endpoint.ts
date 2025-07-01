@@ -96,5 +96,9 @@ export class END_POINT_LIST {
   static readonly PAYMENT = {
     GET_METHOD_STATUS: '/api/payment/getPaymentMethodStatus',
     CHECKOUT: '/api/payment/checkout'
+  };
+
+  static readonly RAG = {
+    RAG_SERVICE: '/api/rag/agent'
   }
 }

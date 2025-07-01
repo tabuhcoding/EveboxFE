@@ -448,5 +448,18 @@
     "orgName": "Organizer name",
     "noStt": "No.",
     "city": "City",
-    "findByLocation": "Find by location..."
+    "findByLocation": "Find by location...",
+    "errorWhenFetchChatBoxContent": "Error when fetch chat box content",
+    "goToSearchResultPage": "Go to search result page",
+    "goToPage": "Go to page",
+    "errorSendToBot": "Error send message to bot",
+    "eveBoxAssistant": "EveBox Assistant",
+    "failedToFetchContent": "Failed to fetch content",
+    "errorHappened": "Error happened",
+    "typing": "Typing",
+    "enterYourMessage": "Enter your message",
+    "goToHomePage": "Go to homepage",
+    "goToProfilePage": "Go to profile page",
+    "goToMyTicketPage": "Go to my ticket page",
+    "goToCreateEventPage": "Go to create event page"
 }
