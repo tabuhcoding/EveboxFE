@@ -22,6 +22,8 @@ import {
 }
   from "./interface/auth.interface";
 
+import { UserAdminApiResponse, UserAdminParams, User } from "@/types/models/admin/accountManagement.interface";
+
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
   const result = await authService.post<BaseApiResponse<ForgotPasswordResponse>>(END_POINT_LIST.USER.FORGOT_PASSWORD, { email });
   return result.data;
@@ -60,21 +62,113 @@ export const toggleNotification = async (isReceived: boolean): Promise<BaseApiRe
 };
 
 export async function addEventOrOrgFavourite(payload: AddEventOrOrgFavouritePayload): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
-    const res = await authService.post(`${END_POINT_LIST.USER.ADD_FAVORITE_EVENT}`, payload);
-    return res.data;
+  const res = await authService.post(`${END_POINT_LIST.USER.ADD_FAVORITE_EVENT}`, payload);
+  return res.data;
 }
 
 export async function removeEventFavourite(eventId: string): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
-    const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_EVENT}/${eventId}`);
-    return res.data;
+  const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_EVENT}/${eventId}`);
+  return res.data;
 }
 
 export async function removeOrgFavourite(orgId: string): Promise<BaseApiResponse<EventOrOrgFavouriteData>> {
-    const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_ORG}/${orgId}`);
-    return res.data;
+  const res = await authService.delete(`${END_POINT_LIST.USER.REMOVE_FAV_ORG}/${orgId}`);
+  return res.data;
 }
 
 export async function getUserFavouriteEvents(page: number = 1, limit: number = 10): Promise<BaseApiResponse<UserFavEvent[]>> {
-    const res = await authService.get(`${END_POINT_LIST.USER.FAVORITE_EVENT}?page=${page}&limit=${limit}`);
-    return res.data;
+  const res = await authService.get(`${END_POINT_LIST.USER.FAVORITE_EVENT}?page=${page}&limit=${limit}`);
+  return res.data;
+}
+
+export async function getUsersByAdmin(params: UserAdminParams, accessToken: string): Promise<BaseApiResponse<UserAdminApiResponse>> {
+  try {
+    const cleanedEntries = Object.entries(params).filter(([_, value]) => value !== undefined);
+    const cleanedParams = {
+      ...Object.fromEntries(cleanedEntries),
+      page: params.page,
+      limit: params.limit
+    } as UserAdminParams;
+
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await authService.get(END_POINT_LIST.ADMIN.USERS, {
+      params: cleanedParams,
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get users by admin');
+
+    return res.data as BaseApiResponse<UserAdminApiResponse>;
+  } catch (error: any) {
+    console.error("Error get users by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function updateUserStatus(email: string, newStatus: string, accessToken: string): Promise<BaseApiResponse<boolean>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    const res = await authService.put(`${END_POINT_LIST.ADMIN.USERS}/${email}/status`, {
+      status: newStatus
+    }, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to update user status by admin')
+
+    return res.data as BaseApiResponse<boolean>;
+  } catch (error: any) {
+    console.error("Error update user status by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function updateUserRole(userId: string, newRole: number, accessToken: string): Promise<BaseApiResponse<boolean>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    // Lưu ý: API yêu cầu truyền số, nên dùng mapping từ FE enum ra số
+    const res = await authService.put(`${END_POINT_LIST.ADMIN.USERS}/${userId}/role`, {
+      role: newRole
+    }, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to update user role by admin');
+    return res.data as BaseApiResponse<boolean>;
+  } catch (error: any) {
+    console.error("Error update user role by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getUserById(id: string): Promise<BaseApiResponse<User>> {
+  try {
+    const res = await authService.get(`${END_POINT_LIST.USER.USER}/${id}`);
+
+    if (!res) throw new Error('Failed to get user by id');
+
+    return res.data as BaseApiResponse<User>;
+  } catch (error: any) {
+    console.error("Error get user by id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
 }

@@ -17,6 +17,7 @@ export class END_POINT_LIST {
     FAVORITE_EVENT: "/api/user/favorite/event",
     REMOVE_FAV_EVENT: "/api/user/favorite/event",
     REMOVE_FAV_ORG: "/api/user/favorite/org",
+    USER: "/api/user",
   };
 
   static readonly EVENT = {
@@ -83,7 +84,8 @@ export class END_POINT_LIST {
     EVENTS: "/api/admin/event",
     EVENT_DETAIL: "/api/admin/event/detail",
     SHOWINGS: "/api/admin/showing",
-    EVENTS_SPECIAL: "api/admin/event-special"
+    EVENTS_SPECIAL: "api/admin/event-special",
+    USERS: "/api/admin/user",
   };
 
   static readonly LOCATION = {

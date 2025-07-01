@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 /* Package Application */
@@ -10,17 +10,7 @@ import { SearchBarProps } from '@/types/models/admin/accountManagement.interface
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const t = useTranslations('common');
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    onSearch(value);
-  }
-
-  useEffect(() => {
-    onSearch(searchTerm);
-  }, [searchTerm, onSearch]);
+  const [searchTerm, setSearchTearm] = useState('');
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -28,10 +18,16 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     return msg;
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTearm(value);
+    onSearch(value);
+  }
+
   return (
-    <div className="searchbar-event-management flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white text-sm">
+    <div className="searchbar-account-management flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
       <input type="text" className="w-full px-3 py-2 outline-none"
-        placeholder={transWithFallback('findByNameOrIdEvent', 'Tìm kiếm theo tên hoặc ID sự kiện')}
+        placeholder={transWithFallback('findByNameOrEmail', 'Tìm kiếm theo tên hoặc email')}
         value={searchTerm}
         onChange={handleInputChange}
       />
