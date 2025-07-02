@@ -500,5 +500,16 @@
     "term": "Terms and Conditions",
     "tnc": "[TnC] event",
     "childrenNote": "Note on children's terms",
-    "vatNote": "Note on VAT terms"
+    "vatNote": "Note on VAT terms",
+    "eventNote": "Note when posting events",
+    "please": "1. Please",
+    "doNotDisplayContactInfo": "do not display the contact information of the Organizing Committee",
+    "example": "(e.g.: Phone number/ Email/ Website/ Facebook/ Instagram…)",
+    "onBannerAndPost": "on the banner and in the post content.",
+    "hotline": "Only use the Ticketbox Hotline - 1900.6408.",
+    "incaseOrg": "2. In case the Organizing Committee",
+    "updateEvent": "creates or updates an event not in accordance with the above regulations, Ticketbox reserves the right to refuse approval of the event.",
+    "checkEvent": "3. Ticketbox will continuously check the information of events being displayed on the platform,",
+    "ifWrong": "if any violations related to images/post content are detected, Ticketbox reserves the right to remove or refuse to provide services for these events,",
+    "basedOn": "based on clause 2.9 in the Service Agreement."
 }

@@ -494,5 +494,16 @@
   "term": "Điều khoản và điều kiện",
   "tnc": "[TnC] sự kiện",
   "childrenNote": "Lưu ý về điều khoản trẻ em",
-  "vatNote": "Lưu ý về điều khoản VAT"
+  "vatNote": "Lưu ý về điều khoản VAT",
+  "eventNote": "Lưu ý khi đăng tải sự kiện",
+  "please": "1. Vui lòng",
+  "doNotDisplayContactInfo": "không hiển thị thông tin liên lạc của Ban Tổ Chức",
+  "example": "(ví dụ: Số điện thoại/ Email/ Website/ Facebook/ Instagram…)",
+  "onBannerAndPost": "trên banner và trong nội dung bài đăng.",
+  "hotline": "Chỉ sử dụng duy nhất Hotline Ticketbox - 1900.6408.",
+  "incaseOrg": "2. Trong trường hợp Ban tổ chức",
+  "updateEvent": "tạo mới hoặc cập nhật sự kiện không đúng theo quy định nêu trên, Ticketbox có quyền từ chối phê duyệt sự kiện.",
+  "checkEvent": "3. Ticketbox sẽ liên tục kiểm tra thông tin các sự kiện đang được hiển thị trên nền tảng,",
+  "ifWrong": "nếu phát hiện có sai phạm liên quan đến hình ảnh/ nội dung bài đăng, Ticketbox có quyền gỡ bỏ hoặc từ chối cung cấp dịch vụ đối với các sự kiện này,",
+  "basedOn": "dựa theo điều khoản 2.9 trong Hợp đồng dịch vụ."
 }
