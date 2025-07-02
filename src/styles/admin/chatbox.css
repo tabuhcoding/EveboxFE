@@ -160,3 +160,19 @@
 .chat-box__body-item-content.user {
   word-break: break-word;
 }
+
+.message-content a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.message-content a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.message-content a:active {
+  transform: scale(0.98);
+}

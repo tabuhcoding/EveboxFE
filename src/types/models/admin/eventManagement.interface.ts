@@ -97,7 +97,7 @@ export interface EventAdminParams {
   createdFrom?: string;
   createdTo?: string;
   categoryId?: number;
-  search?: string;
+  title?: string;
 }
 
 export interface EventPaginationProps {
@@ -138,6 +138,18 @@ export interface UpdateEventAdminPayload {
   categoryIds?: number[];
 }
 
+export interface TicketTypeOfShowing {
+  id: string;
+}
+
+export interface ShowingOfEvent {
+  id: string;
+  startTime: string;
+  endTime: string;
+  seatMapId: number;
+  TicketType: TicketTypeOfShowing[];
+}
+
 export interface EventDetailAdmin {
   id: number;
   title: string;
@@ -150,6 +162,10 @@ export interface EventDetailAdmin {
   isOnline: boolean;
   lastScore: string;
   totalClicks: number;
+  createdAt: string;
+  deleteAt: string | null;
+  isApproved: boolean;
+  locationsString: string;
   weekClicks: number;
   isSpecial: boolean;
   isOnlyOnEve: boolean;
@@ -157,4 +173,9 @@ export interface EventDetailAdmin {
   orgDescription: string;
   categories: Category[];
   status: string;
+  showing: ShowingOfEvent[];
+}
+
+export interface ShowingTableProps {
+  showings: ShowingOfEvent[];
 }

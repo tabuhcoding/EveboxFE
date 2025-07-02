@@ -1,10 +1,28 @@
-// import CryptoJS from "crypto-js";
+import { UserRole } from "@/types/models/admin/accountManagement.interface";
 
-// const keyHex = process.env.NEXT_PUBLIC_ENCRYPTION_KEY!;
-// const ivHex = process.env.NEXT_PUBLIC_ENCRYPTION_IV!;
+export function mapRoleNumberToString(roleNum: number): UserRole {
+  switch (roleNum) {
+    case 0: return UserRole.SYSTEM_ADMIN;
+    case 1: return UserRole.ADMIN;
+    case 2: return UserRole.ORGANIZER;
+    default: return UserRole.CUSTOMER; // hoặc undefined, tùy bạn
+  }
+}
 
-// const key = CryptoJS.enc.Hex.parse(keyHex);
-// const iv = CryptoJS.enc.Hex.parse(ivHex);
+export function mapRoleStringToNumber(roleStr: string): number {
+  switch (roleStr) {
+    case 'SYSTEM_ADMIN': 
+    case UserRole.SYSTEM_ADMIN:
+      return 0;
+    case 'ADMIN': 
+    case UserRole.ADMIN:
+      return 1;
+    case 'ORGANIZER': 
+    case UserRole.ORGANIZER:
+      return 2;
+    default: return 3; 
+  }
+}
 
 /**
  * Formats a date string into a more readable format.
@@ -55,3 +73,7 @@ export const convertLocationToVietnamese = (locationString: string): string => {
 //   });
 //   return decrypted.toString(CryptoJS.enc.Utf8);
 // }
+
+export function formatCurrency (amount: number) {
+  return new Intl.NumberFormat('vi-VN').format(amount);
+}

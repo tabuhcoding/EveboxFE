@@ -73,7 +73,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
         isApproved: activeTab === "approved" ? true : activeTab === "pending" ? false : undefined,
         categoryId: categoryFilter ? mapCategoryNameToId(categoryFilter) : undefined,
         isDeleted: activeTab === "deleted" ? true : undefined,
-        search: searchKeyword ?? "",
+        title: searchKeyword ?? "",
       }, session?.user?.accessToken || "");
 
       if (res.statusCode === 200) {
@@ -82,7 +82,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
         setTotalPages(res.data.pagination.totalPages);
       }
     } catch (error) {
-      toast.error(`Lỗi khi tải dữ liệu sự kiện: ${error}`);
+      toast.error(`${transWithFallback('errorWhenFetchEvents', 'Lỗi khi tải dữ liệu sự kiện')}: ${error}`);
       setEvents([]);
     } finally {
       setIsLoadingEvents(false);
@@ -115,7 +115,6 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
     if (selectedEvent) {
       try {
         setIsLoadingEventAction(true);
-        console.log("🚀 ~ handleConfirmApproval ~ selectedEvent:", selectedEvent)
         const result = await updateEventAdmin(selectedEvent.id, {
           isApproved: true,
         }, session?.user?.accessToken || "");

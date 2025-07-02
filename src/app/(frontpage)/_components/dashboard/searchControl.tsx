@@ -5,16 +5,15 @@ import { CalendarDate } from "@internationalized/date";
 import { RangeValue } from "@react-types/shared";
 import { ChevronDown, Search, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useRef, useState } from 'react';
 
 
 /* Package Application */
-import { getAllCategories } from 'services/event.service';
+import { getAllCategories, getAllProvinces, Location } from 'services/event.service';
 import { Category } from 'types/models/dashboard/frontDisplay';
 
 import { mapCategoryName } from "../libs/functions/mapCategoryName";
-import { fetchProvinces } from '../libs/server/fetchData';
 
 import DatePicker from './datePicker';
 import '../../../../styles/global.css';
@@ -26,12 +25,14 @@ export default function SearchControls() {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-  const [locations, setLocations] = useState<{ name: string; code: number }[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const dropdownEventRef = useRef(null);
   const dropdownLocationRef = useRef(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const router = useRouter();
+  const locale = useLocale();
+
   const t = useTranslations("common");
 
   const handleSearch = () => {
@@ -41,13 +42,21 @@ export default function SearchControls() {
 
     if (searchText) queryParams.title = searchText;
     if (selectedOptions.length > 0) queryParams.type = selectedOptions.join(',');
-    if (selectedLocation) queryParams.location = selectedLocation;
+    if (selectedLocation) queryParams.provinceId = selectedLocation.id.toString();
     if (dateRange?.start) queryParams.startDate = dateRange.start.toString();
     if (dateRange?.end) queryParams.endDate = dateRange.end.toString();
 
     const params = new URLSearchParams(queryParams).toString();
     router.push(`/search?${params}`);
   };
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      const data = await getAllProvinces();
+      setLocations(data);
+    };
+    loadLocations();
+  }, []);
 
 
   useEffect(() => {
@@ -57,14 +66,6 @@ export default function SearchControls() {
     };
 
     loadCategories();
-  }, []);
-
-  useEffect(() => {
-    const loadLocations = async () => {
-      const data = await fetchProvinces();
-      setLocations(data);
-    };
-    loadLocations();
   }, []);
 
   const toggleOption = (option: string) => {
@@ -148,38 +149,41 @@ export default function SearchControls() {
                 className="w-full bg-white border border-gray-300 rounded p-2 flex justify-between items-center text-gray-500 small-text"
               >
                 <span>
-                  {selectedLocation ? selectedLocation : transWithFallback('locationHint', "Chọn địa điểm")}
+                  {selectedLocation
+                    ? (locale === 'en' ? selectedLocation.nameEn : selectedLocation.nameVi)
+                    : transWithFallback('locationHint', "Chọn địa điểm")}
+
                 </span>
                 <ChevronDown size={16} className="text-gray-500" />
               </button>
 
-              {/* Dropdown menu */}
               {isLocationOpen && (
                 <div className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-lg text-[#0C4762] small-text max-h-64 overflow-y-auto">
                   {locations.map((location) => (
                     <div
+                      key={location.id}
                       role="button"
                       tabIndex={0}
-                      key={location.code}
                       className="p-2 hover:bg-[#0C4762] hover:bg-opacity-[0.31] cursor-pointer"
                       onClick={() => {
-                        setSelectedLocation(location.name);
+                        setSelectedLocation(location);
                         setIsLocationOpen(false);
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
-                          setSelectedLocation(location.name);
+                          setSelectedLocation(location);
                           setIsLocationOpen(false);
                         }
                       }}
-                      aria-pressed={selectedLocation === location.name}
                     >
-                      {location.name}
+                      {locale === 'en' ? location.nameEn : location.nameVi}
                     </div>
                   ))}
+
                 </div>
               )}
             </div>
+
           </div>
           <div className="min-w-[180px] w-full">
             <label className="text-sm font-medium mb-2">{transWithFallback('timeTitle', "Thời gian")}</label>

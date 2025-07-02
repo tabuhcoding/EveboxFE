@@ -5,17 +5,31 @@ import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 import { SearchEventsParams } from "types/models/dashboard/searchEventParams.interface";
 import { SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
-import { 
+import {
   EventAdminParams,
   EventManagementApiResponse,
   UpdateEventAdminPayload,
-  EventDetailAdmin
+  EventDetailAdmin,
 } from "@/types/models/admin/eventManagement.interface";
+
+import { SpecialEventAdminParams, SpecialEventApiResponse } from "@/types/models/admin/eventSpecialManagement.interface";
+
+import {
+  ShowingApiResponse,
+  ShowingAdminParams,
+  ShowingDetail,
+  ShowingInTicketTypeDetail
+} from "@/types/models/admin/showingManagement.interface";
+
+import { GetAllLocationsResponseDto } from "@/types/models/admin/locationManagement.interface";
 
 import { END_POINT_LIST } from "./endpoint";
 import { eventService } from "./instance.service";
 
-
+import { CreateEventDto } from "types/models/event/createEvent.dto";
+import { Province } from "types/models/event/location.interface";
+import { EventDetailResponse } from "@/types/models/event/eventdetail/event.interface";
+import { UpdateEventDto, UpdateEventResponseDto } from "@/types/models/event/updateEvent.interface";
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
@@ -82,7 +96,6 @@ export async function getFormOfShowing(showingId: string): Promise<BaseApiRespon
   try {
     const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_FORM}?showingId=${showingId}`);
 
-    console.log("🚀 ~ getFormOfShowing ~ res:", res)
     if (!res) throw new Error('Failed to get form of showing, please try again later');
 
     return res.data;
@@ -123,7 +136,38 @@ export async function getEventsAdmin(params: EventAdminParams, accessToken: stri
   }
 }
 
-export async function updateEventAdmin (eventId: number, payload: UpdateEventAdminPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
+export async function getSpecialEventsManagment(params: SpecialEventAdminParams, accessToken: string): Promise<BaseApiResponse<SpecialEventApiResponse>> {
+  try {
+    const cleanedEntries = Object.entries(params).filter(([_, value]) => value !== undefined);
+    const cleanedParams = {
+      ...Object.fromEntries(cleanedEntries),
+      page: params.page,
+      limit: params.limit
+    } as SpecialEventAdminParams;
+
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(END_POINT_LIST.ADMIN.EVENTS_SPECIAL, {
+      params: cleanedParams,
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get special events by admin');
+
+    return res.data as BaseApiResponse<SpecialEventApiResponse>;
+  } catch (error: any) {
+    console.error("Error get special events by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function updateEventAdmin(eventId: number, payload: UpdateEventAdminPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
   try {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -146,7 +190,7 @@ export async function updateEventAdmin (eventId: number, payload: UpdateEventAdm
   }
 }
 
-export async function getEventDetail(eventId: number, accessToken?: string): Promise<BaseApiResponse<EventDetailAdmin>> {
+export async function getEventDetailAdmin(eventId: number, accessToken?: string): Promise<BaseApiResponse<EventDetailAdmin>> {
   try {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -156,7 +200,7 @@ export async function getEventDetail(eventId: number, accessToken?: string): Pro
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(`${END_POINT_LIST.EVENT.GET_EVENT_DETAIL}?eventId=${eventId}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.EVENT_DETAIL}?eventId=${eventId}`, {
       headers: headers,
     });
 
@@ -169,20 +213,100 @@ export async function getEventDetail(eventId: number, accessToken?: string): Pro
   }
 }
 
+export async function getShowingsByAdmin(params: ShowingAdminParams, accessToken: string): Promise<BaseApiResponse<ShowingApiResponse>> {
+  try {
+    const cleanedEntries = Object.entries(params).filter(([_, value]) => value !== undefined);
+    const cleanedParams = {
+      ...Object.fromEntries(cleanedEntries),
+      page: params.page,
+      limit: params.limit
+    } as ShowingAdminParams;
+
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(END_POINT_LIST.ADMIN.SHOWINGS, {
+      params: cleanedParams,
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get showings by admin');
+
+    return res.data as BaseApiResponse<ShowingApiResponse>;
+  } catch (error: any) {
+    console.error("Error get showings by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getShowingDetailAdmin(id: string, accessToken: string): Promise<BaseApiResponse<ShowingDetail>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.SHOWINGS}/${id}`, {
+      headers: headers,
+    });
+
+    if (!res) throw new Error('Failed to get event detail');
+
+    return res.data as BaseApiResponse<ShowingDetail>;
+  } catch (error: any) {
+    console.error("Error get showing detail by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getTicketTypeDetailAdmin(showingId: string, ticketTypeId: string, accessToken: string): Promise<BaseApiResponse<ShowingInTicketTypeDetail>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN.SHOWINGS}/${showingId}/${ticketTypeId}`, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to get ticket type detail by admin');
+
+    console.log("🚀 ~ getTicketTypeDetailAdmin ~ res.data:", res.data)
+    return res.data as BaseApiResponse<ShowingInTicketTypeDetail>;
+  } catch (error: any) {
+    console.error("Error get ticket type detail by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
 export async function getSearchEvents({
   title,
   type,
+  provinceId,
   startDate,
   endDate,
   minPrice,
   maxPrice,
-  pages = 1, 
+  pages = 1,
   limit = 10
 }: SearchEventsParams): Promise<SearchEventsResponse> {
   try {
     const params = new URLSearchParams();
     params.append("title", title);
     if (type) params.append("type", type);
+    if (provinceId) params.append("location", provinceId);
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
     if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
@@ -199,3 +323,166 @@ export async function getSearchEvents({
   }
 }
 
+export interface Location {
+  id: number;
+  nameVi: string;
+  nameEn: string;
+}
+
+export const getAllProvinces = async (): Promise<Location[]> => {
+  try {
+    const res = await eventService.get("/api/location/all-districts");
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch provinces");
+    }
+
+    const provinces: Location[] = res.data.map((province: any) => ({
+      id: province.id,
+      nameVi: province.name.vi,
+      nameEn: province.name.en
+    }));
+
+    return provinces;
+  } catch (error) {
+    console.error("Error fetching provinces:", error);
+    throw error;
+  }
+}
+
+export async function createEvent(payload: CreateEventDto, accessToken?: string): Promise<{ id: number }> {
+  if (typeof window === "undefined") {
+    // SSR (e.g., for API routes or static rendering)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/org/event`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken || process.env.ACCESS_TOKEN || ""}`,
+      },
+      body: JSON.stringify(payload),
+      next: { revalidate: 0 }, // optional
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Failed to create event");
+    }
+
+    const json: BaseApiResponse<{ id: number }> = await res.json();
+    return json.data;
+  } else {
+    // CSR (e.g., from browser)
+    const res = await eventService.post<BaseApiResponse<{ id: number }>>(
+      END_POINT_LIST.ORG_EVENT.EVENT,
+      payload
+    );
+    if (!res) throw new Error("Failed to create event");
+    return res.data.data;
+  }
+}
+
+export async function updateEvent(
+  eventId: number,
+  payload: UpdateEventDto,
+): Promise<BaseApiResponse<UpdateEventResponseDto["data"]>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.EVENT}/${eventId}`;
+
+  try {
+    const res = await eventService.put<BaseApiResponse<UpdateEventResponseDto["data"]>>(url, payload);
+
+    if (res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to update event");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error updating event:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while updating event");
+  }
+}
+
+export async function getAllDistricts(): Promise<Province[]> {
+  if (typeof window === "undefined") {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/location/all-districts`,
+      {
+        next: { revalidate: 60 }, // Optional SSR caching
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch all districts");
+
+    const json: Province[] = await res.json();
+    return json;
+  } else {
+    const res = await eventService.get<Province[]>(
+      END_POINT_LIST.LOCATION.GET_ALL_DISTRICTS
+    );
+
+    if (!res) throw new Error("Failed to fetch all districts");
+
+    return res.data;
+  }
+}
+
+export const getEventDetail = async (
+  eventId: number,
+): Promise<EventDetailResponse> => {
+  const url = `${END_POINT_LIST.EVENT.GET_EVENT_DETAIL}?eventId=${eventId}`;
+
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
+        "Content-Type": "application/json",
+      },
+      next: { revalidate: 60 }, // optional SSR caching
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Failed to fetch event details");
+    }
+
+    return res.json() as Promise<EventDetailResponse>;
+  } else {
+    const res = await eventService.get<EventDetailResponse>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch event details");
+    }
+
+    return res.data;
+  }
+}
+
+export async function getAllLocations(accessToken: string, organizerId?: string, provinceId?: number): Promise<GetAllLocationsResponseDto> {
+  const params = new URLSearchParams();
+  if (organizerId) params.append("organizerId", organizerId);
+  if (provinceId !== undefined) params.append("provinceId", provinceId.toString());
+
+  const headers: { [key: string]: string } = {
+    'Content-Type': 'application/json',
+  };
+
+  if (accessToken && accessToken !== "") {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  try {
+    const res = await eventService.get(`${END_POINT_LIST.LOCATION.GET_ALL_LOCATIONS}?${params.toString()}`, {
+      headers: headers
+    });
+
+    if (!res || !res.data) {
+      throw new Error("Failed to fetch locations");
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+    throw error;
+  }
+}

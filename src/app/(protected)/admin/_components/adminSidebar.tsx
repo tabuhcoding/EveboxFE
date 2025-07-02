@@ -21,7 +21,7 @@ export default function AdminSidebar() {
     { text: transWithFallback('eventManagement', 'Quản lý sự kiện'), href: '/admin/event-management', icon: <CalendarPlus size={20} /> },
     { text: transWithFallback('showingManagement', 'Quản lý suất diễn'), href: '/admin/showing-management', icon: <Ticket size={20} /> },
     { text: transWithFallback('eventSpecialManagement', 'Quản lý sự kiện đặc biệt'), href: '/admin/event-special-management', icon: <FilePenLine size={20} /> },
-    { text: transWithFallback('locationManagement', 'Quản lý địa điểm'), icon: <MapPin size={20} /> },
+    { text: transWithFallback('locationManagement', 'Quản lý địa điểm'), href: '/admin/location-management', icon: <MapPin size={20} /> },
     // { text: 'Quản lý Voucher', href: '/admin/voucher-management', icon: <TicketPercent size={20} /> },
     { text: transWithFallback('paymentManagement', 'Quản lý thanh toán'), href: 'https://my.payos.vn/login', icon: <CircleDollarSign size={20} /> },
     { text: transWithFallback('revenueManagement', 'Quản lý doanh thu'), href: '/admin/revenue-management', icon: <ChartColumnIncreasing size={20} /> },
