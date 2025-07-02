@@ -4,9 +4,13 @@
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useSession } from 'next-auth/react';
 
 /* Package Application */
-import { generateDescripton } from '../../../libs/functions/info-event/generateDescription';
+import { generateDescription } from '../../../libs/functions/info-event/generateDescription';
+import { useI18n } from '@/app/providers/i18nProvider';
+import { DescriptionWithAIProps } from '../../../../../../../../types/models/event/createEvent.dto';
 // import '@/styles/admin/chatbox.css';
 
 export interface GenerationProps {
@@ -19,30 +23,39 @@ export interface GenerationProps {
   organizerDescription: string;
   categoryIds: number[];
 }
-interface DescriptionWithAIProps {
-  isValid: boolean;
-  generationForm: GenerationProps;
-  onChange: (content: string) => void
-}
 
+export default function DescriptionWithAI({ isValid, eventDetails, onChange, currentDescription = '' }: DescriptionWithAIProps) {
+  const t = useTranslations('common');
+  const { locale } = useI18n();
+  const { data: session } = useSession();
 
-export default function DescriptionWithAI({ isValid, generationForm, onChange }: DescriptionWithAIProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userRequest, setUserRequest] = useState('');
 
   const handleGenerate = async () => {
     if (!isValid) return;
     setIsLoading(true);
     try {
-      const response = await generateDescripton(generationForm);
+      setUserRequest('Tạo mô tả HTML hấp dẫn');
+      const payload = {
+        privatekey: process.env.NEXT_PUBLIC_OPENAI_USAGE_PRIVATE_KEY || '',
+        Event: eventDetails,
+        description: currentDescription,
+        userRequest: userRequest,
+        language: locale,
+      };
 
-      if (response) {
-        onChange(response);
+      const response = await generateDescription(payload, session?.user?.accessToken || "");
+
+      if (response?.statusCode === 200) {
+        onChange(response.data);
       } else {
-        onChange('Error generating description');
+        onChange(transWithFallback('errorGenerateDescription', 'Lỗi khi tạo mô tả'));
+        toast.error(transWithFallback('errorGenerateDescription', 'Lỗi khi tạo mô tả'))
       }
     } catch (error) {
-      onChange('Error generating description');
+      onChange(transWithFallback('errorGenerateDescription', 'Lỗi khi tạo mô tả'));
       console.error('Error generating description', error);
     } finally {
       setIsLoading(false);
@@ -50,17 +63,23 @@ export default function DescriptionWithAI({ isValid, generationForm, onChange }:
     }
   }
 
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    return !msg || msg.startsWith('common.') ? fallback : msg;
+  };
+
   return (
     <div className="flex justify-end mt-3 relative">
       {/* Button Generate AI */}
-      <button className="absolute bottom-5 right-2 border-none bg-transparent focus:outline-none"
+      <button 
+        className="absolute bottom-5 right-2 border-none bg-transparent focus:outline-none"
         onClick={() => {
           if (!isValid) {
-            toast.error("Vui lòng hoàn tất các thông tin trước khi sử dụng tính năng này!");
+            toast.error(transWithFallback('pleaseFillAll', 'Vui lòng hoàn tất các thông tin trước khi sử dụng tính năng này!'));
           }
           setShowPopup(!showPopup)
         }}
-        title="Generate with AI" type="button"
+        title={transWithFallback('generateWithAI', 'Tạo mô tả với AI')} type="button"
       >
         <img className="w-12 h-12 rounded-full object-cover shadow-md hover:shadow-xl transition-transform duration-300 hover:scale-110"
           alt="Generate with AI"
@@ -74,7 +93,7 @@ export default function DescriptionWithAI({ isValid, generationForm, onChange }:
           {/* Header popup */}
           <div className="flex justify-between items-start">
             <p className="text-base font-medium text-gray-800">
-              Dùng AI để sinh nội dung cho phần mô tả dựa trên những gì bạn đang viết
+              {transWithFallback('useAIToGen', 'Dùng AI để sinh nội dung cho phần mô tả dựa trên những gì bạn đang viết')}
             </p>
             <button onClick={() => setShowPopup(false)}
               className="text-gray-500 hover:bg-gray-100 p-1 rounded-full">
@@ -90,8 +109,8 @@ export default function DescriptionWithAI({ isValid, generationForm, onChange }:
             disabled={!isValid || isLoading}
           >
             {isLoading ? (
-              'Đang tạo nội dung'
-            ) : 'Đồng ý'}
+              transWithFallback('generating', 'Đang tạo nội dung')
+            ) : transWithFallback('iAgree', 'Đồng ý')}
           </button>
         </div>
       )}
