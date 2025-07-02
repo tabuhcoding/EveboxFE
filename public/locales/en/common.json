@@ -511,5 +511,8 @@
     "updateEvent": "creates or updates an event not in accordance with the above regulations, Ticketbox reserves the right to refuse approval of the event.",
     "checkEvent": "3. Ticketbox will continuously check the information of events being displayed on the platform,",
     "ifWrong": "if any violations related to images/post content are detected, Ticketbox reserves the right to remove or refuse to provide services for these events,",
-    "basedOn": "based on clause 2.9 in the Service Agreement."
+    "basedOn": "based on clause 2.9 in the Service Agreement.",
+    "noPaymentInfo": "You have not registered payment information as an organizer.",
+    "continueAnyway": "Continue creating the event",
+    "registerOrganizer": "Register as an organizer"
 }

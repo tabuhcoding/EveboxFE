@@ -505,5 +505,8 @@
   "updateEvent": "tạo mới hoặc cập nhật sự kiện không đúng theo quy định nêu trên, Ticketbox có quyền từ chối phê duyệt sự kiện.",
   "checkEvent": "3. Ticketbox sẽ liên tục kiểm tra thông tin các sự kiện đang được hiển thị trên nền tảng,",
   "ifWrong": "nếu phát hiện có sai phạm liên quan đến hình ảnh/ nội dung bài đăng, Ticketbox có quyền gỡ bỏ hoặc từ chối cung cấp dịch vụ đối với các sự kiện này,",
-  "basedOn": "dựa theo điều khoản 2.9 trong Hợp đồng dịch vụ."
+  "basedOn": "dựa theo điều khoản 2.9 trong Hợp đồng dịch vụ.",
+  "noPaymentInfo": "Bạn chưa đăng ký thông tin thanh toán với tư cách tổ chức.",
+  "continueAnyway": "Tiếp tục tạo sự kiện",
+  "registerOrganizer": "Đăng ký tổ chức"
 }

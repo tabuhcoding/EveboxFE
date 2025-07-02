@@ -200,7 +200,7 @@ const transWithFallback = (key: string, fallback: string) => {
           onClick={() => setShowPaymentWarning(false)}
           className="px-4 py-2 bg-red-100 text-red-600 rounded"
         >
-          {transWithFallback("cancel", "Hủy")}
+          {transWithFallback("btnCancel", "Hủy")}
         </button>
       </div>
     </div>
