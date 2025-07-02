@@ -11,7 +11,6 @@ import TextEditor from "./textEditor";
 import OrganizationInfoForm from "./organizationInfoForm";
 import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
-import { GenerationProps } from "./descriptionWithAI";
 import { getAllCategories, getAllDistricts, getEventDetail, updateEvent } from "services/event.service";
 import { Province } from "types/models/event/location.interface";
 import { CreateEventDto, EventDescriptionGenDto } from "types/models/event/createEvent.dto";
@@ -235,10 +234,10 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
   useEffect(() => {
     updateGenerationForm("isOnlineEvent", eventTypeSelected === "offline" ? false : true);
-    updateGenerationForm("description", post);
+    // updateGenerationForm("description", post);
   }, []);
 
-  const updateGenerationForm = (field: keyof GenerationProps, value: string | number | boolean | number[]) => {
+  const updateGenerationForm = (field: keyof EventDescriptionGenDto, value: string | number | boolean | number[]) => {
     setEventDetailInfo((prev) => {
       const safePrev: EventDescriptionGenDto = prev ?? {
         name: "",
@@ -297,7 +296,8 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
       const cat = categories.find((c) => c.name === value) || null;
       const genCat = categories.find((c) => c.name === value);
       setSelectedCategory(cat);
-      updateGenerationForm("categoryIds", genCat ? [genCat.id] : []);
+      updateGenerationForm("categories", genCat ? [genCat.id] : []);
+      // updateGenerationForm("categoryIds", genCat ? [genCat.id] : []);
     }
 
     // Xóa lỗi nếu chọn lại giá trị
@@ -308,7 +308,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
   const onChange = (content: string) => {
     setPost(content);
-    updateGenerationForm("description", content);
+    // updateGenerationForm("description", content);
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {

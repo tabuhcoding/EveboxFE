@@ -460,5 +460,9 @@
   "iAgree": "Đồng ý",
   "noPaymentInfo": "Bạn chưa đăng ký thông tin thanh toán với tư cách nhà tổ chức",
   "continueAnyway": "Tiếp tục tạo sự kiện",
-  "registerOrganizer": "Đăng ký tổ chức"
+  "registerOrganizer": "Đăng ký tổ chức",
+  "yourRequest": "Yêu cầu của bạn (nếu có)",
+  "requestPlaceholder": "Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh",
+  "optionalField": "Trường này không bắt buộc",
+  "language": "Ngôn ngữ"
 }

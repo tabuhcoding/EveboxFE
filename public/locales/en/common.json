@@ -470,5 +470,9 @@
     "iAgree": "Agree",
     "noPaymentInfo": "You haven't registered payment info as an organizer yet",
     "continueAnyway": "Continue anyway",
-    "registerOrganizer": "Register as an organizer"
+    "registerOrganizer": "Register as an organizer",
+    "yourRequest": "Your request (optional)",
+    "requestPlaceholder": "For ex: Create a catchy HTML description with at least 2 images...",
+    "optionalField": "This field is optional",
+    "language": "Language"
 }
