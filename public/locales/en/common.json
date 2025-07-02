@@ -448,5 +448,8 @@
     "orgName": "Organizer name",
     "noStt": "No.",
     "city": "City",
-    "findByLocation": "Find by location..."
+    "findByLocation": "Find by location...",
+    "myEvents": "My events",
+    "reportManagement": "Report management",
+    "legalDocument": "Legal document"
 }
