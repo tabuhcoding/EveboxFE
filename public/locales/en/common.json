@@ -461,5 +461,14 @@
     "goToHomePage": "Go to homepage",
     "goToProfilePage": "Go to profile page",
     "goToMyTicketPage": "Go to my ticket page",
-    "goToCreateEventPage": "Go to create event page"
+    "goToCreateEventPage": "Go to create event page",
+    "errorGenerateDescription": "Error when generate description",
+    "pleaseFillAll": "Please fill all information fields before using this feature!",
+    "generateWithAI": "Generate description with AI",
+    "useAIToGen": "Use AI to generate content for description based on what you write",
+    "generating": "Generating",
+    "iAgree": "Agree",
+    "noPaymentInfo": "You haven't registered payment info as an organizer yet",
+    "continueAnyway": "Continue anyway",
+    "registerOrganizer": "Register as an organizer"
 }

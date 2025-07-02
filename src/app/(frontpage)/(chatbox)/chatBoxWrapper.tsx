@@ -15,7 +15,7 @@ import '@/styles/admin/components/perfectScrollBar.css';
 import { fetchContent, sendMessageToBotNavigation } from "@/services/rag.service";
 import { NAVIGATE_ROUTES } from "./libs/endpoints";
 import { useSearchResults } from "@/app/providers/searchResultProvider";
-import { ChatBoxWrapperProps, ChatBoxContent, NavigationApiResponse } from "@/types/models/dashboard/chatbox.interface";
+import { ChatBoxWrapperProps, ChatBoxContent } from "@/types/models/dashboard/chatbox.interface";
 
 const chatBoxLogo = '/images/chatbox-space1.png';
 

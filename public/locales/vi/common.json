@@ -451,5 +451,14 @@
   "failedToFetchContent": "Lấy dữ liệu thất bại",
   "errorHappened": "Có lỗi xảy ra",
   "typing": "Đang nhập",
-  "enterYourMessage": "Nhập tin nhắn của bạn"
+  "enterYourMessage": "Nhập tin nhắn của bạn",
+  "errorGenerateDescription": "Lỗi khi tạo mô tả",
+  "pleaseFillAll": "Vui lòng hoàn tất các thông tin trước khi sử dụng tính năng này!",
+  "generateWithAI": "Tạo mô tả với AI",
+  "useAIToGen": "Dùng AI để sinh nội dung cho phần mô tả dựa trên những gì bạn đang viết",
+  "generating": "Đang tạo nội dung",
+  "iAgree": "Đồng ý",
+  "noPaymentInfo": "Bạn chưa đăng ký thông tin thanh toán với tư cách nhà tổ chức",
+  "continueAnyway": "Tiếp tục tạo sự kiện",
+  "registerOrganizer": "Đăng ký tổ chức"
 }

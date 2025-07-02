@@ -421,7 +421,6 @@ export async function getAllDistricts(): Promise<Province[]> {
     );
 
     if (!res) throw new Error("Failed to fetch all districts");
-    console.log("=-------:", res.data);
 
     return res.data;
   }
