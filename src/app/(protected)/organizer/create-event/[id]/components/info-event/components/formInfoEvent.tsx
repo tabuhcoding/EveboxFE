@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 /* Package Application */
 import SelectField from "../../common/form/selectField";
@@ -29,6 +29,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   const params = useParams();
   const currentEventId = params?.id;
   const t = useTranslations('common');
+  const locale = useLocale();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -85,34 +86,51 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   ];
 
   //Nội dung sẵn trong Thông tin sự kiện
-  const [post, setPost]
-    = useState(`<p><strong>Giới thiệu sự kiện:</strong></p>
-                <p>
-                    [Tóm tắt ngắn gọn về sự kiện: Nội dung chính, điểm đặc sắc nhất
-                    và lý do khiến người tham gia không nên bỏ lỡ]
-                </p>
+  const [post, setPost] = useState('');
 
-                <p><strong>Chi tiết sự kiện:</strong></p>
-                <ul className="list-disc ml-5">
-                    <li>
-                        <span><strong>Chương trình chính:</strong></span> [Liệt kê
-                        những hoạt động nổi bật trong sự kiện: các phần trình diễn, khách mời
-                        đặc biệt, lịch trình các tiết mục cụ thể nếu có.]
-                    </li>
-                    <li>
-                        <span><strong>Khách mời:</strong></span> [Thông tin về các khách
-                        mời đặc biệt, nghệ sĩ, diễn giả sẽ tham gia sự kiện.]
-                    </li>
-                    <li>
-                        <span><strong>Đối tượng hướng tới:</strong></span> [Chỉ rõ 
-                        tệp đối tượng mà chương trình chủ yếu đáp ứng nhu cầu]
-                    </li>
-                </ul>
+  useEffect(() => {
+    const defaultPost = `
+      <p><strong>${transWithFallback('eventIntro', 'Giới thiệu sự kiện')}:</strong></p>
+      <p>
+        ${transWithFallback(
+      'eventIntroDesc',
+      '[Tóm tắt ngắn gọn về sự kiện: Nội dung chính, điểm đặc sắc nhất và lý do khiến người tham gia không nên bỏ lỡ]'
+    )}
+      </p>
 
-                <p><strong>Điều khoản và điều kiện:</strong></p>
-                <p>[TnC] sự kiện</p>
-                <p>Lưu ý về điều khoản trẻ em</p>
-                <p>Lưu ý về điều khoản VAT</p>`);
+      <p><strong>${transWithFallback('eventDetail', 'Chi tiết sự kiện')}:</strong></p>
+      <ul class="list-disc ml-5">
+        <li>
+          <span><strong>${transWithFallback('mainProgram', 'Chương trình chính')}:</strong></span>
+          ${transWithFallback(
+      'mainProgramDesc',
+      '[Liệt kê những hoạt động nổi bật trong sự kiện: các phần trình diễn, khách mời đặc biệt, lịch trình các tiết mục cụ thể nếu có.]'
+    )}
+        </li>
+        <li>
+          <span><strong>${transWithFallback('guests', 'Khách mời')}:</strong></span>
+          ${transWithFallback(
+      'guestsDesc',
+      '[Thông tin về các khách mời đặc biệt, nghệ sĩ, diễn giả sẽ tham gia sự kiện.]'
+    )}
+        </li>
+        <li>
+          <span><strong>${transWithFallback('targetAudience', 'Đối tượng hướng tới')}:</strong></span>
+          ${transWithFallback(
+      'audienceDesc',
+      '[Chỉ rõ tệp đối tượng mà chương trình chủ yếu đáp ứng nhu cầu]'
+    )}
+        </li>
+      </ul>
+
+      <p><strong>${transWithFallback('term', 'Điều khoản và điều kiện')}:</strong></p>
+      <p>${transWithFallback('tnc', '[TnC] sự kiện')}</p>
+      <p>${transWithFallback('childrenNote', 'Lưu ý về điều khoản trẻ em')}</p>
+      <p>${transWithFallback('vatNote', 'Lưu ý về điều khoản VAT')}</p>
+    `;
+
+    setPost(defaultPost);
+  }, [locale, t]);
 
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
@@ -541,7 +559,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
                 <SelectField
-                  label="Thể loại sự kiện"
+                  label={transWithFallback('eventCategory', 'Thể loại sự kiện')}
                   options={categories.map((cat) => cat.name)}
                   value={selectedCategory ? selectedCategory.name : ""}
                   onChange={(e) => handleSelectChange(e, "typeEvent")}
@@ -557,12 +575,14 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
                 <p className="block text-sm font-bold mb-2">
-                  <span className="text-red-500">* </span> Thông tin sự kiện
+                  <span className="text-red-500">* </span> {transWithFallback('eventInfo', 'Thông tin sự kiện')}
                 </p>
 
-                <div className="boder ">
-                  <TextEditor generationForm={generationForm} content={post} onChange={onChange} isValidDescription={isFormValid} />
-                </div>
+                {post && (
+                  <div className="boder ">
+                    <TextEditor key={locale} generationForm={generationForm} content={post} onChange={onChange} isValidDescription={isFormValid} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

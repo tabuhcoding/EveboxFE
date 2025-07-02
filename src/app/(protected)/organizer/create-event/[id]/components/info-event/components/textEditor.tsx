@@ -16,7 +16,7 @@ import Youtube from '@tiptap/extension-youtube'
 /* Package Application */
 import MenuBar from "./menu-bar";
 // import '@/styles/admin/pages/CreateEvent.css'
-import DescriptionWithAI,{ GenerationProps } from "./descriptionWithAI";
+import DescriptionWithAI, { GenerationProps } from "./descriptionWithAI";
 
 interface TextEditorProps {
     content: string;
@@ -59,52 +59,43 @@ export default function TextEditor({ content, onChange, isValidDescription, gene
         extensions: [
             StarterKit.configure({
                 bulletList: {
-                    HTMLAttributes: {
-                        class: "list-disc ml-3"
-                    }
+                    HTMLAttributes: { class: "list-disc ml-3" },
+                },
+                orderedList: {
+                    HTMLAttributes: { class: "list-decimal ml-3" },
                 },
                 heading: false,
-                orderedList: {
-                    HTMLAttributes: {
-                        class: "list-decimal ml-3"
-                    }
-                },
             }),
-            TextAlign.configure({
-                types: ['heading', 'paragraph'],
-            }),
-            Heading.configure({
-                levels: [1, 2, 3],
-            }),
+            TextAlign.configure({ types: ["heading", "paragraph"] }),
+            Heading.configure({ levels: [1, 2, 3] }),
             Highlight,
             Underline,
             CustomImage,
-            Image.configure({
-                allowBase64: true,
-            }),
-            Youtube.configure({
-                controls: false,
-                nocookie: true,
-            }),
+            Image.configure({ allowBase64: true }),
+            Youtube.configure({ controls: false, nocookie: true }),
             TextStyle,
             Color,
         ],
-        content: content,
+        content: "", // 👉 content rỗng ban đầu
         editorProps: {
             attributes: {
-                class: "w-full min-h-[156px] border rounded-md bg-slate-50 py-2 px-3",
+                class:
+                    "w-full min-h-[156px] border rounded-md bg-slate-50 py-2 px-3",
             },
         },
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
-        }
-    })
+        },
+    });
 
+    // ✅ Khi content props thay đổi, cập nhật lại editor
     useEffect(() => {
-        if (editor && content !== editor.getHTML()) {
+        if (editor && content && editor.getHTML() !== content) {
             editor.commands.setContent(content);
         }
     }, [content, editor]);
+
+    if (!editor) return null;
 
     return (
         <div>
