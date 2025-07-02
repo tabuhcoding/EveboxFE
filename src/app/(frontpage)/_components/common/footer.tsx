@@ -28,43 +28,6 @@ const Footer = () => {
 
         <div className="max-w-4xl mx-auto px-4 mb-8 sm:mb-12">
           <div className="flex flex-col sm:flex-row justify-evenly items-start gap-12">
-            <div className="text-left space-y-2">
-              <p className="font-semibold">{transWithFallback('forCustomer', 'Dành cho khách hàng')}</p>
-              <ul className="space-y-1 list-none p-0">
-                <li>
-                  <a href="/customer-terms-of-use" className="text-white no-underline hover:underline">
-                    {transWithFallback('usageTermForCustomer', 'Điều khoản sử dụng cho khách hàng')}
-                  </a>
-                </li>
-              </ul>
-
-              <p className="font-semibold mt-4">{transWithFallback('forOrganizer', 'Dành cho Ban Tổ chức')}</p>
-              <ul className="space-y-1 list-none p-0">
-                <li>
-                  <a href="/organizer-terms-of-use" className="text-white no-underline hover:underline">
-                    {transWithFallback('usageTermForOrganizer', 'Điều khoản sử dụng cho ban tổ chức')}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="text-left space-y-2">
-              <p className="font-semibold">{transWithFallback('aboutUs', 'Về chúng tôi')}</p>
-              <ul className="space-y-1 list-none p-0">
-                <li><a href="/operational-regulations" className="text-white no-underline hover:underline">{transWithFallback('operatingRegulation', 'Quy chế hoạt động')}</a></li>
-                <li><a href="/information-privacy-policy" className="text-white no-underline hover:underline">{transWithFallback('infoSecurityPolicy', 'Chính sách bảo mật thông tin')}</a></li>
-                <li><a href="/dispute-settlement-policy" className="text-white no-underline hover:underline">{transWithFallback('mechanismResolution', 'Cơ chế giải quyết tranh chấp/ khiếu nại')}</a></li>
-                <li><a href="/payment-privacy-policy" className="text-white no-underline hover:underline">{transWithFallback('paymentSecurityPolicy', 'Chính sách bảo mật thanh toán')}</a></li>
-                <li><a href="/return-and-inspection-policy" className="text-white no-underline hover:underline">{transWithFallback('returnPolicy', 'Chính sách đổi trả và kiểm hàng')}</a></li>
-                <li><a href="/shipping-and-delivery-conditions" className="text-white no-underline hover:underline">{transWithFallback('shippingTerm', 'Điều kiện vận chuyển và giao nhận')}</a></li>
-                <li><a href="/payment-methods" className="text-white no-underline hover:underline">{transWithFallback('paymentMethod', 'Phương thức thanh toán')}</a></li>
-              </ul>
-            </div>
-              </div>
-          </div>
-
-        <div className="max-w-4xl mx-auto px-4 mb-8 sm:mb-12">
-          <div className="flex flex-col sm:flex-row justify-evenly items-start gap-12">
             <div className="text-left text-teal-300 space-y-2">
               <p className="font-semibold">{transWithFallback("forCustomer", "Dành cho khách hàng")}</p>
               <ul className="space-y-1 list-none p-0">
