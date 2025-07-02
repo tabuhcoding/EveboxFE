@@ -445,5 +445,9 @@
   "findByLocation": "Tìm kiếm theo tên địa điểm...",
   "myEvents": "Sự kiện của tôi",
   "reportManagement": "Quản lý báo cáo",
-  "legalDocument": "Điều khoản cho Ban tổ chức"
+  "legalDocument": "Điều khoản cho Ban tổ chức",
+  "createEventSuccess": "Tạo sự kiện thành công!",
+  "createEventError": "Có lỗi xảy ra trong quá trình tạo sự kiện.",
+  "eventTimeAndTicket": "Thời gian & loại vé",
+  "registrationInfo": "Thông tin đăng ký"
 }
