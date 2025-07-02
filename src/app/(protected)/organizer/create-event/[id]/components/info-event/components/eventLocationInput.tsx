@@ -1,5 +1,6 @@
 /* Package System */
 import React, { useState, useEffect, ChangeEvent } from "react";
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import InputField from '../../common/form/inputCountField';
@@ -23,8 +24,16 @@ export default function EventLocationInput({
   setEventTypeSelected,
   updateGenerationForm,
 }: EventLocationInputProps) {
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   const [selectedLocation, setSelectedLocation] = useState("");
-  console.log("all district:--------",districts)
+  console.log("all district:--------", districts)
 
   const setFormField = (field: string, value: string) => {
     if (["eventAddress", "ward", "street"].includes(field)) {
@@ -63,7 +72,7 @@ export default function EventLocationInput({
   return (
     <div className="mt-3 p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
       <p className="block text-sm font-bold mb-2">
-        <span className="text-red-500">* </span> Địa điểm sự kiện
+        <span className="text-red-500">* </span> {transWithFallback('locationAddress', 'Địa điểm sự kiện')}
       </p>
 
       {/* Radio buttons */}
@@ -82,7 +91,7 @@ export default function EventLocationInput({
           <div className="w-4 h-4 rounded-full border border-black bg-white flex items-center justify-center peer-checked:bg-[#9EF5CF] peer-focus:border-green-700">
             <div className="w-2 h-2 rounded-full bg-white"></div>
           </div>
-          <span>Sự kiện offline</span>
+          <span>{transWithFallback('eventTypeOffline', 'Sự kiện offline')}</span>
         </label>
 
         <label className="flex items-center gap-2 cursor-pointer">
@@ -99,7 +108,7 @@ export default function EventLocationInput({
           <div className="w-4 h-4 rounded-full border border-black bg-white flex items-center justify-center peer-checked:bg-[#9EF5CF]">
             <div className="w-2 h-2 rounded-full bg-white"></div>
           </div>
-          <span>Sự kiện online</span>
+          <span>{transWithFallback('eventTypeOnline', 'Sự kiện online')}</span>
         </label>
       </div>
 
@@ -110,13 +119,13 @@ export default function EventLocationInput({
           <div className="location-created flex flex-wrap -mx-3 mb-6">
             <div className="w-full px-3">
               <SelectField
-                label="Địa điểm đã từng tạo sự kiện"
+                label={transWithFallback('createdLocation', 'Địa điểm đã từng tạo sự kiện')}
                 options={createdLocations.map(loc => loc.name)}
                 value={selectedLocation}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setHasAutoFilled(false);
                   setSelectedLocation(e.target.value);
-                }}                
+                }}
               />
               {selectedLocation && (
                 <button
@@ -124,7 +133,7 @@ export default function EventLocationInput({
                   onClick={clearSelection}
                   className="clear-address-btn inline-flex items-center justify-center mt-2 px-3 py-1 text-xs font-medium bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition"
                 >
-                  Xóa địa điểm đã chọn
+                  {transWithFallback('clearSelectedLocation', 'Xóa địa điểm đã chọn')}
                 </button>
               )}
             </div>
@@ -134,8 +143,8 @@ export default function EventLocationInput({
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full px-3">
               <InputField
-                label="Tên địa điểm"
-                placeholder="Nhập tên địa điểm"
+                label={transWithFallback('locationName', 'Tên địa điểm')}
+                placeholder={transWithFallback('locationNamePlaceholder', 'Nhập tên địa điểm')}
                 value={eventAddress}
                 onChange={(e) => handleInputChange(e, "eventAddress")}
                 error={errors.eventAddress}
@@ -149,7 +158,7 @@ export default function EventLocationInput({
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <SelectField
-                label="Tỉnh/Thành"
+                label={transWithFallback('province', 'Tỉnh/Thành')}
                 options={provinces}
                 value={province}
                 onChange={(e) => handleSelectChange(e, "province")}
@@ -161,7 +170,7 @@ export default function EventLocationInput({
             {/* Quận/Huyện */}
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <SelectField
-                label="Quận/Huyện"
+                label={transWithFallback('district', 'Quận/Huyện')}
                 options={districts}
                 value={district}
                 onChange={(e) => handleSelectChange(e, "district")}
@@ -175,8 +184,8 @@ export default function EventLocationInput({
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <InputField
-                label="Phường/Xã"
-                placeholder="Nhập phường/xã"
+                label={transWithFallback('ward', 'Phường/Xã')}
+                placeholder={transWithFallback('wardPlaceholder', 'Nhập phường/xã')}
                 value={ward}
                 onChange={(e) => handleInputChange(e, "ward")}
                 error={errors.ward}
@@ -188,8 +197,8 @@ export default function EventLocationInput({
             {/* Số nhà, đường */}
             <div className="w-full md:w-1/2 px-3">
               <InputField
-                label="Số nhà, đường"
-                placeholder="Nhập số nhà, đường"
+                label={transWithFallback('street', 'Số nhà, đường')}
+                placeholder={transWithFallback('streetPlaceholder', 'Nhập số nhà, đường')}
                 value={street}
                 onChange={(e) => handleInputChange(e, "street")}
                 error={errors.street}
