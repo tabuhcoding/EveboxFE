@@ -646,5 +646,6 @@
     "yourRequest": "Your request (optional)",
     "requestPlaceholder": "For ex: Create a catchy HTML description with at least 2 images...",
     "optionalField": "This field is optional",
-    "language": "Language"
+    "language": "Language",
+    "selectStartEndTime": "Please choose the start and end time"
 }

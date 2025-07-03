@@ -638,5 +638,6 @@
   "yourRequest": "Yêu cầu của bạn (nếu có)",
   "requestPlaceholder": "Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh",
   "optionalField": "Trường này không bắt buộc",
-  "language": "Ngôn ngữ"
+  "language": "Ngôn ngữ",
+  "selectStartEndTime": "Vui lòng chọn thời gian bắt đầu và kết thúc"
 }
