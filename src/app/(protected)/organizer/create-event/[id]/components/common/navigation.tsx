@@ -10,8 +10,8 @@ import { useTranslations } from 'next-intl';
 export default function Navigation({ step }: { step: number }) {
     const router = useRouter();
     const params = useParams();
-    const eventId = params?.id || '';
-    // const eventId = 1; //Gán cứng tạm thời
+    // const eventId = params?.id || '';
+    const eventId = 1; //Gán cứng tạm thời
     const t = useTranslations('common');
 
     const transWithFallback = (key: string, fallback: string) => {

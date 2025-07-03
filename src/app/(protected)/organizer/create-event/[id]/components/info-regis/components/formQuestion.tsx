@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import FilterForm from "./filterForm";
@@ -33,24 +34,32 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
     const [selectedForm, setSelectedForm] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     const fetchForms = async () => {
-  setIsLoading(true);
+        setIsLoading(true);
 
-  try {
-    const fetchedForms = await getAllFormForOrg(); // ← Replaces fetch()
+        try {
+            const fetchedForms = await getAllFormForOrg(); // ← Replaces fetch()
 
-    const sampleFormsData = fetchedForms.filter((form) => form.createdBy === null);
-    const createdFormsData = fetchedForms.filter((form) => form.createdBy !== null);
+            const sampleFormsData = fetchedForms.filter((form) => form.createdBy === null);
+            const createdFormsData = fetchedForms.filter((form) => form.createdBy !== null);
 
-    setSampleForms(sampleFormsData);
-    setCreatedForms(createdFormsData);
-  } catch (error: any) {
-    toast.error(error?.message || "Có lỗi xảy ra trong quá trình tải form. Vui lòng thử lại sau.");
-    console.error("Error fetching forms:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+            setSampleForms(sampleFormsData);
+            setCreatedForms(createdFormsData);
+        } catch (error: any) {
+            toast.error(error?.message || transWithFallback("errForm", "Có lỗi xảy ra trong quá trình tải form. Vui lòng thử lại sau."));
+            console.error("Error fetching forms:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         fetchForms();
@@ -76,12 +85,12 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
     const handleConnectFormToShowing = async () => {
         if (!selectedForm) {
             // toast.error("Vui lòng chọn form cần kết nối.");
-            toast.error("Chưa chọn form hoặc chưa tạo form đăng ký!");
+            toast.error(transWithFallback("noSelectForm", "Chưa chọn form hoặc chưa tạo form đăng ký!"));
             return;
         }
 
         if (!showingIds || showingIds.length === 0) {
-            toast.error("Không có showing để kết nối.");
+            toast.error(transWithFallback("noShow", "Không có showing để kết nối."));
             return;
         }
 
@@ -89,26 +98,26 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
             new Set(showingIds.filter(id => id.trim() !== ""))
         );
         if (validShowingIds.length === 0) {
-            toast.error("Không có showing hợp lệ để kết nối.");
+            toast.error(transWithFallback("invalidShow", "Không có showing hợp lệ để kết nối."));
             return;
         }
 
         try {
             await Promise.all(
-  validShowingIds.map(async (showingId) => {
-    try {
-      await connectForm({
-        showingId,
-        formId: Number(selectedForm),
-      } as ConnectFormDto);
-    } catch (error) {
-      toast.error("Lỗi kết nối form với showing: " + (error as Error).message);
-      throw error; // optionally let it bubble up
-    }
-  })
-);
+                validShowingIds.map(async (showingId) => {
+                    try {
+                        await connectForm({
+                            showingId,
+                            formId: Number(selectedForm),
+                        } as ConnectFormDto);
+                    } catch (error) {
+                        toast.error(transWithFallback("errConnectForm", "Lỗi kết nối form với showing: ") + (error as Error).message);
+                        throw error; // optionally let it bubble up
+                    }
+                })
+            );
 
-            toast.success("Kết nối form thành công!");
+            toast.success(transWithFallback("connectForm", "Kết nối form thành công!"));
             onNextStep();
         } catch (error) {
             toast.error("Error connecting form: " + (error as Error).message);
@@ -122,14 +131,14 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
         if (Object.keys(newErrors).length === 0) {
             // Nếu nút là "Save"
             if (btnValidate4 === "Save") {
-                toast.success("Form hợp lệ, đã tạo và lưu thông tin form");
+                toast.success(transWithFallback("saveFormSuccess", "Form hợp lệ, đã tạo và lưu thông tin form"));
                 await handleConnectFormToShowing();
 
             }
             // Nếu nút là "Continue"
             else if (btnValidate4 === "Continue") {
                 // onNextStep();
-                toast.success("Form hợp lệ!")
+                toast.success(transWithFallback("validForm!", "Form hợp lệ!"))
                 await handleConnectFormToShowing();
             }
         }
@@ -143,7 +152,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
 
                     <button className="w-40 text-sm border-2 border-[#2DC275] text-white font-bold py-2 px-4 rounded bg-[#2DC275] hover:bg-[#7DF7B8] hover:border-[#7DF7B8] hover:text-green-600 transition-all"
                         onClick={() => setIsCreateNewOpen(true)}>
-                        Tạo form mới
+                        {transWithFallback("btnCreateForm", "Tạo form mới")}
                     </button>
                 </div>
 
@@ -159,7 +168,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
                                 FormInput: [
                                     {
                                         id: Date.now(),
-                                        fieldName: "Họ và tên",
+                                        fieldName: transWithFallback("fullName", "Họ và tên"),
                                         type: "text",
                                         required: true,
                                         regex: null,
