@@ -273,7 +273,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                     <div className="flex gap-4 mt-4 mb-4 ml-2">
                                         <button className="w-40 text-sm border-2 border-[#2DC275] text-white font-bold py-2 px-4 rounded bg-[#2DC275] hover:bg-[#7DF7B8] hover:border-[#7DF7B8] hover:text-white transition-all"
                                             onClick={() => {
-                                                if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors)) {
+                                                if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors, t)) {
                                                     toggleCopyTicketDialog(showtime.id, setShowtimes);
                                                 }
                                             }}>
@@ -335,7 +335,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                 <div className="flex justify-center mt-4">
                                     <button type="button" className="text-base font-medium flex items-center gap-1 my-2 text-[#2DC275]"
                                         onClick={() => {
-                                            if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors)) {
+                                            if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors, t)) {
                                                 toggleDialog(showtime.id, setShowtimes);
                                             }
                                         }}>
