@@ -592,6 +592,7 @@
     "pendingEvent": "Event pending approval",
     "partnerSupport": "Partners, please contact EveBox via hotline: 19006408 or email: evebox@gmail.com for assistance with event sales. Thank you!",
     "gotIt": "Got it",
+    "quesText": "Text-based question",
     "questionLabel": "Question",
     "quesRequire": "This question is required",
     "quesMultiple": "Multiple choice question",

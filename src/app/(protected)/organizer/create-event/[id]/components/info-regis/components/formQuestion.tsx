@@ -150,7 +150,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
                 <div className="w-full max-w-4xl mx-auto flex items-center justify-between h-full mb-4">
                     <FilterForm selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
 
-                    <button className="w-40 text-sm border-2 border-[#2DC275] text-white font-bold py-2 px-4 rounded bg-[#2DC275] hover:bg-[#7DF7B8] hover:border-[#7DF7B8] hover:text-green-600 transition-all"
+                    <button className="w-52 text-sm border-2 border-[#2DC275] text-white font-bold py-2 px-4 rounded bg-[#2DC275] hover:bg-[#7DF7B8] hover:border-[#7DF7B8] hover:text-green-600 transition-all"
                         onClick={() => setIsCreateNewOpen(true)}>
                         {transWithFallback("btnCreateForm", "Tạo form mới")}
                     </button>

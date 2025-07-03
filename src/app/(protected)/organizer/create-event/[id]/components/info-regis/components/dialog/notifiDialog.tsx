@@ -26,10 +26,10 @@ export default function NotificationDialog({ open, onClose }: NoteDialogProps) {
                 </button>
             </div>
 
-            <DialogContent className="p-6 flex flex-col justify-center items-center">
+            <DialogContent className="p-6 flex flex-col text-center items-center">
                 <Icon icon="material-symbols:warning" width="50" height="50" color="#f59e0b" className="relative z-50" />
 
-                <div className="content mx-4 mt-4">
+                <div className="content mx-4 mt-4 mb-2">
                     <span>{transWithFallback("partnerSupport", "Đối tác vui lòng liên hệ EveBox qua hotline: 19006408 hoặc email: evebox@gmail.com để được hỗ trợ mở bán sự kiện. Trân trọng cảm ơn!")}</span>
                 </div>
 
