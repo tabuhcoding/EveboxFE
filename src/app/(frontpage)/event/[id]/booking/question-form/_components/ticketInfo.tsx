@@ -92,7 +92,7 @@ export default function TicketInformation({
   }
 
   return (
-    <div className="col-5 border-start" style={{ borderLeft: '1px solid #ddd' }}>
+    <div className="col-12 col-md-10 col-lg-5 mx-auto border-start" style={{ borderLeft: '1px solid #ddd' }}>
       <div className='container'>
         <p className='title-event'>{transWithFallback('eventDetail', 'Chi tiết sự kiện')}</p>
         <div className='row mt-3 text-start'>

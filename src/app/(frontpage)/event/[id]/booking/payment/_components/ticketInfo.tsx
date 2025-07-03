@@ -98,7 +98,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
   };
 
   return (
-    <div className="col-5 border-start" style={{ borderLeft: '1px solid #ddd' }}>
+    <div className="w-full lg:w-5/12 border-start" style={{ borderLeft: '1px solid #ddd' }}>
       <div className='container'>
         <p className='title-event'>{transWithFallback('eventDetail', 'Chi tiết sự kiện')}</p>
         <div className='row mt-3 text-start'>
@@ -198,7 +198,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
 
         <div className='row pt-2 pb-3'>
           <div className="col-md-8 d-flex justify-content-start">
-            <p style={{ color: '#0C4762' }} className='fw-bold'>Tổng tiền</p>
+            <p style={{ color: '#0C4762' }} className='fw-bold'>{transWithFallback("totals", "Tổng tiền")}</p>
           </div>
           <div className="col-md-4 d-flex justify-content-end">
             <p style={{ color: '#0C4762' }} className='fw-bold'>{totalAmount.toLocaleString("vi-VN")}đ</p>
@@ -206,11 +206,11 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
         </div>
 
         <div className='row mt-2 mb-4'>
-          <p>Bằng việc tiến hành đặt mua</p><br />
-          <p>Bạn đã đồng ý với các <a href='#' style={{ color: '#0C4762', textDecoration: 'underline' }}>Điều Kiện Giao Dịch Chung</a></p>
+          <p>{transWithFallback("purchaseAgreement", "Bằng việc tiến hành đặt mua")}</p><br />
+          <p>{transWithFallback("agreementPrefix", "Bạn đã đồng ý với các")} <a href='#' style={{ color: '#0C4762', textDecoration: 'underline' }}>{transWithFallback("generalTerms", "Điều Kiện Giao Dịch Chung")}</a></p>
         </div>
         <div className='row'>
-          <button onClick={handlePayment} className='h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'>Thanh toán</button>
+          <button onClick={handlePayment} className='h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'>{transWithFallback("checkout", "Thanh toán")}</button>
         </div>
       </div>
       <ConfirmDialog

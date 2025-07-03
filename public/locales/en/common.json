@@ -648,5 +648,10 @@
     "optionalField": "This field is optional",
     "language": "Language",
     "selectStartEndTime": "Please choose the start and end time",
-    "errorLoadEvent": "Failed to load event categories!"
+    "errorLoadEvent": "Failed to load event categories!",
+    "totals": "Total Amount",
+    "purchaseAgreement": "By proceeding with the purchase",
+    "agreementPrefix": "You agree to the",
+    "generalTerms": "General Terms and Conditions",
+    "completeBookingIn": "Complete booking in"
 }
