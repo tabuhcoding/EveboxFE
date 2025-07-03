@@ -4,16 +4,15 @@
 import { BarChart3, Users, Package, LayoutGrid, Edit } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { EventOrgFrontDisplayDto } from "@/types/models/org/orgEvent.interface";
 
-/* Package Application */
-import { DisplayEvent } from "../libs/interface/displayEvent";
 
-export default function EventCard({ event }: { event: DisplayEvent }) {
+export default function EventCard({ event }: { event: EventOrgFrontDisplayDto }) {
     return (
         <div className="bg-[#0C4762] p-4 rounded-xl shadow-lg text-white flex flex-col">
             <div className="flex items-center">
                 <Image
-                    src={event.image}
+                    src={event.imgPosterUrl}
                     alt={event.title}
                     width={160}
                     height={96}
@@ -22,16 +21,16 @@ export default function EventCard({ event }: { event: DisplayEvent }) {
                 <div className="ml-4 flex-1">
                     <h2 className="text-xl font-semibold">{event.title}</h2>
                     <p className="text-sm flex items-center mt-3 text-[#51DACF]">
-                        📅 {new Date(event.startTime).toLocaleString("vi-VN")}
+                        📅 {new Date(event.startDate).toLocaleString("vi-VN")}
                     </p>
-                    {event.location && event.address ? (
+                    {event.locationString && event.venue ? (
                         <p className="text-sm flex items-center mt-2">
-                            📍 {event.location} <br />
-                            {event.address}
+                            📍 {event.venue} <br />
+                            {event.locationString}
                         </p>
                     ) : (
                         <p className="text-sm flex items-center mt-2">
-                            📍 {event.location || "Online"} {/* Nếu location rỗng hoặc null, hiển thị "Online" */}
+                            📍 {event.venue || "Online"} {/* Nếu location rỗng hoặc null, hiển thị "Online" */}
                         </p>
                     )}
                 </div>

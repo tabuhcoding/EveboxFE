@@ -6,23 +6,13 @@ import { getServerSession } from 'next-auth/next';
 import Sidebar from "../create-event/_components/sidebar";
 import Tabs from "./_components/tabs";
 import { authOptions } from '@/lib/authOptions';
-import { fetchAllOrgEvent } from './libs/server/fetchAllOrgEvent';
-import { DisplayEvent } from './libs/interface/displayEvent';
+import { getEventOfOrg } from '@/services/org.service';
 
 export default async function Event() {
     const session = await getServerSession(authOptions);
-    const accessToken = session?.user?.accessToken || null;
-    const data = await fetchAllOrgEvent(accessToken);
-    const eventData = data.data || [];
-    const events = eventData.map((event: DisplayEvent) => ({
-        id: event.id,
-        title: event.title,
-        startTime: event.startTime,
-        location: event.venue,
-        address: event.locationsString,
-        image: event.Images_Events_imgPosterIdToImages?.imageUrl || "/images/default-image.png",
-        isApproved: event.isApproved,
-    }));
+    const eventData = await getEventOfOrg();
+
+    const events = eventData;
     
     return (
         <main>

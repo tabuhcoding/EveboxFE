@@ -6,32 +6,47 @@ import { Search } from "lucide-react";
 
 /* Package Application */
 import EventCard from "./eventCard";
-import { DisplayEvent } from "../libs/interface/displayEvent";
+import { EventOrgFrontDisplayDto } from "@/types/models/org/orgEvent.interface";
 
 interface TabsProps {
-    events: DisplayEvent[];
+    events: EventOrgFrontDisplayDto[];
 }
 
 const tabs = [
     { id: "sap-toi", label: "Sắp tới" },
     { id: "da-qua", label: "Đã qua" },
     { id: "cho-duyet", label: "Chờ duyệt" },
-    { id: "nhap", label: "Nháp" }
 ];
 
 export default function Tabs({ events }: TabsProps) {
     const [activeTab, setActiveTab] = useState("sap-toi");
-
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Lọc sự kiện theo địa điểm
-    const filteredEvents = events.filter(event =>
+    const now = new Date();
+
+    // Tab filtering logic
+    const tabFilteredEvents = events.filter((event) => {
+        const start = new Date(event.startDate);
+        switch (activeTab) {
+            case "cho-duyet":
+                return event.isApproved === false;
+            case "da-qua":
+                return event.isApproved === true && start < now;
+            case "sap-toi":
+                return event.isApproved === true && start >= now;
+            default:
+                return false; // "nhap" or unknown tabs
+        }
+    });
+
+    // Search filter
+    const filteredEvents = tabFilteredEvents.filter(event =>
         event.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
         <div>
-            {/* Thanh tìm kiếm và các tab */}
+            {/* Search bar and tabs */}
             <div className="mt-6 flex justify-between items-center">
                 <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
                     <input
@@ -58,12 +73,12 @@ export default function Tabs({ events }: TabsProps) {
                 </div>
             </div>
 
-            {/* Danh sách sự kiện */}
+            {/* Events List */}
             <div className="mt-6 space-y-6">
-                {activeTab === "cho-duyet" ? (
+                {filteredEvents.length > 0 ? (
                     filteredEvents.map(event => (
-                            <EventCard key={event.id} event={event} />
-                        ))
+                        <EventCard key={event.id} event={event} />
+                    ))
                 ) : (
                     <p className="text-center text-gray-500">Không có sự kiện nào.</p>
                 )}

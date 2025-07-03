@@ -7,6 +7,7 @@ import { CreateOrgPaymentInfoDto, OrgPaymentInfoData } from "types/models/org/or
 import { CreateShowingDto, CreateShowingResponseDto, DeleteShowingResponseDto, GetAllShowingDetailOfEventResponseDto, UpdateShowingDto, UpdateShowingResponseDto } from "types/models/showing/createShowing.dto";
 import { CreateTicketTypeDto, CreateTicketTypeResponseDto, DeleteTicketTypeResponseDto, UpdateTicketTypeDto, UpdateTicketTypeResponseDto } from "types/models/ticketType/ticketType.interface";
 import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormResponseDto, GetAllFormForOrgResponseDto } from "types/models/form/form.interface";
+import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -362,3 +363,41 @@ if (!res || res.status !== 200) {
 return res.data.data;
   }
 }
+
+export async function getEventOfOrg(): Promise<EventOrgFrontDisplayDto[]> {
+    const res = await orgService.get<BaseApiResponse<EventOrgFrontDisplayDto[]>>(
+      END_POINT_LIST.ORG_EVENT.EVENT
+    );
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch events of organizer");
+    }
+
+    return res.data.data;
+}
+
+export const getShowingsByEventId = async (eventId: number): Promise<IShowTime[]> => {
+  // const endpoint = END_POINT_LIST.ORG_SHOWING.SHOWING_TIME.replace("{eventId}", eventId.toString());
+  const res = await orgService.get(`${END_POINT_LIST.ORG_SHOWING.SHOWING_TIME}/${eventId}`);
+
+  console.log("fetch showingTime")
+  console.log(res)
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch showing times');
+  }
+  return res.data.data;
+};
+
+// Lấy summary theo showingId
+export const getSummaryByShowingId = async (showingId: string): Promise<IEventSummaryData> => {
+  // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
+
+  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY}/${showingId}`);
+  console.log("fetch sumarry")
+  console.log(res)
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch event summary');
+  }
+
+  return res.data.data;
+};
