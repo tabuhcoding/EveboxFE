@@ -1,4 +1,5 @@
-import { GenerationProps } from "../../components/info-event/components/descriptionWithAI";
+// import { GenerationProps } from "../../components/info-event/components/descriptionWithAI";
+import { EventDescriptionGenDto } from "@/types/models/event/createEvent.dto";
 
 export interface OrganizationInfoFormProps {
     logoOrg: string | null;
@@ -32,7 +33,7 @@ export interface EventLocationInputProps {
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>, field: string) => void;
     handleSelectChange: (e: React.ChangeEvent<HTMLSelectElement>, field: string) => void;
     setEventTypeSelected: React.Dispatch<React.SetStateAction<string>>;
-    updateGenerationForm: (field: keyof GenerationProps, value: string | number | boolean | number[]) => void
+    updateGenerationForm: (field: keyof EventDescriptionGenDto, value: string | number | boolean | number[]) => void
 }
 
 export interface EventImageUploadProps {

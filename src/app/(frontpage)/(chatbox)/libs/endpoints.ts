@@ -1,0 +1,16 @@
+export const NAVIGATE_ROUTES = {
+  HOME_PAGE: '/',
+  PROFILE_PAGE: '/my-profile',
+  CREATE_EVENT_PAGE: '/organizer/create-event',
+  MY_EVENTS_PAGE: '/organizer/my-events',
+  MY_TICKETS_PAGE: '/my-ticket',
+  SEARCH_PAGE: '/search',
+  EVENT_PAGE: '/event',
+  TUTORIAL_PAGE: '/tutorial',
+  POLICY_PAGE: '/policy',
+  LEGAL_DOCUMENT_PAGE: '/legal-document',
+  CHANGE_PASSWORD_PAGE: '/change-password',
+  EVENT_ANALYSTICS_PAGE: '/event-analytics',
+  EVENT_DETAIL_PAGE: '/event',
+  NONE: '/',
+};

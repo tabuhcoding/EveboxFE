@@ -12,10 +12,9 @@ import TextEditor from "./textEditor";
 import OrganizationInfoForm from "./organizationInfoForm";
 import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
-import { GenerationProps } from "./descriptionWithAI";
 import { getAllCategories, getAllDistricts, getEventDetail, updateEvent } from "services/event.service";
 import { Province } from "types/models/event/location.interface";
-import { CreateEventDto } from "types/models/event/createEvent.dto";
+import { CreateEventDto, EventDescriptionGenDto } from "types/models/event/createEvent.dto";
 import { useEventImageUpload } from "../../../libs/hooks/useEventImageUpload";
 import { Category } from "@/types/models/dashboard/frontDisplay";
 
@@ -49,21 +48,23 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   const [district, setDistrict] = useState("");
   const [ward, setWard] = useState("");
   const [street, setStreet] = useState("");
+  const [eventDetailInfo, setEventDetailInfo] = useState<EventDescriptionGenDto | null>(null);
 
   //********Call api**********
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [allProvinces, setAllProvinces] = useState<Province[]>([]);
-  const [generationForm, setGenerationForm] = useState<GenerationProps>({
-    name: "",
-    description: "",
-    isOnlineEvent: eventTypeSelected === "offline" ? false : true,
-    location: "",
-    venue: "",
-    organizer: "",
-    organizerDescription: "",
-    categoryIds: [],
-  });
+
+  // const [generationForm, setGenerationForm] = useState<GenerationProps>({
+  //   name: "",
+  //   description: "",
+  //   isOnlineEvent: eventTypeSelected === "offline" ? false : true,
+  //   location: "",
+  //   venue: "",
+  //   organizer: "",
+  //   organizerDescription: "",
+  //   categoryIds: [],
+  // });
 
   //Gán cứng địa điểm đã tạo
   const createdLocations = [
@@ -226,16 +227,26 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
           const locationParts = eventData.locationsString?.split(",").map(part => part.trim());
 
-          setGenerationForm({
+          // setGenerationForm({
+          //   name: eventData.title || "",
+          //   description: eventData.description || "",
+          //   isOnlineEvent: eventData.isOnline,
+          //   location: `${locationParts[0] || ''}, ${locationParts[1] || ''}, ${locationParts[2] || ''}, ${locationParts[3] || ''}`,
+          //   venue: eventData.venue || "",
+          //   organizer: eventData.orgName || "",
+          //   organizerDescription: eventData.orgDescription || "",
+          //   categoryIds: eventData.categories?.length ? eventData.categories.map((c: { id: number }) => c.id) : []
+          // });
+
+          setEventDetailInfo({
             name: eventData.title || "",
-            description: eventData.description || "",
             isOnlineEvent: eventData.isOnline,
             location: `${locationParts[0] || ''}, ${locationParts[1] || ''}, ${locationParts[2] || ''}, ${locationParts[3] || ''}`,
             venue: eventData.venue || "",
             organizer: eventData.orgName || "",
             organizerDescription: eventData.orgDescription || "",
-            categoryIds: eventData.categories?.length ? eventData.categories.map((c: { id: number }) => c.id) : []
-          });
+            categories: eventData.categories?.length ? eventData.categories.map((c: { id: number }) => String(c.id)) : []
+          })
 
         } catch (error) {
           console.error("Error fetching event detail:", error);
@@ -250,14 +261,25 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
   useEffect(() => {
     updateGenerationForm("isOnlineEvent", eventTypeSelected === "offline" ? false : true);
-    updateGenerationForm("description", post);
+    // updateGenerationForm("description", post);
   }, []);
 
-  const updateGenerationForm = (field: keyof GenerationProps, value: string | number | boolean | number[]) => {
-    setGenerationForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const updateGenerationForm = (field: keyof EventDescriptionGenDto, value: string | number | boolean | number[]) => {
+    setEventDetailInfo((prev) => {
+      const safePrev: EventDescriptionGenDto = prev ?? {
+        name: "",
+        isOnlineEvent: false,
+        location: "",
+        venue: "",
+        organizer: "",
+        organizerDescription: "",
+        categories: [],
+      };
+      return {
+        ...safePrev,
+        [field]: value,
+      };
+    });
   };
   const { uploadImage } = useEventImageUpload();
 
@@ -301,7 +323,8 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
       const cat = categories.find((c) => c.name === value) || null;
       const genCat = categories.find((c) => c.name === value);
       setSelectedCategory(cat);
-      updateGenerationForm("categoryIds", genCat ? [genCat.id] : []);
+      updateGenerationForm("categories", genCat ? [genCat.id] : []);
+      // updateGenerationForm("categoryIds", genCat ? [genCat.id] : []);
     }
 
     // Xóa lỗi nếu chọn lại giá trị
@@ -312,7 +335,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
   const onChange = (content: string) => {
     setPost(content);
-    updateGenerationForm("description", content);
+    // updateGenerationForm("description", content);
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
@@ -386,12 +409,12 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
     if (!currentEventId) {
       if (!background) {
-        setImageErrors((prev) => ({ ...prev, background: transWithFallback('pleaseWhenUploadBackground', 'Vui lòng tải lên ảnh nền sự kiện!') }));
-        toast.error(transWithFallback('pleaseWhenUploadBackground', 'Vui lòng tải lên ảnh nền sự kiện!'), { duration: 5000 });
+        setImageErrors((prev) => ({ ...prev, background: "Vui lòng tải lên ảnh nền sự kiện" }));
+        toast.error("Vui lòng tải lên ảnh nền sự kiện!", { duration: 5000 });
       }
       if (!logoOrg) {
-        setImageLogoErrors((prev) => ({ ...prev, logoOrg: transWithFallback('pleaseWhenUploadLogo', 'Vui lòng tải lên logo ban tổ chức!') }));
-        toast.error(transWithFallback('pleaseWhenUploadLogo', 'Vui lòng tải lên logo ban tổ chức!'), { duration: 5000 });
+        setImageLogoErrors((prev) => ({ ...prev, logoOrg: "Vui lòng tải lên logo ban tổ chức" }));
+        toast.error("Vui lòng tải lên logo ban tổ chức!", { duration: 5000 });
       }
     }
 
@@ -523,6 +546,16 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     eventName, nameOrg, infoOrg, post, selectedCategory, background, logoOrg, eventAddress, province, district, ward, street, eventTypeSelected
   ]);
 
+  const eventDetails: EventDescriptionGenDto = {
+    name: eventName,
+    isOnlineEvent: eventTypeSelected === "online",
+    location: `${street}, ${ward}, ${district}, ${province}`,
+    venue: eventAddress,
+    organizer: nameOrg,
+    organizerDescription: infoOrg,
+    categories: selectedCategory ? [selectedCategory.name] : []
+  };
+
   return (
     <>
       <Toaster position="top-center" />
@@ -580,7 +613,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
                 {post && (
                   <div className="boder ">
-                    <TextEditor key={locale} generationForm={generationForm} content={post} onChange={onChange} isValidDescription={isFormValid} />
+                    <TextEditor key={locale} eventDetails={!eventDetailInfo ? eventDetails : eventDetailInfo} content={post} onChange={onChange} isValidDescription={isFormValid} />
                   </div>
                 )}
               </div>

@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 
 /* Package Application */
 import { Providers } from "./provider";
+import ChatboxButton from './(frontpage)/(chatbox)/chatboxBtn';
 import "tailwindcss/tailwind.css";
 
 export const metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <div>
                 {children}
               </div>
+              <ChatboxButton />
             </div>
           </Providers>
         </>
