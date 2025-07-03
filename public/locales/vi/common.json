@@ -639,5 +639,6 @@
   "requestPlaceholder": "Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh",
   "optionalField": "Trường này không bắt buộc",
   "language": "Ngôn ngữ",
-  "selectStartEndTime": "Vui lòng chọn thời gian bắt đầu và kết thúc"
+  "selectStartEndTime": "Vui lòng chọn thời gian bắt đầu và kết thúc",
+  "errorLoadEvent": "Lỗi khi tải danh sách thể loại sự kiện!"
 }

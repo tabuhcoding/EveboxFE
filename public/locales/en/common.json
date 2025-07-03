@@ -647,5 +647,6 @@
     "requestPlaceholder": "For ex: Create a catchy HTML description with at least 2 images...",
     "optionalField": "This field is optional",
     "language": "Language",
-    "selectStartEndTime": "Please choose the start and end time"
+    "selectStartEndTime": "Please choose the start and end time",
+    "errorLoadEvent": "Failed to load event categories!"
 }

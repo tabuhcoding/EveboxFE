@@ -151,7 +151,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
         setCategories(eventTypes);
       } catch (error) {
         console.error("Error fetching event types:", error);
-        toast.error("Lỗi khi tải danh sách thể loại sự kiện!", { duration: 5000 });
+        toast.error(transWithFallback("errorLoadEvent", "Lỗi khi tải danh sách thể loại sự kiện!"), { duration: 5000 });
       }
     };
 
