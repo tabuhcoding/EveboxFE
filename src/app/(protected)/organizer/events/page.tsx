@@ -1,15 +1,14 @@
+export const dynamic = "force-dynamic";
+
 /* Package System */
 import 'tailwindcss/tailwind.css';
-import { getServerSession } from 'next-auth/next';
 
 /* Package Application */
 import Sidebar from "../create-event/_components/sidebar";
 import Tabs from "./_components/tabs";
-import { authOptions } from '@/lib/authOptions';
 import { getEventOfOrg } from '@/services/org.service';
 
 export default async function Event() {
-    const session = await getServerSession(authOptions);
     const eventData = await getEventOfOrg();
 
     const events = eventData;
