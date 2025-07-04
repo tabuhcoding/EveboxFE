@@ -49,11 +49,11 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
                     <Package size={18} />
                     <span className="text-sm mt-1">Đơn hàng</span>
                 </Link>
-                <Link href={`/organizer/events/${event.id}/seating`} className="flex flex-col items-center">
+                {/* <Link href={`/organizer/events/${event.id}/seating`} className="flex flex-col items-center">
                     <LayoutGrid size={18} />
                     <span className="text-sm mt-1">Sơ đồ ghế</span>
-                </Link>
-                <Link href={`/organizer/events/${event.id}/edit`} className="flex flex-col items-center">
+                </Link> */}
+                <Link href={`/organizer/create-event/${event.id}?step=info`} className="flex flex-col items-center">
                     <Edit size={18} />
                     <span className="text-sm mt-1">Chỉnh sửa</span>
                 </Link>

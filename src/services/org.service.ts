@@ -10,6 +10,7 @@ import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormRespo
 import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
 import { AnalyticData } from "@/types/models/org/analytics.interface";
 import { EventMember, EventRoleItem } from "@/types/models/org/member.interface";
+import { GetOrdersResponse } from "@/types/models/org/orders.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -474,3 +475,16 @@ export async function getEventRoles(): Promise<EventRoleItem[]> {
     return res.data.data;
   }
 }
+
+export const getOrdersByShowingId = async (showingId: string): Promise<GetOrdersResponse> => {
+  // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
+
+  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}`);
+  console.log("fetch orders")
+  console.log(res)
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch event orders');
+  }
+
+  return res.data.data;
+};
