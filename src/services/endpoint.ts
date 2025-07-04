@@ -49,6 +49,8 @@ export class END_POINT_LIST {
 
   static readonly ORG_EVENT = {
     EVENT: "/api/org/event",
+    MEMBER: "/org/member",
+    EVENT_ROLE: "/api/event/role",
   }
 
   static readonly ORG_SHOWING = {

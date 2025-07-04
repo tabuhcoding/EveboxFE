@@ -9,6 +9,7 @@ import { CreateTicketTypeDto, CreateTicketTypeResponseDto, DeleteTicketTypeRespo
 import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormResponseDto, GetAllFormForOrgResponseDto } from "types/models/form/form.interface";
 import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
 import { AnalyticData } from "@/types/models/org/analytics.interface";
+import { EventMember, EventRoleItem } from "@/types/models/org/member.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -425,3 +426,51 @@ export const getAnalyticByEvent = async (eventId: string, startDate?: string,end
 
   return res.data.data;
 };
+
+export async function getEventMembers(
+  eventId: number,
+  email?: string
+): Promise<EventMember[]> {
+  const query = email ? `?email=${encodeURIComponent(email)}` : "";
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}/${eventId}${query}`;
+
+  try {
+    const res = await orgService.get<BaseApiResponse<EventMember[]>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch event members");
+    }
+
+    return res.data.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error fetching event members:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while fetching event members");
+  }
+}
+
+export async function getEventRoles(): Promise<EventRoleItem[]> {
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/event/role`, {
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
+      },
+      next: { revalidate: 60 }, // Optional SSR caching
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch event roles");
+
+    const json: BaseApiResponse<EventRoleItem[]> = await res.json();
+    return json.data;
+  } else {
+    const res = await orgService.get<BaseApiResponse<EventRoleItem[]>>(
+      END_POINT_LIST.ORG_EVENT.EVENT_ROLE
+    );
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch event roles");
+    }
+
+    return res.data.data;
+  }
+}
