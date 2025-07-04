@@ -162,7 +162,24 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     const fetchProvinces = async () => {
       try {
         const data = await getAllDistricts();
-        setAllProvinces(data);
+
+        const removeQuotes = (str: string) => str?.replace(/^"(.*)"$/, '$1').replace(/"/g, '');
+        const cleanedData = data.map((province) => ({
+          ...province,
+          name: {
+            ...province.name,
+            vi: removeQuotes(province.name.vi),
+          },
+          districts: province.districts.map((district) => ({
+            ...district,
+            name: {
+              ...district.name,
+              vi: removeQuotes(district.name.vi),
+            },
+          })),
+        }));
+
+        setAllProvinces(cleanedData);
       } catch (error) {
         console.error("Error fetching provinces:", error);
       }
