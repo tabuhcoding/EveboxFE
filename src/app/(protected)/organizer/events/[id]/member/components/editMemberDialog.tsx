@@ -43,6 +43,8 @@ export default function EditMemberDialog({ eventId, member, onClose, onSuccess }
     }
 
     try {
+      console.log(eventId);
+      console.log(onSuccess);
       // const response = await apiClient.put(`/org/member?eventId=${eventId}`, {
       //   email: member.email,
       //   role: roleNumber,
@@ -71,7 +73,7 @@ export default function EditMemberDialog({ eventId, member, onClose, onSuccess }
         <h2 className="text-2xl font-semibold text-[#0C4762] text-center">Chỉnh sửa thành viên</h2>
 
         <div className="mt-6">
-          <label className="text-left block font-medium">Email</label>
+          <p className="text-left block font-medium">Email</p>
           <input
             type="email"
             className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -81,7 +83,7 @@ export default function EditMemberDialog({ eventId, member, onClose, onSuccess }
         </div>
 
         <div className="mt-4">
-          <label className="text-left block font-medium">Vai trò <span className="text-red-500">*</span></label>
+          <p className="text-left block font-medium">Vai trò <span className="text-red-500">*</span></p>
           <select
             className={`w-full border rounded-md px-3 py-2 mt-1 outline-none ${roleError ? 'border-red-500' : 'border-gray-300'}`}
             value={role}

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { X, Check } from "lucide-react"
-import type { IShowTime } from "@/types/model/getSummaryOrg"
+import { IShowTime } from "@/types/models/org/orgEvent.interface"
 
 interface ShowTimesPopupProps {
   isOpen: boolean

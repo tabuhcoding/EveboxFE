@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
-import type { TicketOrderData } from "@/types/model/getOrdersOrg"
+import { TicketOrderData } from "@/types/models/org/orders.interface"
 
 export default function TicketSection({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
   const [search, setSearch] = useState("")

@@ -1,4 +1,4 @@
-import SidebarOrganizer from "../components/sidebarOrganizer";
+import SidebarOrganizer from "../_components/sidebarOrganizer";
 
 export default function UnauthorizedPage() {
   return (

@@ -1,7 +1,7 @@
 import { OrdersPage } from "./components/orders-page"
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function Page({ params }: PageProps) {

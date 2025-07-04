@@ -12,41 +12,41 @@ export default function BasicInfo({ voucherType }: BasicInfoProps) {
   const [voucherCode, setVoucherCode] = useState("");
   const [quantity, setQuantity] = useState("");
   const [prefix, setPrefix] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors] = useState<Record<string, string>>({});
 
-  const validate = () => {
-    let newErrors: Record<string, string> = {};
+  // const validate = () => {
+  //   const newErrors: Record<string, string> = {};
 
-    if (!promoName.trim()) newErrors.promoName = "Vui lòng nhập tên chương trình khuyến mãi!";
-    if (!voucherCode.trim()) {
-      newErrors.voucherCode = "Vui lòng nhập mã voucher!";
-    } else if (!/^[A-Z0-9]{6,12}$/.test(voucherCode)) {
-      newErrors.voucherCode = "Mã voucher chỉ gồm A-Z, 0-9 và từ 6-12 ký tự!";
-    }
+  //   if (!promoName.trim()) newErrors.promoName = "Vui lòng nhập tên chương trình khuyến mãi!";
+  //   if (!voucherCode.trim()) {
+  //     newErrors.voucherCode = "Vui lòng nhập mã voucher!";
+  //   } else if (!/^[A-Z0-9]{6,12}$/.test(voucherCode)) {
+  //     newErrors.voucherCode = "Mã voucher chỉ gồm A-Z, 0-9 và từ 6-12 ký tự!";
+  //   }
 
-    if (voucherType === "multiple") {
-      if (!quantity.trim()) newErrors.quantity = "Vui lòng nhập số lượng mã voucher!";
-      if (!prefix.trim()) newErrors.prefix = "Vui lòng nhập tiền tố mã!";
-    }
+  //   if (voucherType === "multiple") {
+  //     if (!quantity.trim()) newErrors.quantity = "Vui lòng nhập số lượng mã voucher!";
+  //     if (!prefix.trim()) newErrors.prefix = "Vui lòng nhập tiền tố mã!";
+  //   }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
-  const handleSubmit = () => {
-    if (validate()) {
-      //todo
-    }
-  };
+  // const handleSubmit = () => {
+  //   if (validate()) {
+  //     //todo
+  //   }
+  // };
 
   return (
     <div className="p-6 bg-[#E6F6F1] rounded-lg border border-[#BEE3DB] space-y-6 shadow-lg">
       <h2 className="text-lg font-semibold text-[#0C4762]">Thông tin cơ bản</h2>
 
       <div>
-        <label className="block font-semibold text-[#0C4762]">
+        <p className="block font-semibold text-[#0C4762]">
           <span className="text-red-500">*</span> Tên chương trình khuyến mãi:
-        </label>
+        </p>
         <div className="relative">
           <input
             className={`w-full p-2 border rounded text-sm ${errors.promoName ? "border-red-500" : "border-gray-300"
@@ -65,7 +65,7 @@ export default function BasicInfo({ voucherType }: BasicInfoProps) {
       </div>
 
       <div>
-        <label className="block font-semibold text-[#0C4762]"><span className="text-red-500">*</span> Mã voucher:</label>
+        <p className="block font-semibold text-[#0C4762]"><span className="text-red-500">*</span> Mã voucher:</p>
         <div className="relative">
           <input
             className={`w-full p-2 border rounded text-sm ${errors.voucherCode ? "border-red-500" : "border-gray-300"
@@ -88,9 +88,9 @@ export default function BasicInfo({ voucherType }: BasicInfoProps) {
         <>
           {/* Số lượng mã voucher */}
           <div>
-            <label className="block font-semibold text-[#064E3B]">
+            <p className="block font-semibold text-[#064E3B]">
               <span className="text-red-500">*</span> Số lượng mã voucher:
-            </label>
+            </p>
             <input
               className={`w-full p-2 border rounded text-sm ${errors.quantity ? "border-red-500" : "border-gray-300"
                 }`}
@@ -105,9 +105,9 @@ export default function BasicInfo({ voucherType }: BasicInfoProps) {
 
           {/* Prefix */}
           <div>
-            <label className="block font-semibold text-[#064E3B]">
+            <p className="block font-semibold text-[#064E3B]">
               <span className="text-red-500">*</span> Prefix:
-            </label>
+            </p>
             <input
               className={`w-full p-2 border rounded text-sm ${
                 errors.prefix ? "border-red-500" : "border-gray-300"
@@ -124,7 +124,7 @@ export default function BasicInfo({ voucherType }: BasicInfoProps) {
       )}
 
       <div className="flex space-x-4 items-center">
-        <label className="block font-semibold text-[#0C4762]"><span className="text-red-500">*</span> Thời gian sử dụng mã:</label>
+        <p className="block font-semibold text-[#0C4762]"><span className="text-red-500">*</span> Thời gian sử dụng mã:</p>
         {/* <input
           className="w-full p-2 border rounded border-gray-300 text-sm"
           placeholder="Từ ngày | Đến ngày"

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import CardSelection from "./components/cardSelection";
@@ -13,16 +12,16 @@ import SidebarOrganizer from "../../_components/sidebarOrganizer";
 export default function Home() {
     const [voucherType, setVoucherType] = useState("single");
 
-    const router = useRouter();
+    // const router = useRouter();
 
-    const handleCancel = () => {
-        window.history.back(); // Quay lại trang trước
-    };
+    // const handleCancel = () => {
+    //     window.history.back(); // Quay lại trang trước
+    // };
 
-    const handleCreateVoucher = () => {
-        // TODO: Xử lý logic tạo voucher 
-        router.back(); 
-    };
+    // const handleCreateVoucher = () => {
+    //     // TODO: Xử lý logic tạo voucher 
+    //     router.back(); 
+    // };
 
     return (
         <main>

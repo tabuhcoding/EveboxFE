@@ -19,7 +19,7 @@ interface SummaryControlsProps {
 export const SummaryControls = ({ eventTitle, eventId, startTime, endTime, onShowingChange }: SummaryControlsProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [showTimes, setShowTimes] = useState<IShowTime[]>([])
-  const [loadingShowTimes, setLoadingShowTimes] = useState(false)
+  const [, setLoadingShowTimes] = useState(false)
 
   const formatDateTime = (dateTime?: string | Date) => {
     if (!dateTime) return ""

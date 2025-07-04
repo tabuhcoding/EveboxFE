@@ -4,8 +4,7 @@
 import { useState, useEffect } from "react";
 
 /* Package Application */
-import { TicketCheckin } from "../lib/interface/check-in.interface";
-import { TicketCheckinTableProps } from "../lib/interface/check-in.interface";
+import { TicketCheckin, TicketCheckinTableProps } from "../lib/interface/check-in.interface";
 import Pagination from "./common/pagination";
 import { sortUsers } from "@/app/(protected)/admin/account-management/libs/function/sortUsers";
 import SortIcon from "@/app/(protected)/admin/account-management/_components/sortIcon";
@@ -63,7 +62,7 @@ export default function TicketCheckinTable({ activeTab, searchKeyword }: TicketC
         },
     ];
 
-    const [tickets, setTickets] = useState<TicketCheckin[]>(data);
+    const [tickets] = useState<TicketCheckin[]>(data);
     const [sortConfig, setSortConfig] = useState<{ key: keyof TicketCheckin; direction: 'asc' | 'desc' } | null>(null);
 
     const handleSort = (key: keyof TicketCheckin) => {

@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import { BarChart3, Users, Package, LayoutGrid, Edit } from "lucide-react";
+import { BarChart3, Users, Package, Edit } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { EventOrgFrontDisplayDto } from "@/types/models/org/orgEvent.interface";

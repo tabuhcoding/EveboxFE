@@ -14,6 +14,8 @@ export default function DeleteMemberDialog({ eventId, email, onClose, onSuccess 
   
     const handleDelete = async () => {
     try {
+      console.log(eventId);
+      console.log(onSuccess);
       // const response = await apiClient.delete(`/org/member/${eventId}?email=${email}`);
 
       // if (response.data?.statusCode === 200) {

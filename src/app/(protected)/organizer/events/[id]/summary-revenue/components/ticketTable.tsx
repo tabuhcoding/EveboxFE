@@ -1,6 +1,6 @@
 "use client";
 
-import type { ITicketTypeSummary } from "@/types/model/getSummaryOrg"
+import { ITicketTypeSummary } from "@/types/models/org/orgEvent.interface";
 
 interface TicketTableProps {
   ticketTypes: ITicketTypeSummary[]

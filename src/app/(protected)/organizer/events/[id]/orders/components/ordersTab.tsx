@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import type { TicketOrderData } from "@/types/model/getOrdersOrg"
 
 import OrderSection from "./orderSection"
 import TicketSection from "./TicketSection"
+import { TicketOrderData } from "@/types/models/org/orders.interface"
 
 export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
   const [activeTab, setActiveTab] = useState("orders")

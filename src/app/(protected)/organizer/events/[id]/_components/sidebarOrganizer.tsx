@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link';
-import { User, Ticket, Calendar, BarChart, Edit, Users, Map, ArrowLeft, Menu } from 'lucide-react';
+import { User, Ticket, Calendar, BarChart, Edit, Users, ArrowLeft, Menu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { SidebarProps } from '../libs/interface/organizer.interface';

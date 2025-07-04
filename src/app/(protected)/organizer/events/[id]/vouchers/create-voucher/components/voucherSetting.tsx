@@ -13,20 +13,19 @@ export default function VoucherSettings({ voucherType }: VoucherSettingsProps) {
   const [minTickets, setMinTickets] = useState("");
   const [maxTickets, setMaxTickets] = useState("");
   const [isUnlimited, setIsUnlimited] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors] = useState<{ [key: string]: string }>({});
 
-  const validate = () => {
-    let newErrors: { [key: string]: string } = {};
+  // const validate = () => {
+  //   let newErrors: { [key: string]: string } = {};
 
-    if (!discountValue.trim()) newErrors.discountValue = "Vui lòng nhập mức giảm";
-    if (!isUnlimited && !ticketLimit.trim()) newErrors.ticketLimit = "Vui lòng nhập số lượng vé";
-    if (voucherType === "single") {
-      if (!maxOrders.trim()) newErrors.maxOrders = "Vui lòng nhập số đơn hàng tối đa";
-      if (!minTickets.trim()) newErrors.minTickets = "Vui lòng nhập số vé tối thiểu";
-      if (!maxTickets.trim()) newErrors.maxTickets = "Vui lòng nhập số vé tối đa";
-    }
-  };
-
+  //   if (!discountValue.trim()) newErrors.discountValue = "Vui lòng nhập mức giảm";
+  //   if (!isUnlimited && !ticketLimit.trim()) newErrors.ticketLimit = "Vui lòng nhập số lượng vé";
+  //   if (voucherType === "single") {
+  //     if (!maxOrders.trim()) newErrors.maxOrders = "Vui lòng nhập số đơn hàng tối đa";
+  //     if (!minTickets.trim()) newErrors.minTickets = "Vui lòng nhập số vé tối thiểu";
+  //     if (!maxTickets.trim()) newErrors.maxTickets = "Vui lòng nhập số vé tối đa";
+  //   }
+  // };
 
   return (
     <div className="p-6 bg-[#E6F6F1] rounded-lg border border-[#BEE3DB] space-y-6 shadow-lg">
@@ -34,9 +33,9 @@ export default function VoucherSettings({ voucherType }: VoucherSettingsProps) {
 
       {/* Hiển thị chung cho cả "single" và "multiple" */}
       <div>
-        <label className="block font-semibold text-[#0C4762]">
+        <p className="block font-semibold text-[#0C4762]">
           <span className="text-red-500">*</span> Loại khuyến mãi:
-        </label>
+        </p>
         <div className="flex space-x-2">
           <select
             className={`p-2 border rounded text-sm w-1/2 ${errors.discountValue ? 'border-red-500' : 'border-gray-300'}`}
@@ -57,9 +56,9 @@ export default function VoucherSettings({ voucherType }: VoucherSettingsProps) {
       </div>
 
       <div>
-        <label className="block font-semibold text-[#0C4762]">
+        <p className="block font-semibold text-[#0C4762]">
           <span className="text-red-500">*</span> Tổng số vé được áp dụng:
-        </label>
+        </p>
         <div className="flex items-center space-x-2">
           <input type="radio" checked={!isUnlimited} onChange={() => setIsUnlimited(false)} />
           <span>Giới hạn</span>
@@ -82,9 +81,9 @@ export default function VoucherSettings({ voucherType }: VoucherSettingsProps) {
       {voucherType === "single" && (
         <>
           <div>
-            <label className="block font-semibold text-[#0C4762]">
+            <p className="block font-semibold text-[#0C4762]">
               <span className="text-red-500">*</span> Số đơn hàng tối đa/Người mua:
-            </label>
+            </p>
             <input
               className={`w-full p-2 border rounded text-sm ${errors.maxOrders ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Nhập số đơn hàng tối đa"
@@ -96,9 +95,9 @@ export default function VoucherSettings({ voucherType }: VoucherSettingsProps) {
           </div>
 
           <div>
-            <label className="block font-semibold text-[#0C4762]">
+            <p className="block font-semibold text-[#0C4762]">
               <span className="text-red-500">*</span> Số lượng vé tối thiểu:
-            </label>
+            </p>
             <input
               className={`w-full p-2 border rounded text-sm ${errors.minTickets ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Nhập số lượng vé tối thiểu"
@@ -110,9 +109,9 @@ export default function VoucherSettings({ voucherType }: VoucherSettingsProps) {
           </div>
 
           <div>
-            <label className="block font-semibold text-[#0C4762]">
+            <p className="block font-semibold text-[#0C4762]">
               <span className="text-red-500">*</span> Số lượng vé tối đa:
-            </label>
+            </p>
             <input
               className={`w-full p-2 border rounded text-sm ${errors.maxTickets ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Nhập số lượng vé tối đa"

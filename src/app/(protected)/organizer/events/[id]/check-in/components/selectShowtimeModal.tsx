@@ -69,7 +69,7 @@ export default function SelectShowtimeModal({ isOpen, onClose, onConfirm }: Show
                 <div className="space-y-4">
                     {/* Chọn ngày */}
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Ngày diễn</label>
+                        <p className="text-sm font-medium text-gray-700">Ngày diễn</p>
                         <select
                             value={selectedShowing.startTime.slice(0, 10)}
                             onChange={(e) => handleDateChange(e.target.value)}
@@ -85,7 +85,7 @@ export default function SelectShowtimeModal({ isOpen, onClose, onConfirm }: Show
 
                     {/* Chọn suất diễn */}
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Suất diễn</label>
+                        <p className="text-sm font-medium text-gray-700">Suất diễn</p>
                         <select
                             value={selectedShowing.id}
                             onChange={(e) => handleTimeChange(e.target.value)}

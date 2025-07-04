@@ -25,6 +25,9 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
    useEffect(() => {
   const fetchRoles = async () => {
     try {
+      console.log(eventId);
+      console.log(onSuccess);
+
       const roles: EventRoleItem[] = await getEventRoles();
 
       const matrix: boolean[][] = [
@@ -126,7 +129,7 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
                 {/* Nội dung cuộn được */}
                 <div className="overflow-y-auto flex-1">
                     <div className="mt-4">
-                        <label className="block font-medium">Email <span className="text-red-500">*</span></label>
+                        <p className="block font-medium">Email <span className="text-red-500">*</span></p>
                         <input
                             type="email"
                             className={`w-full border rounded-md px-3 py-2 mt-1 outline-none ${emailError ? 'border-red-500' : 'border-gray-300'}`}
@@ -138,7 +141,7 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
                     </div>
 
                     <div className="mt-4">
-                        <label className="block font-medium">Vai trò <span className="text-red-500">*</span></label>
+                        <p className="block font-medium">Vai trò <span className="text-red-500">*</span></p>
                         <select
                             className={`w-full border rounded-md px-3 py-2 mt-1 outline-none ${roleError ? 'border-red-500' : 'border-gray-300'}`}
                             value={role}

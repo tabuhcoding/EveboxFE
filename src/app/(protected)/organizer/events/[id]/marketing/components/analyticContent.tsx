@@ -42,7 +42,7 @@ export default function AnalyticsContent() {
             </div>
 
             <div className="flex-1 p-6">
-                <h1 className="text-2xl font-bold text-[#0C4762]"></h1>
+                {/* <h1 className="text-2xl font-bold text-[#0C4762]"></h1> */}
                 <p className="text-sm text-[#51DACF] pt-2">{analytics?.eventTitle}</p>
 
                 <div className="border-t-2 border-[#0C4762] mt-2"></div>

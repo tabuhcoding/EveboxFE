@@ -1,4 +1,3 @@
-import { BaseApiResponse } from "@/types/baseApiResponse";
 
 // Define Statistic structure inside analytics
 export interface StatisticData {
