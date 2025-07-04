@@ -477,5 +477,6 @@
     "language": "Language",
     "continueBooking": "You were in the process of purchasing a ticket earlier. Would you like to continue the ticket purchase process?",
     "continueBookTicket": "Continue book ticket",
-    "seatAlreadyTaken": "Seat has been already taken"
+    "seatAlreadyTaken": "Seat has been already taken",
+    "registerTicketSuccess": "You have registered successfully! Direct to Ticket Management page for more details"
 }

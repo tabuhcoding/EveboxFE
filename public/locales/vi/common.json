@@ -467,5 +467,6 @@
   "language": "Ngôn ngữ",
   "continueBooking": "Bạn đang mua vé trước đó, bạn có muốn tiếp tục tiến trình mua vé không?",
   "continueBookTicket": "Tiếp tục đặt vé",
-  "seatAlreadyTaken": "Ghế này đã được người khác chọn"
+  "seatAlreadyTaken": "Ghế này đã được người khác chọn",
+  "registerTicketSuccess": "Bạn đã đăng ký vé thành công! Tiếp tục đến trang Vé của tôi để xem chi tiết"
 }
