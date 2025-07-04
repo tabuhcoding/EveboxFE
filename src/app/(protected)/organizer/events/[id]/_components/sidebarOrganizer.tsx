@@ -25,8 +25,8 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
       title: 'Cài đặt sự kiện',
       items: [
         { text: 'Thành viên', href: 'member', icon: <Users size={18} /> },
-        { text: 'Chỉnh sửa', href: '/edit', icon: <Edit size={18} /> },
-        { text: 'Seatmap', href: `/organizer/events/${eventId}/seatmap`, icon: <Map size={18} /> },
+        { text: 'Chỉnh sửa', href: `/organizer/create-event/${eventId}?step=info`, icon: <Edit size={18} /> },
+        // { text: 'Seatmap', href: `/organizer/events/${eventId}/seatmap`, icon: <Map size={18} /> },
       ],
     },
     {
