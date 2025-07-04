@@ -300,7 +300,6 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                   seatMap={seatMapData as SeatMap}
                   onSeatSelectionChange={handleSeatSelectionChange}
                   ticketType={ticketType}
-                  selectedSeatIds={selectedSeatIds}
                   selectedTickets={selectedTickets}
                 />
                 <div className='w-[30%] pl-4'>
