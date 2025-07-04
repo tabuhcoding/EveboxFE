@@ -8,6 +8,7 @@ import { CreateShowingDto, CreateShowingResponseDto, DeleteShowingResponseDto, G
 import { CreateTicketTypeDto, CreateTicketTypeResponseDto, DeleteTicketTypeResponseDto, UpdateTicketTypeDto, UpdateTicketTypeResponseDto } from "types/models/ticketType/ticketType.interface";
 import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormResponseDto, GetAllFormForOrgResponseDto } from "types/models/form/form.interface";
 import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
+import { AnalyticData } from "@/types/models/org/analytics.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -397,6 +398,29 @@ export const getSummaryByShowingId = async (showingId: string): Promise<IEventSu
   console.log(res)
   if (!res || !res.data) {
     throw new Error('Failed to fetch event summary');
+  }
+
+  return res.data.data;
+};
+
+export const getAnalyticByEvent = async (eventId: string, startDate?: string,endDate?: string): Promise<AnalyticData> => {
+  const params: Record<string, string> = {};
+
+  if (startDate) {
+    params.startDate = startDate;
+  }
+  if (endDate) {
+    params.endDate = endDate;
+  }
+
+  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_ANALYTIC}/${eventId}`, {
+    params,
+  });
+
+  console.log("fetch analytics", res);
+
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch event analytics');
   }
 
   return res.data.data;
