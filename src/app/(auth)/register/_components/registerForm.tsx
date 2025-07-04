@@ -55,7 +55,7 @@ export const RegisterForm = () => {
                                     src="/images/logo.png"
                                     alt="EveBox Logo"
                                     width={50}
-                                    height={50} 
+                                    height={50}
                                     className="mb-3 img-fluid logo"
                                 />
                                 <h3><strong>{transWithFallback('registerWith', 'Đăng ký ngay với') + ' Evebox'}</strong></h3>
@@ -81,7 +81,7 @@ export const RegisterForm = () => {
 
                                 <div className="d-flex mb-3">
                                     <div className="me-2 w-50">
-                                        <label htmlFor="name" className="form-label font-style">{t("name")|| "TÊN"}</label>
+                                        <label htmlFor="name" className="form-label font-style">{t("name") || "TÊN"}</label>
                                         <input
                                             type="text"
                                             id="name"
@@ -98,7 +98,7 @@ export const RegisterForm = () => {
                                         )}
                                     </div>
                                     <div className="w-50">
-                                        <label htmlFor="phone" className="form-label font-style">{t("phoneNumber")|| "SỐ ĐIỆN THOẠI"}</label>
+                                        <label htmlFor="phone" className="form-label font-style">{t("phoneNumber") || "SỐ ĐIỆN THOẠI"}</label>
                                         <input
                                             type="text"
                                             id="phone"
@@ -129,13 +129,13 @@ export const RegisterForm = () => {
                                                 onBlur={formik.handleBlur}
                                                 value={formik.values.password}
                                             />
-                                                <IconButton
-                                                    className="position-absolute eye-btn"
-                                                    aria-label="Toggle password visibility"
-                                                    onClick={() => setShowPassword(!showPassword)}
-                                                >
-                                                    <Icon icon={showPassword ? "ph:eye-light" : "ph:eye-closed-light"} width="20px" color="#aaaaaa" />
-                                                </IconButton>
+                                            <IconButton
+                                                className="position-absolute eye-btn"
+                                                aria-label="Toggle password visibility"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                <Icon icon={showPassword ? "ph:eye-light" : "ph:eye-closed-light"} width="20px" color="#aaaaaa" />
+                                            </IconButton>
                                         </div>
                                         {formik.touched.password && formik.errors.password && (
                                             <div className="text-danger" style={{ fontSize: '12px' }}>
@@ -156,13 +156,13 @@ export const RegisterForm = () => {
                                                 onBlur={formik.handleBlur}
                                                 value={formik.values.re_password}
                                             />
-                                                <IconButton
-                                                    className="position-absolute eye-btn"
-                                                    aria-label="Toggle password visibility"
-                                                    onClick={() => setShowRePassword(!showRePassword)}
-                                                >
-                                                    <Icon icon={showRePassword ? "ph:eye-light" : "ph:eye-closed-light"} width="20px" color="#aaaaaa" />
-                                                </IconButton>
+                                            <IconButton
+                                                className="position-absolute eye-btn"
+                                                aria-label="Toggle password visibility"
+                                                onClick={() => setShowRePassword(!showRePassword)}
+                                            >
+                                                <Icon icon={showRePassword ? "ph:eye-light" : "ph:eye-closed-light"} width="20px" color="#aaaaaa" />
+                                            </IconButton>
                                         </div>
                                         {formik.touched.re_password && formik.errors.re_password && (
                                             <div className="text-danger" style={{ fontSize: '12px' }}>
@@ -180,7 +180,11 @@ export const RegisterForm = () => {
                                         {...formik.getFieldProps('agree')}
                                     />
                                     <label htmlFor="agree" className="form-check-label">
-                                        {transWithFallback('agree', 'Tôi đồng ý với tất cả')} <a href="" style={{ color: 'white', cursor: 'pointer' }}>{" "+ transWithFallback('term', 'Các điều khoản')}</a> {" "+ transWithFallback('and', 'và')} <a href="" style={{ color: 'white', cursor: 'pointer' }}>{" "+ transWithFallback('policy', 'Chính sách bảo mật')}</a>
+                                        {transWithFallback('agree', 'Tôi đồng ý với tất cả')} <a href="/files/DieuKhoanSuDung.pdf"
+                                            target="_blank"
+                                            rel="noopener noreferrer" style={{ color: 'white', cursor: 'pointer' }}>{" " + transWithFallback('term', 'Các điều khoản')}</a> {" " + transWithFallback('and', 'và')} <a href="/files/ChinhSachBaoMatThongTinNguoiDung.pdf"
+                                                target="_blank"
+                                                rel="noopener noreferrer" style={{ color: 'white', cursor: 'pointer' }}>{" " + transWithFallback('policy', 'Chính sách bảo mật')}</a>
                                     </label>
                                     {formik.touched.agree && formik.errors.agree && (
                                         <div className="text-danger">{formik.errors.agree}</div>
