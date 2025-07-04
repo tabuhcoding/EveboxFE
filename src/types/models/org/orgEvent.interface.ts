@@ -1,3 +1,5 @@
+import { TicketType } from "../admin/showingManagement.interface";
+
 export interface EventOrgFrontDisplayDto {
   id: number;
   title: string;
@@ -24,6 +26,9 @@ export interface IShowTime {
   id: string
   startTime: string | Date
   endTime: string | Date
+  eventId?: number
+  seatMapId?: number
+  TicketType?: TicketType[]
   isSelected?: boolean
 }
 

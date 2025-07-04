@@ -378,7 +378,7 @@ export async function getEventOfOrg(): Promise<EventOrgFrontDisplayDto[]> {
 
 export const getShowingsByEventId = async (eventId: number): Promise<IShowTime[]> => {
   // const endpoint = END_POINT_LIST.ORG_SHOWING.SHOWING_TIME.replace("{eventId}", eventId.toString());
-  const res = await orgService.get(`${END_POINT_LIST.ORG_SHOWING.SHOWING_TIME}/${eventId}`);
+  const res = await orgService.get(`${END_POINT_LIST.ORG_SHOWING.SHOWING}/${eventId}`);
 
   console.log("fetch showingTime")
   console.log(res)
@@ -392,7 +392,7 @@ export const getShowingsByEventId = async (eventId: number): Promise<IShowTime[]
 export const getSummaryByShowingId = async (showingId: string): Promise<IEventSummaryData> => {
   // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
 
-  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY}/${showingId}`);
+  const res = await orgService.get<BaseApiResponse<IEventSummaryData>>(`${END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY}/${showingId}`);
   console.log("fetch sumarry")
   console.log(res)
   if (!res || !res.data) {

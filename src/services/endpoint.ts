@@ -56,7 +56,6 @@ export class END_POINT_LIST {
     FORM_CONNECT:"/api/org/showing/connect-form",
     SHOWING_FORM: "/api/org/showing/form",
     SHOWING: "/api/org/showing",
-    SHOWING_TIME: "/api/org/showing/showingTime",
   }
 
   static readonly ORG_TICKETTYPE = {
