@@ -474,5 +474,8 @@
     "yourRequest": "Your request (optional)",
     "requestPlaceholder": "For ex: Create a catchy HTML description with at least 2 images...",
     "optionalField": "This field is optional",
-    "language": "Language"
+    "language": "Language",
+    "continueBooking": "You were in the process of purchasing a ticket earlier. Would you like to continue the ticket purchase process?",
+    "continueBookTicket": "Continue book ticket",
+    "seatAlreadyTaken": "Seat has been already taken"
 }

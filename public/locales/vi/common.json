@@ -464,5 +464,8 @@
   "yourRequest": "Yêu cầu của bạn (nếu có)",
   "requestPlaceholder": "Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh",
   "optionalField": "Trường này không bắt buộc",
-  "language": "Ngôn ngữ"
+  "language": "Ngôn ngữ",
+  "continueBooking": "Bạn đang mua vé trước đó, bạn có muốn tiếp tục tiến trình mua vé không?",
+  "continueBookTicket": "Tiếp tục đặt vé",
+  "seatAlreadyTaken": "Ghế này đã được người khác chọn"
 }

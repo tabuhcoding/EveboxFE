@@ -36,7 +36,8 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
   }, [selectedSeatIds]);
 
   const handleSeatClick = (seat: Seat, sectionTicketTypeId: string, sectionId: number, status: string, rowName: string) => {
-    if (status !== 'AVAILABLE') return;
+    console.log('seat.status', seat.status)
+    if (status !== 'AVAILABLE' && status !== 'INCACHE') return;
 
     // Lấy data hiện tại của loại vé đó (ticketType)
     const ticket = ticketType.find((t) => t.id === sectionTicketTypeId);

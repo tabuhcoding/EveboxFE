@@ -6,19 +6,70 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 /* Package Application */
 import { EventDetail, Showing } from "../../../../../types/models/event/eventdetail/event.interface";
+import { getRedisSeat } from "@/services/booking.service";
+
+import ContinueDialog from "./continueDialog";
 
 const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventDetail }) => {
   const [expandedShowId, setExpandedShowId] = useState<string | null>(null);
   const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations("common");
+  const { data: session } = useSession();
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [href, setHref] = useState("");
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    return !msg || msg.startsWith('common.') ? fallback : msg;
+  };
+
+  const handleBuyButton = async (eventId: number, showingId: string, seatMapId: number) => {
+    const accessToken = session?.user?.accessToken;
+    if (!accessToken) {
+      setAlertMessage(transWithFallback("pleaseLogin", "Vui lòng đăng nhập để truy cập vào trang này!"));
+      setHref("/login");
+      setAlertOpen(true);
+      return;
+    }
+
+    const fetchRedisSeat = async () => {
+      try {
+        const res = await getRedisSeat(showingId);
+
+        if (res?.statusCode === 200) {
+          return res.data;
+        }
+        return null
+      } catch (error: any) {
+        console.error(`${transWithFallback('errorGetRedisSeat', 'Lỗi khi lấy thông tin từ redis')}:`, error)
+        return null
+      }
+    }
+
+    const redisSeat = await fetchRedisSeat();
+    if (!redisSeat) {
+      return router.push(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
+    }
+    const timeLeft = redisSeat.expiredTime;
+    if (timeLeft && timeLeft > 0) {
+      setAlertMessage(transWithFallback("continueBooking", "Bạn đang mua vé trước đó, bạn có muốn tiếp tục tiến trình mua vé không?"));
+      setHref(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
+      setAlertOpen(true);
+      return;
+    }
+    router.push(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
+  }
 
   return (
     <>
-      <div className="flex justify-center mt-8 ml-2" id="info-ticket">
+      <div className="flex justify-center mt-8 ml-2 ticket-list" id="info-ticket">
         <div className="w-full md:w-5/6">
           <h2 className="text-xl md:text-2xl font-bold">{t("ticketInfo") || "Thông tin vé"}</h2>
           <div className="card mt-3">
@@ -68,8 +119,10 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
 
                         case "REGISTER_NOW":
                           return (
-                            <button type="button" className="btn-buy" onClick={() =>
-                              router.push(`/event/${showing.eventId}/register?showingId=${showing.id}`)}>
+                            <button type="button" className="btn-buy" onClick={() => {
+                              localStorage.setItem('showingStatus', 'REGISTER_NOW')
+                              handleBuyButton(showing.eventId, showing.id, showing.seatMapId)}
+                            }>
                               {t('registerNow') || "Đăng ký ngay"}
                             </button>
                           );
@@ -79,9 +132,10 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                             <button
                               type="button"
                               className="btn-buy"
-                              onClick={() =>
-                                router.push(`/event/${showing.eventId}/booking/select-ticket?showingId=${showing.id}&eventId=${showing.eventId}${(showing.seatMapId && showing.seatMapId !== 0) ? `&seatMapId=${showing.seatMapId}` : ""}`)
-                              }
+                              onClick={() => {
+                                localStorage.setItem('showingStatus', 'BOOK_NOW')
+                                handleBuyButton(showing.eventId, showing.id, showing.seatMapId)
+                              }}
                             >
                               {t('bookNow') || "Mua vé ngay"}
                             </button>
@@ -301,6 +355,12 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
           </div>
         </div>
       </div>
+      <ContinueDialog
+        message={alertMessage}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        href={href}
+      />
     </>
   )
 };

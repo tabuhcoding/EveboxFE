@@ -8,15 +8,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
-import { selectSeat } from "@/services/booking.service";
+import { selectSeat, unselectSeat, getRedisSeat } from "@/services/booking.service";
 import { useI18n } from "app/providers/i18nProvider";
 import AlertDialog from "components/common/alertDialog";
 import { TicketInforProps, SelectSeatPayload } from "types/models/event/booking/seatmap.interface";
+import { RedisInfo } from "@/types/models/event/redisSeat";
 
 export default function TicketInfor({
   event,
@@ -38,9 +39,31 @@ export default function TicketInfor({
   const [alertMessage, setAlertMessage] = useState("");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [href, setHref] = useState("");
+  const [redisSeatInfo, setRedisSeatInfo] = useState<RedisInfo | null>(null);
 
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchRedisSeat = async () => {
+      if (showingId) {
+        try {
+          const response = await getRedisSeat(showingId);
+          if (response?.statusCode === 200) {
+            setRedisSeatInfo(response.data);
+          } else {
+            setRedisSeatInfo(null);
+          }
+        } catch (error: any) {
+         setRedisSeatInfo(null);
+         if (!error?.toString().includes('expired')) {
+           console.error('Error fetching redis seat:', error);
+         }
+        }
+      }
+    }
+    fetchRedisSeat();
+  }, [showingId]);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -112,6 +135,30 @@ export default function TicketInfor({
     }
   }
 
+  const handleUnSelectSeat = async () => {
+    if (!showingId || !session?.user?.accessToken || !redisSeatInfo) {
+      onClearSelection?.();
+      setShowConfirmDialog(false);
+      return;
+    }
+
+    try {
+      const res = await unselectSeat(showingId ?? "", session?.user?.accessToken || "");
+      if (res?.statusCode !== 200) {
+        setAlertMessage(`${transWithFallback('errorUnselectSeat', 'Lỗi khi hủy chọn vé')}: ${res?.message}`);
+        setAlertOpen(true);
+      }
+    } catch (error: any) {
+      setAlertMessage(error);
+      setAlertOpen(true);
+    } finally {
+      onClearSelection?.();
+      setIsLoading(false);
+      setShowConfirmDialog(false);
+      window.location.reload();
+    }
+  }
+
   return (
     <>
       <div className="info-container flex flex-col md:flex-row px-32 py-8 items-stretch space-y-4 md:space-y-0 md:space-x-6 min-h-[540]">
@@ -152,13 +199,14 @@ export default function TicketInfor({
 
           <div className='action-wrapper pb-4'>
             {/* Selected tickets */}
-            {Object.entries(selectedTickets).filter(([_, info]) => info.quantity > 0).length > 0 && (
+            {!isLoading && 
+              Object.entries(selectedTickets).filter(([_, info]) => info.quantity > 0).length > 0 && (
               <div className="mb-2">
                 <div className="text-sm font-semibold text-[#0C4762] mb-1">{transWithFallback('selectedTickets', 'Các vé đã chọn')}:</div>
                 <ul className="space-y-1">
                   {Object.entries(selectedTickets).map(([ticketTypeId, info]) => {
                     if (!info.quantity || info.quantity === 0) return null;
-                    
+
                     const ticketTypeObj = ticketType?.find(tt => tt.id === ticketTypeId);
                     return (
                       <li key={ticketTypeId} className="flex items-center gap-2 text-sm">
@@ -248,10 +296,7 @@ export default function TicketInfor({
               {t("btnCancel") ?? "Hủy"}
             </button>
             <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
-              onClick={() => {
-                onClearSelection?.();
-                setShowConfirmDialog(false);
-              }}>
+              onClick={handleUnSelectSeat}>
               {t("btnDeleteAll") ?? "Xóa tất cả vé"}
             </button>
           </div>
