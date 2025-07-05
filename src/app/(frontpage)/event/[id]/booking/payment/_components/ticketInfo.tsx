@@ -14,6 +14,7 @@ import { checkoutPayment } from "@/services/payment.service";
 import { TicketInforProps } from "@/types/models/event/booking/payment.interface";
 
 import ConfirmDialog from "../../question-form/_components/confirmDialog";
+import GeneralTermsDialog from "../../question-form/_components/generalTermsDialog";
 
 export default function TicketInformation({ event, totalTickets, totalAmount, selectedTickets, ticketType, paymentMethod, showingId, seatMapId, redisInfo }: TicketInforProps) {
   console.log("🚀 ~ TicketInformation ~ totalTickets:", totalTickets)
@@ -27,6 +28,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
   const [openUnselectSeatDialog, setOpenUnselectSeatDialog] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [openGeneralTerms, setOpenGeneralTerms] = useState(false);
 
   // const handleOpenDialog = () => {
   //   setIsOpen(true);
@@ -207,7 +209,14 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
 
         <div className='row mt-2 mb-4'>
           <p>{transWithFallback("purchaseAgreement", "Bằng việc tiến hành đặt mua")}</p><br />
-          <p>{transWithFallback("agreementPrefix", "Bạn đã đồng ý với các")} <a href='#' style={{ color: '#0C4762', textDecoration: 'underline' }}>{transWithFallback("generalTerms", "Điều Kiện Giao Dịch Chung")}</a></p>
+          <p>{transWithFallback("agreementPrefix", "Bạn đã đồng ý với các ")}
+            <a href='#' onClick={(e) => {
+              e.preventDefault();
+              setOpenGeneralTerms(true);
+            }} style={{ color: '#0C4762', textDecoration: 'underline' }}>
+              {transWithFallback("generalTerms", "Điều Kiện Giao Dịch Chung")}
+            </a>
+          </p>
         </div>
         <div className='row'>
           <button onClick={handlePayment} className='h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'>{transWithFallback("checkout", "Thanh toán")}</button>
@@ -224,6 +233,10 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
+      />
+      <GeneralTermsDialog 
+        open={openGeneralTerms} 
+        onClose={() => setOpenGeneralTerms(false)} 
       />
     </div>
   )

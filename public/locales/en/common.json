@@ -651,7 +651,7 @@
     "errorLoadEvent": "Failed to load event categories!",
     "totals": "Total Amount",
     "purchaseAgreement": "By proceeding with the purchase",
-    "agreementPrefix": "You agree to the",
+    "agreementPrefix": "You agree to the ",
     "generalTerms": "General Terms and Conditions",
     "completeBookingIn": "Complete booking in"
 }
