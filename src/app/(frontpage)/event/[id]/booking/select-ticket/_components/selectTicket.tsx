@@ -12,7 +12,8 @@ export default function SelectTicket({
   selectedTickets,
   setSelectedTickets,
   selectedTicket,
-  setSelectedTicket
+  setSelectedTicket,
+  initialSelectedTickets
 }: SelectTicketProps) {
   const t = useTranslations("common");
   // const [alertOpen, setAlertOpen] = useState(false);
@@ -136,7 +137,10 @@ export default function SelectTicket({
                         onClick={() => handleDecrease(ticket.id)}
                         disabled={!selectedTickets[ticket.id]}
                       >-</button>
-                      <span className="px-4 font-semibold">{selectedTickets[ticket.id]?.quantity || 0}</span>
+                      {/* <span className="px-4 font-semibold">{selectedTickets[ticket.id]?.quantity || 0}</span> */}
+                      <span className="px-4 font-semibold">
+                        {initialSelectedTickets?.[ticket.id]?.quantity || selectedTickets[ticket.id]?.quantity || 0}
+                      </span>
                       <button
                         className={`px-3 py-1 border rounded-r bg-gray-100 hover:bg-gray-200 
                                   ${(selectedTickets[ticket.id]?.quantity || 0) >= ticket.maxQtyPerOrder ? 'opacity-50 cursor-not-allowed' : ''}`}

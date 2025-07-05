@@ -30,6 +30,7 @@ export interface SelectTicketProps {
   setSelectedTickets: Dispatch<SetStateAction<SelectedTicketsState>>;
   selectedTicket: string | null;
   setSelectedTicket: Dispatch<SetStateAction<string | null>>;
+  initialSelectedTickets?: SelectedTicketsState;
 }
 
 export interface SelectTicketPageProps {
