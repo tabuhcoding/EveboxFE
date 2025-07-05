@@ -2,13 +2,22 @@
 
 import Link from 'next/link';
 import { Ticket, CalendarPlus, BarChart, BookMinus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const Sidebar = () => {
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   const menuSections = [
-    { text: 'Sự kiện của tôi', href: '/organizer/events', icon: <Ticket size={20} /> },
-    { text: 'Quản lý báo cáo', href: '/organizer/export-file', icon: <BarChart size={20} /> },
-    { text: 'Tạo sự kiện', href: '/organizer/create-event', icon: <CalendarPlus size={20} /> },
-    { text: 'Điều khoản cho Ban tổ chức', href: '/organizer/legal-document', icon: <BookMinus size={20} /> },
+    { text: transWithFallback('myEvents', 'Sự kiện của tôi'), href: '/organizer/events', icon: <Ticket size={20} /> },
+    { text: transWithFallback('reportManagement', 'Quản lý báo cáo'), href: '/organizer/export-file', icon: <BarChart size={20} /> },
+    { text: transWithFallback('createEvent', 'Tạo sự kiện'), href: '/organizer/create-event', icon: <CalendarPlus size={20} /> },
+    { text: transWithFallback('legalDocument', 'Điều khoản cho Ban tổ chức'), href: '/organizer/legal-document', icon: <BookMinus size={20} /> },
   ];
 
   return (

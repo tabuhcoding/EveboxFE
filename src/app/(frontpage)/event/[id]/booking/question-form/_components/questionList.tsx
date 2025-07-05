@@ -77,7 +77,7 @@ export default function QuestionList({
   };
 
   return (
-    <div className="col-7">
+    <div className="col-12 col-md-10 col-lg-7 mx-auto">
       <div className='container'>
         <form className="row g-3 needs-validation" noValidate>
           <div className="alert alert-info bg-alert">

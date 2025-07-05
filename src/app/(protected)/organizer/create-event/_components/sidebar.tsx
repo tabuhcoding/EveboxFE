@@ -3,14 +3,23 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Ticket, CalendarPlus, BarChart, BookMinus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const Sidebar = () => {
   const pathName = usePathname();
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   const menuSections = [
-    { text: 'Sự kiện của tôi', href: '/organizer/events', icon: <Ticket size={20} /> },
-    { text: 'Quản lý báo cáo', href: '/organizer/report-management', icon: <BarChart size={20} /> },
-    { text: 'Tạo sự kiện', href: '/organizer/create-event', icon: <CalendarPlus size={20} /> },
-    { text: 'Điều khoản cho Ban tổ chức', href: '/organizer/legal-document', icon: <BookMinus size={20} /> },
+    { text: transWithFallback('myEvents', 'Sự kiện của tôi'), href: '/organizer/events', icon: <Ticket size={20} /> },
+    { text: transWithFallback('reportManagement', 'Quản lý báo cáo'), href: '/organizer/report-management', icon: <BarChart size={20} /> },
+    { text: transWithFallback('createEvent', 'Tạo sự kiện'), href: '/organizer/create-event', icon: <CalendarPlus size={20} /> },
+    { text: transWithFallback('legalDocument', 'Điều khoản cho Ban tổ chức'), href: '/organizer/legal-document', icon: <BookMinus size={20} /> },
   ];
 
   return (
@@ -22,9 +31,8 @@ const Sidebar = () => {
             <li key={i}>
               <Link
                 href={item.href}
-                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
-                  pathName.startsWith(item.href) ? "bg-sky-700" : "hover:bg-sky-800"
-                }`}
+                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${pathName.startsWith(item.href) ? "bg-sky-700" : "hover:bg-sky-800"
+                  }`}
               >
                 {item.icon}
                 {item.text}

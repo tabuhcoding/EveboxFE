@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations, useLocale } from 'next-intl';
 
 /* Package Application */
 import SelectField from "../../common/form/selectField";
@@ -26,6 +27,14 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   const router = useRouter();
   const params = useParams();
   const currentEventId = params?.id;
+  const t = useTranslations('common');
+  const locale = useLocale();
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   const [background, setBackground] = useState<string | null>(null);
   const [logoOrg, setLogoOrg] = useState<string | null>(null);
@@ -45,6 +54,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [allProvinces, setAllProvinces] = useState<Province[]>([]);
+
   // const [generationForm, setGenerationForm] = useState<GenerationProps>({
   //   name: "",
   //   description: "",
@@ -77,34 +87,51 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   ];
 
   //Nội dung sẵn trong Thông tin sự kiện
-  const [post, setPost]
-    = useState(`<p><strong>Giới thiệu sự kiện:</strong></p>
-                <p>
-                    [Tóm tắt ngắn gọn về sự kiện: Nội dung chính, điểm đặc sắc nhất
-                    và lý do khiến người tham gia không nên bỏ lỡ]
-                </p>
+  const [post, setPost] = useState('');
 
-                <p><strong>Chi tiết sự kiện:</strong></p>
-                <ul className="list-disc ml-5">
-                    <li>
-                        <span><strong>Chương trình chính:</strong></span> [Liệt kê
-                        những hoạt động nổi bật trong sự kiện: các phần trình diễn, khách mời
-                        đặc biệt, lịch trình các tiết mục cụ thể nếu có.]
-                    </li>
-                    <li>
-                        <span><strong>Khách mời:</strong></span> [Thông tin về các khách
-                        mời đặc biệt, nghệ sĩ, diễn giả sẽ tham gia sự kiện.]
-                    </li>
-                    <li>
-                        <span><strong>Đối tượng hướng tới:</strong></span> [Chỉ rõ 
-                        tệp đối tượng mà chương trình chủ yếu đáp ứng nhu cầu]
-                    </li>
-                </ul>
+  useEffect(() => {
+    const defaultPost = `
+      <p><strong>${transWithFallback('eventIntro', 'Giới thiệu sự kiện')}:</strong></p>
+      <p>
+        ${transWithFallback(
+      'eventIntroDesc',
+      '[Tóm tắt ngắn gọn về sự kiện: Nội dung chính, điểm đặc sắc nhất và lý do khiến người tham gia không nên bỏ lỡ]'
+    )}
+      </p>
 
-                <p><strong>Điều khoản và điều kiện:</strong></p>
-                <p>[TnC] sự kiện</p>
-                <p>Lưu ý về điều khoản trẻ em</p>
-                <p>Lưu ý về điều khoản VAT</p>`);
+      <p><strong>${transWithFallback('eventDetail', 'Chi tiết sự kiện')}:</strong></p>
+      <ul class="list-disc ml-5">
+        <li>
+          <span><strong>${transWithFallback('mainProgram', 'Chương trình chính')}:</strong></span>
+          ${transWithFallback(
+      'mainProgramDesc',
+      '[Liệt kê những hoạt động nổi bật trong sự kiện: các phần trình diễn, khách mời đặc biệt, lịch trình các tiết mục cụ thể nếu có.]'
+    )}
+        </li>
+        <li>
+          <span><strong>${transWithFallback('guests', 'Khách mời')}:</strong></span>
+          ${transWithFallback(
+      'guestsDesc',
+      '[Thông tin về các khách mời đặc biệt, nghệ sĩ, diễn giả sẽ tham gia sự kiện.]'
+    )}
+        </li>
+        <li>
+          <span><strong>${transWithFallback('targetAudience', 'Đối tượng hướng tới')}:</strong></span>
+          ${transWithFallback(
+      'audienceDesc',
+      '[Chỉ rõ tệp đối tượng mà chương trình chủ yếu đáp ứng nhu cầu]'
+    )}
+        </li>
+      </ul>
+
+      <p><strong>${transWithFallback('term', 'Điều khoản và điều kiện')}:</strong></p>
+      <p>${transWithFallback('tnc', '[TnC] sự kiện')}</p>
+      <p>${transWithFallback('childrenNote', 'Lưu ý về điều khoản trẻ em')}</p>
+      <p>${transWithFallback('vatNote', 'Lưu ý về điều khoản VAT')}</p>
+    `;
+
+    setPost(defaultPost);
+  }, [locale, t]);
 
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
@@ -124,7 +151,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
         setCategories(eventTypes);
       } catch (error) {
         console.error("Error fetching event types:", error);
-        toast.error("Lỗi khi tải danh sách thể loại sự kiện!", { duration: 5000 });
+        toast.error(transWithFallback("errorLoadEvent", "Lỗi khi tải danh sách thể loại sự kiện!"), { duration: 5000 });
       }
     };
 
@@ -135,7 +162,24 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     const fetchProvinces = async () => {
       try {
         const data = await getAllDistricts();
-        setAllProvinces(data);
+
+        const removeQuotes = (str: string) => str?.replace(/^"(.*)"$/, '$1').replace(/"/g, '');
+        const cleanedData = data.map((province) => ({
+          ...province,
+          name: {
+            ...province.name,
+            vi: removeQuotes(province.name.vi),
+          },
+          districts: province.districts.map((district) => ({
+            ...district,
+            name: {
+              ...district.name,
+              vi: removeQuotes(district.name.vi),
+            },
+          })),
+        }));
+
+        setAllProvinces(cleanedData);
       } catch (error) {
         console.error("Error fetching provinces:", error);
       }
@@ -223,7 +267,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
         } catch (error) {
           console.error("Error fetching event detail:", error);
-          toast.error("Lỗi khi tải thông tin sự kiện!", { duration: 5000 });
+          toast.error(transWithFallback('errorWhenFetchEventDetail', 'Lỗi khi tải thông tin sự kiện!'), { duration: 5000 });
         }
       };
 
@@ -266,7 +310,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
       const { imageUrl } = await uploadImage(file);
       setBackground(imageUrl);
     } catch {
-      toast.error("Tải ảnh nền thất bại");
+      toast.error(transWithFallback('errorWhenUploadBackground', 'Tải ảnh nền thất bại'));
     }
   };
 
@@ -279,7 +323,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
       const { imageUrl } = await uploadImage(file);
       setLogoOrg(imageUrl);
     } catch {
-      toast.error("Tải logo thất bại");
+      toast.error(transWithFallback('errorWhenUploadLogo', 'Tải logo thất bại'));
     }
   };
 
@@ -363,11 +407,11 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
       });
 
-      toast.success("Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!", { duration: 5000 });
+      toast.success(transWithFallback('updateEventSuccess', 'Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!'), { duration: 5000 });
       router.push(`/organizer/create-event/${currentEventId}?step=showing`);
     } catch (error: any) {
       console.error("Error updating event:", error);
-      toast.error(error.message || "Lỗi khi cập nhật sự kiện!", { duration: 5000 });
+      toast.error(error.message || transWithFallback('errorWhenUpdateEvent', 'Lỗi khi cập nhật sự kiện!'), { duration: 5000 });
     }
   };
 
@@ -399,7 +443,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
       if (!street.trim()) newErrors.street = true;
 
       if (!eventAddress.trim() || !province || !district || !ward || !street.trim()) {
-        toast.error("Vui lòng nhập đầy đủ thông tin địa điểm sự kiện!", { duration: 5000 });
+        toast.error(transWithFallback('pleaseWhenFillLocation', 'Vui lòng nhập đầy đủ thông tin địa điểm sự kiện!'), { duration: 5000 });
       }
     }
 
@@ -464,7 +508,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
         }
 
         if (btnValidate === "Save") {
-          toast.success("Form hợp lệ! Đã lưu thông tin sự kiện!", { duration: 5000 });
+          toast.success(transWithFallback('formValid', 'Form hợp lệ! Đã lưu thông tin sự kiện!'), { duration: 5000 });
           onNextStep({
             title: eventName,
             description: post,
@@ -482,9 +526,9 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                 .find((p) => p.name.vi === province)
                 ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
           });
-          toast.success("Đã lưu thông tin sự kiện!", { duration: 5000 });
+          toast.success(transWithFallback("savedInfo", "Đã lưu thông tin sự kiện!"), { duration: 5000 });
         } else if (btnValidate === "Continue") {
-          toast.success("Form hợp lệ! Sẽ chuyển sang bước tiếp theo!", { duration: 5000 });
+          toast.success(transWithFallback("formValid", "Form hợp lệ! Sẽ chuyển sang bước tiếp theo!"), { duration: 5000 });
           onNextStep({
             title: eventName,
             description: post,
@@ -565,7 +609,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
                 <SelectField
-                  label="Thể loại sự kiện"
+                  label={transWithFallback('eventCategory', 'Thể loại sự kiện')}
                   options={categories.map((cat) => cat.name)}
                   value={selectedCategory ? selectedCategory.name : ""}
                   onChange={(e) => handleSelectChange(e, "typeEvent")}
@@ -581,12 +625,14 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
                 <p className="block text-sm font-bold mb-2">
-                  <span className="text-red-500">* </span> Thông tin sự kiện
+                  <span className="text-red-500">* </span> {transWithFallback('eventInfo', 'Thông tin sự kiện')}
                 </p>
 
-                <div className="boder ">
-                  <TextEditor eventDetails={!eventDetailInfo ? eventDetails : eventDetailInfo} content={post} onChange={onChange} isValidDescription={isFormValid} />
-                </div>
+                {post && (
+                  <div className="boder ">
+                    <TextEditor key={locale} eventDetails={!eventDetailInfo ? eventDetails : eventDetailInfo} content={post} onChange={onChange} isValidDescription={isFormValid} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

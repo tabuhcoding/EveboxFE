@@ -1,10 +1,22 @@
 'use client'
 
-import { Equal } from "lucide-react"; 
+/* Package System */
+import { Equal } from "lucide-react";
+import { useTranslations } from 'next-intl';
+
+/* Package Application */
 import FormInputItem from "./formInputItem";
 import { FormItemProps } from "../../../../libs/interface/question.interface";
 
-export default function FormItem ({ form, isExpanded, toggleExpand, selectedForms, handleSelectForm }:FormItemProps) {
+export default function FormItem({ form, isExpanded, toggleExpand, selectedForms, handleSelectForm }: FormItemProps) {
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     return (
         <div key={form.id} className="p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto mt-3 mb-6" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
             <div className="flex items-center justify-between w-full mb-2">
@@ -24,9 +36,9 @@ export default function FormItem ({ form, isExpanded, toggleExpand, selectedForm
 
             {!isExpanded && (
                 <div className="flex items-center w-full ml-4">
-                    <span className="text-sm ml-4">{form.FormInput.length} Câu hỏi</span>
+                    <span className="text-sm ml-4">{form.FormInput.length} {transWithFallback("quesTitle", "Câu hỏi")}</span>
                 </div>
-            )} 
+            )}
 
             {isExpanded && (
                 <div>
