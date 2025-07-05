@@ -187,7 +187,7 @@ export default function SearchControls() {
           </div>
           <div className="min-w-[180px] w-full">
             <label className="text-sm font-medium mb-2">{transWithFallback('timeTitle', "Thời gian")}</label>
-            <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
+            <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px] overflow-hidden text-sm">
               <DatePicker
                 value={dateRange}
                 onDateRangeChange={setDateRange}
