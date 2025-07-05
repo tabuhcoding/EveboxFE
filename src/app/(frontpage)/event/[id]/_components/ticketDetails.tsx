@@ -13,6 +13,7 @@ import { EventDetail, Showing } from "../../../../../types/models/event/eventdet
 import { getRedisSeat } from "@/services/booking.service";
 
 import ContinueDialog from "./continueDialog";
+import AlertDialog from "@/components/common/alertDialog";
 
 const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventDetail }) => {
   const [expandedShowId, setExpandedShowId] = useState<string | null>(null);
@@ -23,7 +24,10 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [continueOpen, setContinueOpen] = useState(false);
+  const [continueMessage, setContinueMessage] = useState("");
   const [href, setHref] = useState("");
+  const [continueHref, setContinueHref] = useState("");
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -59,9 +63,9 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
     }
     const timeLeft = redisSeat.expiredTime;
     if (timeLeft && timeLeft > 0) {
-      setAlertMessage(transWithFallback("continueBooking", "Bạn đang mua vé trước đó, bạn có muốn tiếp tục tiến trình mua vé không?"));
-      setHref(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
-      setAlertOpen(true);
+      setContinueMessage(transWithFallback("continueBooking", "Bạn đang mua vé trước đó, bạn có muốn tiếp tục tiến trình mua vé không?"));
+      setContinueHref(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
+      setContinueOpen(true);
       return;
     }
     router.push(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
@@ -355,11 +359,18 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
           </div>
         </div>
       </div>
-      <ContinueDialog
+      <AlertDialog
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
         href={href}
+      />
+
+      <ContinueDialog
+        message={continueMessage}
+        onClose={() => setContinueOpen(false)}
+        open={continueOpen}
+        href={continueHref}
       />
     </>
   )
