@@ -150,7 +150,7 @@ export default function SearchControls() {
               >
                 <span>
                   {selectedLocation
-                    ? (locale === 'en' ? selectedLocation.nameEn : selectedLocation.nameVi)
+                    ? (locale === 'en' ? selectedLocation.nameEn.replace(/"/g, '') : selectedLocation.nameVi.replace(/"/g, ''))
                     : transWithFallback('locationHint', "Chọn địa điểm")}
 
                 </span>
@@ -176,7 +176,7 @@ export default function SearchControls() {
                         }
                       }}
                     >
-                      {locale === 'en' ? location.nameEn : location.nameVi}
+                      {locale === 'en' ? location.nameEn.replace(/"/g, '')  : location.nameVi.replace(/"/g, '') }
                     </div>
                   ))}
 
