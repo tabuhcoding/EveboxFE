@@ -4,7 +4,8 @@
 import { ChevronDown, ChevronUp, CirclePlus, X, PencilLine, Ticket, Trash2 } from "lucide-react";
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Toaster,toast } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import DateTimePicker from "../../common/form/dateTimePicker";
@@ -23,7 +24,15 @@ import CopyTicketDailog from "./dialogs/copyTicket";
 import { handleDeleteShow } from "../../../libs/functions/showing/deleteShow";
 import { getAllShowingDetailOfEvent } from "services/org.service";
 
-export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, setShowingList,eventId }: { onNextStep: () => void, btnValidate2: string, setShowingList: (showtimes: Showtime[]) => void, eventId: number}) {
+export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, setShowingList, eventId }: { onNextStep: () => void, btnValidate2: string, setShowingList: (showtimes: Showtime[]) => void, eventId: number }) {
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     //Chỉnh sửa vé đã tạo
     const [editShowtimeId, setEditShowtimeId] = useState<string | null>(null);
     const [editTicketIndex, setEditTicketIndex] = useState<number | null>(null);
@@ -43,66 +52,66 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
     ]);
 
     useEffect(() => {
-       const fetchShowtimes = async () => {
-  try {
-    const data = await getAllShowingDetailOfEvent(Number(eventId)); 
+        const fetchShowtimes = async () => {
+            try {
+                const data = await getAllShowingDetailOfEvent(Number(eventId));
 
-    if (!data || data.length === 0) {
-      setShowtimes([{
-        id: "",
-        startDate: null,
-        endDate: null,
-        tickets: [],
-        isExpanded: true,
-        showDialog: false,
-        showEditDialog: false,
-        showCopyTicketDialog: false,
-        showConfirmDeleteDialog: false,
-        showDeleteShow: false
-      }]);
-    } else {
-      const formattedShowtimes: Showtime[] = data.map((show) => ({
-        id: show.id,
-        startDate: new Date(show.startTime),
-        endDate: new Date(show.endTime),
-        tickets: show.TicketType
-          .map((ticket) => ({
-            id: ticket.id,
-            name: ticket.name,
-            price: ticket.originalPrice.toString(),
-            quantity: ticket.quantity.toString(),
-            min: ticket.minQtyPerOrder.toString(),
-            max: ticket.maxQtyPerOrder.toString(),
-            startDate: new Date(ticket.startTime),
-            endDate: new Date(ticket.endTime),
-            setSelectedStartDate: () => {},
-            setSelectedEndDate: () => {},
-            information: ticket.description,
-            image: ticket.imageUrl || null,
-            free: ticket.isFree,
-            position: ticket.position
-          }))
-          .sort((a, b) => a.position - b.position),
-        isExpanded: true,
-        showDialog: false,
-        showEditDialog: true,
-        showCopyTicketDialog: false,
-        showConfirmDeleteDialog: false,
-        showDeleteShow: false,
-      }));
+                if (!data || data.length === 0) {
+                    setShowtimes([{
+                        id: "",
+                        startDate: null,
+                        endDate: null,
+                        tickets: [],
+                        isExpanded: true,
+                        showDialog: false,
+                        showEditDialog: false,
+                        showCopyTicketDialog: false,
+                        showConfirmDeleteDialog: false,
+                        showDeleteShow: false
+                    }]);
+                } else {
+                    const formattedShowtimes: Showtime[] = data.map((show) => ({
+                        id: show.id,
+                        startDate: new Date(show.startTime),
+                        endDate: new Date(show.endTime),
+                        tickets: show.TicketType
+                            .map((ticket) => ({
+                                id: ticket.id,
+                                name: ticket.name,
+                                price: ticket.originalPrice.toString(),
+                                quantity: ticket.quantity.toString(),
+                                min: ticket.minQtyPerOrder.toString(),
+                                max: ticket.maxQtyPerOrder.toString(),
+                                startDate: new Date(ticket.startTime),
+                                endDate: new Date(ticket.endTime),
+                                setSelectedStartDate: () => { },
+                                setSelectedEndDate: () => { },
+                                information: ticket.description,
+                                image: ticket.imageUrl || null,
+                                free: ticket.isFree,
+                                position: ticket.position
+                            }))
+                            .sort((a, b) => a.position - b.position),
+                        isExpanded: true,
+                        showDialog: false,
+                        showEditDialog: true,
+                        showCopyTicketDialog: false,
+                        showConfirmDeleteDialog: false,
+                        showDeleteShow: false,
+                    }));
 
-      setShowtimes(formattedShowtimes);
-      localStorage.setItem("showtimes", JSON.stringify(formattedShowtimes));
-      console.log("Showtimes saved to local storage", formattedShowtimes);
-    }
-  } catch (error) {
-    toast.error("Error fetching showtimes: " + (error as Error).message);
-  }
-};
+                    setShowtimes(formattedShowtimes);
+                    localStorage.setItem("showtimes", JSON.stringify(formattedShowtimes));
+                    console.log("Showtimes saved to local storage", formattedShowtimes);
+                }
+            } catch (error) {
+                toast.error("Error fetching showtimes: " + (error as Error).message);
+            }
+        };
 
-      
+
         fetchShowtimes();
-      }, [eventId]);
+    }, [eventId]);
 
     useEffect(() => {
         setShowingList(showtimes);
@@ -124,10 +133,10 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
 
     const handleAddShowtime = () => {
         setShowtimes([...showtimes, {
-            id:"", startDate: null, endDate: null, tickets: [],
+            id: "", startDate: null, endDate: null, tickets: [],
             showEditDialog: false, showConfirmDeleteDialog: false, showDeleteShow: false
         }]);
-        console.log('Showtime----',showtimes)
+        console.log('Showtime----', showtimes)
     };
 
     const handleSubmit = () => {
@@ -136,17 +145,17 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
         const totalTickets = showtimes.reduce((count, showtime) => count + showtime.tickets.length, 0);
 
         if (totalTickets === 0) {
-            toast.error("Vui lòng tạo ít nhất một loại vé trước khi tiếp tục!");
+            toast.error(transWithFallback("pleaseChoseTicket", "Vui lòng tạo ít nhất một loại vé trước khi tiếp tục!"));
             return;
         }
 
         // Nếu nút là "Save"
         if (btnValidate2 === "Save") {
-            toast.success("Form hợp lệ");
+            toast.success(transWithFallback("validForm", "Form hợp lệ"));
         }
         // Nếu nút là "Continue"
         else if (btnValidate2 === "Continue") {
-            toast.success("Form hợp lệ! Chuyển sang bước tiếp theo...");
+            toast.success(transWithFallback("continueForm", "Form hợp lệ! Chuyển sang bước tiếp theo..."));
             onNextStep();
         }
     };
@@ -158,7 +167,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
             <div className="w-full mt-6">
                 <form className="w-full max-w-4xl mx-auto mb-6" onSubmit={handleSubmit} id="ticket-form">
                     <div className="relative flex items-center">
-                        <p className="text-xl font-bold mr-4">Thời gian</p>
+                        <p className="text-xl font-bold mr-4">{transWithFallback('timeTitle', 'Thời gian')}</p>
                         <div className="relative ml-auto">
                             <select
                                 className={`text-base block appearance-none w-40 border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400 
@@ -166,13 +175,13 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                 value={selectedMonth}
                                 onChange={handleSelectChange}
                             >
-                                <option value="">Tất cả tháng</option>
+                                <option value="">{transWithFallback('allMonth', 'Tất cả tháng')}</option>
                                 {Array.from(new Set(showtimes
                                     .filter(show => show.startDate) // Lọc bỏ các startDate null
                                     .map(show => new Date(show.startDate as Date).getMonth() + 1)
                                 )).map((month) => (
                                     <option key={month} value={month} className="text-black">
-                                        Tháng {month}
+                                        {transWithFallback('mth', 'Tháng')} {month}
                                     </option>
                                 ))}
                             </select>
@@ -193,7 +202,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                     <>
                                         <div className="flex items-center">
                                             <ChevronUp size={20} className="cursor-pointer" onClick={() => toggleExpanded(showtime.id, setShowtimes)} />
-                                            <p className="text-base font-medium ml-2">Ngày sự kiện</p>
+                                            <p className="text-base font-medium ml-2">{transWithFallback('eventDate', 'Ngày sự kiện')}</p>
                                         </div>
 
                                         <X className="ml-auto text-red-500 rounded w-5 h-5 cursor-pointer hover:bg-red-100"
@@ -207,14 +216,14 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                         <ChevronDown size={20} className="cursor-pointer" onClick={() => toggleExpanded(showtime.id, setShowtimes)} />
                                         <div>
                                             <label className={`text-base font-medium ml-2 ${showtime.tickets.length === 0 ? "text-red-500" : "text-black"}`}>
-                                                {showtime.startDate ? `${showtime.startDate.toLocaleDateString("vi-VN", {timeZone: "UTC",  day: "2-digit", month: "2-digit", year: "numeric" })} - ${showtime.startDate.toLocaleString("vi-VN", { timeZone: "UTC", hour: "2-digit", minute: "2-digit" })}`
-                                                    : "Vui lòng chọn thông tin xuất diễn"}
+                                                {showtime.startDate ? `${showtime.startDate.toLocaleDateString("vi-VN", { timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric" })} - ${showtime.startDate.toLocaleString("vi-VN", { timeZone: "UTC", hour: "2-digit", minute: "2-digit" })}`
+                                                    : transWithFallback("pleaseChoseShow", "Vui lòng chọn thông tin xuất diễn")}
                                             </label>
                                             <br />
                                             {showtime.tickets.length === 0 ? (
-                                                showtime.startDate && <span className="text-sm ml-2">Vui lòng tạo ít nhất một loại vé</span>
+                                                showtime.startDate && <span className="text-sm ml-2">{transWithFallback('pleaseCreate', 'Vui lòng tạo ít nhất một loại vé')}</span>
                                             ) : (
-                                                <span className="text-sm ml-2">{showtime.tickets.length} Loại vé</span>
+                                                <span className="text-sm ml-2">{showtime.tickets.length} {transWithFallback('ticketType', 'Loại vé')}</span>
                                             )}
 
                                         </div>
@@ -227,7 +236,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                     {/* Thời gian bắt đầu */}
                                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <DateTimePicker
-                                            label="Thời gian bắt đầu"
+                                            label={transWithFallback("startTime", "Thời gian bắt đầu")}
                                             selectedDate={showtime.startDate}
                                             setSelectedDate={(date) => {
                                                 const updatedShowtimes = [...showtimes];
@@ -242,7 +251,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                     {/* Thời gian kết thúc */}
                                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <DateTimePicker
-                                            label="Thời gian kết thúc"
+                                            label={transWithFallback("endTime", "Thời gian kết thúc")}
                                             selectedDate={showtime.endDate}
                                             setSelectedDate={(date) => {
                                                 const updatedShowtimes = [...showtimes];
@@ -256,19 +265,19 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                 </div>
 
                                 <p className="block text-base font-medium mb-2">
-  <span className="text-red-500">*</span> Loại vé
-</p>
+                                    <span className="text-red-500">*</span> {transWithFallback('ticketType', 'Loại vé')}
+                                </p>
 
 
                                 {showtimes.length >= 2 && showtime.tickets.length === 0 && (
                                     <div className="flex gap-4 mt-4 mb-4 ml-2">
                                         <button className="w-40 text-sm border-2 border-[#2DC275] text-white font-bold py-2 px-4 rounded bg-[#2DC275] hover:bg-[#7DF7B8] hover:border-[#7DF7B8] hover:text-white transition-all"
                                             onClick={() => {
-                                                if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors)) {
+                                                if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors, t)) {
                                                     toggleCopyTicketDialog(showtime.id, setShowtimes);
                                                 }
                                             }}>
-                                            Copy loại vé
+                                            {transWithFallback('copyTicket', 'Copy loại vé')}
                                         </button>
                                     </div>
                                 )}
@@ -315,7 +324,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                                         onConfirm={() => {
                                                             handleDeleteTicket(showtime.id, delTicketIndex, setShowtimes, setDelShowtimeId, setDelTicketIndex);
 
-                                                           console.log(delTicketIndex);
+                                                            console.log(delTicketIndex);
                                                         }}
                                                     />)}
                                             </div>
@@ -326,11 +335,11 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                 <div className="flex justify-center mt-4">
                                     <button type="button" className="text-base font-medium flex items-center gap-1 my-2 text-[#2DC275]"
                                         onClick={() => {
-                                            if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors)) {
+                                            if (validateTimeSelection(showtime.startDate, showtime.endDate, setErrors, t)) {
                                                 toggleDialog(showtime.id, setShowtimes);
                                             }
                                         }}>
-                                        <CirclePlus size={20} /> Tạo loại vé mới
+                                        <CirclePlus size={20} /> {transWithFallback('btnCreateTicket', 'Tạo loại vé mới')}
                                     </button>
 
                                     {showtime.showDialog &&
@@ -364,7 +373,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                         )}
                                         onConfirm={() => {
                                             handleDeleteShow(showtime.id, showtime.startDate, showtime.endDate, setShowtimes, setDelShowtimeId);
-                                            
+
                                         }}
                                     />)}
                             </>)}
@@ -379,7 +388,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                             type="button" onClick={handleAddShowtime}
                             className="text-base font-medium flex items-center gap-1 my-2 text-[#2DC275]"
                         >
-                            <CirclePlus size={20} /> Tạo suất diễn
+                            <CirclePlus size={20} /> {transWithFallback('btnCreateShow', 'Tạo suất diễn')}
                         </button>
                     </div>
                 </form >

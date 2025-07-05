@@ -2,6 +2,7 @@
 
 // Package System
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 // Package App
 import TimeOutDialog from './timeOutDialog';
@@ -11,8 +12,15 @@ interface CountdownTimerProps {
 }
 
 export default function CountdownTimer({ expiredTime }: CountdownTimerProps) {
+  const t = useTranslations('common');
   const [isTimeout, setIsTimeout] = useState(false);
   const [timeLeft, setTimeLeft] = useState(expiredTime);
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   useEffect(() => {
     if (expiredTime <= 0) {
@@ -69,7 +77,7 @@ export default function CountdownTimer({ expiredTime }: CountdownTimerProps) {
 
   return (
     <div className="mt-3 bg-[#DDF9F5] border border-[#52D1C9] rounded-xl p-4 text-center shadow-md flex flex-col items-center">
-      <p className="text-black mb-2">Hoàn tất đặt vé trong</p>
+      <p className="text-black mb-2">{transWithFallback("completeBookingIn", "Hoàn tất đặt vé trong")}</p>
       <div className="w-24 h-12 flex items-center justify-center bg-[#52D1C9] text-black text-xl font-bold rounded-md mt-2">
         {formatTime(Math.floor(timeLeft))}
       </div>

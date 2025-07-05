@@ -48,7 +48,7 @@ export default function ConfirmDialog({ open, onClose, id, showingId, seatMapId 
         <div className="flex gap-4 mt-4">
           <button
             onClick={handleCancel}
-            className="border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
+            className="border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:!bg-[#0C4762] hover:text-white transition-all"
           >
             {transWithFallback('cancelOrder', 'Hủy đơn hàng')}
           </button>

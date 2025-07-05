@@ -72,7 +72,7 @@ export default function PaymentMethod({ onMethodSelected }: PaymentMethodProps) 
 
   return (
     <>
-      <div className="col-7">
+      <div className="w-full lg:w-7/12">
         <div className="container bg-white rounded-lg p-4 shadow-lg">
           {/* Lưu ý cập nhật thông tin */}
           <div className="alert alert-info bg-alert text-sm d-flex align-items-center">

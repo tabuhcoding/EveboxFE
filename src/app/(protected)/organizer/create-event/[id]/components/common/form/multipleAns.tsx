@@ -1,7 +1,19 @@
+/* Package System */
 import { Trash2 } from "lucide-react";
+import { useTranslations } from 'next-intl';
+
+/* Package Application */
 import { InputItemProps } from "../../../libs/interface/comform.interface";
 
 export default function MultipleAnswer({ value, checked, onChange, onToggle, onDelete }: InputItemProps) {
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     return (
         <div className="flex items-center space-x-2 p-2">
             {/* Checkbox */}
@@ -30,7 +42,7 @@ export default function MultipleAnswer({ value, checked, onChange, onToggle, onD
             {/* Input field */}
             <input
                 type="text"
-                placeholder="Nhập văn bản"
+                placeholder={transWithFallback("hintText", "Nhập văn bản")}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 className="text-sm block flex-1 border rounded py-3 px-4 focus:outline-black-400 border-gray-400 w-full"

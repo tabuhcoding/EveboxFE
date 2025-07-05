@@ -1,8 +1,11 @@
+/* Package System */
 import React from "react";
+import { useTranslations } from 'next-intl';
+
+/* Package Application */
 import { InputFieldProps } from "../../../libs/interface/comform.interface";
 
-
-export default function InputCountField ({
+export default function InputCountField({
     label,
     placeholder,
     value,
@@ -11,6 +14,14 @@ export default function InputCountField ({
     maxLength,
     required = false,
 }: InputFieldProps) {
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     return (
         <>
             <label className="block text-sm font-bold mb-2">
@@ -18,9 +29,8 @@ export default function InputCountField ({
             </label>
             <div className="relative">
                 <input
-                    className={`text-sm block w-full border rounded py-3 px-4 mb-1 focus:outline-black-400 ${
-                        error ? "border-red-500" : "border-gray-400"
-                    }`}
+                    className={`text-sm block w-full border rounded py-3 px-4 mb-1 focus:outline-black-400 ${error ? "border-red-500" : "border-gray-400"
+                        }`}
                     type="text"
                     placeholder={placeholder}
                     maxLength={maxLength}
@@ -31,7 +41,7 @@ export default function InputCountField ({
                     {value.length}/{maxLength}
                 </p>
             </div>
-            {error && <p className="text-red-500 text-sm mt-1">Vui lòng nhập {label.toLowerCase()}</p>}
+            {error && <p className="text-red-500 text-sm mt-1">{transWithFallback('pleaseInput', 'Vui lòng nhập')} {label.toLowerCase()}</p>}
         </>
     );
 };

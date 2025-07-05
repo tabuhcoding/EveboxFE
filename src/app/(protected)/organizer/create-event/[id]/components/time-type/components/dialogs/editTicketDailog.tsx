@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import DateTimePicker from "../../../common/form/dateTimePicker";
@@ -21,10 +22,18 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
     const [imageTicket, setImageTicket] = useState<string | null>(ticket.image || null);
     const isRegisterPayment = typeof window !== 'undefined' && localStorage.getItem("isRegisterPayment") === "true";
 
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     const validateStartDate = (date: Date | null) => {
         if (!date || !endDate) return true;
         if (date > endDate) {
-            setDateErrors((prev) => ({ ...prev, startDate: "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé" }));
+            setDateErrors((prev) => ({ ...prev, startDate: transWithFallback("conditionStart", "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé") }));
             return false;
         }
         setDateErrors((prev) => ({ ...prev, startDate: undefined }));
@@ -36,13 +45,13 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
 
         if (date < startDate) {
             setEndDate(null);
-            setDateErrors((prev) => ({ ...prev, startDate: "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé" }));
-            setDateErrors((prev) => ({ ...prev, endDate: "Hạn cuối bán vé phải lớn hơn thời gian hiện bắt đầu" }));
+            setDateErrors((prev) => ({ ...prev, startDate: transWithFallback("conditionStart", "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé") }));
+            setDateErrors((prev) => ({ ...prev, endDate: transWithFallback("conditionEnd", "Hạn cuối bán vé phải lớn hơn thời gian sự kiện bắt đầu") }));
             return false;
         }
 
         if (endDateEvent && date > endDateEvent) {
-            setDateErrors((prev) => ({ ...prev, endDate: "Hạn cuối bán vé phải nhỏ hơn thời gian sự kiện kết thúc" }));
+            setDateErrors((prev) => ({ ...prev, endDate: transWithFallback("conditionStartEnd", "Hạn cuối bán vé phải nhỏ hơn thời gian sự kiện kết thúc") }));
             return false;
         }
 
@@ -54,16 +63,16 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
 
 
     const [ticketData, setTicketData] = useState({
-  id: ticket.id,
-  name: ticket.name,
-  price: ticket.price,
-  quantity: ticket.quantity,
-  min: ticket.min,
-  max: ticket.max,
-  info: ticket.information,
-  image: ticket.image,
-  isFree: isRegisterPayment ? true : ticket.free,
-});
+        id: ticket.id,
+        name: ticket.name,
+        price: ticket.price,
+        quantity: ticket.quantity,
+        min: ticket.min,
+        max: ticket.max,
+        info: ticket.information,
+        image: ticket.image,
+        isFree: isRegisterPayment ? true : ticket.free,
+    });
 
     const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
     const [imageErrors, setImageErrors] = useState<{ [key: string]: string }>({});
@@ -77,26 +86,26 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
     };
 
     const { uploadImage } = useEventImageUpload();
-    
+
     const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
         const file = event.target.files?.[0];
         if (!file) return;
-    
+
         if (file.size > 1 * 1024 * 1024) {
-            setImageErrors((prev) => ({ ...prev, [type]: "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB" }));
-            toast.error("Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!", { duration: 5000 });
+            setImageErrors((prev) => ({ ...prev, [type]: transWithFallback("sizeImg", "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!") }));
+            toast.error(transWithFallback("sizeImg", "Dung lượng ảnh phải nhỏ hơn hoặc bằng 1MB!"), { duration: 5000 });
             return;
         }
-    
+
         try {
             const { imageUrl } = await uploadImage(file);
             setImageTicket(imageUrl);
             setImageErrors((prev) => ({ ...prev, [type]: "" }));
         } catch {
-            toast.error("Tải ảnh vé thất bại");
+            toast.error(transWithFallback("errUploadImg", "Tải ảnh vé thất bại"));
         }
     };
-    
+
 
     //Lưu vé
     const handleSaveTicket = (e: React.FormEvent) => {
@@ -137,7 +146,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
         <>
             <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
                 <div className="text-white dialog-header px-6 py-2 pb-4  justify-center items-center flex relative" style={{ background: '#0C4762' }}>
-                    <DialogTitle className="!m-0 !p-0 text-lg text-center font-bold">Tạo loại vé mới</DialogTitle>
+                    <DialogTitle className="!m-0 !p-0 text-lg text-center font-bold">{transWithFallback('btnCreateTicket', 'Tạo loại vé mới')}</DialogTitle>
                     <button onClick={onClose} className="absolute right-2 top-2 px-1 py-1 close-btn">
                         <Icon icon="ic:baseline-close" width="20" height="20" />
                     </button>
@@ -149,8 +158,8 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                         <div className="flex flex-wrap -mx-3 mb-6">
                             <div className="w-full px-3">
                                 <InputCountField
-                                    label="Tên vé"
-                                    placeholder="Tên vé"
+                                    label={transWithFallback("ticketName", "Tên vé")}
+                                    placeholder={transWithFallback("ticketName", "Tên vé")}
                                     value={ticketData.name}
                                     onChange={(e) => handleInputChange(e, "name")}
                                     error={errors.name}
@@ -165,47 +174,47 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Giá vé */}
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                                 <p className="block text-sm font-bold mb-2">
-                                    <span className="text-red-500">* </span> Giá vé
+                                    <span className="text-red-500">* </span> {transWithFallback("ticketPrice", "Giá vé")}
                                 </p>
                                 <div className="relative">
                                     <input
-  className={`w-full p-2 border rounded-md text-sm 
+                                        className={`w-full p-2 border rounded-md text-sm 
     ${(ticketData.isFree || isRegisterPayment) ? 'bg-red-100 text-red-500 border-red-500 cursor-not-allowed' : 'border-gray-300'}`}
-  type="number"
-  value={ticketData.isFree || isRegisterPayment ? 0 : ticketData.price}
-  placeholder="0"
-  onChange={(e) => {
-    setTicketData((prev) => ({ ...prev, price: e.target.value }));
-    if (errors.price) {
-      setErrors((prev) => ({ ...prev, price: false }));
-    }
-  }}
-  disabled={ticketData.isFree || isRegisterPayment}
-/>
+                                        type="number"
+                                        value={ticketData.isFree || isRegisterPayment ? 0 : ticketData.price}
+                                        placeholder="0"
+                                        onChange={(e) => {
+                                            setTicketData((prev) => ({ ...prev, price: e.target.value }));
+                                            if (errors.price) {
+                                                setErrors((prev) => ({ ...prev, price: false }));
+                                            }
+                                        }}
+                                        disabled={ticketData.isFree || isRegisterPayment}
+                                    />
                                 </div>
-                                {errors.ticketPrice && <p className="text-red-500 text-sm mt-1">Vui lòng nhập giá vé</p>}
+                                {errors.ticketPrice && <p className="text-red-500 text-sm mt-1">{transWithFallback('inputTicketPrice', 'Vui lòng nhập giá vé')}</p>}
                             </div>
 
                             {/* Vé miễn phí */}
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0 flex items-center">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
-  type="checkbox"
-  name="fee"
-  className="peer hidden"
-  checked={ticketData.isFree}
-  onChange={() => {
-    if (!isRegisterPayment) {
-      setTicketData((prev) => ({ ...prev, isFree: !prev.isFree, price: "0" }));
-    }
-  }}
-  disabled={isRegisterPayment}
-/>
+                                        type="checkbox"
+                                        name="fee"
+                                        className="peer hidden"
+                                        checked={ticketData.isFree}
+                                        onChange={() => {
+                                            if (!isRegisterPayment) {
+                                                setTicketData((prev) => ({ ...prev, isFree: !prev.isFree, price: "0" }));
+                                            }
+                                        }}
+                                        disabled={isRegisterPayment}
+                                    />
                                     <div className={`w-4 h-4 rounded-full border border-black flex items-center justify-center 
                                                     ${ticketData.isFree ? "bg-[#9EF5CF] border-green-700" : "bg-white "}`}>
                                         {ticketData.isFree && <div className="w-2 h-2 rounded-full bg-white"></div>}
                                     </div>
-                                    <span className="text-center">Miễn phí</span>
+                                    <span className="text-center">{transWithFallback('free' , 'Miễn phí')}</span>
                                 </label>
                             </div>
 
@@ -213,7 +222,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Tổng só lượng vé */}
                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                                 <InputNumberField
-                                    label="Tổng số lượng vé"
+                                    label={transWithFallback("totalTicketsAmount", "Tổng số lượng vé")}
                                     value={ticketData.quantity}
                                     placeholder=""
                                     error={errors.quantity}
@@ -225,7 +234,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Số vé tối thiểu của một đơn hàng */}
                             <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                                 <InputNumberField
-                                    label="Số vé tối thiểu của một đơn hàng"
+                                    label={transWithFallback("minOrder", "Số vé tối thiểu của một đơn hàng")}
                                     value={ticketData.min}
                                     placeholder=""
                                     error={errors.min}
@@ -237,7 +246,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Số vé tối đa của một đơn hàng */}
                             <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                                 <InputNumberField
-                                    label="Số vé tối đa của một đơn hàng"
+                                    label={transWithFallback("maxOrder", "Số vé tối đa của một đơn hàng")}
                                     value={ticketData.max}
                                     placeholder=""
                                     error={errors.max}
@@ -251,7 +260,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Thời gian bắt đầu */}
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <DateTimePicker
-                                    label="Thời gian bắt đầu"
+                                    label={transWithFallback("startTime", "Thời gian bắt đầu")}
                                     selectedDate={startDate}
                                     setSelectedDate={setStartDate}
                                     popperPlacement="bottom-end"
@@ -264,7 +273,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Thời gian kết thúc */}
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <DateTimePicker
-                                    label="Thời gian kết thúc"
+                                    label={transWithFallback("endTime", "Thời gian kết thúc")}
                                     selectedDate={endDate}
                                     setSelectedDate={setEndDate}
                                     popperPlacement="bottom-start"
@@ -279,12 +288,12 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             <div className="w-3/4 px-3 flex flex-col h-full">
                                 {/* Thông tin vé */}
                                 <p className="block text-sm font-bold mb-2">
-                                    Thông tin vé
+                                    {transWithFallback("ticketInfo", "Thông tin vé")}
                                 </p>
                                 <div className="relative">
                                     <textarea
                                         className="w-full h-32 text-sm block appearance-none border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400"
-                                        placeholder="Mô tả"
+                                        placeholder={transWithFallback("desciption", "Mô tả")}
                                         value={ticketData.info}
                                         onChange={(e) => handleInputChange(e, "info")}
                                     />
@@ -297,17 +306,17 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                             {/* Hình ảnh vé */}
                             <div className="w-1/4 px-3 flex flex-col h-full">
                                 <p className="block text-sm font-bold mb-2">
-                                    Hình ảnh vé
+                                    {transWithFallback("imgTicket", "Hình ảnh vé")}
                                 </p>
                                 <div className="h-full flex items-center justify-center">
-                                <ImageUpload
-                                                                        image={imageTicket}
-                                                                        onUpload={(e) => handleUpload(e, "imageTicket")}
-                                                                        placeholderText="Thêm"
-                                                                        dimensions="1MB"
-                                                                        height="h-32"
-                                                                        error={imageErrors.imageTicket}
-                                                                    />
+                                    <ImageUpload
+                                        image={imageTicket}
+                                        onUpload={(e) => handleUpload(e, "imageTicket")}
+                                        placeholderText={transWithFallback("add", "Thêm")}
+                                        dimensions="1MB"
+                                        height="h-32"
+                                        error={imageErrors.imageTicket}
+                                    />
 
                                 </div>
                             </div>
@@ -318,7 +327,7 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
                                 onClick={handleSaveTicket}
                                 className="w-full border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
                             >
-                                Lưu
+                                {transWithFallback("save", "Lưu")}
                             </button>
                         </div>
                     </div>

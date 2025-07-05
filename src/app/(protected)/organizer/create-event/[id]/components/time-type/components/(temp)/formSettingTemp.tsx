@@ -3,6 +3,7 @@
 /* Package System */
 import { useState } from "react";
 import { LayoutList, ToggleLeft, ToggleRight } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 
@@ -31,6 +32,13 @@ export default function FormSettingClientTemp() {
         // setErrors(newErrors);
     };
 
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
     return (
         <>
@@ -104,21 +112,21 @@ export default function FormSettingClientTemp() {
                         <div className="relative flex items-center space-x-2">
                             <LayoutList size={20} />
                             <p className="text-base font-bold">
-                                Tạo bảng câu hỏi cho người tham gia
+                                {transWithFallback("createQues", "Tạo bảng câu hỏi cho người tham gia")}
                             </p>
                         </div>
 
                         <span className="text-sm mt-3">
-                            Evebox giúp bạn tạo câu hỏi với 3 mẫu: <br></br>
-                            <span className="ml-3">1. Điền câu trả lời </span><br></br>
-                            <span className="ml-3">2. Chọn 1 câu trả lời</span> <br></br>
-                            <span className="ml-3">3. Chọn nhiều câu trả lời</span>
+                            {transWithFallback("quesEve", "Evebox giúp bạn tạo câu hỏi với 3 mẫu:")} <br></br>
+                            <span className="ml-3">{transWithFallback("ques1", "1. Điền câu trả lời")} </span><br></br>
+                            <span className="ml-3">{transWithFallback("ques2", "2. Chọn 1 câu trả lời")}</span> <br></br>
+                            <span className="ml-3">{transWithFallback("ques3", "3. Chọn nhiều câu trả lời")}</span>
                         </span>
 
                         <div className="relative flex items-center space-x-2 ">
                             {isToggleOn ? <ToggleRight size={30} onClick={() => setIsToggleOn(false)} className="cursor-pointer text-[#51DACF]" /> : <ToggleLeft size={30} onClick={() => setIsToggleOn(true)} className="cursor-pointer text-gray-500" />}
                             <p className="text-sm cursor-pointer" onClick={() => setIsToggleOn(!isToggleOn)}>
-                                Mở chức năng này (tạo câu hỏi ở bước sau)
+                                {transWithFallback("quesNext", "Mở chức năng này (tạo câu hỏi ở bước sau)")}
                             </p>
                         </div>
                     </div>

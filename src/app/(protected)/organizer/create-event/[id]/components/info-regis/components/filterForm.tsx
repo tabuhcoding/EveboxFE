@@ -1,13 +1,21 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 interface FilterFormProps {
     selectedCategory: string;
     setSelectedCategory: (value: string) => void;
 }
 
-export default function FilterForm({ selectedCategory, setSelectedCategory }: FilterFormProps){
+export default function FilterForm({ selectedCategory, setSelectedCategory }: FilterFormProps) {
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
     return (
         <>
@@ -18,8 +26,8 @@ export default function FilterForm({ selectedCategory, setSelectedCategory }: Fi
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
                     >
-                        <option value="sample">Form mẫu</option>
-                        <option value="existing">Form đã tạo</option>
+                        <option value="sample">{transWithFallback("templateForm", "Form mẫu")}</option>
+                        <option value="existing">{transWithFallback("createdForm", "Form đã tạo")}</option>
                     </select>
                     <div className="text-black pointer-events-none absolute inset-y-0 right-3 flex items-center px-2">
                         <ChevronDown size={20} />

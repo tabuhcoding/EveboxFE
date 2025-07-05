@@ -141,7 +141,7 @@ export default function QuestionFormPage({ showingId, seatMapId }: { showingId: 
           <CountdownTimer expiredTime={redisSeatInfo?.expiredTime ? redisSeatInfo?.expiredTime : 0} />
         </div>
 
-        <div className="px-32 py-0">
+        <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-32 py-0">
           <div className="row align-items-start mt-4">
             <QuestionList
               formInputs={formInputs}
