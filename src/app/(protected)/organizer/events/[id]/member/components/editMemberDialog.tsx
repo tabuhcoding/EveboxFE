@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { UpdateEventMemberDto } from "@/types/models/org/member.interface";
+import { updateEventMember } from "@/services/org.service";
 
 interface EditMemberDialogProps {
   eventId: number;
@@ -45,18 +47,21 @@ export default function EditMemberDialog({ eventId, member, onClose, onSuccess }
     try {
       console.log(eventId);
       console.log(onSuccess);
-      // const response = await apiClient.put(`/org/member?eventId=${eventId}`, {
-      //   email: member.email,
-      //   role: roleNumber,
-      // });
+      const payload: UpdateEventMemberDto = {
+    email: member.email,
+    role: roleNumber,
+  };
 
-      // if (response.data?.statusCode === 200) {
-      //   toast.success("Cập nhật thành viên thành công!");
-      //   onSuccess?.();
-      //   onClose();
-      // } else {
-      //   toast.error(response.data?.message || "Cập nhật thất bại");
-      // }
+  const response = await updateEventMember(eventId, payload);
+
+
+      if (response?.statusCode === 200) {
+        toast.success("Cập nhật thành viên thành công!");
+        onSuccess?.();
+        onClose();
+      } else {
+        toast.error(response?.message || "Cập nhật thất bại");
+      }
     } catch (error) {
       console.error("Update member failed:", error);
       toast.error("Lỗi khi cập nhật thành viên");

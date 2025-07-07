@@ -22,3 +22,31 @@ export interface EventRoleItem {
   checkout: boolean;
   redeem: boolean;
 }
+
+export interface AddEventMemberDto {
+  email: string;
+  role: number;
+}
+
+export interface AddEventMemberResponseDto {
+  eventId: number;
+  userId: string;
+  email: string;
+  role: number;
+  role_desc: string;
+  createdAt: string;
+}
+
+export interface UpdateEventMemberDto {
+  email: string;
+  role: number;
+}
+
+export interface UpdateEventMemberResponseDto {
+  eventId: number;
+  userId: string;
+  email: string;
+  role: number;
+  role_desc: string;
+  createdAt: Date;
+}

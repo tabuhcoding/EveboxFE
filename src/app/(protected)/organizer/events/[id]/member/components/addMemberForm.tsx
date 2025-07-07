@@ -1,11 +1,10 @@
 'use client';
 
 import { X, CheckCircle } from 'lucide-react';
-// import createApiClient from '@/services/apiClient';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
-import { EventRoleItem } from '@/types/models/org/member.interface';
-import { getEventRoles } from '@/services/org.service';
+import { AddEventMemberDto, EventRoleItem } from '@/types/models/org/member.interface';
+import { addEventMember, getEventRoles } from '@/services/org.service';
 
 interface AddMemberFormProps {
     eventId: number;
@@ -18,7 +17,6 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
     const [role, setRole] = useState('');
     const [emailError, setEmailError] = useState('');
     const [roleError, setRoleError] = useState('');
-    // const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL || "");
     const [permissionMatrix, setPermissionMatrix] = useState<boolean[][]>([]);
 
 
@@ -55,10 +53,9 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
 
     const roleMap: { [key: string]: number } = {
         admin: 2,
-        manager: 3,
+        marketer: 3,
         "check-in": 4,
-        "check-out": 5,
-        redeem: 6,
+        analyst: 6,
       };
 
     const validateEmail = (email: string) => {
@@ -95,22 +92,24 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
         }
       
         try {
-          // const response = await apiClient.post(`/org/member?eventId=${eventId}`, {
-          //   email,
-          //   role: roleNumber,
-          // });
-      
-          // if (response.data?.statusCode === 201 || response.data?.statusCode === 200) {
-          //   toast.success("Thêm thành viên thành công!");
-          //   if (onSuccess) onSuccess();
-          //   onClose();
-          // } else {
-          //   toast.error(response.data?.message || "Thêm thất bại");
-          // }
-        } catch (error) {
-          console.error("Add member failed:", error);
-          toast.error("Lỗi khi thêm thành viên");
-        }
+  const payload: AddEventMemberDto = {
+    email,
+    role: roleNumber,
+  };
+
+  const response = await addEventMember(eventId, payload);
+
+  if (response?.statusCode === 201 || response?.statusCode === 200) {
+    toast.success("Thêm thành viên thành công!");
+    if (onSuccess) onSuccess();
+    onClose();
+  } else {
+    toast.error(response?.message || "Thêm thất bại");
+  }
+} catch (error) {
+  console.error("Add member failed:", error);
+  toast.error("Lỗi khi thêm thành viên");
+}
       };
 
     return (
@@ -149,10 +148,9 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
                         >
                            <option value="">Thêm vai trò</option>
                            <option value="admin">Quản trị viên</option>
-                           <option value="manager">Quản lý</option>
                            <option value="check-in">Nhân viên check-in</option>
-                           <option value="check-out">Nhân viên check-out</option>
-                           <option value="redeem">Nhân viên redeem</option>
+                           <option value="analyst">Phân tích viên</option>
+                           <option value="marketer">Marketer</option>
                         </select>
                         {roleError && <p className="text-red-500 text-sm mt-1">{roleError}</p>}
                     </div>
@@ -170,10 +168,10 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
         <th className="p-2 border w-1/7"></th>
         <th className="p-2 border w-1/7">Chủ sự kiện</th>
         <th className="p-2 border w-1/7">Quản trị viên</th>
-        <th className="p-2 border w-1/7">Quản lý</th>
+        <th className="p-2 border w-1/7">Marketer</th>
         <th className="p-2 border w-1/7">Nhân viên check-in</th>
-        <th className="p-2 border w-1/7">Nhân viên check-out</th>
-        <th className="p-2 border w-1/7">Nhân viên redeem</th>
+        <th className="p-2 border w-1/7">Người xem</th>
+        <th className="p-2 border w-1/7">Phân tích viên</th>
       </tr>
     </thead>
     <tbody>

@@ -9,7 +9,7 @@ import { CreateTicketTypeDto, CreateTicketTypeResponseDto, DeleteTicketTypeRespo
 import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormResponseDto, GetAllFormForOrgResponseDto } from "types/models/form/form.interface";
 import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
 import { AnalyticData } from "@/types/models/org/analytics.interface";
-import { EventMember, EventRoleItem } from "@/types/models/org/member.interface";
+import { AddEventMemberDto, AddEventMemberResponseDto, EventMember, EventRoleItem, UpdateEventMemberDto, UpdateEventMemberResponseDto } from "@/types/models/org/member.interface";
 import { GetOrdersResponse } from "@/types/models/org/orders.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
@@ -488,3 +488,69 @@ export const getOrdersByShowingId = async (showingId: string): Promise<GetOrders
 
   return res.data.data;
 };
+
+export async function addEventMember(
+  eventId: number,
+  payload: AddEventMemberDto
+): Promise<BaseApiResponse<AddEventMemberResponseDto>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}?eventId=${eventId}`;
+
+  try {
+    const res = await orgService.post<BaseApiResponse<AddEventMemberResponseDto>>(url, payload);
+
+    if (!res || res.status !== 201) {
+      throw new Error(res?.data?.message || "Failed to add member to event");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error adding member to event:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while adding member");
+  }
+}
+
+export async function updateEventMember(
+  eventId: number,
+  payload: UpdateEventMemberDto
+): Promise<BaseApiResponse<UpdateEventMemberResponseDto>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}?eventId=${eventId}`;
+
+  try {
+    const res = await orgService.put<BaseApiResponse<UpdateEventMemberResponseDto>>(
+      url,
+      payload
+    );
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to update event member");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error updating event member:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while updating member");
+  }
+}
+
+export async function deleteEventMember(
+  eventId: number,
+  email: string
+): Promise<BaseApiResponse<{ message: string }>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}/${eventId}?email=${encodeURIComponent(email)}`;
+
+  try {
+    const res = await orgService.delete<BaseApiResponse<{ message: string }>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to delete event member");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error deleting event member:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while deleting event member");
+  }
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteEventMember } from "@/services/org.service";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -16,15 +17,15 @@ export default function DeleteMemberDialog({ eventId, email, onClose, onSuccess 
     try {
       console.log(eventId);
       console.log(onSuccess);
-      // const response = await apiClient.delete(`/org/member/${eventId}?email=${email}`);
+      const response = await deleteEventMember(eventId, email);
 
-      // if (response.data?.statusCode === 200) {
-      //   toast.success("Xoá thành viên thành công!");
-      //   onSuccess?.();
-      //   onClose();
-      // } else {
-      //   toast.error(response.data?.message || "Xoá thất bại");
-      // }
+  if (response?.statusCode === 200) {
+    toast.success("Xoá thành viên thành công!");
+    onSuccess?.();
+    onClose();
+  } else {
+    toast.error(response?.message || "Xoá thất bại");
+  }
     } catch (error) {
       console.error("Delete member error:", error);
       toast.error("Lỗi khi xoá thành viên");
