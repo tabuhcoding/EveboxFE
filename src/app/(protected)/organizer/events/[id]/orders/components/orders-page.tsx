@@ -60,6 +60,7 @@ export function OrdersPage({ eventId }: OrdersPageProps) {
 
       try {
         setLoading(true)
+        setError('');
         const response = await getOrdersByShowingId(showingId)
         console.log("Orders API response:", response)
 

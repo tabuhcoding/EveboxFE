@@ -48,37 +48,31 @@ export function DropdownWrapper({
   const [formattedShowings, setFormattedShowings] = useState<Array<IShowTime & { formattedLabel: string }>>([])
 
   // Process showings data when it changes
-  useEffect(() => {
-    if (!showings || showings.length === 0) return
+ useEffect(() => {
+  if (!showings || showings.length === 0) return
 
-    const formatted = showings.map((showing) => {
-      const startDate = new Date(showing.startTime)
-      const endDate = new Date(showing.endTime)
+  const formatted = showings.map((showing) => {
+    const startDate = new Date(showing.startTime)
+    const endDate = new Date(showing.endTime)
 
-      const dateStr = startDate.toLocaleDateString("vi-VN")
+    const dateStr = startDate.toLocaleDateString("vi-VN")
+    const startTimeStr = `${startDate.getHours().toString().padStart(2, "0")}:${startDate.getMinutes().toString().padStart(2, "0")}`
+    const endTimeStr = `${endDate.getHours().toString().padStart(2, "0")}:${endDate.getMinutes().toString().padStart(2, "0")}`
 
-      const startTimeStr = `${startDate.getHours().toString().padStart(2, "0")}:${startDate.getMinutes().toString().padStart(2, "0")}`
-      const endTimeStr = `${endDate.getHours().toString().padStart(2, "0")}:${endDate.getMinutes().toString().padStart(2, "0")}`
-
-      // Create formatted label
-      const formattedLabel = `${dateStr} (${startTimeStr} - ${endTimeStr})`
-
-      return {
-        ...showing,
-        formattedLabel,
-      }
-    })
-
-    setFormattedShowings(formatted)
-
-    if (formatted.length > 0) {
-      const defaultShowing = formatted.find((s) => s.isSelected) || formatted[0]
-      setSelectedShowing(defaultShowing.id)
-      if (onShowingSelect) {
-        onShowingSelect(defaultShowing.id)
-      }
+    return {
+      ...showing,
+      formattedLabel: `${dateStr} (${startTimeStr} - ${endTimeStr})`,
     }
-  }, [showings, onShowingSelect])
+  })
+
+  setFormattedShowings(formatted)
+
+  if (formatted.length > 0 && !selectedShowing) {
+    const defaultShowing = formatted.find((s) => s.isSelected) || formatted[0]
+    setSelectedShowing(defaultShowing.id)
+    onShowingSelect?.(defaultShowing.id)
+  }
+}, [showings, onShowingSelect, selectedShowing])
 
   const handleShowingChange = (showingId: string) => {
     setSelectedShowing(showingId)

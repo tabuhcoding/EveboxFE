@@ -478,7 +478,6 @@ export async function getEventRoles(): Promise<EventRoleItem[]> {
 
 export const getOrdersByShowingId = async (showingId: string): Promise<GetOrdersResponse> => {
   // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
-
   const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}`);
   console.log("fetch orders")
   console.log(res)
