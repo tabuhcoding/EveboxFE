@@ -18,10 +18,9 @@ interface EditMemberDialogProps {
 
 const roleMap: { [key: number]: string } = {
   2: "admin",
-  3: "manager",
+  3: "marketer",
   4: "check-in",
-  5: "check-out",
-  6: "redeem",
+  6: "analyst",
 };
 
 const reverseRoleMap: { [key: string]: number } = Object.fromEntries(
@@ -95,11 +94,10 @@ export default function EditMemberDialog({ eventId, member, onClose, onSuccess }
             onChange={(e) => setRole(e.target.value)}
           >
             <option value="">Chọn vai trò</option>
-            <option value="admin">Quản trị viên</option>
-            <option value="manager">Quản lý</option>
-            <option value="check-in">Nhân viên check-in</option>
-            <option value="check-out">Nhân viên check-out</option>
-            <option value="redeem">Nhân viên redeem</option>
+             <option value="admin">Quản trị viên</option>
+                           <option value="check-in">Nhân viên check-in</option>
+                           <option value="analyst">Phân tích viên</option>
+                           <option value="marketer">Marketer</option>
           </select>
           {roleError && <p className="text-red-500 text-sm mt-1">{roleError}</p>}
         </div>
