@@ -36,20 +36,22 @@ export default function MoreInformation({ title, location, locationsString }: Mo
                     <h5 className="card-title font-bold mt-2">
                         {title}
                     </h5>
-                    <p className="card-text mt-2 flex items-center gap-1 cursor-pointer">
+                    <p className="card-text !mb-0 mt-2 flex items-center gap-1 cursor-pointer">
                         <MapPin size={16} />
                         {location}
                     </p>
-                    <span role="button" tabIndex={0}
-                        className="card-text text-body-secondary ml-6 mb-2" id="event-location" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' });
-                            }
-                        }}>
-                        {locale === "vi" ? convertLocationToVietnamese(locationsString) : locationsString}
-                    </span>
+                    <div className='ml-5'>
+                        <span role="button" tabIndex={0}
+                            className="card-text text-body-secondary mb-2" id="event-location" onClick={() => document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' })}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    document.getElementById('info-ticket')?.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}>
+                            {locale === "vi" ? convertLocationToVietnamese(locationsString).replace(/"/g, "") : locationsString.replace(/"/g, "")}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

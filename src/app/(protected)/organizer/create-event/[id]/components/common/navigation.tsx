@@ -1,8 +1,9 @@
 'use client';
 
 //Package System
-import { useRouter, useParams} from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 //Package App
 
@@ -11,12 +12,19 @@ export default function Navigation({ step }: { step: number }) {
     const params = useParams();
     const eventId = params?.id || '';
     // const eventId = 1; //Gán cứng tạm thời
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
     const steps = [
-        { number: 1, label: "Thông tin sự kiện", key: "info" },
-        { number: 2, label: "Thời gian & loại vé", key: "showing" },
-        // { number: 3, label: "Cài đặt", key: "setting" },
-        { number: 3, label: "Thông tin đăng ký", key: "questions" },
+        { number: 1, label: transWithFallback('eventInfo', 'Thông tin sự kiện'), key: "info" },
+        { number: 2, label: transWithFallback('eventTimeAndTicket', 'Thời gian & loại vé'), key: "showing" },
+        // { number: 3, label: transWithFallback('eventSettings', 'Cài đặt'), key: "setting" },
+        { number: 3, label: transWithFallback('registrationInfo', 'Thông tin đăng ký'), key: "questions" },
     ];
 
     const handleStepClick = (targetStep: number, stepKey: string) => {
@@ -33,12 +41,12 @@ export default function Navigation({ step }: { step: number }) {
                 const isActive = s.number === step; // Kiểm tra bước hiện tại
                 return (
                     <li
-  key={index}
-  className={`flex items-center space-x-2.5 transition-colors duration-200
+                        key={index}
+                        className={`flex items-center space-x-2.5 transition-colors duration-200
               ${isActive ? 'text-black-600' : 'text-gray-500'} 
               ${s.number <= step ? 'cursor-pointer hover:text-[#51DACF] hover:font-semibold' : 'cursor-not-allowed'}`}
-  onClick={() => handleStepClick(s.number, s.key)}
->
+                        onClick={() => handleStepClick(s.number, s.key)}
+                    >
                         <span className={`text-xs mb-2 flex items-center justify-center w-8 h-8 border rounded-full 
                                     ${isActive ? 'border-[#51DACF] bg-[#51DACF] text-white' : 'border-gray-500'}
                                     ${isCompleted ? 'border-green-500 bg-green-100 text-green-600' : ''}`}>

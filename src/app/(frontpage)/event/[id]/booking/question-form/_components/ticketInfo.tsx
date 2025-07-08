@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 
 /* Package Application */
 import AlertDialog from '@/components/common/alertDialog';
+import SuccessDialog from './successDialog';
 import { submitForm, unselectSeat } from '@/services/booking.service';
 import { TicketInformationProps } from 'types/models/event/booking/questionForm.interface';
 
@@ -25,6 +26,10 @@ export default function TicketInformation({
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [href, setHref] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -73,11 +78,18 @@ export default function TicketInformation({
 
       if (res.statusCode === 200) {
         localStorage.setItem('submittedForm', JSON.stringify(formData));
-
-        if (seatMapId && seatMapId !== 0) {
-          router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);
+        const showingStatus = localStorage.getItem('showingStatus');
+        localStorage.removeItem('showingStatus');
+        if (showingStatus === 'BOOK_NOW') {
+          if (seatMapId && seatMapId !== 0) {
+            router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);
+          }
+          else router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
+        } else {
+          setSuccessMessage(transWithFallback('registerTicketSuccess', 'Bạn đã đăng ký vé thành công! Tiếp tục đến trang Vé của tôi để xem chi tiết'));
+          setSuccessOpen(true);
+          setHref('/my-ticket');
         }
-        else router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
       } else {
         setAlertMessage(transWithFallback('errorSubmitForm', 'Lỗi khi gửi form đi'));
         setAlertOpen(true);
@@ -92,7 +104,7 @@ export default function TicketInformation({
   }
 
   return (
-    <div className="col-5 border-start" style={{ borderLeft: '1px solid #ddd' }}>
+    <div className="col-12 col-md-10 col-lg-5 mx-auto border-start" style={{ borderLeft: '1px solid #ddd' }}>
       <div className='container'>
         <p className='title-event'>{transWithFallback('eventDetail', 'Chi tiết sự kiện')}</p>
         <div className='row mt-3 text-start'>
@@ -219,6 +231,12 @@ export default function TicketInformation({
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
+      />
+      <SuccessDialog
+        message={successMessage}
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        href={href}
       />
     </div>
   );

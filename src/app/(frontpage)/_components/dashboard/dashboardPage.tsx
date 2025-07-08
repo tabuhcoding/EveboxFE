@@ -53,8 +53,8 @@ const DashboardPage = () => {
   const sliderEvents = weeklyRecommendedEvents || [];
 
   return (
-    <div className="min-h-screen flex flex-col mb-8">
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col bg-white">
+      <main className="flex-1 mb-8">
         <div className="w-full flex justify-center flex-col items-center px-4 md:mt-8">
           <div className="w-full md:w-5/6 relative">
             <ImageSlider events={sliderEvents} />
