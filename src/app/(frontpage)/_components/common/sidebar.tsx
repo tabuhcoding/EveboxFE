@@ -19,7 +19,6 @@ import { useAuth } from '@/contexts/auth.context';
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
   const router = useRouter();
-  console.log("Role User:", user);
   const [loading, setLoading] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { data: session } = useSession();
@@ -191,7 +190,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   {transWithFallback('login', 'Đăng nhập')}
                 </button>
               </Link>
-              <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+              <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">{transWithFallback('btnCancel', 'Hủy')}</button>
             </div>
           </div>
         </div>

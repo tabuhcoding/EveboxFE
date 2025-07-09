@@ -658,5 +658,6 @@
     "agreementPrefix": "You agree to the ",
     "generalTerms": "General Terms and Conditions",
     "completeBookingIn": "Complete booking in",
-    "goToAdmin": "Go To Admin"
+    "goToAdmin": "Go To Admin",
+    "createNewQuestion": "Create New Question"
 }

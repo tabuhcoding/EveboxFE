@@ -26,8 +26,8 @@ export default function FilterForm({ selectedCategory, setSelectedCategory }: Fi
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
                     >
-                        <option value="sample">{transWithFallback("templateForm", "Form mẫu")}</option>
-                        <option value="existing">{transWithFallback("createdForm", "Form đã tạo")}</option>
+                        <option value="sample">{transWithFallback("templateForm", "Mẫu biểu mẫu")}</option>
+                        <option value="existing">{transWithFallback("createdForm", "Biểu mẫu đã tạo")}</option>
                     </select>
                     <div className="text-black pointer-events-none absolute inset-y-0 right-3 flex items-center px-2">
                         <ChevronDown size={20} />

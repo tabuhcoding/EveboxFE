@@ -96,7 +96,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
     const handleAddQuestion = () => {
         const newQuestion: FormInput = {
             id: Date.now(),
-            fieldName: `Câu hỏi mới`,
+            fieldName: transWithFallback("createNewQuestion", "Câu hỏi mới"),
             type: quesText,
             required: true,
             regex: null,
@@ -153,24 +153,24 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
 
             if (!res.ok) {
                 const errData = await res.json();
-                toast.error(errData.message || transWithFallback("createFormError", "Lỗi tạo form mới"));
+                toast.error(errData.message || transWithFallback("createFormError", "Lỗi tạo biểu mẫu mới"));
                 return;
             }
 
             const data = await res.json();
             const newFormId = data?.data?.formId;
             if (!newFormId) {
-                toast.error(transWithFallback("missingFormId", "Không nhận được ID của form mới."));
+                toast.error(transWithFallback("missingFormId", "Không nhận được ID của biểu mẫu mới."));
                 return;
             }
-            toast.success(transWithFallback("createFormSuccess", "Tạo form mới thành công!"));
+            toast.success(transWithFallback("createFormSuccess", "Tạo biểu mẫu mới thành công!"));
             const updatedForm = { ...currentForm, id: newFormId };
             setForm(updatedForm);
             onFormCreated(updatedForm);
             onClose();
         } catch (error) {
             console.error("Error creating new form:", error);
-            toast.error(transWithFallback("errCreateForm", "Lỗi khi tạo form mới"));
+            toast.error(transWithFallback("errCreateForm", "Lỗi khi tạo biểu mẫu mới"));
         }
     };
 
