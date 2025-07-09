@@ -8,7 +8,6 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 /* Package Application */
-import { gatewayService } from 'services/instance.service';
 import { useAuth } from 'contexts/auth.context';
 import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
