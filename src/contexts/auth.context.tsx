@@ -13,7 +13,7 @@ interface JwtPayload {
   accessToken: string;
   id: string;
   email: string;
-  role: string;
+  role: number;
   refreshToken: string;
 }
 

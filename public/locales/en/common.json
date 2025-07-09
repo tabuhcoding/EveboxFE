@@ -657,5 +657,6 @@
     "purchaseAgreement": "By proceeding with the purchase",
     "agreementPrefix": "You agree to the ",
     "generalTerms": "General Terms and Conditions",
-    "completeBookingIn": "Complete booking in"
+    "completeBookingIn": "Complete booking in",
+    "goToAdmin": "Go To Admin"
 }
