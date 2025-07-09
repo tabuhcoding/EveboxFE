@@ -3,7 +3,7 @@
 /* Package System */
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -19,7 +19,7 @@ export default function DescriptionWithAI({ isValid, eventDetails, onChange, cur
 
   const [showPopup, setShowPopup] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [userRequest, setUserRequest] = useState('Tạo mô tả HTML hấp dẫn với ít nhất 2 hình ảnh');
+  const [userRequest, setUserRequest] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState<'vi' | 'en'>('vi');
 
   const handleGenerate = async () => {
@@ -64,7 +64,9 @@ export default function DescriptionWithAI({ isValid, eventDetails, onChange, cur
         onClick={() => {
           if (!isValid) {
             toast.error(transWithFallback('pleaseFillAll', 'Vui lòng hoàn tất các thông tin trước khi sử dụng tính năng này!'));
+            return;
           }
+          setUserRequest(transWithFallback('requestPlaceholder', 'Ví dụ: Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh'));
           setShowPopup(!showPopup)
         }}
         title={transWithFallback('generateWithAI', 'Tạo mô tả với AI')} type="button"
