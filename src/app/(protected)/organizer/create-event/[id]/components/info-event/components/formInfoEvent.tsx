@@ -426,12 +426,12 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
     if (!currentEventId) {
       if (!background) {
-        setImageErrors((prev) => ({ ...prev, background: "Vui lòng tải lên ảnh nền sự kiện" }));
-        toast.error("Vui lòng tải lên ảnh nền sự kiện!", { duration: 5000 });
+        setImageErrors((prev) => ({ ...prev, background: transWithFallback("pleaseWhenUploadBackground", "Vui lòng tải lên ảnh nền sự kiện!") }));
+        toast.error(transWithFallback("pleaseWhenUploadBackground", "Vui lòng tải lên ảnh nền sự kiện!"), { duration: 5000 });
       }
       if (!logoOrg) {
-        setImageLogoErrors((prev) => ({ ...prev, logoOrg: "Vui lòng tải lên logo ban tổ chức" }));
-        toast.error("Vui lòng tải lên logo ban tổ chức!", { duration: 5000 });
+        setImageLogoErrors((prev) => ({ ...prev, logoOrg: transWithFallback("pleaseWhenUploadLogo", "Vui lòng tải lên logo ban tổ chức!") }));
+        toast.error(transWithFallback("pleaseWhenUploadLogo", "Vui lòng tải lên logo ban tổ chức!"), { duration: 5000 });
       }
     }
 
