@@ -6,7 +6,6 @@ import { CirclePlus, Equal, Trash2 } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { useState, ChangeEvent } from "react";
 import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
 import { useTranslations } from 'next-intl';
 
 /* Package Application */
@@ -18,6 +17,7 @@ import OneAnswer from "../../common/form/oneAns";
 import GroupRadioButton from "./groupRadioButton";
 import GroupRadioOption from "./groupRadioOption";
 import { FormInput, Form } from "../../../libs/interface/question.interface";
+import { useAuth } from "contexts/auth.context";
 
 interface CreateNewFormProps {
     form: Form;
@@ -28,7 +28,7 @@ interface CreateNewFormProps {
 }
 
 export default function CreateNewForm({ form, setForm, open, onClose, onFormCreated }: CreateNewFormProps) {
-    const { data: session } = useSession();
+    const { session } = useAuth();
     const [currentForm, setCurrentForm] = useState<Form>(form); // Lưu form hiện tại
     const [expandedQuestionId, setExpandedQuestionId] = useState<number | null>(
         currentForm.FormInput.length > 0 ? currentForm.FormInput[0].id : null

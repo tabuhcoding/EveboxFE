@@ -649,5 +649,9 @@
   "purchaseAgreement": "Bằng việc tiến hành đặt mua",
   "agreementPrefix": "Bạn đã đồng ý với các ",
   "generalTerms": "Điều Kiện Giao Dịch Chung",
-  "completeBookingIn": "Hoàn tất đặt vé trong"
+  "completeBookingIn": "Hoàn tất đặt vé trong",
+  "sessionExpiredTitle": "Phiên đăng nhập đã hết hạn",
+  "sessionExpiredMessage": "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.",
+  "sessionExpiredNote": "Dữ liệu đã nhập sẽ được bảo toàn sau khi đăng nhập",
+  "loginAgain": "Đăng nhập lại"
 }

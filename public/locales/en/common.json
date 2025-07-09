@@ -657,5 +657,9 @@
     "purchaseAgreement": "By proceeding with the purchase",
     "agreementPrefix": "You agree to the ",
     "generalTerms": "General Terms and Conditions",
-    "completeBookingIn": "Complete booking in"
+    "completeBookingIn": "Complete booking in",
+    "sessionExpiredTitle": "Session Expired",
+    "sessionExpiredMessage": "Your session has expired. Please log in again to continue using the application.",
+    "sessionExpiredNote": "Your entered data will be preserved after logging in",
+    "loginAgain": "Login Again"
 }

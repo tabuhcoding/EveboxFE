@@ -2,7 +2,6 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarOff, Check } from "lucide-react";
@@ -22,11 +21,12 @@ import { EventTableProps, EventAdminDataDto } from "@/types/models/admin/eventMa
 
 import { sortEvents } from "./libs/sortEvent";
 import { getEventsAdmin, updateEventAdmin } from "@/services/event.service";
+import { useAuth } from "@/contexts/auth.context";
 
 export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo }: EventTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [events, setEvents] = useState<EventAdminDataDto[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState<boolean>(true);

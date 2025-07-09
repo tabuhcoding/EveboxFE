@@ -1,7 +1,6 @@
 'use client';
 
 /* Package System */
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,6 +15,7 @@ import { getRedisSeat } from '@/services/booking.service';
 import { SeatMap, SeatmapType, ShowingData, TicketType } from 'types/models/event/booking/seatmap.interface';
 import { SelectTicketPageProps, SelectedTicketsState } from 'types/models/event/booking/selectTicket.interface';
 import { EventDetail } from 'types/models/event/eventdetail/event.interface';
+import { useAuth } from '@/contexts/auth.context';
 
 import Navigation from '../../_components/navigation';
 
@@ -26,7 +26,7 @@ import TicketInfor from './ticketInfo';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicketsState>({});
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);

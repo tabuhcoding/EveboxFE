@@ -4,7 +4,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 /* Package Application */
@@ -17,13 +16,14 @@ import EventPagination from "../../event-management/_components/common/paginatio
 import SortIcon from "../../account-management/_components/sortIcon";
 import { sortEvents } from "./libs/sortEvents";
 import { getSpecialEventsManagment } from "@/services/event.service";
+import { useAuth } from "@/contexts/auth.context";
 import SpecialEventTableLoading from "./specialEventTableLoading";
 import GlobalLoading from "./common/globalLoading";
 
 export default function SpecialEventTable({ searchKeyword, categoryFilter }: EventSpecialTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [events, setEvents] = useState<EventSpecial[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState<boolean>(true);
