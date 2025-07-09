@@ -651,5 +651,6 @@
   "generalTerms": "Điều Kiện Giao Dịch Chung",
   "completeBookingIn": "Hoàn tất đặt vé trong",
   "goToAdmin": "Đến trang quản trị",
-  "createNewQuestion": "Câu hỏi mới"
+  "createNewQuestion": "Câu hỏi mới",
+  "noRegisPayment": "Bạn chưa đăng ký thông tin thanh toán!"
 }

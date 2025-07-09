@@ -174,7 +174,7 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
                                 <p className="block text-sm font-bold mb-2">
                                     <span className="text-red-500">* </span> {transWithFallback("ticketPrice", "Giá vé")}
                                 </p>
-                                <div className="relative">
+                                <div className="relative" title={isFree ? transWithFallback("noRegisPayment", "Bạn chưa đăng ký thông tin thanh toán!") : ""}>
                                     <input
                                         type="number"
                                         className={`w-full p-2 border rounded-md text-sm 

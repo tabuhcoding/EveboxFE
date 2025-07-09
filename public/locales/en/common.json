@@ -659,5 +659,6 @@
     "generalTerms": "General Terms and Conditions",
     "completeBookingIn": "Complete booking in",
     "goToAdmin": "Go To Admin",
-    "createNewQuestion": "Create New Question"
+    "createNewQuestion": "Create New Question",
+    "noRegisPayment": "You haven't registered payment info!"
 }
