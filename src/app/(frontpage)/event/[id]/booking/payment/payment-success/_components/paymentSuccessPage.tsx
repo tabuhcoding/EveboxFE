@@ -2,13 +2,13 @@
 
 /* Package System */
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 /* Package Application */
 import { getUserOrderByOriginalId } from "@/services/payment.service";
 import { OrderResponse } from "@/types/models/event/booking/payment.interface";
+import { useAuth } from "@/contexts/auth.context";
 
 import AutoCloseDialog from "./autoCloseDialog";
 import OrderInfoTable from "./orderInfoTable";
@@ -18,7 +18,7 @@ import TicketResponseInfo from "./ticketResponseInfo";
 
 export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: string, status?: string }) {
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");

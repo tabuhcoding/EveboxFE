@@ -3,7 +3,6 @@
 /* Package System */
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { HttpStatusCode } from "axios";
 import toast from "react-hot-toast";
@@ -12,6 +11,7 @@ import toast from "react-hot-toast";
 import { sortUsers } from "../libs/function/sortUsers";
 import { UserAdminData, UserStatus, AccountTableProps, UserRole } from "@/types/models/admin/accountManagement.interface";
 import { getUsersByAdmin, updateUserStatus } from "@/services/auth.service";
+import { useAuth } from "@/contexts/auth.context";
 import AlertDialog from "@/components/common/alertDialog";
 import SortIcon from "./sortIcon";
 import AccountSkeletonLoading from "../loading";
@@ -21,7 +21,7 @@ import ConfirmStatusDialog from "./confirmStatusDialog";
 export default function AccountTable({ searchKeyword, roleFilter, dateFrom, dateTo }: AccountTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [users, setUsers] = useState<UserAdminData[]>([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);

@@ -6,16 +6,16 @@ import { Icon } from '@iconify/react';
 import { Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useState, useRef, FormEvent, useEffect } from 'react';
 
 /* Package Application */
 import 'styles/admin/pages/ForgotPassword.css';
+import { useAuth } from 'contexts/auth.context';
 import { changePassword } from 'services/auth.service';
 
 export const ChangePasswordForm = () => {
-    const { status } = useSession();
+    const { logout } = useAuth();
     const router = useRouter();
     const [showPopup, setShowPopup] = useState(false);
     const formRef = useRef<HTMLFormElement>(null); // Add a form reference
@@ -99,8 +99,7 @@ export const ChangePasswordForm = () => {
 
                     setTimeout(async () => {
                         try {
-                            await signOut({ redirect: false });
-                            router.push('/login');
+                            await logout();
                         } catch (error) {
                             console.error("Error during logout:", error);
                         } finally {

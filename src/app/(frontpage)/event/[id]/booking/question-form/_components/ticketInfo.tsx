@@ -3,7 +3,6 @@
 /* Package System */
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 
@@ -12,6 +11,7 @@ import AlertDialog from '@/components/common/alertDialog';
 import SuccessDialog from './successDialog';
 import { submitForm, unselectSeat } from '@/services/booking.service';
 import { TicketInformationProps } from 'types/models/event/booking/questionForm.interface';
+import { useAuth } from '@/contexts/auth.context';
 
 import ConfirmDialog from './confirmDialog';
 
@@ -30,7 +30,7 @@ export default function TicketInformation({
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [href, setHref] = useState("");
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const router = useRouter();
 
   const transWithFallback = (key: string, fallback: string) => {

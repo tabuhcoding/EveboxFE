@@ -2,7 +2,6 @@
 
 /* Package System */
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 
@@ -13,6 +12,7 @@ import FormList from "./formTemplate/formList";
 import { Form } from "../../../libs/interface/question.interface";
 import { connectForm, getAllFormForOrg } from "services/org.service";
 import { ConnectFormDto } from "types/models/form/form.interface";
+import { useAuth } from "contexts/auth.context";
 
 interface FormQuestionClientProps {
     onNextStep: () => void;
@@ -21,7 +21,7 @@ interface FormQuestionClientProps {
 }
 
 export default function FormQuestionClient({ onNextStep, btnValidate4, showingIds }: FormQuestionClientProps) {
-    const { data: session } = useSession();
+    const { session } = useAuth();
     const access_token = session?.user?.accessToken;
 
     const [selectedCategory, setSelectedCategory] = useState("sample");

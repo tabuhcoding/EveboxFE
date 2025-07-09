@@ -2,7 +2,6 @@
 
 /* Package System */
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -10,9 +9,10 @@ import { useEffect, useState } from 'react';
 import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
+import { useAuth } from "contexts/auth.context";
 
 export default function TicketManagement() {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations('common');
