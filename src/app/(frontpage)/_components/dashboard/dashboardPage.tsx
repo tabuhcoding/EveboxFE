@@ -53,7 +53,7 @@ const DashboardPage = () => {
   const sliderMontlyEvents = monthlyRecommendedEvents || [];
   const sliderEvents = weeklyRecommendedEvents || [];
 
-  var bannerEvents = frontDisplayEvents.recommendedEvents.slice(0, 5);
+  let bannerEvents = frontDisplayEvents.recommendedEvents.slice(0, 5);
   if (bannerEvents.length < 5) {
     bannerEvents = frontDisplayEvents.specialEvents.slice(0, 5);
     if (bannerEvents.length < 5) {
