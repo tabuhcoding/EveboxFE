@@ -3,7 +3,6 @@
 /* Package System */
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
@@ -17,11 +16,12 @@ import { User, UserRole, UserStatus } from "@/types/models/admin/accountManageme
 import useAvatar from "@/app/(protected)/(user)/my-profile/_components/libs/hooks/useAvatar";
 import { getUserById, updateUserRole, updateUserStatus } from "@/services/auth.service";
 import { mapRoleNumberToString, mapRoleStringToNumber } from "@/utils/helpers";
+import { useAuth } from "@/contexts/auth.context";
 
 export default function AccountDetailPage({ id }: { id: string }) {
   const t = useTranslations('common');
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const roles = Object.values(UserRole);
   const status = Object.values(UserStatus);

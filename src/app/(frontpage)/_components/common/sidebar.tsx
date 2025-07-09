@@ -2,12 +2,11 @@
 
 import { User, Ticket, Calendar, LogOut, Lock, Menu } from 'lucide-react';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from "next-intl";
 import { useState } from 'react';
 
-import { gatewayService } from 'services/instance.service';
-import { getOrgPaymentInfo } from 'services/org.service'; 
+import { useAuth } from 'contexts/auth.context';
+import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
 import { SidebarProps } from '../libs/interface/dashboard.interface';
@@ -16,7 +15,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const [loading, setLoading] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const { data: session } = useSession();
+  const { isAuthenticated, logout } = useAuth();
   const t = useTranslations("common");
 
   const [showPaymentWarning, setShowPaymentWarning] = useState(false);
@@ -24,19 +23,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [showOrgRegisterPopup, setShowOrgRegisterPopup] = useState(false);
 
   const handleLogout = async () => {
-    if (!session?.user?.accessToken) {
-      console.error('No token found');
+    if (!isAuthenticated) {
+      console.error('User not authenticated');
       return;
     }
 
     setLoading(true);
     try {
-      await gatewayService.post('/api/user/logout', {
-        refresh_token: session.user.refreshToken
-      });
-
-      await signOut({ redirect: false });
-      window.location.href = "/";
+      await logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -45,32 +39,32 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   };
 
   const handleProtectedClick = async (href: string) => {
-  if (!session?.user) {
-    setShowLoginPrompt(true);
-  } else {
-    if (href === '/organizer/create-event') {
-    try {
-      const res = await getOrgPaymentInfo();
-      if (!res) {
-        // Show dialog
-        setPendingNavigation(href);
-        setShowPaymentWarning(true);
-        return;
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true);
+    } else {
+      if (href === '/organizer/create-event') {
+        try {
+          const res = await getOrgPaymentInfo();
+          if (!res) {
+            // Show dialog
+            setPendingNavigation(href);
+            setShowPaymentWarning(true);
+            return;
+          }
+          else {
+            localStorage.setItem("isRegisterPayment", "true");
+          }
+        } catch (err) {
+          console.error("Failed to check organizer payment info:", err);
+          // Optionally show an error dialog
+          return;
+        }
       }
-      else{
-        localStorage.setItem("isRegisterPayment", "true");
-      }
-    } catch (err) {
-      console.error("Failed to check organizer payment info:", err);
-      // Optionally show an error dialog
-      return;
+      window.location.href = href;
     }
-   }
-    window.location.href = href;
-  }
-};
+  };
 
-const transWithFallback = (key: string, fallback: string) => {
+  const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
@@ -138,15 +132,15 @@ const transWithFallback = (key: string, fallback: string) => {
                     </button>
                   )} */}
                   {item.href || item.onClick ? (
-  <button
-    onClick={item.onClick}
-    disabled={loading}
-    className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base w-full text-left"
-  >
-    {item.icon}
-    <span>{item.text}</span>
-  </button>
-) : null}
+                    <button
+                      onClick={item.onClick}
+                      disabled={loading}
+                      className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base w-full text-left"
+                    >
+                      {item.icon}
+                      <span>{item.text}</span>
+                    </button>
+                  ) : null}
                 </li>
               ))}
             </ul>
@@ -155,68 +149,68 @@ const transWithFallback = (key: string, fallback: string) => {
       </div>
 
       {showLoginPrompt && (
-      <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
-        <div className="bg-white text-black p-6 rounded-md shadow-lg w-[90%] max-w-sm">
-          <p className="text-base sm:text-lg">{transWithFallback("pleaseLogin", "Vui lòng đăng nhập!")}</p>
-          <div className="mt-4 flex justify-end space-x-2">
-            <Link href="/login" style={{ textDecoration: "none" }}>
-                  <button className=" px-4 py-2 bg-teal-300 rounded">
-                    {transWithFallback('login', 'Đăng nhập')}
-                  </button>
-            </Link>
-            <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>            
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
+          <div className="bg-white text-black p-6 rounded-md shadow-lg w-[90%] max-w-sm">
+            <p className="text-base sm:text-lg">{transWithFallback("pleaseLogin", "Vui lòng đăng nhập!")}</p>
+            <div className="mt-4 flex justify-end space-x-2">
+              <Link href="/login" style={{ textDecoration: "none" }}>
+                <button className=" px-4 py-2 bg-teal-300 rounded">
+                  {transWithFallback('login', 'Đăng nhập')}
+                </button>
+              </Link>
+              <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {showPaymentWarning && (
-    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
-    <div className="bg-white text-black p-6 rounded-md shadow-lg w-[90%] max-w-sm">
-      <p className="text-base sm:text-lg">
-        {transWithFallback("noPaymentInfo", "Bạn chưa đăng ký thông tin thanh toán với tư cách tổ chức.")}
-      </p>
-      <div className="mt-4 flex flex-col space-y-2">
-        <button
-          onClick={() => {
-            setShowPaymentWarning(false);
-            localStorage.setItem("isRegisterPayment", "false");
+      {showPaymentWarning && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[999]">
+          <div className="bg-white text-black p-6 rounded-md shadow-lg w-[90%] max-w-sm">
+            <p className="text-base sm:text-lg">
+              {transWithFallback("noPaymentInfo", "Bạn chưa đăng ký thông tin thanh toán với tư cách tổ chức.")}
+            </p>
+            <div className="mt-4 flex flex-col space-y-2">
+              <button
+                onClick={() => {
+                  setShowPaymentWarning(false);
+                  localStorage.setItem("isRegisterPayment", "false");
+                  if (pendingNavigation) window.location.href = pendingNavigation;
+                }}
+                className="px-4 py-2 bg-teal-500 text-white rounded"
+              >
+                {transWithFallback("continueAnyway", "Tiếp tục tạo sự kiện")}
+              </button>
+              <button
+                onClick={() => {
+                  setShowPaymentWarning(false);
+                  setShowOrgRegisterPopup(true);
+                }}
+                className="px-4 py-2 bg-gray-300 rounded w-full"
+              >
+                {transWithFallback("registerOrganizer", "Đăng ký tổ chức")}
+              </button>
+              <button
+                onClick={() => setShowPaymentWarning(false)}
+                className="px-4 py-2 bg-red-100 text-red-600 rounded"
+              >
+                {transWithFallback("btnCancel", "Hủy")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showOrgRegisterPopup && (
+        <OrganizerRegistrationPopup
+          onClose={() => setShowOrgRegisterPopup(false)}
+          onSuccess={() => {
+            setShowOrgRegisterPopup(false);
+            localStorage.setItem("isRegisterPayment", "true");
             if (pendingNavigation) window.location.href = pendingNavigation;
           }}
-          className="px-4 py-2 bg-teal-500 text-white rounded"
-        >
-          {transWithFallback("continueAnyway", "Tiếp tục tạo sự kiện")}
-        </button>
-        <button
-  onClick={() => {
-    setShowPaymentWarning(false);
-    setShowOrgRegisterPopup(true);
-  }}
-  className="px-4 py-2 bg-gray-300 rounded w-full"
->
-  {transWithFallback("registerOrganizer", "Đăng ký tổ chức")}
-</button>
-        <button
-          onClick={() => setShowPaymentWarning(false)}
-          className="px-4 py-2 bg-red-100 text-red-600 rounded"
-        >
-          {transWithFallback("btnCancel", "Hủy")}
-        </button>
-      </div>
-    </div>
-  </div>
-    )}
-
-     {showOrgRegisterPopup && (
-      <OrganizerRegistrationPopup
-        onClose={() => setShowOrgRegisterPopup(false)}
-        onSuccess={() => {
-          setShowOrgRegisterPopup(false);
-          localStorage.setItem("isRegisterPayment", "true");
-          if (pendingNavigation) window.location.href = pendingNavigation;
-        }}
-      />
-    )}
+        />
+      )}
     </>
   );
 };

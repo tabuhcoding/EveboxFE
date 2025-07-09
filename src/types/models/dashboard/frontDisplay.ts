@@ -26,6 +26,7 @@ export interface EventResponse {
   specialEvents: Event[];
   trendingEvents: Event[];
   onlyOnEve: Event[];
+  recommendedEvents: Event[];
   categorySpecial: CategorySpecial[];
 }
 

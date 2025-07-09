@@ -2,7 +2,6 @@
 
 /* Package System */
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, MapPin, House } from "lucide-react";
@@ -12,13 +11,14 @@ import toast from "react-hot-toast";
 /* Package Application */
 import { EventDetailAdmin } from "@/types/models/admin/eventManagement.interface";
 import { getEventDetailAdmin } from "@/services/event.service";
+import { useAuth } from "@/contexts/auth.context";
 import EventDetailLoading from "./eventDetailLoading";
 import ShowingTable from "./showingTable";
 
 export default function EventDetailPage({ eventId }: { eventId: number }) {
   const router = useRouter();
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [event, setEvent] = useState<EventDetailAdmin | null>(null);
   const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(true);

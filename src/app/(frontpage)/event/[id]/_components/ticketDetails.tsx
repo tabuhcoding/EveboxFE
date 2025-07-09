@@ -6,11 +6,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 
 /* Package Application */
 import { EventDetail, Showing } from "../../../../../types/models/event/eventdetail/event.interface";
 import { getRedisSeat } from "@/services/booking.service";
+import { useAuth } from "@/contexts/auth.context";
 
 import ContinueDialog from "./continueDialog";
 import AlertDialog from "@/components/common/alertDialog";
@@ -20,7 +20,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
   const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations("common");
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");

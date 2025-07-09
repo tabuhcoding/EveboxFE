@@ -4,7 +4,6 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { Eye } from "lucide-react";
 import { HttpStatusCode } from "axios";
 import toast from "react-hot-toast";
@@ -17,11 +16,12 @@ import EventPagination from "../../event-management/_components/common/paginatio
 
 import { sortShowings } from "../libs/sortShowing";
 import { getShowingsByAdmin } from "@/services/event.service";
+import { useAuth } from "@/contexts/auth.context";
 
 export default function ShowingTable({ searchKeyword, dateFrom, dateTo }: ShowingTableProps) {
   const t = useTranslations('common');
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [showings, setShowings] = useState<Showing[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
