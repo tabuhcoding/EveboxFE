@@ -18,7 +18,7 @@ interface ConfirmDialogProps {
 
 export default function ConfirmDialog({ open, onClose, id, showingId, seatMapId }: ConfirmDialogProps) {
   const router = useRouter();
-
+  
   const t = useTranslations('common');
 
   const transWithFallback = (key: string, fallback: string) => {
@@ -26,10 +26,15 @@ export default function ConfirmDialog({ open, onClose, id, showingId, seatMapId 
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
   };
-
+  
   const handleCancel = () => {
     onClose();
-    router.push(`/event/${id}/booking/select-ticket?showingId=${showingId}&eventId=${id}&seatMapId=${seatMapId}`);
+    if (id && showingId && seatMapId) {
+      router.push(`/event/${id}/booking/select-ticket?showingId=${showingId}&eventId=${id}&seatMapId=${seatMapId}`);
+    }
+    else if (id && showingId) {
+      router.push(`/event/${id}/booking/select-ticket?showingId=${showingId}&eventId=${id}`);
+    }
   };
 
   return (

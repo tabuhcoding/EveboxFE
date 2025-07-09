@@ -225,7 +225,7 @@ export default function TicketInformation({
         onClose={handleClose}
         id={event?.id} 
         showingId={showingId ?? ""}
-        seatMapId={seatMapId}
+        seatMapId={seatMapId || undefined}
       />
       <AlertDialog
         message={alertMessage}
