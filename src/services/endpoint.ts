@@ -68,6 +68,11 @@ export class END_POINT_LIST {
     PAYMENT: "/api/org/payment",
   }
 
+  static readonly  ORG_CHECKIN: {
+    ALL_CHECKED_IN: "/api/org/checkin/all"
+  }
+
+
   static readonly ORG_STATISTICS = {
     GET_SUMMARY: "/api/org/statistics/summary",
     GET_ORDERS: "/api/org/statistics/orders",

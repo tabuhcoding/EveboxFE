@@ -8,119 +8,78 @@ import { TicketCheckin, TicketCheckinTableProps } from "../lib/interface/check-i
 import Pagination from "./common/pagination";
 import { sortUsers } from "@/app/(protected)/admin/account-management/libs/function/sortUsers";
 import SortIcon from "@/app/(protected)/admin/account-management/_components/sortIcon";
+import { CheckedInTicketDto } from "@/types/models/org/checkin.interface";
+import { getAllCheckedInTickets } from "@/services/org.service";
 
-export default function TicketCheckinTable({ activeTab, searchKeyword }: TicketCheckinTableProps) {
+export default function TicketCheckinTable({ activeTab, searchKeyword, showingId }: TicketCheckinTableProps) {
     //Gán cứng
-    const data: TicketCheckin[] = [
-        {
-            orderId: 'OD8492TH',
-            ticket: {
-                id: 'TKX-58J2KQ',
-                type: 'Vé cứng',
-            },
-            showing: {
-                startTime: '2025-04-29T18:00:00Z',
-                endTime: '2025-04-29T20:00:00Z',
-            },
-            venue: 'TẦNG 12B TÒA NHÀ IMC',
-        },
-        {
-            orderId: 'OD1157NV',
-            ticket: {
-                id: 'TKX-94XZTP',
-                type: 'Vé điện tử',
-            },
-            showing: {
-                startTime: '2025-04-29T13:00:00Z',
-                endTime: '2025-04-29T15:00:00Z',
-            },
-            venue: 'TẦNG 12B TÒA NHÀ IMC',
-        },
-        {
-            orderId: 'OD8492TH',
-            ticket: {
-                id: 'TKX-73LMN8',
-                type: 'Vé cứng',
-            },
-            showing: {
-                startTime: '2025-04-29T18:00:00Z',
-                endTime: '2025-04-29T20:00:00Z',
-            },
-            venue: 'TẦNG 12B TÒA NHÀ IMC',
-        },
-        {
-            orderId: 'OD6623AB',
-            ticket: {
-                id: 'TKX-31KPLD',
-                type: 'Vé điện tử',
-            },
-            showing: {
-                startTime: '2025-04-29T09:00:00Z',
-                endTime: '2025-04-29T11:00:00Z',
-            },
-            venue: 'TẦNG 12B TÒA NHÀ IMC',
-        },
-    ];
+   const [tickets, setTickets] = useState<CheckedInTicketDto[]>([])
+  const [sortConfig, setSortConfig] = useState<{ key: keyof CheckedInTicketDto; direction: 'asc' | 'desc' } | null>(null)
 
-    const [tickets] = useState<TicketCheckin[]>(data);
-    const [sortConfig, setSortConfig] = useState<{ key: keyof TicketCheckin; direction: 'asc' | 'desc' } | null>(null);
+  useEffect(() => {
+    if (!showingId) return;
 
-    const handleSort = (key: keyof TicketCheckin) => {
-        setSortConfig((prev) => {
-            if (prev?.key === key) {
-                return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
-            } else {
-                return { key, direction: 'asc' };
-            }
-        });
-    };
+    const fetchData = async () => {
+      try {
+        const result = await getAllCheckedInTickets(showingId)
+        setTickets(result)
+      } catch (err) {
+        console.error("Failed to load checked-in tickets:", err)
+        setTickets([])
+      }
+    }
 
-    const filteredTickets = tickets.filter(ticket => {
-        const matchSearch = ticket.orderId.toLowerCase().includes(searchKeyword.toLowerCase());
+    fetchData()
+  }, [showingId])
 
-        let matchTab = false;
+    const handleSort = (key: keyof CheckedInTicketDto) => {
+    setSortConfig((prev) =>
+      prev?.key === key
+        ? { key, direction: prev.direction === "asc" ? "desc" : "asc" }
+        : { key, direction: "asc" }
+    )
+  }
 
-        switch (activeTab) {
-            case "all":
-                matchTab = true;
-                break;
-            case "e-ticket":
-                matchTab = ticket.ticket.type === "Vé điện tử";
-                break;
-            case "ticket":
-                matchTab = ticket.ticket.type === "Vé cứng";
-                break;
-            default:
-                matchTab = true;
-        }
+  const filteredTickets = tickets.filter(ticket => {
+    const matchSearch = ticket.order_id.toLowerCase().includes(searchKeyword.toLowerCase())
 
-        return matchSearch && matchTab;
-    });
+    let matchTab = false
+    switch (activeTab) {
+      case "all":
+        matchTab = true
+        break
+      case "e-ticket":
+        matchTab = ticket.deliveryType === "E_TICKET"
+        break
+      case "ticket":
+        matchTab = ticket.deliveryType === "PHYSICAL_TICKET"
+        break
+      default:
+        matchTab = true
+    }
 
-    //Pagination
-    const itemsPerPage = 10;
-    const [currentPage, setCurrentPage] = useState(1);
+    return matchSearch && matchTab
+  })
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [activeTab]);
 
-    const totalItems = filteredTickets.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const startItem = (currentPage - 1) * itemsPerPage + 1;
-    const endItem = Math.min(startItem + itemsPerPage - 1, totalItems);
+     // Pagination
+  const itemsPerPage = 10
+  const [currentPage, setCurrentPage] = useState(1)
 
-    const handlePrevious = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [activeTab])
 
-    const handleNext = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
+    const totalItems = filteredTickets.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const startItem = (currentPage - 1) * itemsPerPage
+  const endItem = Math.min(startItem + itemsPerPage, totalItems)
 
-    const sortedTickets = sortUsers(filteredTickets, sortConfig);
+  const handlePrevious = () => currentPage > 1 && setCurrentPage(currentPage - 1)
+  const handleNext = () => currentPage < totalPages && setCurrentPage(currentPage + 1)
 
-    const paginatedData = sortedTickets.slice(startItem - 1, endItem);
+  const sortedTickets = sortUsers(filteredTickets, sortConfig)
+  const paginatedData = sortedTickets.slice(startItem, endItem)
 
     return (
         <>
@@ -129,9 +88,9 @@ export default function TicketCheckinTable({ activeTab, searchKeyword }: TicketC
                     <thead>
                         <tr className="bg-[#0C4762] text-white text-sm text-left rounded-t-lg">
                             <th className="px-4 py-3 text-center">STT</th>
-                            <th className="px-4 py-3 cursor-pointer text-center" onClick={() => handleSort('orderId')}>
-                                Mã đơn hàng <SortIcon field="orderId" sortConfig={sortConfig} />
-                            </th>
+                           <th className="px-4 py-3 text-center cursor-pointer" onClick={() => handleSort('order_id')}>
+                Mã đơn hàng <SortIcon field="order_id" sortConfig={sortConfig} />
+              </th>
                             <th className="px-4 py-3 cursor-pointer text-center">
                                 Mã vé
                             </th>
@@ -153,26 +112,25 @@ export default function TicketCheckinTable({ activeTab, searchKeyword }: TicketC
                         {paginatedData.length > 0 ? (
                             paginatedData.map((ticket, index) => (
                                 <tr key={index} className="border-t border-gray-200 hover:bg-gray-200 transition-colors duration-200">
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">{index + 1}</td>
-                                    <td className="px-4 py-3 border-r border-gray-200 cursor-pointer">
-                                        {ticket.orderId}
-                                    </td>
-                                    <td className="px-4 py-3 border-r border-gray-200">{ticket.ticket.id}</td>
-                                    <td className="px-4 py-3 border-r border-gray-200 text-center">{new Date(ticket.showing.startTime).toLocaleDateString('vi-VN')}</td>
-                                    <td className="px-4 py-3 text-center border-r border-gray-200">
-                                        {new Date(ticket.showing.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} - {new Date(ticket.showing.endTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
-                                    </td>
-                                    <td className="px-4 py-3 border-r border-gray-200">{ticket.venue}</td>
-                                    <td className="px-4 py-3 text-center border-r cursor-pointer">
-                                        <span
-                                            title={`Chuyển thành ${ticket.ticket.type === 'Vé cứng' ? 'Vé điện tử' : 'Vé cứng'}`}
-                                            className={`min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border 
-                                                    ${ticket.ticket.type === 'Vé cứng'
-                                                    ? 'bg-[#D3FFDA] text-[#51DA68] border-[#32E14F]'
-                                                    : 'bg-teal-100 text-teal-500 border-teal-500'}`}>
-                                            {ticket.ticket.type}
-                                        </span>
-                                    </td>
+                                     <td className="px-4 py-3 text-center border-r">{index + 1 + startItem}</td>
+                    <td className="px-4 py-3 text-center border-r">{ticket.order_id}</td>
+                    <td className="px-4 py-3 text-center border-r">{ticket.ticket_id}</td>
+                    <td className="px-4 py-3 text-center border-r">{ticket.startTime.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-center border-r">
+                      {ticket.startTime.toLocaleString("vi-VN", { hour: '2-digit', minute: '2-digit' })} - {ticket.endTime.toLocaleString("vi-VN", { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="px-4 py-3 text-center border-r">{ticket.venue}</td>
+                    <td className="px-4 py-3 text-center border-r">
+                      <span
+                        className={`inline-block px-4 py-1 rounded-full text-xs font-semibold border ${
+                          ticket.deliveryType === "PHYSICAL_TICKET"
+                            ? "bg-[#D3FFDA] text-[#51DA68] border-[#32E14F]"
+                            : "bg-teal-100 text-teal-500 border-teal-500"
+                        }`}
+                      >
+                        {ticket.deliveryType === "PHYSICAL_TICKET" ? "Vé cứng" : "Vé điện tử"}
+                      </span>
+                    </td>
                                 </tr>
                             ))
                         ) : (

@@ -67,7 +67,7 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
 
   const filteredOrders = safeOrdersData.filter((order) => {
     const customerName = getCustomerName(order).toLowerCase()
-    const orderId = (order.id ?? "").toLowerCase()
+    const orderId = (order.id ?? "")
     const keyword = search.toLowerCase()
     return customerName.includes(keyword) || orderId.includes(keyword)
   })

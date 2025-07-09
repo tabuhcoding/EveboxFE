@@ -23,6 +23,7 @@ export interface SearchBarProps {
 export interface TicketCheckinTableProps {
     activeTab: string;
     searchKeyword: string;
+    showingId: string;
 }
 
 //Tabs

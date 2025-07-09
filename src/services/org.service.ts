@@ -11,6 +11,7 @@ import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/m
 import { AnalyticData } from "@/types/models/org/analytics.interface";
 import { AddEventMemberDto, AddEventMemberResponseDto, EventMember, EventRoleItem, UpdateEventMemberDto, UpdateEventMemberResponseDto } from "@/types/models/org/member.interface";
 import { GetOrdersResponse } from "@/types/models/org/orders.interface";
+import { CheckedInTicketDto } from "@/types/models/org/checkin.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -551,5 +552,32 @@ export async function deleteEventMember(
     const err = error as { response?: { data?: { message?: string } } };
     console.error("Error deleting event member:", err?.response?.data?.message || error);
     throw new Error(err?.response?.data?.message || "Unexpected error while deleting event member");
+  }
+}
+
+export async function getAllCheckedInTickets(showingId: string): Promise<CheckedInTicketDto[]> {
+  const url = `/api/org/checkin/all/${showingId}`;
+
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`, // Adjust based on your SSR token strategy
+      },
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch checked-in tickets");
+    const json: BaseApiResponse<CheckedInTicketDto[]> = await res.json();
+    return json.data;
+  } else {
+        console.log("-------",showingId)
+
+    const res = await orgService.get<BaseApiResponse<CheckedInTicketDto[]>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch checked-in tickets");
+    }
+
+    return res.data.data;
   }
 }
