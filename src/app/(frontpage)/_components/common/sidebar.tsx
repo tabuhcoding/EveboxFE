@@ -87,8 +87,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       { icon: <User size={20} />, text: t("accountManagement"), onClick: () => handleProtectedClick('/my-profile') },
       { icon: <Ticket size={20} />, text: t("ticketManagement"), onClick: () => handleProtectedClick('/my-ticket') },
       { icon: <Calendar size={20} />, text: t("createEvent"), onClick: () => handleProtectedClick('/organizer/create-event') },
-      { icon: <Lock size={20} />, text: t("changePassword"), href: '/change-password' },
-      { icon: <LogOut size={20} />, text: t("logout"), onClick: handleLogout },
+      { icon: <Lock size={20} />, text: t("changePassword"), onClick: () => handleProtectedClick('/change-password') },
     ];
 
     if (user?.role === 1) {
@@ -101,8 +100,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       });
     }
 
+    if (user) {
+      items.push({
+        icon: <LogOut size={20} />,
+        text: t("logout"),
+        onClick: handleLogout,
+      });
+    }
+
     return items;
-  }, [user, t]);
+  }, [user, t, handleLogout, router]);
 
   return (
     <>
@@ -157,7 +164,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       <span>{item.text}</span>
                     </button>
                   )} */}
-                  {item.href || item.onClick ? (
+                  {item.onClick ? (
                     <button
                       onClick={item.onClick}
                       disabled={loading}
