@@ -660,5 +660,9 @@
     "completeBookingIn": "Complete booking in",
     "goToAdmin": "Go To Admin",
     "createNewQuestion": "Create New Question",
-    "noRegisPayment": "You haven't registered payment info!"
+    "noRegisPayment": "You haven't registered payment info!",
+    "sessionExpiredTitle": "Session Expired",
+    "sessionExpiredMessage": "Your session has expired. Please log in again to continue using the application.",
+    "sessionExpiredNote": "Your entered data will be preserved after logging in",
+    "loginAgain": "Login Again"
 }

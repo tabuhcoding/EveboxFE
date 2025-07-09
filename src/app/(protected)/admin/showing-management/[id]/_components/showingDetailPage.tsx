@@ -4,7 +4,6 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -14,11 +13,12 @@ import { getShowingDetailAdmin } from "@/services/event.service";
 import ShowingDetailLoading from "./showingDetailLoading";
 import TicketTable from "./ticketTable";
 import { HttpStatusCode } from "axios";
+import { useAuth } from "contexts/auth.context";
 
 export default function ShowingDetailPage({ showingId }: { showingId: string }) {
   const t = useTranslations('common');
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [showing, setShowing] = useState<ShowingDetail | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);

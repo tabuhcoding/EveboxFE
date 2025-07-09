@@ -3,7 +3,6 @@
 /* Package System */
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { HttpStatusCode } from "axios";
@@ -14,12 +13,13 @@ import { ShowingInTicketTypeDetail, TicketTypeDetailProps } from "@/types/models
 import { getTicketTypeDetailAdmin } from "@/services/event.service";
 import { formatCurrency } from "@/utils/helpers";
 import TicketPageLoading from "./ticketPageLoading";
+import { useAuth } from "contexts/auth.context";
 
 export default function TicketDetailPage() {
   const t = useTranslations('common');
   const params = useParams();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const showingId = params?.id as string;
   const ticketTypeId = params?.ticketTypeId as string;

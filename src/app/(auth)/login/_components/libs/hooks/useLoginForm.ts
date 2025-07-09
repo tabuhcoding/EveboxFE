@@ -5,14 +5,11 @@ import { signIn } from 'next-auth/react';
 import { useState , useEffect } from 'react';
 import * as Yup from 'yup';
 
-import { useAuth } from 'contexts/auth.context';
-
 export const useLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
 
   const handleGoogleLogin = () => {
     try {
@@ -30,9 +27,13 @@ export const useLoginForm = () => {
 
       window.addEventListener('message', (event) => {
         if (event.origin === process.env.NEXT_PUBLIC_API_URL) {
-          const { type/* , data */, error } = event.data;
-
+          const { type, data , error } = event.data;
+		  console.log("event.data: ", event.data);
           if (type === 'GOOGLE_LOGIN_SUCCESS') {
+		  console.log("data.access_token: ", data.access_token);
+            // Store tokens temporarily for Google login handling
+            localStorage.setItem('google_access_token', data.access_token);
+            localStorage.setItem('google_refresh_token', data.refresh_token);
             router.push('/');
             popup?.close();
           } else if (type === 'GOOGLE_LOGIN_ERROR') {
@@ -50,9 +51,12 @@ export const useLoginForm = () => {
 
   useEffect(() => {
     const queryString = window.location.search;
+  console.log("queryString: ", queryString);
+	
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code');
-
+  console.log("code: ", code);
+	
     if (code) {
       setIsLoading(true);
       axios
@@ -64,8 +68,9 @@ export const useLoginForm = () => {
           const { access_token, refresh_token } = response.data.data;
 
           if (access_token) {
-            login(access_token, refresh_token);
-            localStorage.setItem('refresh_token', refresh_token);
+            // Store tokens temporarily for Google login handling
+            localStorage.setItem('google_access_token', access_token);
+            localStorage.setItem('google_refresh_token', refresh_token);
             router.push('/');
           } else {
             setError('Không nhận được access token từ Google.');

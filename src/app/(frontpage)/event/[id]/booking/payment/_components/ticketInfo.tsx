@@ -2,7 +2,6 @@
 
 /* Package System */
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -12,6 +11,7 @@ import AlertDialog from "@/components/common/alertDialog";
 import { unselectSeat } from "@/services/booking.service";
 import { checkoutPayment } from "@/services/payment.service";
 import { TicketInforProps } from "@/types/models/event/booking/payment.interface";
+import { useAuth } from "@/contexts/auth.context";
 
 import ConfirmDialog from "../../question-form/_components/confirmDialog";
 import GeneralTermsDialog from "../../question-form/_components/generalTermsDialog";
@@ -20,7 +20,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
   console.log("🚀 ~ TicketInformation ~ totalTickets:", totalTickets)
   const { locale } = useI18n();
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   // const [promoCode, setPromoCode] = useState('');
 

@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { Calendar, Ticket } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,6 +17,7 @@ import { useI18n } from "app/providers/i18nProvider";
 import AlertDialog from "components/common/alertDialog";
 import { TicketInforProps, SelectSeatPayload } from "types/models/event/booking/seatmap.interface";
 import { RedisInfo } from "@/types/models/event/redisSeat";
+import { useAuth } from "@/contexts/auth.context";
 
 export default function TicketInfor({
   event,
@@ -41,7 +41,7 @@ export default function TicketInfor({
   const [href, setHref] = useState("");
   const [redisSeatInfo, setRedisSeatInfo] = useState<RedisInfo | null>(null);
 
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

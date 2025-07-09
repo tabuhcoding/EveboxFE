@@ -2,12 +2,12 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { Check } from "lucide-react";
 import toast from "react-hot-toast";
 
 /* Package Application */
 import { updateEventAdmin } from "@/services/event.service";
+import { useAuth } from "@/contexts/auth.context";
 
 interface EventType {
   id: number;
@@ -22,7 +22,7 @@ interface ToggleOnlyOnEveButtonProps {
 
 export default function ToggleSpecialButton({ event, onToggle, setGlobalLoading }: ToggleOnlyOnEveButtonProps) {
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);

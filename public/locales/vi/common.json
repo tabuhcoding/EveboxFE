@@ -652,5 +652,9 @@
   "completeBookingIn": "Hoàn tất đặt vé trong",
   "goToAdmin": "Đến trang quản trị",
   "createNewQuestion": "Câu hỏi mới",
-  "noRegisPayment": "Bạn chưa đăng ký thông tin thanh toán!"
+  "noRegisPayment": "Bạn chưa đăng ký thông tin thanh toán!",
+  "sessionExpiredTitle": "Phiên đăng nhập đã hết hạn",
+  "sessionExpiredMessage": "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.",
+  "sessionExpiredNote": "Dữ liệu đã nhập sẽ được bảo toàn sau khi đăng nhập",
+  "loginAgain": "Đăng nhập lại"
 }

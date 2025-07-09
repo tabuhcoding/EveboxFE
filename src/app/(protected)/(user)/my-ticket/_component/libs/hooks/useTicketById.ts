@@ -2,10 +2,10 @@
 
 /* Package System */
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 
 /* Package Application */
 import { IUserTicketById } from '@/types/models/ticket/ticketInfoById';
+import { useAuth } from "contexts/auth.context";
 
 // import { fetchTicketById } from '../server/fetchTicketById';
 import { getTicketById } from '@/services/booking.service';
@@ -15,7 +15,7 @@ export function useTicketById(id: string) {
   const [ticket, setTicket] = useState<IUserTicketById | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   useEffect(() => {
     async function getTicket() {

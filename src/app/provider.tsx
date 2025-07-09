@@ -14,7 +14,12 @@ import { SearchResultProvider } from './providers/searchResultProvider';
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <I18nProvider>
-      <SessionProvider>
+      <SessionProvider 
+      // refetchInterval = time expired token, set to 50 seconds to ensure it is before the token expires
+        refetchInterval={50} 
+        refetchOnWindowFocus={false} 
+        refetchWhenOffline={false}
+      >
         <NextUIProvider>
           <SearchResultProvider>
             <AuthProvider>

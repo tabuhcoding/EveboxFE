@@ -3,25 +3,24 @@
 /* Package System */
 import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser } from 'lucide-react';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from "next-intl";
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 /* Package Application */
 import { gatewayService } from 'services/instance.service';
+import { useAuth } from 'contexts/auth.context';
 import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
 import { SidebarProps } from '../libs/interface/dashboard.interface';
-import { useAuth } from '@/contexts/auth.context';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const { data: session } = useSession();
+  const { isAuthenticated, logout } = useAuth();
   const t = useTranslations("common");
 
   const [showPaymentWarning, setShowPaymentWarning] = useState(false);
@@ -29,19 +28,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [showOrgRegisterPopup, setShowOrgRegisterPopup] = useState(false);
 
   const handleLogout = async () => {
-    if (!session?.user?.accessToken) {
-      console.error('No token found');
+    if (!isAuthenticated) {
+      console.error('User not authenticated');
       return;
     }
 
     setLoading(true);
     try {
-      await gatewayService.post('/api/user/logout', {
-        refresh_token: session.user.refreshToken
-      });
-
-      await signOut({ redirect: false });
-      window.location.href = "/";
+      await logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -50,7 +44,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   };
 
   const handleProtectedClick = async (href: string) => {
-    if (!session?.user) {
+    if (!isAuthenticated) {
       setShowLoginPrompt(true);
     } else {
       if (href === '/organizer/create-event') {

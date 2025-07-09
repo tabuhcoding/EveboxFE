@@ -106,7 +106,7 @@ const Footer = () => {
               </a>
             </div>
             <div className="text-xs sm:text-sm">
-              Non Copyrighted © 2025.12 Upload by EveBox
+              Non Copyrighted © 2025.14 Upload by EveBox
             </div>
           </div>
         </div>
