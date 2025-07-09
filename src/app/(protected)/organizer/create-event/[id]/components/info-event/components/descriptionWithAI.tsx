@@ -3,7 +3,7 @@
 /* Package System */
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
