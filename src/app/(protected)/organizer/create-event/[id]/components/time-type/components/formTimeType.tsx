@@ -19,7 +19,6 @@ import { updateTicket } from "../../../libs/functions/showing/updateTicket";
 import { addTicket } from "../../../libs/functions/showing/addTicket";
 import { validateStartDate, validateEndDate, validateTimeSelection } from "../../../libs/functions/showing/validationUtils";
 import { toggleExpanded, toggleDialog, toggleEditDialog, toggleDelDialog, toggleCopyTicketDialog, toggleDelShowDialog } from "../../../libs/functions/showing/toggleDialogUtils";
-import FormSettingClientTemp from "./(temp)/formSettingTemp";
 import CopyTicketDailog from "./dialogs/copyTicket";
 import { handleDeleteShow } from "../../../libs/functions/showing/deleteShow";
 import { getAllShowingDetailOfEvent } from "services/org.service";
@@ -164,8 +163,8 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
         <>
             <Toaster position="top-center" />
 
-            <div className="w-full mt-6">
-                <form className="w-full max-w-4xl mx-auto mb-6" onSubmit={handleSubmit} id="ticket-form">
+            <div className="w-full mt-6 mb-8">
+                <form className="w-full max-w-4xl mx-auto mb-10" onSubmit={handleSubmit} id="ticket-form">
                     <div className="relative flex items-center">
                         <p className="text-xl font-bold mr-4">{transWithFallback('timeTitle', 'Thời gian')}</p>
                         <div className="relative ml-auto">
@@ -383,7 +382,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
 
                     <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
 
-                    <div className="flex justify-center mb-6">
+                    <div className="flex justify-center mb-10">
                         <button
                             type="button" onClick={handleAddShowtime}
                             className="text-base font-medium flex items-center gap-1 my-2 text-[#2DC275]"
@@ -392,9 +391,6 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                         </button>
                     </div>
                 </form >
-
-
-                <FormSettingClientTemp />
             </div>
         </>
     );

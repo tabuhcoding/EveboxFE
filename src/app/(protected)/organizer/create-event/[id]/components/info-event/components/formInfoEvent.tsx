@@ -620,7 +620,17 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
             </div>
           </div>
 
-          <div className="mt-3 p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
+          <OrganizationInfoForm
+            logoOrg={logoOrg}
+            nameOrg={nameOrg}
+            infoOrg={infoOrg}
+            handleUpload={handleUploadLogo}
+            handleInputChange={handleInputChange}
+            errors={errors}
+            imageLogoErrors={imageLogoErrors}
+          />
+
+          <div className="mt-3 p-6 lg:p-8 rounded-lg shadow-sm w-full max-w-5xl mx-auto mb-8" style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}>
             {/* Thông tin sự kiện */}
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
@@ -635,17 +645,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                 )}
               </div>
             </div>
-          </div>
-
-          <OrganizationInfoForm
-            logoOrg={logoOrg}
-            nameOrg={nameOrg}
-            infoOrg={infoOrg}
-            handleUpload={handleUploadLogo}
-            handleInputChange={handleInputChange}
-            errors={errors}
-            imageLogoErrors={imageLogoErrors}
-          />
+          </div>          
         </form>
       </div>
     </>

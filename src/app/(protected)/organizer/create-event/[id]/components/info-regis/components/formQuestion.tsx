@@ -54,7 +54,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
             setSampleForms(sampleFormsData);
             setCreatedForms(createdFormsData);
         } catch (error: any) {
-            toast.error(error?.message || transWithFallback("errForm", "Có lỗi xảy ra trong quá trình tải form. Vui lòng thử lại sau."));
+            toast.error(error?.message || transWithFallback("errForm", "Có lỗi xảy ra trong quá trình tải biểu mẫu. Vui lòng thử lại sau."));
             console.error("Error fetching forms:", error);
         } finally {
             setIsLoading(false);
@@ -85,7 +85,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
     const handleConnectFormToShowing = async () => {
         if (!selectedForm) {
             // toast.error("Vui lòng chọn form cần kết nối.");
-            toast.error(transWithFallback("noSelectForm", "Chưa chọn form hoặc chưa tạo form đăng ký!"));
+            toast.error(transWithFallback("noSelectForm", "Chưa chọn biểu mẫu hoặc chưa tạo biểu mẫu đăng ký!"));
             return;
         }
 
@@ -111,13 +111,13 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
                             formId: Number(selectedForm),
                         } as ConnectFormDto);
                     } catch (error) {
-                        toast.error(transWithFallback("errConnectForm", "Lỗi kết nối form với showing: ") + (error as Error).message);
+                        toast.error(transWithFallback("errConnectForm", "Lỗi kết nối biểu mẫu với showing: ") + (error as Error).message);
                         throw error; // optionally let it bubble up
                     }
                 })
             );
 
-            toast.success(transWithFallback("connectForm", "Kết nối form thành công!"));
+            toast.success(transWithFallback("connectForm", "Kết nối biểu mẫu thành công!"));
             onNextStep();
         } catch (error) {
             toast.error("Error connecting form: " + (error as Error).message);
@@ -131,14 +131,14 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
         if (Object.keys(newErrors).length === 0) {
             // Nếu nút là "Save"
             if (btnValidate4 === "Save") {
-                toast.success(transWithFallback("saveFormSuccess", "Form hợp lệ, đã tạo và lưu thông tin form"));
+                toast.success(transWithFallback("saveFormSuccess", "Biểu mẫu hợp lệ, đã tạo và lưu thông tin biểu mẫu"));
                 await handleConnectFormToShowing();
 
             }
             // Nếu nút là "Continue"
             else if (btnValidate4 === "Continue") {
                 // onNextStep();
-                toast.success(transWithFallback("validForm!", "Form hợp lệ!"))
+                toast.success(transWithFallback("validForm!", "Biểu mẫu hợp lệ!"))
                 await handleConnectFormToShowing();
             }
         }
@@ -152,7 +152,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
 
                     <button className="w-52 text-sm border-2 border-[#2DC275] text-white font-bold py-2 px-4 rounded bg-[#2DC275] hover:bg-[#7DF7B8] hover:border-[#7DF7B8] hover:text-green-600 transition-all"
                         onClick={() => setIsCreateNewOpen(true)}>
-                        {transWithFallback("btnCreateForm", "Tạo form mới")}
+                        {transWithFallback("btnCreateForm", "Tạo biểu mẫu mới")}
                     </button>
                 </div>
 

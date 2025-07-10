@@ -1,10 +1,13 @@
 "use client"
 
-import { User, Ticket, Calendar, LogOut, Lock, Menu } from 'lucide-react';
+/* Package System */
+import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 
+/* Package Application */
 import { useAuth } from 'contexts/auth.context';
 import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
@@ -12,7 +15,8 @@ import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_
 import { SidebarProps } from '../libs/interface/dashboard.interface';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-
+  const { user } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { isAuthenticated, logout } = useAuth();
@@ -70,13 +74,34 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     return msg;
   };
 
-  const menuItems = [
-    { icon: <User size={20} />, text: t("accountManagement"), onClick: () => handleProtectedClick('/my-profile') },
-    { icon: <Ticket size={20} />, text: t("ticketManagement"), onClick: () => handleProtectedClick('/my-ticket') },
-    { icon: <Calendar size={20} />, text: t("createEvent"), onClick: () => handleProtectedClick('/organizer/create-event') },
-    { icon: <Lock size={20} />, text: t("changePassword"), href: '/change-password' },
-    { icon: <LogOut size={20} />, text: t("logout"), onClick: handleLogout },
-  ];
+  const menuItems = useMemo(() => {
+    const items = [
+      { icon: <User size={20} />, text: t("accountManagement"), onClick: () => handleProtectedClick('/my-profile') },
+      { icon: <Ticket size={20} />, text: t("ticketManagement"), onClick: () => handleProtectedClick('/my-ticket') },
+      { icon: <Calendar size={20} />, text: t("createEvent"), onClick: () => handleProtectedClick('/organizer/create-event') },
+      { icon: <Lock size={20} />, text: t("changePassword"), onClick: () => handleProtectedClick('/change-password') },
+    ];
+
+    if (user?.role === 1) {
+      items.unshift({
+        icon: <ShieldUser size={20} />,
+        text: t("goToAdmin"),
+        onClick: async () => {
+          router.push('/admin/account-management');
+        },
+      });
+    }
+
+    if (user) {
+      items.push({
+        icon: <LogOut size={20} />,
+        text: t("logout"),
+        onClick: handleLogout,
+      });
+    }
+
+    return items;
+  }, [user, t, handleLogout, router]);
 
   return (
     <>
@@ -131,7 +156,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       <span>{item.text}</span>
                     </button>
                   )} */}
-                  {item.href || item.onClick ? (
+                  {item.onClick ? (
                     <button
                       onClick={item.onClick}
                       disabled={loading}
@@ -158,7 +183,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   {transWithFallback('login', 'Đăng nhập')}
                 </button>
               </Link>
-              <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+              <button onClick={() => setShowLoginPrompt(false)} className="px-4 py-2 bg-gray-300 rounded">{transWithFallback('btnCancel', 'Hủy')}</button>
             </div>
           </div>
         </div>
