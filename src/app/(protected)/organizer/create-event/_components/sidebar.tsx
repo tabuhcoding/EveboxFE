@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Ticket, CalendarPlus, BarChart, BookMinus } from 'lucide-react';
+import { Ticket, CalendarPlus, BookMinus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const Sidebar = () => {
