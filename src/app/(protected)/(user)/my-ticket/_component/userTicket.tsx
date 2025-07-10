@@ -10,7 +10,6 @@ import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
 import { useAuth } from "contexts/auth.context";
-import { set } from 'date-fns';
 
 export default function TicketManagement() {
   const { session } = useAuth();
