@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 // Function to refresh access token
 async function refreshAccessToken(token: any) {
@@ -77,8 +78,42 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Handle Google OAuth signin
+      if (account?.provider === "google" && profile) {
+        try {
+          // Exchange Google profile with backend to get custom tokens
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/google/signin`, {
+            email: profile.email,
+            name: profile.name,
+            googleId: profile.sub,
+            avatar: (profile as any).picture || null,
+            accessToken: account.access_token,
+          });
+
+          const userData = res.data.data;
+          
+          // Add custom tokens to user object for JWT callback
+          user.accessToken = userData.access_token;
+          user.refreshToken = userData.refresh_token;
+          user.id = userData.id || user.id;
+          
+          return true;
+        } catch (error) {
+          console.error("Error during Google OAuth with backend:", error);
+          return false;
+        }
+      }
+      
+      // Handle credentials signin (existing flow)
+      return true;
+    },
     async jwt({ token, user, trigger }) {
       // Initial login
       if (user) {
