@@ -10,11 +10,18 @@ import { sortUsers } from "@/app/(protected)/admin/account-management/libs/funct
 import SortIcon from "@/app/(protected)/admin/account-management/_components/sortIcon";
 import { CheckedInTicketDto } from "@/types/models/org/checkin.interface";
 import { getAllCheckedInTickets } from "@/services/org.service";
+import { useTranslations } from "next-intl"
+
 
 export default function TicketCheckinTable({ activeTab, searchKeyword, showingId }: TicketCheckinTableProps) {
     //Gán cứng
    const [tickets, setTickets] = useState<CheckedInTicketDto[]>([])
   const [sortConfig, setSortConfig] = useState<{ key: keyof CheckedInTicketDto; direction: 'asc' | 'desc' } | null>(null)
+const t = useTranslations("common")
+const transWithFallback = (key: string, fallback: string) => {
+  const msg = t(key)
+  return msg.startsWith("common.") ? fallback : msg
+}
 
   useEffect(() => {
     if (!showingId) return;
@@ -85,29 +92,20 @@ export default function TicketCheckinTable({ activeTab, searchKeyword, showingId
         <>
             <div className="table-account-management overflow-x-auto rounded-xl shadow-md mt-6">
                 <table className="min-w-full border border-gray-200">
-                    <thead>
-                        <tr className="bg-[#0C4762] text-white text-sm text-left rounded-t-lg">
-                            <th className="px-4 py-3 text-center">STT</th>
-                           <th className="px-4 py-3 text-center cursor-pointer" onClick={() => handleSort('order_id')}>
-                Mã đơn hàng <SortIcon field="order_id" sortConfig={sortConfig} />
-              </th>
-                            <th className="px-4 py-3 cursor-pointer text-center">
-                                Mã vé
-                            </th>
-                            <th className="px-4 py-3 cursor-pointer text-center">
-                                Ngày diễn
-                            </th>
-                            <th className="px-4 py-3 cursor-pointer text-center" >
-                                Thời gian diễn ra 
-                            </th>
-                            <th className="px-4 py-3 cursor-pointer text-center" >
-                                Địa điểm
-                            </th>
-                            <th className="px-4 py-3 cursor-pointer text-center" >
-                                Loại vé
-                            </th>
-                        </tr>
-                    </thead>
+                   <thead>
+  <tr className="bg-[#0C4762] text-white text-sm text-left rounded-t-lg">
+    <th className="px-4 py-3 text-center">STT</th>
+    <th className="px-4 py-3 text-center cursor-pointer" onClick={() => handleSort('order_id')}>
+      {transWithFallback("orderId", "Mã đơn hàng")} <SortIcon field="order_id" sortConfig={sortConfig} />
+    </th>
+    <th className="px-4 py-3 text-center">{transWithFallback("ticketId", "Mã vé")}</th>
+    <th className="px-4 py-3 text-center">{transWithFallback("showDate", "Ngày diễn")}</th>
+    <th className="px-4 py-3 text-center">{transWithFallback("showtime", "Thời gian diễn ra")}</th>
+    <th className="px-4 py-3 text-center">{transWithFallback("venue", "Địa điểm")}</th>
+    <th className="px-4 py-3 text-center">{transWithFallback("ticketType", "Loại vé")}</th>
+  </tr>
+</thead>
+
                     <tbody className="text-sm">
                         {paginatedData.length > 0 ? (
                             paginatedData.map((ticket, index) => (
@@ -136,8 +134,8 @@ export default function TicketCheckinTable({ activeTab, searchKeyword, showingId
                         ) : (
                             <tr>
                                 <td colSpan={9} className="text-center py-4 text-gray-500">
-                                    Không có tài khoản nào khớp với từ khóa tìm kiếm
-                                </td>
+  {transWithFallback("noTicketsMatch", "Không có vé nào khớp với từ khóa tìm kiếm")}
+</td>
                             </tr>
                         )
                         }

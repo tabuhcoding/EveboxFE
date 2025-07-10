@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 interface OverviewCardProps {
   totalRevenue: number;
   ticketsSold: number;
@@ -13,9 +15,14 @@ export const OverviewCard = ({
   totalTickets,
   percentageSold,
 }: OverviewCardProps) => {
+  const t = useTranslations("common");
+    const transWithFallback = (key: string, fallback: string) => {
+      const msg = t(key);
+      return msg.startsWith("common.") ? fallback : msg;
+    };
   return (
     <div className="mt-4">
-      <h3 className="text-lg font-bold text-[#0C4762] mb-2">Tổng quan</h3>
+      <h3 className="text-lg font-bold text-[#0C4762] mb-2"> {transWithFallback("overview", "Tổng quan")}</h3>
       <div className="flex shadow-lg">
 
         {/* Card for Total Revenue */}
@@ -24,9 +31,9 @@ export const OverviewCard = ({
             {percentageSold}%
           </div>
           <div>
-            <p className="text-sm">Doanh thu</p>
+            <p className="text-sm">{transWithFallback("revenue", "Doanh thu")} </p>
             <h2 className="text-2xl font-bold">{totalRevenue.toLocaleString()} Đ</h2>
-            <p className="text-xs">Tổng: {totalRevenue.toLocaleString()} đ</p>
+            <p className="text-xs">{transWithFallback("total", "Tổng")}: {totalRevenue.toLocaleString()} đ</p>
           </div>
         </div>
 

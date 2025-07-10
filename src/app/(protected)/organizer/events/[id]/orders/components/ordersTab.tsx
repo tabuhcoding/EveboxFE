@@ -5,8 +5,14 @@ import { useState, useEffect } from "react"
 import OrderSection from "./orderSection"
 import TicketSection from "./TicketSection"
 import { TicketOrderData } from "@/types/models/org/orders.interface"
+import { useTranslations } from "next-intl"
 
 export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
+  const t = useTranslations("common")
+    const transWithFallback = (key: string, fallback: string) => {
+      const msg = t(key)
+      return msg.startsWith("common.") ? fallback : msg
+    }
   const [activeTab, setActiveTab] = useState("orders")
   const [mounted, setMounted] = useState(false)
 
@@ -33,14 +39,14 @@ export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrde
                         ${activeTab === "orders" ? "bg-[#0C4762] text-white" : "bg-gray-200 text-[#0C4762]"}`}
           onClick={() => setActiveTab("orders")}
         >
-          Đơn hàng
+          {transWithFallback("orders", "Đơn hàng")}
         </button>
         <button
           className={`flex-1 py-1 text-center text-lg font-medium transition-all duration-300
                         ${activeTab === "tickets" ? "bg-[#0C4762] text-white" : "bg-gray-200 text-[#0C4762]"}`}
           onClick={() => setActiveTab("tickets")}
         >
-          Vé
+           {transWithFallback("ticket", "Vé")}
         </button>
       </div>
 

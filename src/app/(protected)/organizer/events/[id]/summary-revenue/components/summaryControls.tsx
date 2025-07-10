@@ -7,6 +7,7 @@ import { getShowingsByEventId } from "@/services/org.service"
 import type { IShowTime } from "@/types/models/org/orgEvent.interface"
 import { format } from "date-fns"
 import { vi } from "date-fns/locale"
+import { useTranslations } from "next-intl"
 
 interface SummaryControlsProps {
   eventTitle: string
@@ -20,6 +21,12 @@ export const SummaryControls = ({ eventTitle, eventId, startTime, endTime, onSho
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [showTimes, setShowTimes] = useState<IShowTime[]>([])
   const [, setLoadingShowTimes] = useState(false)
+
+   const t = useTranslations("common");
+      const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        return msg.startsWith("common.") ? fallback : msg;
+      };
 
   const formatDateTime = (dateTime?: string | Date) => {
     if (!dateTime) return ""
@@ -74,7 +81,7 @@ export const SummaryControls = ({ eventTitle, eventId, startTime, endTime, onSho
           className="flex items-center gap-2 bg-[#0C4762] text-white px-4 py-2 rounded-lg hover:bg-[#09374e]"
         >
           <RotateCcw size={20} />
-          Chọn suất diễn
+          {transWithFallback("selectShowing", "Chọn suất diễn")} 
         </button>
       </div>
 

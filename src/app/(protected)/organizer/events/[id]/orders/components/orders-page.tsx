@@ -10,12 +10,18 @@ import { getOrdersByShowingId, getShowingsByEventId } from "@/services/org.servi
 import SidebarOrganizer from "../../_components/sidebarOrganizer"
 import { IShowTime } from "@/types/models/org/orgEvent.interface"
 import { TicketOrderData } from "@/types/models/org/orders.interface"
+import { useTranslations } from "next-intl"
 
 interface OrdersPageProps {
   eventId: number
 }
 
 export function OrdersPage({ eventId }: OrdersPageProps) {
+  const t = useTranslations("common")
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key)
+    return msg.startsWith("common.") ? fallback : msg
+  }
   // State variables
   const [showingId, setShowingId] = useState<string>("")
   const [showings, setShowings] = useState<IShowTime[]>([])
@@ -104,10 +110,10 @@ export function OrdersPage({ eventId }: OrdersPageProps) {
           <SidebarOrganizer />
         </div>
         <div className="flex-1 p-6">
-          <h1 className="text-2xl font-bold text-[#0C4762]">LiveShow ca nhạc</h1>
+          <h1 className="text-2xl font-bold text-[#0C4762]">Orders</h1>
           <div className="border-t-2 border-[#0C4762] mt-2"></div>
           <div className="py-6 flex items-center space-x-6">
-            <h3 className="text-lg font-bold text-[#0C4762] mb-2">Danh sách buổi biểu diễn</h3>
+            <h3 className="text-lg font-bold text-[#0C4762] mb-2">{transWithFallback("showingList", "Danh sách buổi biểu diễn")}</h3>
             <DropdownWrapper showings={showings} onShowingSelect={handleShowingSelect} />
           </div>
 

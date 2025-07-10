@@ -16,8 +16,14 @@ import Navigation from '../common/navigation';
 import { useAuth } from '../../../../../../../contexts/auth.context';
 import { CreateEventDto } from 'types/models/event/createEvent.dto';
 import { createEvent } from 'services/event.service';
+import { useTranslations } from 'next-intl';
 
 export default function InformationEventClientPage() {
+    const t = useTranslations('common');
+      const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        return msg.startsWith('common.') ? fallback : msg;
+      };
     // const { data: session } = useSession();
     const { user } = useAuth();
     const router = useRouter();
@@ -63,7 +69,7 @@ export default function InformationEventClientPage() {
     return (
         <>
             <div className="flex flex-col items-center justify-center p-10 relative">
-                <span className="text-3xl font-semibold mb-6">Tạo sự kiện</span>
+                <span className="text-3xl font-semibold mb-6">{transWithFallback("createEvent", "Tạo sự kiện")}</span>
                 <div className="w-full flex justify-center">
                     <ol className="flex space-x-6">
                         <Navigation step={step} />
@@ -71,14 +77,14 @@ export default function InformationEventClientPage() {
                         <div className="flex gap-4 mt-4 mb-6">
                             <button className="text-xs w-18 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
                                 type="submit" form="event-form" onClick={handleSave}>
-                                Lưu
+                                {transWithFallback("save", "Lưu")}
                             </button>
                         </div>
 
                         <div className="flex gap-4 mt-4 mb-6">
                             <button className="text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
                                 type="submit" form="event-form" onClick={handleContinue}>
-                                Tiếp tục
+                                {transWithFallback("continue", "Tiếp tục")}
                             </button>
                         </div>
                     </ol>
