@@ -14,8 +14,7 @@ export default function Member() {
                 </div>
                 <div className="flex-1 p-6">
                     <h1 className="text-2xl font-bold text-[#0C4762]">Members</h1>
-                    <div className="border-t-2 border-[#0C4762] mt-2"></div>
-                
+                    <div className="border-t-2 border-[#0C4762] mt-4"></div>
                     <MemberTable/>
                 </div>
             </div>

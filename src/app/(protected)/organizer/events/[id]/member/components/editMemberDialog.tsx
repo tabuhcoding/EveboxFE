@@ -58,7 +58,7 @@ export default function EditMemberDialog({ eventId, member, onClose, onSuccess }
       } else {
         toast.error(response?.message || transWithFallback("updateFailed", "Cập nhật thất bại"));
       }
-    } catch (error) {
+    } catch {
       toast.error(transWithFallback("updateError", "Lỗi khi cập nhật thành viên"));
     }
   };

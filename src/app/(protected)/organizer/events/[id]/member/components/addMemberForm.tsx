@@ -98,7 +98,7 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
       } else {
         toast.error(response?.message || transWithFallback("addFailed", "Thêm thất bại"));
       }
-    } catch (error) {
+    } catch {
       toast.error(transWithFallback("addError", "Lỗi khi thêm thành viên"));
     }
   };

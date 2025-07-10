@@ -28,7 +28,7 @@ export default function DeleteMemberDialog({ eventId, email, onClose, onSuccess 
       } else {
         toast.error(response?.message || transWithFallback("deleteFailed", "Xoá thất bại"));
       }
-    } catch (error) {
+    } catch {
       toast.error(transWithFallback("deleteError", "Lỗi khi xoá thành viên"));
     }
   };

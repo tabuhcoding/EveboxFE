@@ -49,7 +49,7 @@ const MemberTable = () => {
   return (
     <div>
       <Toaster position="top-center" />
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-4">
         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
           <input
             type="text"
