@@ -2,7 +2,6 @@
 
 /* Package System */
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -12,14 +11,16 @@ import AlertDialog from "@/components/common/alertDialog";
 import { unselectSeat } from "@/services/booking.service";
 import { checkoutPayment } from "@/services/payment.service";
 import { TicketInforProps } from "@/types/models/event/booking/payment.interface";
+import { useAuth } from "@/contexts/auth.context";
 
 import ConfirmDialog from "../../question-form/_components/confirmDialog";
+import GeneralTermsDialog from "../../question-form/_components/generalTermsDialog";
 
 export default function TicketInformation({ event, totalTickets, totalAmount, selectedTickets, ticketType, paymentMethod, showingId, seatMapId, redisInfo }: TicketInforProps) {
   console.log("🚀 ~ TicketInformation ~ totalTickets:", totalTickets)
   const { locale } = useI18n();
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   // const [promoCode, setPromoCode] = useState('');
 
@@ -27,6 +28,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
   const [openUnselectSeatDialog, setOpenUnselectSeatDialog] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [openGeneralTerms, setOpenGeneralTerms] = useState(false);
 
   // const handleOpenDialog = () => {
   //   setIsOpen(true);
@@ -98,7 +100,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
   };
 
   return (
-    <div className="col-5 border-start" style={{ borderLeft: '1px solid #ddd' }}>
+    <div className="w-full lg:w-5/12 border-start" style={{ borderLeft: '1px solid #ddd' }}>
       <div className='container'>
         <p className='title-event'>{transWithFallback('eventDetail', 'Chi tiết sự kiện')}</p>
         <div className='row mt-3 text-start'>
@@ -198,7 +200,7 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
 
         <div className='row pt-2 pb-3'>
           <div className="col-md-8 d-flex justify-content-start">
-            <p style={{ color: '#0C4762' }} className='fw-bold'>Tổng tiền</p>
+            <p style={{ color: '#0C4762' }} className='fw-bold'>{transWithFallback("totals", "Tổng tiền")}</p>
           </div>
           <div className="col-md-4 d-flex justify-content-end">
             <p style={{ color: '#0C4762' }} className='fw-bold'>{totalAmount.toLocaleString("vi-VN")}đ</p>
@@ -206,11 +208,18 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
         </div>
 
         <div className='row mt-2 mb-4'>
-          <p>Bằng việc tiến hành đặt mua</p><br />
-          <p>Bạn đã đồng ý với các <a href='#' style={{ color: '#0C4762', textDecoration: 'underline' }}>Điều Kiện Giao Dịch Chung</a></p>
+          <p>{transWithFallback("purchaseAgreement", "Bằng việc tiến hành đặt mua")}</p><br />
+          <p>{transWithFallback("agreementPrefix", "Bạn đã đồng ý với các ")}
+            <a href='#' onClick={(e) => {
+              e.preventDefault();
+              setOpenGeneralTerms(true);
+            }} style={{ color: '#0C4762', textDecoration: 'underline' }}>
+              {transWithFallback("generalTerms", "Điều Kiện Giao Dịch Chung")}
+            </a>
+          </p>
         </div>
         <div className='row'>
-          <button onClick={handlePayment} className='h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'>Thanh toán</button>
+          <button onClick={handlePayment} className='h-11 rounded bg-[#51DACF] text-[#0C4762] font-bold hover:bg-[#3BB8AE]'>{transWithFallback("checkout", "Thanh toán")}</button>
         </div>
       </div>
       <ConfirmDialog
@@ -224,6 +233,10 @@ export default function TicketInformation({ event, totalTickets, totalAmount, se
         message={alertMessage}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
+      />
+      <GeneralTermsDialog 
+        open={openGeneralTerms} 
+        onClose={() => setOpenGeneralTerms(false)} 
       />
     </div>
   )

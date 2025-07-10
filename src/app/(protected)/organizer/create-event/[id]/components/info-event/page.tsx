@@ -1,13 +1,14 @@
 'use client';
 
 /* Package System */
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 // import { useRef } from 'react';
 import { Divider } from '@nextui-org/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 // import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import NoteDialog from '../dialogs/noteDialog';
@@ -30,8 +31,15 @@ export default function InformationEventClientPage() {
     const [open, setOpen] = useState(true);
     const [step] = useState(1);
     const [btnValidate, setBtnValidate] = useState("");
+    const t = useTranslations('common');
 
-    const searchParams = useSearchParams(); 
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
+    const searchParams = useSearchParams();
     useEffect(() => {
         if (!searchParams?.get('step')) {
             router.replace('/organizer/create-event?step=infor');
@@ -47,29 +55,29 @@ export default function InformationEventClientPage() {
     }
 
     const handleNextStep = async (payload: CreateEventDto) => {
-  const access_token = user?.accessToken;
-  if (!access_token) return;
+        const access_token = user?.accessToken;
+        if (!access_token) return;
 
-  try {
-    const result = await createEvent(payload, access_token);
+        try {
+            const result = await createEvent(payload, access_token);
 
-    const newEventId = result.id;
+            const newEventId = result.id;
 
-    if (btnValidate === "Continue") {
-      router.push(`/organizer/create-event/${newEventId}?step=showing`);
-    } else {
-      toast.success("Tạo sự kiện thành công!");
-    }
-  } catch (error: any) {
-    toast.error(error.message || "Có lỗi xảy ra trong quá trình tạo sự kiện.");
-    console.error("Error creating event:", error);
-  }
-};
+            if (btnValidate === "Continue") {
+                router.push(`/organizer/create-event/${newEventId}?step=showing`);
+            } else {
+                toast.success(transWithFallback('createEventSuccess', 'Tạo sự kiện thành công!'));
+            }
+        } catch (error: any) {
+            toast.error(error.message || transWithFallback('createEventError', 'Có lỗi xảy ra trong quá trình tạo sự kiện.'));
+            console.error("Error creating event:", error);
+        }
+    };
 
     return (
         <>
             <div className="flex flex-col items-center justify-center p-10 relative">
-                <span className="text-3xl font-semibold mb-6">{transWithFallback("createEvent", "Tạo sự kiện")}</span>
+                <span className="text-3xl font-semibold mb-6">{transWithFallback('createEvent', 'Tạo sự kiện')}</span>
                 <div className="w-full flex justify-center">
                     <ol className="flex space-x-6">
                         <Navigation step={step} />
@@ -77,14 +85,14 @@ export default function InformationEventClientPage() {
                         <div className="flex gap-4 mt-4 mb-6">
                             <button className="text-xs w-18 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
                                 type="submit" form="event-form" onClick={handleSave}>
-                                {transWithFallback("save", "Lưu")}
+                                {transWithFallback('save', 'Lưu')}
                             </button>
                         </div>
 
                         <div className="flex gap-4 mt-4 mb-6">
                             <button className="text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
                                 type="submit" form="event-form" onClick={handleContinue}>
-                                {transWithFallback("continue", "Tiếp tục")}
+                                {transWithFallback('continue', 'Tiếp tục')}
                             </button>
                         </div>
                     </ol>

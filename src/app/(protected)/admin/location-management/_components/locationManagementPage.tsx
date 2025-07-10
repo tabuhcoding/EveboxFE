@@ -3,7 +3,6 @@
 /* Package System */
 import { FormEvent, useEffect, useState } from "react";
 import { Search, RotateCcw, Loader } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 /* Package Application */
@@ -13,9 +12,10 @@ import { useI18n } from "@/app/providers/i18nProvider";
 import { Province } from "@/types/models/event/location.interface";
 import { OrganizerLocationGroup, Venue, Location } from "@/types/models/admin/locationManagement.interface";
 import { getAllDistricts, getAllLocations } from "@/services/event.service";
+import { useAuth } from "@/contexts/auth.context";
 
 export default function LocationManagementClient() {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const t = useTranslations('common');
   const { locale } = useI18n();
 

@@ -1,16 +1,16 @@
 "use client";
 
 /* Packagae system */
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import { gatewayService } from "services/instance.service";
 
 /* Package application */
+import { useAuth } from "@/contexts/auth.context";
 
 export default function useAvatar({ avatar_id }: { avatar_id?: number }) {
     const imageUrlDefault = process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || ""; 
-    const { data: session } = useSession();
+    const { session } = useAuth();
     const [imageUrl, setImageUrl] = useState<string>(imageUrlDefault);
 
     useEffect(() => {

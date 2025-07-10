@@ -150,7 +150,7 @@ export default function SearchControls() {
               >
                 <span>
                   {selectedLocation
-                    ? (locale === 'en' ? selectedLocation.nameEn : selectedLocation.nameVi)
+                    ? (locale === 'en' ? selectedLocation.nameEn.replace(/"/g, '') : selectedLocation.nameVi.replace(/"/g, ''))
                     : transWithFallback('locationHint', "Chọn địa điểm")}
 
                 </span>
@@ -176,7 +176,7 @@ export default function SearchControls() {
                         }
                       }}
                     >
-                      {locale === 'en' ? location.nameEn : location.nameVi}
+                      {locale === 'en' ? location.nameEn.replace(/"/g, '')  : location.nameVi.replace(/"/g, '') }
                     </div>
                   ))}
 
@@ -187,7 +187,7 @@ export default function SearchControls() {
           </div>
           <div className="min-w-[180px] w-full">
             <label className="text-sm font-medium mb-2">{transWithFallback('timeTitle', "Thời gian")}</label>
-            <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px]">
+            <div className="mt-2 relative bg-white border border-gray-300 rounded min-w-[180px] overflow-hidden text-sm">
               <DatePicker
                 value={dateRange}
                 onDateRangeChange={setDateRange}

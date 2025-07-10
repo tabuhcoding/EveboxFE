@@ -6,7 +6,7 @@ import { CirclePlus, Equal, Trash2 } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { useState, ChangeEvent } from "react";
 import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
+import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import InputCountField from "../../common/form/inputCountField";
@@ -16,7 +16,8 @@ import OneAnswer from "../../common/form/oneAns";
 // import { handleAddOption, handleDelete, toggleChecked } from "../../../libs/functions/question/multipleAnswer";
 import GroupRadioButton from "./groupRadioButton";
 import GroupRadioOption from "./groupRadioOption";
-import { FormInput,Form } from "../../../libs/interface/question.interface";
+import { FormInput, Form } from "../../../libs/interface/question.interface";
+import { useAuth } from "contexts/auth.context";
 
 interface CreateNewFormProps {
     form: Form;
@@ -27,7 +28,7 @@ interface CreateNewFormProps {
 }
 
 export default function CreateNewForm({ form, setForm, open, onClose, onFormCreated }: CreateNewFormProps) {
-    const { data: session } = useSession();
+    const { session } = useAuth();
     const [currentForm, setCurrentForm] = useState<Form>(form); // Lưu form hiện tại
     const [expandedQuestionId, setExpandedQuestionId] = useState<number | null>(
         currentForm.FormInput.length > 0 ? currentForm.FormInput[0].id : null
@@ -35,6 +36,14 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
     const quesText = currentForm.FormInput.length > 0 ? currentForm.FormInput[0].type : "text"; // Lưu loại câu hỏi hiện tại
     const [errors,] = useState<{ [key: string]: boolean }>({});
     const [eventScopeSelected, setEventScopeSelected] = useState<string>("all");
+
+    const t = useTranslations('common');
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
     // // One Answer
     // const [oneTexts, setOneTexts] = useState<string[]>(["", "", ""]);
@@ -87,7 +96,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
     const handleAddQuestion = () => {
         const newQuestion: FormInput = {
             id: Date.now(),
-            fieldName: `Câu hỏi mới`,
+            fieldName: transWithFallback("createNewQuestion", "Câu hỏi mới"),
             type: quesText,
             required: true,
             regex: null,
@@ -127,7 +136,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
 
         const accessToken = session?.user?.accessToken;
         if (!accessToken) {
-            toast.error("Vui lòng đăng nhập để thực hiện hành động này.");
+            toast.error(transWithFallback("loginRequired", "Vui lòng đăng nhập để thực hiện hành động này."));
             return;
         }
 
@@ -144,24 +153,24 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
 
             if (!res.ok) {
                 const errData = await res.json();
-                toast.error(errData.message || "Lỗi tạo form mới");
+                toast.error(errData.message || transWithFallback("createFormError", "Lỗi tạo biểu mẫu mới"));
                 return;
             }
-            
+
             const data = await res.json();
             const newFormId = data?.data?.formId;
             if (!newFormId) {
-                toast.error("Không nhận được ID của form mới.");
+                toast.error(transWithFallback("missingFormId", "Không nhận được ID của biểu mẫu mới."));
                 return;
             }
-            toast.success("Tạo form mới thành công!");
+            toast.success(transWithFallback("createFormSuccess", "Tạo biểu mẫu mới thành công!"));
             const updatedForm = { ...currentForm, id: newFormId };
             setForm(updatedForm);
             onFormCreated(updatedForm);
             onClose();
         } catch (error) {
             console.error("Error creating new form:", error);
-            toast.error("Lỗi khi tạo form mới");
+            toast.error(transWithFallback("errCreateForm", "Lỗi khi tạo biểu mẫu mới"));
         }
     };
 
@@ -170,7 +179,7 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
         <>
             <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
                 <div className="text-white dialog-header px-6 py-2 pb-4  justify-center items-center flex relative" style={{ background: '#0C4762' }}>
-                    <DialogTitle className="!m-0 !p-0 text-lg text-center font-bold">Tạo form mới</DialogTitle>
+                    <DialogTitle className="!m-0 !p-0 text-lg text-center font-bold">{transWithFallback("btnCreateForm", "Tạo form mới")}</DialogTitle>
                     <button onClick={onClose} className="absolute right-2 top-2 px-1 py-1 close-btn">
                         <Icon icon="ic:baseline-close" width="20" height="20" />
                     </button>
@@ -190,12 +199,12 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                     <Equal className="text-[#51DACF] cursor-pointer" onClick={() => toggleExpand(question.id)} />
                                     <div className="ml-2">
                                         <div className="relative flex items-center space-x-2">
-                                            <label className="text-base font-bold"> Câu {index + 1} </label>
+                                            <label className="text-base font-bold"> {transWithFallback("questionLabel", "Câu")} {index + 1} </label>
                                         </div>
 
-                                        {question.type === "text" && <span>Câu hỏi dạng văn bản</span>}
-                                        {question.type === "oneAns" && <span>Câu hỏi một lựa chọn</span>}
-                                        {(question.type === "multiAns" || question.type === "4") && <span>Câu hỏi nhiều lựa chọn</span>}
+                                        {question.type === "text" && <span>{transWithFallback("quesText", "Câu hỏi dạng văn bản")}</span>}
+                                        {question.type === "oneAns" && <span>{transWithFallback("quesOneAns", "Câu hỏi một lựa chọn")}</span>}
+                                        {(question.type === "multiAns" || question.type === "4") && <span>{transWithFallback("quesMultiple", "Câu hỏi nhiều lựa chọn")}</span>}
                                     </div>
                                     <Trash2
                                         className="ml-auto p-2 bg-red-500 text-white rounded w-8 h-8 cursor-pointer"
@@ -209,13 +218,13 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                         <div className="flex flex-wrap items-center -mx-3 mt-4">
                                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                                                 <p className="block text-sm font-bold mb-2 text-right">
-                                                    <span className="text-red-500">*</span> Câu hỏi
+                                                    <span className="text-red-500">*</span> {transWithFallback("quesTitle", "Câu hỏi")}
                                                 </p>
                                             </div>
                                             <div className="w-full md:w-5/6 px-3 mb-6 md:mb-0">
                                                 <InputCountField
                                                     label=""
-                                                    placeholder="Nhập câu hỏi"
+                                                    placeholder={transWithFallback("inputQues", "Nhập câu hỏi")}
                                                     value={question.fieldName}
                                                     onChange={(e) => handleInputChange(e, question.id, "fieldName")}
                                                     error={errors.name}
@@ -227,13 +236,13 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                         <div className="flex flex-wrap items-center -mx-3 mt-4">
                                             <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                                                 <p className="block text-sm font-bold mb-2 text-right">
-                                                    Mô tả
+                                                    {transWithFallback("desciption", "Mô tả")}
                                                 </p>
                                             </div>
                                             <div className="w-full md:w-5/6 px-3 mb-6 md:mb-0">
                                                 <InputCountField
                                                     label=""
-                                                    placeholder={question.regex ? question.regex : "Mô tả"}
+                                                    placeholder={question.regex ? question.regex : transWithFallback("desciption", "Mô tả")}
                                                     value={question.regex || ""}
                                                     onChange={(e) => handleInputChange(e, question.id, "regex")}
                                                     maxLength={100}
@@ -274,11 +283,11 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                                         <button
                                                             className="text-[#2DC275] mt-2 flex items-center gap-1"
                                                             onClick={() => {
-                                                                const updated = [...(question.options || []),""];
+                                                                const updated = [...(question.options || []), ""];
                                                                 updateQuestionOptions(question.id, updated);
                                                             }}
                                                         >
-                                                            <CirclePlus size={20} /> Thêm tùy chọn
+                                                            <CirclePlus size={20} /> {transWithFallback("addSelect", "Thêm tùy chọn")}
                                                         </button>
                                                     </div>
                                                 )}
@@ -310,20 +319,20 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                                                                 updateQuestionOptions(question.id, updated);
                                                             }}
                                                         >
-                                                            <CirclePlus size={20} /> Thêm tùy chọn
+                                                            <CirclePlus size={20} /> {transWithFallback("addSelect", "Thêm tùy chọn")}
                                                         </button>
                                                     </div>
                                                 )}
 
                                                 <div className="flex justify-end mt-3">
                                                     <label className="flex items-center gap-2 cursor-pointer">
-                                                        <input 
-                                                            type="checkbox" 
+                                                        <input
+                                                            type="checkbox"
                                                             className="w-4 h-4 border border-black"
-                                                            checked={question.required} 
+                                                            checked={question.required}
                                                             onChange={(e) => handleCheckBoxChange(e, question.id)}
                                                         />
-                                                        <span className="text-sm">Yêu cầu trả lời</span>
+                                                        <span className="text-sm">{transWithFallback("requiredAnswer", "Yêu cầu trả lời")}</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -338,17 +347,17 @@ export default function CreateNewForm({ form, setForm, open, onClose, onFormCrea
                         <div className="flex justify-center mb-6">
                             <button type="button" className="text-base font-medium flex items-center gap-1 my-2 text-[#2DC275]"
                                 onClick={handleAddQuestion}>
-                                <CirclePlus size={20} /> Tạo câu hỏi
+                                <CirclePlus size={20} /> {transWithFallback("btnCreateQues", "Tạo câu hỏi")}
                             </button>
                         </div>
 
                         <div className="flex justify-center gap-10 mt-4 mb-6">
                             <button onClick={onClose} className="w-60 border-2 border-gray-500 text-gray-500 font-bold py-2 px-4 rounded bg-white hover:bg-gray-500 hover:text-white transition-all">
-                                Hủy
+                                {transWithFallback("btnCancel", "Hủy")}
                             </button>
 
                             <button onClick={handleSaveForm} className="w-60 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all">
-                                Lưu
+                                {transWithFallback("save", "Lưu")}
                             </button>
                         </div>
                     </div>

@@ -1,13 +1,19 @@
 /* Package System */
-import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, {
+  AxiosError,
+  AxiosHeaders,
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { getServerSession } from "next-auth";
-import { getSession, signOut } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 /* Package Application */
 import { authOptions } from "lib/authOptions";
 
 let cachedSession: Awaited<ReturnType<typeof getSession>> | null = null;
-let sessionPromise: Promise<any> | null = null; 
+let sessionPromise: Promise<any> | null = null;
 let lastSessionFetch = 0;
 let isRefreshing = false;
 let failedQueue: Array<{
@@ -16,10 +22,10 @@ let failedQueue: Array<{
 }> = [];
 
 // Check if code is running on server or client
-const isServer = typeof window === 'undefined';
+const isServer = typeof window === "undefined";
 
-// Session cache duration (5 phút)
-const SESSION_CACHE_DURATION = 5 * 60 * 1000;
+// Session cache duration (15 phút - tăng từ 5 phút)
+const SESSION_CACHE_DURATION = 15 * 60 * 1000;
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach(({ resolve, reject }) => {
@@ -29,39 +35,41 @@ const processQueue = (error: any, token: string | null = null) => {
       resolve(token);
     }
   });
-  
+
   failedQueue = [];
 };
 
-const getOptimizedSession = async (): Promise<Awaited<ReturnType<typeof getSession>>> => {
+const getOptimizedSession = async (): Promise<
+  Awaited<ReturnType<typeof getSession>>
+> => {
   const now = Date.now();
-  
-  if (cachedSession && (now - lastSessionFetch) < SESSION_CACHE_DURATION) {
+
+  if (cachedSession && now - lastSessionFetch < SESSION_CACHE_DURATION) {
     return cachedSession;
   }
-  
+
   if (sessionPromise) {
     return sessionPromise;
   }
-  
+
   // Tạo mới session request
   sessionPromise = (async () => {
     try {
-      const session = isServer 
+      const session = isServer
         ? await getServerSession(authOptions)
         : await getSession();
-      
+
       cachedSession = session;
       lastSessionFetch = now;
       return session;
     } catch (error) {
-      console.error('Session fetch error:', error);
+      console.error("Session fetch error:", error);
       return null;
     } finally {
       sessionPromise = null;
     }
   })();
-  
+
   return sessionPromise;
 };
 
@@ -106,15 +114,17 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
           // Nếu đang refresh, đưa request vào queue
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });
-          }).then(token => {
-            if (!originalRequest.headers) {
-              originalRequest.headers = new AxiosHeaders();
-            }
-            originalRequest.headers.set("Authorization", `Bearer ${token}`);
-            return apiClient(originalRequest);
-          }).catch(err => {
-            return Promise.reject(err);
-          });
+          })
+            .then((token) => {
+              if (!originalRequest.headers) {
+                originalRequest.headers = new AxiosHeaders();
+              }
+              originalRequest.headers.set("Authorization", `Bearer ${token}`);
+              return apiClient(originalRequest);
+            })
+            .catch((err) => {
+              return Promise.reject(err);
+            });
         }
 
         originalRequest._retry = true;
@@ -122,12 +132,12 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
 
         try {
           console.log("🔒 Refreshing token...: isServer:", isServer);
-          
+
           clearSessionCache();
-          
+
           const session = await getOptimizedSession();
           const refreshToken = session?.user?.refreshToken;
-          
+
           if (!refreshToken) {
             throw new Error("No refresh token available");
           }
@@ -139,31 +149,50 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
 
           const { access_token, refresh_token } = refreshResponse.data.data;
 
+          // Cập nhật cached session
           if (cachedSession?.user) {
             cachedSession.user.accessToken = access_token;
             cachedSession.user.refreshToken = refresh_token;
+          }
+
+          // Cập nhật NextAuth session với token mới
+          if (!isServer) {
+            // Trigger session update để NextAuth nhận token mới
+            const event = new CustomEvent("nextauth.session.update", {
+              detail: {
+                accessToken: access_token,
+                refreshToken: refresh_token,
+              },
+            });
+            window.dispatchEvent(event);
           }
 
           if (!originalRequest.headers) {
             originalRequest.headers = new AxiosHeaders();
           }
 
-          originalRequest.headers.set("Authorization", `Bearer ${access_token}`);
+          originalRequest.headers.set(
+            "Authorization",
+            `Bearer ${access_token}`
+          );
 
           processQueue(null, access_token);
-          
+
           return apiClient(originalRequest);
         } catch (refreshError) {
           console.error("🔒 Refresh token failed", refreshError);
-          
+
           processQueue(refreshError, null);
-          
+
           clearSessionCache();
 
-          await signOut({
-            redirect: true,
-            callbackUrl: "/login",
-          });
+          // Emit event to notify AuthContext about refresh token failure
+          if (!isServer) {
+            const event = new CustomEvent("refresh-token-failed", {
+              detail: { error: refreshError },
+            });
+            window.dispatchEvent(event);
+          }
 
           return Promise.reject(refreshError);
         } finally {
@@ -176,7 +205,7 @@ const createApiClient = (baseUrl: string): AxiosInstance => {
   );
 
   return apiClient;
-}
+};
 
 export { clearSessionCache };
 export default createApiClient;

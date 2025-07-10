@@ -1,7 +1,6 @@
 'use client';
 
 /* Package System */
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,9 +11,11 @@ import AlertDialog from '@/components/common/alertDialog';
 import Error from 'app/(frontpage)/error';
 import Loading from 'app/(protected)/(user)/my-profile/loading';
 import { getSeatMap, getShowingData } from 'services/event.service';
+import { getRedisSeat } from '@/services/booking.service';
 import { SeatMap, SeatmapType, ShowingData, TicketType } from 'types/models/event/booking/seatmap.interface';
 import { SelectTicketPageProps, SelectedTicketsState } from 'types/models/event/booking/selectTicket.interface';
 import { EventDetail } from 'types/models/event/eventdetail/event.interface';
+import { useAuth } from '@/contexts/auth.context';
 
 import Navigation from '../../_components/navigation';
 
@@ -25,7 +26,7 @@ import TicketInfor from './ticketInfo';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicketsState>({});
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
@@ -43,7 +44,37 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [href, setHref] = useState("");
-  
+
+  useEffect(() => {
+    const fetchRedisSeat = async () => {
+      try {
+        const res = await getRedisSeat(showingId);
+        if (res?.statusCode === 200 && res.data?.ticketTypeSelection) {
+          const redisTickets = res.data.ticketTypeSelection.reduce((acc, item) => {
+            acc[item.tickettypeId] = {
+              quantity: item?.seatInfo?.length || item?.quantity || 0,
+              sectionId: item?.sectionId || 0,
+              seatIds: item?.seatInfo?.map(seat => seat.seatId) || [],
+              name: [item?.ticketTypeName]
+            };
+            return acc;
+          }, {} as SelectedTicketsState);
+
+          setSelectedTickets(redisTickets);
+          setSelectedSeatIds(res.data.ticketTypeSelection.flatMap(item =>
+            item.seatInfo?.map(seat => seat.seatId) || []));
+        }
+      } catch (error: any) {
+        if (!error.toString().includes('expired')) {
+          console.error('Error fetching redis seat:', error);
+        }
+      }
+    };
+
+    if (showingId) {
+      fetchRedisSeat();
+    }
+  }, [showingId]);
 
   useEffect(() => {
     if (!session?.user?.accessToken) {
@@ -269,7 +300,6 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                   seatMap={seatMapData as SeatMap}
                   onSeatSelectionChange={handleSeatSelectionChange}
                   ticketType={ticketType}
-                  selectedSeatIds={selectedSeatIds}
                   selectedTickets={selectedTickets}
                 />
                 <div className='w-[30%] pl-4'>

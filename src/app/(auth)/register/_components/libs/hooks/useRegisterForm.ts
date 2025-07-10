@@ -9,7 +9,6 @@ import * as Yup from 'yup';
 
 /* Package Application */
 import { OtpConstants } from 'app/(auth)/verify-otp/_components/libs/constants/otpConstants';
-import { useAuth } from 'contexts/auth.context';
 import { register } from 'services/auth.service';
 import { ErrorResponse } from 'types/errorResponse';
 
@@ -19,7 +18,6 @@ export const useRegisterForm = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
 
   const handleGoogleLogin = () => {
       try {
@@ -71,8 +69,9 @@ export const useRegisterForm = () => {
             const { access_token, refresh_token } = response.data.data;
   
             if (access_token) {
-              login(access_token, refresh_token);
-              localStorage.setItem('refresh_token', refresh_token);
+              // Store tokens for Google login callback handling
+              localStorage.setItem('google_access_token', access_token);
+              localStorage.setItem('google_refresh_token', refresh_token);
               router.push('/');
             } else {
               setError('Không nhận được access token từ Google.');

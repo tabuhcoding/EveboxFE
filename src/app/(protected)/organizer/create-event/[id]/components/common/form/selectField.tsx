@@ -1,5 +1,9 @@
+/* Package System */
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from 'next-intl';
+
+/* Package Application */
 import { SelectFieldProps } from "../../../libs/interface/comform.interface";
 
 export default function SelectField({
@@ -10,6 +14,14 @@ export default function SelectField({
   error = false,
   required = false,
 }: SelectFieldProps) {
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
+
   return (
     <>
       <label className="block text-sm font-bold mb-2">
@@ -17,14 +29,13 @@ export default function SelectField({
       </label>
       <div className="relative">
         <select
-          className={`text-sm block appearance-none w-full border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400 ${
-            error ? "border-red-500" : "border-gray-400"
-          } ${value === "" ? "text-gray-400" : "text-black"}`}
+          className={`text-sm block appearance-none w-full border py-3 px-4 pr-8 rounded leading-tight focus:outline-black-400 ${error ? "border-red-500" : "border-gray-400"
+            } ${value === "" ? "text-gray-400" : "text-black"}`}
           value={value}
           onChange={onChange}
         >
           <option value="" disabled hidden>
-            Chọn {label}
+            {transWithFallback('select', 'Chọn')} {label}
           </option>
 
           {options.map((item, index) => {
@@ -43,7 +54,7 @@ export default function SelectField({
       </div>
       {error && (
         <p className="text-red-500 text-sm mt-1">
-          Vui lòng chọn {label.toLowerCase()}
+          {transWithFallback('pleaseSelect', 'Vui lòng chọn')} {label.toLowerCase()}
         </p>
       )}
     </>

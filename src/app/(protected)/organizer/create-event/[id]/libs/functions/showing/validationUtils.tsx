@@ -11,17 +11,24 @@ export const validateEndDate = (date: Date | null, startDate: Date | null) => {
 };
 
 export const validateTimeSelection = (
-    startDate: Date | null, 
+    startDate: Date | null,
     endDate: Date | null,
-    setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>
+    setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>,
+    t: (key: string) => string
 ) => {
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
+
     if (!startDate || !endDate) {
         setErrors((prev) => ({
             ...prev,
             startDate: !startDate,
             endDate: !endDate,
         }));
-        toast.error("Vui lòng chọn thời gian bắt đầu và kết thúc");
+        toast.error(transWithFallback("selectStartEndTime", "Vui lòng chọn thời gian bắt đầu và kết thúc"));
         return false;
     }
     return true;

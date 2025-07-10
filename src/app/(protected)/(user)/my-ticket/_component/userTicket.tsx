@@ -2,7 +2,6 @@
 
 /* Package System */
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -10,9 +9,10 @@ import { useEffect, useState } from 'react';
 import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
+import { useAuth } from "contexts/auth.context";
 
 export default function TicketManagement() {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations('common');
@@ -66,8 +66,7 @@ export default function TicketManagement() {
 
       const token = session?.user?.accessToken || "";
 
-      const url = `/api/ticket/getUserOrder?${params.toString()}`;
-      const response = await getUserTicketResponse(url, token);
+      const response = await getUserTicketResponse(params.toString(), token);
 
       if (response?.statusCode === 200) {
         const fetchedTickets = response.data;

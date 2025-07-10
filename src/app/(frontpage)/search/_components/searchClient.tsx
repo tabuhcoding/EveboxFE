@@ -7,7 +7,6 @@ import { ChevronDown, MousePointerClick, Bell, Heart, Loader2 } from 'lucide-rea
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
@@ -19,6 +18,7 @@ import AlertDialog from '@/components/common/alertDialog';
 import { addEventOrOrgFavourite, removeEventFavourite, removeOrgFavourite } from '@/services/auth.service';
 import { getAllCategories, getAllProvinces, getSearchEvents, Location } from '@/services/event.service';
 import { Category } from '@/types/models/dashboard/frontDisplay';
+import { useAuth } from '@/contexts/auth.context';
 import { SearchEventsResponse } from '@/types/models/dashboard/searchEvents.interface';
 import Pagination from 'app/(protected)/admin/event-special-management/_common/pagination';
 
@@ -27,7 +27,6 @@ import { mapCategoryName } from '../../_components/libs/functions/mapCategoryNam
 
 
 import RangeSlider from './range-slider';
-
 
 export default function SearchClient() {
   const [searchText, setSearchText] = useState('');
@@ -43,7 +42,7 @@ export default function SearchClient() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [href, setHref] = useState("");
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const [isSearching, setIsSearching] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [locations, setLocations] = useState<Location[]>([]);

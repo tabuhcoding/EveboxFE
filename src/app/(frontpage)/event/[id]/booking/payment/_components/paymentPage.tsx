@@ -85,14 +85,14 @@ export default function PaymentPage({ showingId, seatMapId }: { showingId: strin
   return (
     <>
       <div className="mt-5 mb-5">
-        <Navigation title="Thanh toán" />
+        <Navigation title={transWithFallback("checkout", "Thanh toán")} />
 
         <div className="fixed top-10 right-10 mt-4">
           <CountdownTimer expiredTime={redisSeatInfo?.expiredTime ? redisSeatInfo?.expiredTime : 15} />
         </div>
 
-        <div className="px-32 py-0">
-          <div className="row align-items-start mt-4">
+        <div className="px-4 sm:px-6 lg:px-12 xl:px-24">
+          <div className="flex flex-col lg:flex-row lg:space-x-6 mt-4">
             <PaymentMethod onMethodSelected={(method) => setSelectedMethod(method)} />
             {event && ticketType && (
               <TicketInformation 

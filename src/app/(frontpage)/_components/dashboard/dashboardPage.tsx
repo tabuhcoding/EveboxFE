@@ -46,18 +46,27 @@ const DashboardPage = () => {
     specialEvents: frontDisplayEvents.specialEvents || [],
     trendingEvents: frontDisplayEvents.trendingEvents || [],
     onlyOnEve: frontDisplayEvents.onlyOnEve || [],
+    recommendedEvents: frontDisplayEvents.recommendedEvents || [],
     categorySpecial: frontDisplayEvents.categorySpecial as CategorySpecial[] || [],
   };
 
   const sliderMontlyEvents = monthlyRecommendedEvents || [];
   const sliderEvents = weeklyRecommendedEvents || [];
 
+  let bannerEvents = frontDisplayEvents.recommendedEvents.slice(0, 5);
+  if (bannerEvents.length < 5) {
+    bannerEvents = frontDisplayEvents.specialEvents.slice(0, 5);
+    if (bannerEvents.length < 5) {
+      bannerEvents = sliderMontlyEvents.slice(0, 5);
+    }
+  }
+
   return (
-    <div className="min-h-screen flex flex-col mb-8">
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col bg-white">
+      <main className="flex-1 mb-8">
         <div className="w-full flex justify-center flex-col items-center px-4 md:mt-8">
           <div className="w-full md:w-5/6 relative">
-            <ImageSlider events={sliderEvents} />
+            <ImageSlider events={bannerEvents} />
             <SearchControls />
           </div>
         </div>
@@ -67,13 +76,16 @@ const DashboardPage = () => {
         {/* Events Section */}
         <div className="flex justify-center mt-8 px-4">
           <div className="w-full md:w-5/6">
-            <EventSlider title="special" subtitle="specialEvent" events={events.specialEvents} />
+              <EventSlider title="foryou" subtitle="recommendForyou" events={events.recommendedEvents} /> 
+            <div className="mt-8">
+              <EventSlider title="special" subtitle="specialEvent" events={events.specialEvents} />
+            </div>
             <div className="mt-8">
               <EventSlider title="trending" subtitle="trendingEvent" events={events.trendingEvents} />
             </div>
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <EventSlider title="onlyOnEve" subtitle="onlyOnEveEvent" events={events.onlyOnEve} showViewMore />
-            </div>
+            </div> */}
 
             {/* Client-side TabSwitcher */}
             <TabSwitcher

@@ -1,7 +1,11 @@
 "use client"
 
+/* Package System */
 import { X } from "lucide-react"
 import { useState, ChangeEvent } from "react"
+import { useTranslations } from 'next-intl';
+
+/* Package Application */
 import { createOrgPaymentInfo } from "services/org.service";
 
 interface OrganizerRegistrationPopupProps {
@@ -24,6 +28,14 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
     companyTaxCode: "",
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const t = useTranslations('common');
+
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   const handlePaymentInputChange = (e: ChangeEvent<HTMLInputElement>, field: string) => {
     setPaymentForm((prev) => ({
@@ -57,55 +69,55 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
   }
 
   const handleSubmitPayment = async () => {
-  const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {};
 
-  if (!paymentForm.accName.trim()) newErrors.accName = "Vui lòng nhập tên chủ tài khoản";
-  if (!paymentForm.accNum.trim()) newErrors.accNum = "Vui lòng nhập số tài khoản";
-  if (!paymentForm.bankName.trim()) newErrors.bankName = "Vui lòng nhập tên ngân hàng";
-  if (!paymentForm.bankBranch.trim()) newErrors.bankBranch = "Vui lòng nhập chi nhánh";
+    if (!paymentForm.accName.trim()) newErrors.accName = transWithFallback("pleaseEnterAccName", "Vui lòng nhập tên chủ tài khoản");
+    if (!paymentForm.accNum.trim()) newErrors.accNum = transWithFallback("pleaseEnterAccNum", "Vui lòng nhập số tài khoản");
+    if (!paymentForm.bankName.trim()) newErrors.bankName = transWithFallback("pleaseEnterBankName", "Vui lòng nhập tên ngân hàng");
+    if (!paymentForm.bankBranch.trim()) newErrors.bankBranch = transWithFallback("pleaseEnterBankBranch", "Vui lòng nhập chi nhánh");
 
-  const isPersonal = paymentForm.typeBusiness === "Cá nhân";
+    const isPersonal = paymentForm.typeBusiness === "Cá nhân";
 
-  if (isPersonal) {
-    if (!paymentForm.perName.trim()) newErrors.perName = "Vui lòng nhập họ tên";
-    if (!paymentForm.perAddress.trim()) newErrors.perAddress = "Vui lòng nhập địa chỉ";
-    if (!paymentForm.taxCode.trim()) newErrors.taxCode = "Vui lòng nhập mã số thuế";
-  } else {
-    if (!paymentForm.companyName.trim()) newErrors.companyName = "Vui lòng nhập tên công ty";
-    if (!paymentForm.companyAddress.trim()) newErrors.companyAddress = "Vui lòng nhập địa chỉ công ty";
-    if (!paymentForm.companyTaxCode.trim()) newErrors.companyTaxCode = "Vui lòng nhập mã số thuế";
-  }
-
-  setErrors(newErrors);
-
-  if (Object.keys(newErrors).length === 0) {
-    try {
-      const payload = {
-        accountName: paymentForm.accName,
-        accountNumber: paymentForm.accNum,
-        bankName: paymentForm.bankName,
-        branch: paymentForm.bankBranch,
-        businessType: isPersonal ? 1 : 2,
-        fullName: isPersonal ? paymentForm.perName : paymentForm.companyName,
-        address: isPersonal ? paymentForm.perAddress : paymentForm.companyAddress,
-        taxCode: isPersonal ? paymentForm.taxCode : paymentForm.companyTaxCode,
-      };
-
-      await createOrgPaymentInfo(payload);
-      onSuccess(); // success callback (e.g., redirect or close popup)
-    } catch (error) {
-      console.error("Create payment info failed:", error);
-      alert("Đăng ký thông tin thanh toán thất bại. Vui lòng thử lại!");
+    if (isPersonal) {
+      if (!paymentForm.perName.trim()) newErrors.perName = transWithFallback("pleaseEnterFullName", "Vui lòng nhập họ tên");
+      if (!paymentForm.perAddress.trim()) newErrors.perAddress = transWithFallback("pleaseEnterAddress", "Vui lòng nhập địa chỉ");
+      if (!paymentForm.taxCode.trim()) newErrors.taxCode = transWithFallback("pleaseEnterTaxCode", "Vui lòng nhập mã số thuế");
+    } else {
+      if (!paymentForm.companyName.trim()) newErrors.companyName = transWithFallback("pleaseEnterCompanyName", "Vui lòng nhập tên công ty");
+      if (!paymentForm.companyAddress.trim()) newErrors.companyAddress = transWithFallback("pleaseEnterCompanyAddress", "Vui lòng nhập địa chỉ công ty");
+      if (!paymentForm.companyTaxCode.trim()) newErrors.companyTaxCode = transWithFallback("pleaseEnterTaxCode", "Vui lòng nhập mã số thuế");
     }
-  }
-};
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const payload = {
+          accountName: paymentForm.accName,
+          accountNumber: paymentForm.accNum,
+          bankName: paymentForm.bankName,
+          branch: paymentForm.bankBranch,
+          businessType: isPersonal ? 1 : 2,
+          fullName: isPersonal ? paymentForm.perName : paymentForm.companyName,
+          address: isPersonal ? paymentForm.perAddress : paymentForm.companyAddress,
+          taxCode: isPersonal ? paymentForm.taxCode : paymentForm.companyTaxCode,
+        };
+
+        await createOrgPaymentInfo(payload);
+        onSuccess(); // success callback (e.g., redirect or close popup)
+      } catch (error) {
+        console.error("Create payment info failed:", error);
+        alert(transWithFallback("paymentInfoFailed", "Đăng ký thông tin thanh toán thất bại. Vui lòng thử lại!"));
+      }
+    }
+  };
 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="relative flex items-center justify-center mb-4 rounded-t-lg">
-          <h3 className="text-lg font-bold text-[#0C4762]">Đăng ký làm Nhà Tổ chức</h3>
+          <h3 className="text-lg font-bold text-[#0C4762]">{transWithFallback("registerAsOrganizer", "Đăng ký làm Nhà Tổ chức")}</h3>
           <button
             onClick={onClose}
             className="absolute right-2 hover:bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
@@ -119,15 +131,14 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
           className="p-4 rounded-lg mb-4"
           style={{ backgroundColor: "rgba(158, 245, 207, 0.2)", border: "1.5px solid #9EF5CF" }}
         >
-          <label htmlFor="paymentInfo" className="text-base font-bold block mb-2">Thông tin thanh toán</label>
+          <label htmlFor="paymentInfo" className="text-base font-bold block mb-2">{transWithFallback("paymentInfo", "Thông tin thanh toán")}</label>
           <span className="text-sm block mb-3">
-            Evebox sẽ chuyển tiền bán vé đến tài khoản của bạn. Tiền bán vé (sau khi trừ phí dịch vụ cho Evebox) sẽ vào
-            tài khoản của bạn sau khi xác nhận sale report từ 7 - 10 ngày.
+            {transWithFallback("paymentInfoDescription", "Evebox sẽ chuyển tiền bán vé đến tài khoản của bạn. Tiền bán vé (sau khi trừ phí dịch vụ cho Evebox) sẽ vào tài khoản của bạn sau khi xác nhận sale report từ 7 - 10 ngày.")}
           </span>
 
           <div className="mb-4">
             <label htmlFor="accName" className="block text-sm font-medium mb-1">
-              Chủ tài khoản: <span className="text-red-500">*</span>
+              {transWithFallback("accountHolder", "Chủ tài khoản:")} <span className="text-red-500">*</span>
             </label>
             <input
               id="accName"
@@ -142,7 +153,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
           <div className="mb-4">
             <label htmlFor="accNum" className="block text-sm font-medium mb-1">
-              Số tài khoản: <span className="text-red-500">*</span>
+              {transWithFallback("accountNumber", "Số tài khoản:")} <span className="text-red-500">*</span>
             </label>
             <input
               id="accNum"
@@ -156,7 +167,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
           <div className="mb-4">
             <label htmlFor="bankName" className="block text-sm font-medium mb-1">
-              Tên ngân hàng: <span className="text-red-500">*</span>
+              {transWithFallback("bankName", "Tên ngân hàng:")} <span className="text-red-500">*</span>
             </label>
             <input
               id="bankName"
@@ -171,7 +182,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
           <div className="mb-4">
             <label htmlFor="bankBranch" className="block text-sm font-medium mb-1">
-              Chi nhánh: <span className="text-red-500">*</span>
+              {transWithFallback("bankBranch", "Chi nhánh:")} <span className="text-red-500">*</span>
             </label>
             <input
               id="bankBranch"
@@ -184,11 +195,11 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             {errors.bankBranch && <p className="text-red-500 text-xs mt-1">{errors.bankBranch}</p>}
           </div>
 
-          <label htmlFor="redBill" className="text-base font-bold block mt-4 mb-2">Hoá đơn đỏ</label>
+          <label htmlFor="redBill" className="text-base font-bold block mt-4 mb-2">{transWithFallback("invoice", "Hoá đơn đỏ")}</label>
 
           <div className="mb-4">
             <label htmlFor="typeBusiness" className="block text-sm font-medium mb-1">
-              Loại hình kinh doanh: <span className="text-red-500">*</span>
+              {transWithFallback("businessType", "Loại hình kinh doanh:")} <span className="text-red-500">*</span>
             </label>
             <select
               id="typeBusiness"
@@ -196,8 +207,8 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
               onChange={handleSelectChange}
               className="w-full border p-2 rounded-md bg-white"
             >
-              <option value="Cá nhân">Cá nhân</option>
-              <option value="Doanh nghiệp/Tổ chức">Doanh nghiệp/Tổ chức</option>
+              <option value="Cá nhân">{transWithFallback("personal", "Cá nhân")}</option>
+              <option value="Doanh nghiệp/Tổ chức">{transWithFallback("businessOrOrganization", "Doanh nghiệp/Tổ chức")}</option>
             </select>
           </div>
 
@@ -205,7 +216,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             <div className="infoOfPersonal">
               <div className="mb-4">
                 <label htmlFor="perName" className="block text-sm font-medium mb-1">
-                  Họ tên: <span className="text-red-500">*</span>
+                  {transWithFallback("fullname", "Họ tên:")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="perName"
@@ -220,7 +231,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
               <div className="mb-4">
                 <label htmlFor="perAddress" className="block text-sm font-medium mb-1">
-                  Địa chỉ: <span className="text-red-500">*</span>
+                  {transWithFallback("address", "Địa chỉ")}: <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="perAddress"
@@ -235,7 +246,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
               <div className="mb-4">
                 <label htmlFor="taxCode" className="block text-sm font-medium mb-1">
-                  Mã số thuế: <span className="text-red-500">*</span>
+                  {transWithFallback("tax", "Mã số thuế:")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="taxCode"
@@ -253,7 +264,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             <div className="infoOfCompany">
               <div className="mb-4">
                 <label htmlFor="companyName" className="block text-sm font-medium mb-1">
-                  Tên công ty: <span className="text-red-500">*</span>
+                  {transWithFallback("companyName", "Tên công ty:")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="companyName"
@@ -268,7 +279,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
               <div className="mb-4">
                 <label htmlFor="companyAddress" className="block text-sm font-medium mb-1">
-                  Địa chỉ công ty: <span className="text-red-500">*</span>
+                  {transWithFallback("companyAddress", "Địa chỉ công ty:")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="companyAddress"
@@ -283,7 +294,7 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
 
               <div className="mb-4">
                 <label htmlFor="companyTaxCode" className="block text-sm font-medium mb-1">
-                  Mã số thuế: <span className="text-red-500">*</span>
+                  {transWithFallback("tax", "Mã số thuế:")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="companyTaxCode"
@@ -304,13 +315,13 @@ export default function OrganizerRegistrationPopup({ onClose, onSuccess }: Organ
             onClick={handleSubmitPayment}
             className="bg-[#51DACF] text-[#0C4762] px-4 py-2 rounded-md hover:bg-teal-300 transition"
           >
-            Xác nhận
+            {transWithFallback("confirm", "Xác nhận")}
           </button>
           <button
             onClick={onClose}
             className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition"
           >
-            Đóng
+            {transWithFallback("close", "Đóng")}
           </button>
         </div>
       </div>

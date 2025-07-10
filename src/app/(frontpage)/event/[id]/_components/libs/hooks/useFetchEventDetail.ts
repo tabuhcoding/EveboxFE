@@ -1,16 +1,16 @@
 'use client';
 
 /* Package System */
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 /* Package Application */
 import { Event } from 'types/models/event/event';
+import { useAuth } from '@/contexts/auth.context';
 
 import { fetchEventDetail } from '../server/fetchEventDetail';
 
 export function useFetchEventDetail(eventId: string) {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

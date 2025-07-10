@@ -4,7 +4,6 @@
 import { Bell, ChevronLeft, ChevronRight, Heart, MousePointerClick } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import { useTranslations } from "next-intl";
 import { useRef, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -18,6 +17,7 @@ import 'swiper/css/navigation';
 import AlertDialog from '@/components/common/alertDialog';
 import { addEventOrOrgFavourite, removeEventFavourite, removeOrgFavourite } from '@/services/auth.service';
 import { EventSliderProps } from 'types/models/dashboard/dashboard.interface';
+import { useAuth } from '@/contexts/auth.context';
 
 import mapEventStatus from '../libs/functions/mapEventStatus';
 
@@ -47,7 +47,7 @@ const EventSlider = ({ title, subtitle, events }: EventSliderProps) => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [href, setHref] = useState("");
-  const { data: session } = useSession();
+  const { session } = useAuth();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);

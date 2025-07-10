@@ -9,8 +9,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { SeatMapProps, Section } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedSeatIds, selectedTickets = {} }: SeatMapProps) {
-  console.log("🚀 ~ SeatMapSectionComponent ~ selectedSeatIds:", selectedSeatIds)
+export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedTickets = {} }: SeatMapProps) {
   const t = useTranslations("common");
 
   // const [alertOpen, setAlertOpen] = useState(false);

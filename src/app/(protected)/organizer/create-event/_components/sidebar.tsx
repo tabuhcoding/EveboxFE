@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Ticket, CalendarPlus, BookMinus } from 'lucide-react';
+import { Ticket, CalendarPlus, BarChart, BookMinus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const Sidebar = () => {
   const t = useTranslations('common');
   const pathName = usePathname();
+  const t = useTranslations('common');
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -44,9 +45,8 @@ const Sidebar = () => {
             <li key={i}>
               <Link
                 href={item.href}
-                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
-                  pathName.startsWith(item.href) ? "bg-sky-700" : "hover:bg-sky-800"
-                }`}
+                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${pathName.startsWith(item.href) ? "bg-sky-700" : "hover:bg-sky-800"
+                  }`}
               >
                 {item.icon}
                 {item.text}
