@@ -1,25 +1,14 @@
 'use client';
 
 // Package System
-import { useRouter, useParams } from 'next/navigation';
 //Package System
 import { useRouter, useParams } from 'next/navigation';
 import { Check } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-
 // Package App
 import { useTranslations } from 'next-intl';
 
 export default function Navigation({ step }: { step: number }) {
-  const router = useRouter();
-  const params = useParams();
-  const eventId = params?.id || '';
 
-  const t = useTranslations('common');
-  const transWithFallback = (key: string, fallback: string) => {
-    const msg = t(key);
-    return msg.startsWith('common.') ? fallback : msg;
-  };
     const router = useRouter();
     const params = useParams();
     const eventId = params?.id || '';

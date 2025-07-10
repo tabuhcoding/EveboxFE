@@ -6,7 +6,6 @@ import { Ticket, CalendarPlus, BarChart, BookMinus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const Sidebar = () => {
-  const t = useTranslations('common');
   const pathName = usePathname();
   const t = useTranslations('common');
 

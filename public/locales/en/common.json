@@ -762,6 +762,5 @@
   "ticketRatio": "Ratio",
   "revenue":"Revenue",
   "selectShowing":"Select showing",
-  "timeAndTicketType": "Time & Ticket Type",
-  "registrationInfo": "Registration Information"
+  "timeAndTicketType": "Time & Ticket Type"
 }

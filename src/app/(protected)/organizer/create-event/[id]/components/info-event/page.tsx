@@ -8,7 +8,6 @@ import { Divider } from '@nextui-org/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 // import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import NoteDialog from '../dialogs/noteDialog';
@@ -20,11 +19,6 @@ import { createEvent } from 'services/event.service';
 import { useTranslations } from 'next-intl';
 
 export default function InformationEventClientPage() {
-    const t = useTranslations('common');
-      const transWithFallback = (key: string, fallback: string) => {
-        const msg = t(key);
-        return msg.startsWith('common.') ? fallback : msg;
-      };
     // const { data: session } = useSession();
     const { user } = useAuth();
     const router = useRouter();
