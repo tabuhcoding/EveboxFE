@@ -10,6 +10,7 @@ import { IUserTicket } from '@/types/models/ticket/ticketInfo';
 import TicketPagination from './ticketPagination';
 import { getUserTicketResponse } from '@/services/booking.service';
 import { useAuth } from "contexts/auth.context";
+import { set } from 'date-fns';
 
 export default function TicketManagement() {
   const { session } = useAuth();
@@ -66,8 +67,7 @@ export default function TicketManagement() {
 
       const token = session?.user?.accessToken || "";
 
-      const url = `/api/ticket/getUserOrder?${params.toString()}`;
-      const response = await getUserTicketResponse(url, token);
+      const response = await getUserTicketResponse(params.toString(), token);
 
       if (response?.statusCode === 200) {
         const fetchedTickets = response.data;
