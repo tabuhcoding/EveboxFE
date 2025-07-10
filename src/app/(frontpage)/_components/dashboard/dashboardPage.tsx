@@ -83,9 +83,9 @@ const DashboardPage = () => {
             <div className="mt-8">
               <EventSlider title="trending" subtitle="trendingEvent" events={events.trendingEvents} />
             </div>
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <EventSlider title="onlyOnEve" subtitle="onlyOnEveEvent" events={events.onlyOnEve} showViewMore />
-            </div>
+            </div> */}
 
             {/* Client-side TabSwitcher */}
             <TabSwitcher
