@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 
 /* Package Application */
-import { TicketCheckin, TicketCheckinTableProps } from "../lib/interface/check-in.interface";
+import { TicketCheckinTableProps } from "../lib/interface/check-in.interface";
 import Pagination from "./common/pagination";
 import { sortUsers } from "@/app/(protected)/admin/account-management/libs/function/sortUsers";
 import SortIcon from "@/app/(protected)/admin/account-management/_components/sortIcon";
@@ -41,7 +41,7 @@ export default function TicketCheckinTable({ activeTab, searchKeyword, showingId
   }
 
   const filteredTickets = tickets.filter(ticket => {
-    const matchSearch = ticket.order_id.toLowerCase().includes(searchKeyword.toLowerCase())
+    const matchSearch = ticket.order_id.toString().toLowerCase().includes(searchKeyword.toLowerCase())
 
     let matchTab = false
     switch (activeTab) {

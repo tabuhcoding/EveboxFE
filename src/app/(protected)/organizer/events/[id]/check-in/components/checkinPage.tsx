@@ -82,7 +82,7 @@ export default function CheckinPage({ eventId }: CheckinPageProps) {
                 </div>
 
                 <h3 className="text-lg font-bold text-[#0C4762] mb-2 mt-6">Tổng quan</h3>
-                <CheckinStats />
+                <CheckinStats showingId={selectedShow.id}/>
 
                 {/* Chi tiết vé */}
                 <h3 className="text-lg font-bold text-[#0C4762] mb-2 mt-6">Chi tiết</h3>
