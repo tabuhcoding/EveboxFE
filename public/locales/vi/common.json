@@ -656,5 +656,7 @@
   "sessionExpiredTitle": "Phiên đăng nhập đã hết hạn",
   "sessionExpiredMessage": "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.",
   "sessionExpiredNote": "Dữ liệu đã nhập sẽ được bảo toàn sau khi đăng nhập",
-  "loginAgain": "Đăng nhập lại"
+  "loginAgain": "Đăng nhập lại",
+  "foryou": "Sự kiện",
+  "recommendForyou": "Dành cho bạn"
 }
