@@ -5,8 +5,8 @@ import { useState } from 'react';
 import 'tailwindcss/tailwind.css';
 
 /* Package Application */
-import Sidebar from './components/common/sidebar';
 import EventStep from './components/common/eventStep';
+import Sidebar from '../_components/sidebar';
 
 export default function Page() {
     const [eventId] = useState<number | 1>(1); // Gán cứng là 1 tuy nhiên sau này sẽ dựa và db tạo event để tạo ID
