@@ -1,5 +1,5 @@
 /* Package Application */
-import { BaseApiResponse } from "types/baseApiResponse";
+import { BaseApiResponse, PaginationData } from "types/baseApiResponse";
 
 import { END_POINT_LIST } from "./endpoint";
 import { orgService } from "./instance.service";
@@ -10,7 +10,7 @@ import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormRespo
 import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
 import { AnalyticData } from "@/types/models/org/analytics.interface";
 import { AddEventMemberDto, AddEventMemberResponseDto, EventMember, EventRoleItem, UpdateEventMemberDto, UpdateEventMemberResponseDto } from "@/types/models/org/member.interface";
-import { GetOrdersResponse } from "@/types/models/org/orders.interface";
+import { GetOrdersResponse, OrderTicket } from "@/types/models/org/orders.interface";
 import { CheckedInTicketDto } from "@/types/models/org/checkin.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
@@ -579,5 +579,37 @@ export async function getAllCheckedInTickets(showingId: string): Promise<Checked
     }
 
     return res.data.data;
+  }
+}
+
+export async function getAllTicketsOfShowing(
+  showingId: string,
+  orderId?: number,
+  page = 1,
+  limit = 10
+): Promise<{ data: OrderTicket[]; pagination?: PaginationData }> {
+  const query = new URLSearchParams();
+
+  if (orderId) query.append("orderId", orderId.toString());
+  if (page) query.append("page", page.toString());
+  if (limit) query.append("limit", limit.toString());
+
+  const url = `${END_POINT_LIST.ORG_STATISTICS.GET_TICKETS}/${showingId}?${query.toString()}`;
+
+  try {
+    const res = await orgService.get<BaseApiResponse<OrderTicket[]>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch tickets of showing");
+    }
+
+    return {
+      data: res.data.data,
+      pagination: res.data.pagination,
+    };
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error fetching tickets of showing:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while fetching tickets");
   }
 }

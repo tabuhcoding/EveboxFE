@@ -76,7 +76,8 @@ export class END_POINT_LIST {
   static readonly ORG_STATISTICS = {
     GET_SUMMARY: "/api/org/statistics/summary",
     GET_ORDERS: "/api/org/statistics/orders",
-    GET_ANALYTIC: "/api/org/statistics/analytic"
+    GET_ANALYTIC: "/api/org/statistics/analytic",
+    GET_TICKETS: "/api/org/statistics/tickets"
   };
 
   static readonly ADMIN_STATISTICS = {

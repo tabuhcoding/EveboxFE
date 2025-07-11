@@ -1,62 +1,80 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
-import { TicketOrderData } from "@/types/models/org/orders.interface";
-import { useTranslations } from "next-intl";
+import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { getAllTicketsOfShowing } from '@/services/org.service'; // import your fetch method
+import { OrderTicket } from '@/types/models/org/orders.interface'; // assume you have these
+import { toast } from 'react-toastify';
 
-export default function TicketSection({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
-  const t = useTranslations("common");
+interface TicketSectionProps {
+  showingId: string;
+}
+
+export default function TicketSection({ showingId }: TicketSectionProps) {
+  const t = useTranslations('common');
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
-    return msg.startsWith("common.") ? fallback : msg;
+    return msg.startsWith('common.') ? fallback : msg;
   };
 
-  const [search, setSearch] = useState("");
-  const [mounted, setMounted] = useState(false);
+  const [search, setSearch] = useState('');
+  const [tickets, setTickets] = useState<OrderTicket[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const fetchTickets = async () => {
+      try {
+        setLoading(true);
+        const response = await getAllTicketsOfShowing(showingId);
+        setTickets(response.data || []);
+      } catch (err) {
+        toast.error('Lỗi khi tải dữ liệu vé');
+        console.error('Error loading tickets:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    console.log("TicketSection received data:", ordersData);
-  }, [ordersData]);
+    if (showingId) {
+      fetchTickets();
+    }
+  }, [showingId]);
 
-  const safeOrdersData = Array.isArray(ordersData) ? ordersData : [];
-
-  const filteredTickets = safeOrdersData.filter((order) => {
-    const formResponses = order.FormResponse?.FormAnswer || [];
+  const filteredTickets = tickets.filter((ticket) => {
+    const formResponses = ticket.formResponse?.FormAnswer || [];
     const nameField = formResponses.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || "";
-      return fieldName.includes("name") || fieldName.includes("tên");
+      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || '';
+      return fieldName.includes('name') || fieldName.includes('tên');
     });
 
-    const name = nameField?.value || "";
-    return name.toLowerCase().includes(search.toLowerCase()) || order.id.toLowerCase().includes(search.toLowerCase());
+    const name = nameField?.value || '';
+    return name.toLowerCase().includes(search.toLowerCase()) || ticket.id.toLowerCase().includes(search.toLowerCase());
   });
 
-  const getCustomerName = (order: TicketOrderData): string => {
-    const formResponses = order.FormResponse?.FormAnswer || [];
+  const getCustomerName = (ticket: OrderTicket): string => {
+    const formResponses = ticket.formResponse?.FormAnswer || [];
     const nameField = formResponses.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || "";
-      return fieldName.includes("name") || fieldName.includes("tên");
+      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || '';
+      return fieldName.includes('name') || fieldName.includes('tên');
     });
 
-    return nameField?.value || "-";
+    return nameField?.value || '-';
   };
 
-  const getCustomerEmail = (order: TicketOrderData): string => {
-    const formResponses = order.FormResponse?.FormAnswer || [];
+  const getCustomerEmail = (ticket: OrderTicket): string => {
+    const formResponses = ticket.formResponse?.FormAnswer || [];
     const emailField = formResponses.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || "";
-      return fieldName.includes("email");
+      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || '';
+      return fieldName.includes('email');
     });
 
-    return emailField?.value || "-";
+    return emailField?.value || '-';
   };
 
-  if (!mounted) return null;
+  if (loading) {
+    return <p className="text-center py-6">Đang tải dữ liệu vé...</p>;
+  }
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -65,7 +83,7 @@ export default function TicketSection({ ordersData = [] }: { ordersData?: Ticket
           <input
             type="text"
             className="w-full px-3 py-2 outline-none"
-            placeholder={transWithFallback("searchByName", "Tìm kiếm theo tên")}
+            placeholder={transWithFallback('searchByName', 'Tìm kiếm theo tên')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -78,12 +96,12 @@ export default function TicketSection({ ordersData = [] }: { ordersData?: Ticket
       <table className="w-full border">
         <thead>
           <tr className="bg-[#0C4762] text-white text-left">
-            <th className="py-2 px-4">{transWithFallback("ticketId", "Mã vé")}</th>
-            <th className="py-2 px-4">{transWithFallback("customer", "Khách hàng")}</th>
-            <th className="py-2 px-4">{transWithFallback("email", "Email")}</th>
-            <th className="py-2 px-4">{transWithFallback("ticketType", "Loại vé")}</th>
-            <th className="py-2 px-4">{transWithFallback("status", "Trạng thái")}</th>
-            <th className="py-2 px-4">{transWithFallback("emailSent", "Email đã gửi")}</th>
+            <th className="py-2 px-4">Mã vé</th>
+            <th className="py-2 px-4">Khách hàng</th>
+            <th className="py-2 px-4">Email</th>
+            <th className="py-2 px-4">Loại vé</th>
+            <th className="py-2 px-4">Trạng thái</th>
+            <th className="py-2 px-4">Email đã gửi</th>
           </tr>
         </thead>
         <tbody>
@@ -97,29 +115,25 @@ export default function TicketSection({ ordersData = [] }: { ordersData?: Ticket
                 <td className="py-2 px-4">
                   <span
                     className={`px-2 py-1 rounded-full text-sm ${
-                      ticket.status === 1
-                        ? "bg-green-100 text-green-800"
-                        : ticket.status === 0
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                      ticket.status === 'PAID'
+                        ? 'bg-green-100 text-green-800'
+                        : ticket.status !== 'PAID'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
                     }`}
                   >
-                    {ticket.status === 1
-                      ? transWithFallback("completed", "Hoàn thành")
-                      : ticket.status === 0
-                      ? transWithFallback("processing", "Đang xử lý")
-                      : transWithFallback("cancelled", "Đã hủy")}
+                    {ticket.status === 'PAID'
+                      ? 'Hoàn thành'
+                      : ticket.status !== 'PAID'
+                      ? 'Đang xử lý'
+                      : 'Đã hủy'}
                   </span>
                 </td>
                 <td className="py-2 px-4">
                   {ticket.mailSent ? (
-                    <span className="px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                      {transWithFallback("emailSentYes", "Đã gửi")}
-                    </span>
+                    <span className="px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">Đã gửi</span>
                   ) : (
-                    <span className="px-2 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
-                      {transWithFallback("emailSentNo", "Chưa gửi")}
-                    </span>
+                    <span className="px-2 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">Chưa gửi</span>
                   )}
                 </td>
               </tr>
@@ -127,9 +141,7 @@ export default function TicketSection({ ordersData = [] }: { ordersData?: Ticket
           ) : (
             <tr>
               <td colSpan={6} className="text-center py-4 text-gray-500">
-                {safeOrdersData.length === 0
-                  ? transWithFallback("noTicketData", "Không có dữ liệu vé.")
-                  : transWithFallback("noTicketSearchResult", "Không tìm thấy vé nào phù hợp với tìm kiếm.")}
+                Không tìm thấy vé phù hợp.
               </td>
             </tr>
           )}

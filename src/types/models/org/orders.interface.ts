@@ -53,8 +53,26 @@ export interface Ticket {
   qrCode: string;
   description: string;
 }
+export interface OrderTicket {
+  id: string; // Order ID
+  showingId: string;
+  status: string;
+  type: string;
+  price: number;
+  mailSent: boolean;
+  userId: string;
+  formResponse?: FormResponse;
+  paymentInfo?: PaymentInfo;
+  createdAt: Date;
+  totalTicket: number;
+}
 
-
+export interface Pagination {
+  total: number;       // Total number of records
+  page: number;        // Current page number
+  limit: number;       // Items per page
+  totalPages: number;  // Total number of pages
+}
 
 export interface TicketOrderData {
   id: string;

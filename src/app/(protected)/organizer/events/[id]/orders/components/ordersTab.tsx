@@ -55,7 +55,7 @@ export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrde
         {activeTab === "orders" ? (
           <OrderSection ordersData={safeOrdersData} />
         ) : (
-          <TicketSection ordersData={safeOrdersData} />
+          <TicketSection showingId={safeOrdersData[0].showingId} />
         )}
       </div>
     </div>
