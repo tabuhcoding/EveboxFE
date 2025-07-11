@@ -177,7 +177,7 @@ export default function AddMemberForm({eventId, onClose, onSuccess }: AddMemberF
                     "Seat map", "Thành viên", "Check in", "Check out", "Redeem"
                   ].map((perm, idx) => (
                     <tr key={idx} className="text-center">
-                      <td className="border p-2">{transWithFallback(`perm.${perm}`, perm)}</td>
+                      <td className="border p-2">{transWithFallback(`perm-${perm}`, perm)}</td>
                       {permissionMatrix[idx].map((hasPermission, i) => (
                         <td key={i} className="border p-2">
                           <div className="flex justify-center">

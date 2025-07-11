@@ -40,9 +40,9 @@ export const OverviewCard = ({
         {/* Card for Ticket Sales */}
         <div className="bg-[#387478] text-white p-6 flex-1 flex items-center gap-4 rounded-lg -ml-4 justify-end">
           <div>
-            <p className="text-sm text-white text-right">Số vé đã bán</p>
+            <p className="text-sm text-white text-right">{transWithFallback("soldTickets", "Số vé đã bán")}</p>
             <h2 className="text-2xl font-bold text-white text-right">{ticketsSold} vé</h2>
-            <p className="text-xs text-white text-right">Tổng: {totalTickets} vé</p>
+            <p className="text-xs text-white text-right">{transWithFallback("total", "Tổng")}: {totalTickets} vé</p>
           </div>
           <div className="w-16 h-16 bg-teal-300 rounded-full flex items-center justify-center text-teal-900 font-bold">
             {percentageSold}%
