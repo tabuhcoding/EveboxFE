@@ -47,6 +47,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
 
   useEffect(() => {
     const fetchRedisSeat = async () => {
+      localStorage.removeItem('timeLeft');
+      localStorage.removeItem('timestamp');
       try {
         const res = await getRedisSeat(showingId);
         if (res?.statusCode === 200 && res.data?.ticketTypeSelection) {
