@@ -25,7 +25,7 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
   }, [ordersData]);
 
   const getCustomerName = (order: TicketOrderData): string => {
-    const formAnswers = order.FormResponse?.FormAnswer || [];
+    const formAnswers = order.formResponse?.FormAnswer || [];
     const nameAnswer = formAnswers.find((answer) => {
       const fieldName = answer.FormInput?.fieldName?.toLowerCase() || "";
       return fieldName.includes("name") || fieldName.includes("tên");
@@ -43,11 +43,11 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
   const getStatusDisplay = (status: number | string): { text: string; className: string } => {
     const statusValue = String(status).toLowerCase();
     switch (statusValue) {
-      case "1":
-        return { text: transWithFallback("completed", "Hoàn thành"), className: "bg-green-100 text-green-800" };
-      case "0":
+      case "success":
+        return { text: transWithFallback("success", "Thành công"), className: "bg-green-100 text-green-800" };
+      case "processing":
         return { text: transWithFallback("processing", "Đang xử lý"), className: "bg-yellow-100 text-yellow-800" };
-      case "2":
+      case "cancelled":
         return { text: transWithFallback("cancelled", "Đã hủy"), className: "bg-red-100 text-red-800" };
       default:
         return { text: statusValue, className: "bg-gray-100 text-gray-800" };
@@ -55,13 +55,11 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
   };
 
   const getQuantity = (order: TicketOrderData): number => {
-    return order.PaymentInfo?.OrderInfo?.quantity || 1;
-  };
-
-  const getSeatInfo = (order: TicketOrderData): string => {
-    const seatId = order.PaymentInfo?.OrderInfo?.seatId;
-    if (!seatId) return "-";
-    return Array.isArray(seatId) ? seatId.join(", ") : String(seatId);
+    let quantity = 0;
+     order?.Ticket?.forEach(ticket => {
+       quantity+=ticket.tickets.length;
+    });
+    return quantity;
   };
 
   const safeOrdersData = Array.isArray(ordersData) ? ordersData : [];
@@ -125,7 +123,7 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
             <th className="py-2 px-4">{transWithFallback("customer", "Khách hàng")}</th>
             <th className="py-2 px-4">{transWithFallback("ticketType", "Loại vé")}</th>
             <th className="py-2 px-4">{transWithFallback("quantity", "Số lượng")}</th>
-            <th className="py-2 px-4">{transWithFallback("seat", "Ghế")}</th>
+            <th className="py-2 px-4">{transWithFallback("payment", "Thanh toán")}</th>
             <th className="py-2 px-4">{transWithFallback("status", "Trạng thái")}</th>
             <th className="py-2 px-4">{transWithFallback("total", "Tổng cộng")}</th>
           </tr>
@@ -147,7 +145,7 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
                   <td className="py-2 px-4">{getCustomerName(order)}</td>
                   <td className="py-2 px-4">{order.type}</td>
                   <td className="py-2 px-4">{getQuantity(order)}</td>
-                  <td className="py-2 px-4">{getSeatInfo(order)}</td>
+                  <td className="py-2 px-4">{order.paymentInfo?.method}</td>
                   <td className="py-2 px-4">
                     <span className={`px-2 py-1 rounded-full text-sm ${status.className}`}>{status.text}</span>
                   </td>

@@ -38,18 +38,34 @@ export interface OrderInfo {
 export interface PaymentInfo {
   id: number;
   paidAt?: Date;
-  OrderInfo: OrderInfo;
+  method: string;
 }
+
+export interface TicketTypeInfo {
+  id: string;
+  tickets: Ticket[];
+}
+
+export interface Ticket {
+  id: string;
+  seatId: string;
+  sectionID: string;
+  qrCode: string;
+  description: string;
+}
+
+
 
 export interface TicketOrderData {
   id: string;
-  status: number;
+  status: string;
   price: number;
   type: string;
   mailSent: boolean;
   showingId: string;
-  FormResponse?: FormResponse;
-  PaymentInfo?: PaymentInfo;
+  formResponse?: FormResponse;
+  paymentInfo?: PaymentInfo;
+  Ticket?: TicketTypeInfo[];
 }
 
 export interface GetOrdersResponse extends BaseResponse {
