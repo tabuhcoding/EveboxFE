@@ -666,5 +666,8 @@
     "sessionExpiredNote": "Your entered data will be preserved after logging in",
     "loginAgain": "Login Again",
     "foryou": "For you",
-    "recommendForyou": "Event"
+    "recommendForyou": "Event",
+    "updateNeedReview": "Your update need to be reviewed because: ",
+    "updateWillWaitApproval" : "If you continue, your event will be updated and has to wait for the next approval.",
+    "confirmUpdate": "Confirm your update"
 }
