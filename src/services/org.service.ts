@@ -7,6 +7,11 @@ import { CreateOrgPaymentInfoDto, OrgPaymentInfoData } from "types/models/org/or
 import { CreateShowingDto, CreateShowingResponseDto, DeleteShowingResponseDto, GetAllShowingDetailOfEventResponseDto, UpdateShowingDto, UpdateShowingResponseDto } from "types/models/showing/createShowing.dto";
 import { CreateTicketTypeDto, CreateTicketTypeResponseDto, DeleteTicketTypeResponseDto, UpdateTicketTypeDto, UpdateTicketTypeResponseDto } from "types/models/ticketType/ticketType.interface";
 import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormResponseDto, GetAllFormForOrgResponseDto } from "types/models/form/form.interface";
+import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
+import { AnalyticData } from "@/types/models/org/analytics.interface";
+import { AddEventMemberDto, AddEventMemberResponseDto, EventMember, EventRoleItem, UpdateEventMemberDto, UpdateEventMemberResponseDto } from "@/types/models/org/member.interface";
+import { GetOrdersResponse } from "@/types/models/org/orders.interface";
+import { CheckedInTicketDto } from "@/types/models/org/checkin.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
   if (typeof window === "undefined") {
@@ -360,5 +365,219 @@ if (!res || res.status !== 200) {
 }
 
 return res.data.data;
+  }
+}
+
+export async function getEventOfOrg(): Promise<EventOrgFrontDisplayDto[]> {
+    const res = await orgService.get<BaseApiResponse<EventOrgFrontDisplayDto[]>>(
+      END_POINT_LIST.ORG_EVENT.EVENT
+    );
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch events of organizer");
+    }
+
+    return res.data.data;
+}
+
+export const getShowingsByEventId = async (eventId: number): Promise<IShowTime[]> => {
+  // const endpoint = END_POINT_LIST.ORG_SHOWING.SHOWING_TIME.replace("{eventId}", eventId.toString());
+  const res = await orgService.get(`${END_POINT_LIST.ORG_SHOWING.SHOWING}/${eventId}`);
+
+  console.log("fetch showingTime")
+  console.log(res)
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch showing times');
+  }
+  return res.data.data;
+};
+
+// Lấy summary theo showingId
+export const getSummaryByShowingId = async (showingId: string): Promise<IEventSummaryData> => {
+  // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
+
+  const res = await orgService.get<BaseApiResponse<IEventSummaryData>>(`${END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY}/${showingId}`);
+  console.log("fetch sumarry")
+  console.log(res)
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch event summary');
+  }
+
+  return res.data.data;
+};
+
+export const getAnalyticByEvent = async (eventId: string, startDate?: string,endDate?: string): Promise<AnalyticData> => {
+  const params: Record<string, string> = {};
+
+  if (startDate) {
+    params.startDate = startDate;
+  }
+  if (endDate) {
+    params.endDate = endDate;
+  }
+
+  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_ANALYTIC}/${eventId}`, {
+    params,
+  });
+
+  console.log("fetch analytics", res);
+
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch event analytics');
+  }
+
+  return res.data.data;
+};
+
+export async function getEventMembers(
+  eventId: number,
+  email?: string
+): Promise<EventMember[]> {
+  const query = email ? `?email=${encodeURIComponent(email)}` : "";
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}/${eventId}${query}`;
+
+  try {
+    const res = await orgService.get<BaseApiResponse<EventMember[]>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch event members");
+    }
+
+    return res.data.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error fetching event members:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while fetching event members");
+  }
+}
+
+export async function getEventRoles(): Promise<EventRoleItem[]> {
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/event/role`, {
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`,
+      },
+      next: { revalidate: 60 }, // Optional SSR caching
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch event roles");
+
+    const json: BaseApiResponse<EventRoleItem[]> = await res.json();
+    return json.data;
+  } else {
+    const res = await orgService.get<BaseApiResponse<EventRoleItem[]>>(
+      END_POINT_LIST.ORG_EVENT.EVENT_ROLE
+    );
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch event roles");
+    }
+
+    return res.data.data;
+  }
+}
+
+export const getOrdersByShowingId = async (showingId: string): Promise<GetOrdersResponse> => {
+  // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
+  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}`);
+  console.log("fetch orders")
+  console.log(res)
+  if (!res || !res.data) {
+    throw new Error('Failed to fetch event orders');
+  }
+
+  return res.data.data;
+};
+
+export async function addEventMember(
+  eventId: number,
+  payload: AddEventMemberDto
+): Promise<BaseApiResponse<AddEventMemberResponseDto>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}?eventId=${eventId}`;
+
+  try {
+    const res = await orgService.post<BaseApiResponse<AddEventMemberResponseDto>>(url, payload);
+
+    if (!res || res.status !== 201) {
+      throw new Error(res?.data?.message || "Failed to add member to event");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error adding member to event:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while adding member");
+  }
+}
+
+export async function updateEventMember(
+  eventId: number,
+  payload: UpdateEventMemberDto
+): Promise<BaseApiResponse<UpdateEventMemberResponseDto>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}?eventId=${eventId}`;
+
+  try {
+    const res = await orgService.put<BaseApiResponse<UpdateEventMemberResponseDto>>(
+      url,
+      payload
+    );
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to update event member");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error updating event member:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while updating member");
+  }
+}
+
+export async function deleteEventMember(
+  eventId: number,
+  email: string
+): Promise<BaseApiResponse<{ message: string }>> {
+  const url = `${END_POINT_LIST.ORG_EVENT.MEMBER}/${eventId}?email=${encodeURIComponent(email)}`;
+
+  try {
+    const res = await orgService.delete<BaseApiResponse<{ message: string }>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to delete event member");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error deleting event member:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while deleting event member");
+  }
+}
+
+export async function getAllCheckedInTickets(showingId: string): Promise<CheckedInTicketDto[]> {
+  const url = `/api/org/checkin/all/${showingId}`;
+
+  if (typeof window === "undefined") {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN || ""}`, // Adjust based on your SSR token strategy
+      },
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch checked-in tickets");
+    const json: BaseApiResponse<CheckedInTicketDto[]> = await res.json();
+    return json.data;
+  } else {
+        console.log("-------",showingId)
+
+    const res = await orgService.get<BaseApiResponse<CheckedInTicketDto[]>>(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch checked-in tickets");
+    }
+
+    return res.data.data;
   }
 }
