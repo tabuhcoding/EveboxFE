@@ -1,5 +1,8 @@
 export interface UpdateEventResponseData {
   id: number;
+  isApproved: boolean;
+  signMessage?: string;
+  checkMessage?: string;
 }
 
 export interface UpdateEventResponseDto {
