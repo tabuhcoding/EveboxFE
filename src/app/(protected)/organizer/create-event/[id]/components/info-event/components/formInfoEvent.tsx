@@ -12,6 +12,8 @@ import TextEditor from "./textEditor";
 import OrganizationInfoForm from "./organizationInfoForm";
 import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
+import UpdateConfirmModal from "./updateConfirmDialog";
+
 import { getAllCategories, getAllDistricts, getEventDetail, updateEvent } from "services/event.service";
 import { Province } from "types/models/event/location.interface";
 import { CreateEventDto, EventDescriptionGenDto } from "types/models/event/createEvent.dto";
@@ -88,6 +90,14 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
 
   //Nội dung sẵn trong Thông tin sự kiện
   const [post, setPost] = useState('');
+
+  // new state for update event
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmData, setConfirmData] = useState<{
+    signMessage?: string;
+    checkMessage?: string;
+    eventId?: number;
+  }>({});
 
   useEffect(() => {
     const defaultPost = `
@@ -386,33 +396,57 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     }
   };
 
-  const handleUpdateEvent = async () => {
+  const handleUpdateEvent = async (signMessage?: string) => {
     try {
-
-      await updateEvent(Number(currentEventId), {
+      const payload = {
         title: eventName,
         description: post,
-        isOnline: eventTypeSelected === "online" || eventTypeSelected === "Online",
+        isOnline: eventTypeSelected === "online",
         venue: eventAddress,
         orgName: nameOrg,
         orgDescription: infoOrg,
         categoryIds: selectedCategory ? [selectedCategory.id] : [],
-        imgLogoUrl: logoOrg || "",            // use default image URL if needed
-        imgPosterUrl: background || "",       // use default image URL if needed
+        imgLogoUrl: logoOrg || "",
+        imgPosterUrl: background || "",
         wardString: ward,
         streetString: street,
-        districtId:
-          allProvinces
-            .find((p) => p.name.vi === province)
-            ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
-      });
+        districtId: allProvinces
+          .find((p) => p.name.vi === province)
+          ?.districts.find((d) => d.name.vi === district)?.id || undefined,
+        signMessage: signMessage,
+      };
 
-      toast.success(transWithFallback('updateEventSuccess', 'Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!'), { duration: 5000 });
+      const res = await updateEvent(Number(currentEventId), payload);
+
+      if (res?.data?.isApproved === false && res.data.signMessage) {
+        setConfirmData({
+          signMessage: res.data.signMessage,
+          checkMessage: res.data.checkMessage,
+          eventId: Number(currentEventId),
+        });
+        setShowConfirmModal(true);
+        return;
+      }
+
+      toast.success(
+        transWithFallback(
+          "updateEventSuccess",
+          "Cập nhật sự kiện thành công, chuyển sang bước tiếp theo!"
+        ),
+        { duration: 5000 }
+      );
       router.push(`/organizer/create-event/${currentEventId}?step=showing`);
     } catch (error: any) {
       console.error("Error updating event:", error);
       toast.error(error.message || transWithFallback('errorWhenUpdateEvent', 'Lỗi khi cập nhật sự kiện!'), { duration: 5000 });
     }
+  };
+
+  const handleConfirmUpdate = async () => {
+    if (confirmData.signMessage) {
+      await handleUpdateEvent(confirmData.signMessage);
+    }
+    setShowConfirmModal(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -645,9 +679,15 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
                 )}
               </div>
             </div>
-          </div>          
+          </div>
         </form>
       </div>
+      <UpdateConfirmModal
+        show={showConfirmModal}
+        checkMessage={confirmData.checkMessage || ""}
+        onConfirm={handleConfirmUpdate}
+        onCancel={() => setShowConfirmModal(false)}
+      />
     </>
   );
 }

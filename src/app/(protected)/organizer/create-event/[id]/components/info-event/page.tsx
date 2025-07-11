@@ -8,7 +8,6 @@ import { Divider } from '@nextui-org/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 // import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { useTranslations } from 'next-intl';
 
 /* Package Application */
 import NoteDialog from '../dialogs/noteDialog';
@@ -17,6 +16,7 @@ import Navigation from '../common/navigation';
 import { useAuth } from '../../../../../../../contexts/auth.context';
 import { CreateEventDto } from 'types/models/event/createEvent.dto';
 import { createEvent } from 'services/event.service';
+import { useTranslations } from 'next-intl';
 
 export default function InformationEventClientPage() {
     // const { data: session } = useSession();

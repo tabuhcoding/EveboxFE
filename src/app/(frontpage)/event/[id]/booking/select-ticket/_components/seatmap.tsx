@@ -187,6 +187,9 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
       <div className="seatmap-legend-container absolute top-0 left-[50%] transform -translate-x-1/2 z-10 bg-white bg-opacity-80 w-full">
         <div className="mb-3 seatmap-legend justify-between">
           <div className="legend-item">
+            <span className="seat unavailable"></span> {transWithFallback('unavailableSeat', 'Ghế không có sẵn')}
+          </div>
+          <div className="legend-item">
             <span className="seat available"></span> {transWithFallback('availableSeat', 'Ghế có sẵn')}
           </div>
           <div className="legend-item">

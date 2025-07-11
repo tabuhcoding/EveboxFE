@@ -49,6 +49,8 @@ export class END_POINT_LIST {
 
   static readonly ORG_EVENT = {
     EVENT: "/api/org/event",
+    MEMBER: "/org/member",
+    EVENT_ROLE: "/api/event/role",
   }
 
   static readonly ORG_SHOWING = {
@@ -56,7 +58,6 @@ export class END_POINT_LIST {
     FORM_CONNECT:"/api/org/showing/connect-form",
     SHOWING_FORM: "/api/org/showing/form",
     SHOWING: "/api/org/showing",
-    SHOWING_TIME: "/api/org/showing/showingTime",
   }
 
   static readonly ORG_TICKETTYPE = {
@@ -66,6 +67,11 @@ export class END_POINT_LIST {
   static readonly ORG_PAYMENT = {
     PAYMENT: "/api/org/payment",
   }
+
+  static readonly  ORG_CHECKIN: {
+    ALL_CHECKED_IN: "/api/org/checkin/all"
+  }
+
 
   static readonly ORG_STATISTICS = {
     GET_SUMMARY: "/api/org/statistics/summary",

@@ -5,7 +5,14 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     domains: ["images.tkbcdn.com", "salt.tkbcdn.com", "res.cloudinary.com", "fastly.picsum.photos"], // Add all external domains here
-  }
+  },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      canvas: false, // Bỏ canvas để tránh lỗi khi bundle
+    }
+    return config
+  },
 };
 
 export default nextConfig;
