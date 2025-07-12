@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 
 /* Package Application */
 import { useAuth } from 'contexts/auth.context';
-import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
 import { SidebarProps } from '../libs/interface/dashboard.interface';
@@ -50,7 +49,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       if (href === '/organizer/create-event') {
         try {
           const res = await getCurrentUser();
-          if (res.role != 1 && res.role != 2) {
+          if (res.role !== 1 && res.role !== 2) {
             // Show dialog
             setPendingNavigation(href);
             setShowPaymentWarning(true);
