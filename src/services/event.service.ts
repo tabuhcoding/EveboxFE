@@ -31,7 +31,13 @@ import { Province } from "types/models/event/location.interface";
 import { EventDetailResponse } from "@/types/models/event/eventdetail/event.interface";
 import { UpdateEventDto, UpdateEventResponseDto } from "@/types/models/event/updateEvent.interface";
 
-import { RawRevenueChartData, ProvinceRevenueData, RevenueByTicketPriceData, OrganizerRevenueData } from "@/types/models/admin/revenueManagement.interface";
+import { 
+  RawRevenueChartData,
+  ProvinceRevenueData,
+  RevenueByTicketPriceData,
+  OrganizerRevenueData,
+  EventRevenueV2Data
+} from "@/types/models/admin/revenueManagement.interface";
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
@@ -537,7 +543,6 @@ export async function getOrgRevenueByProvince(accessToken: string): Promise<Base
       throw new Error("Failed to fetch organizer revenue by province");
     }
 
-    console.log("🚀 ~ getOrgRevenueByProvince ~  res.data:",  res.data)
     return res.data as BaseApiResponse<ProvinceRevenueData[]>;
   } catch (error: any) {
     console.error("Error get organizer revenue by province:", error?.response?.data?.message);
@@ -563,7 +568,6 @@ export async function getOrgRevenueByTicketPrice(accessToken: string): Promise<B
       throw new Error("Failed to fetch organizer revenue by ticket price");
     }
 
-    console.log("🚀 ~ getOrgRevenueByTicketPrice ~ res.data:", res.data)
     return res.data as BaseApiResponse<RevenueByTicketPriceData[]>;
   } catch (error: any) {
     console.error("Error get organizer revenue by ticket price:", error?.response?.data?.message);
@@ -596,10 +600,60 @@ export async function getOrganizerRevenue(accessToken: string, page: number, lim
       throw new Error("Failed to fetch organizer revenue");
     }
 
-    console.log("🚀 ~ getOrganizerRevenue ~ res.data:", res.data)
     return res.data as BaseApiResponse<OrganizerRevenueData[]>;
   } catch (error: any) {
     console.error("Error get organizer revenue:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getEventRevenueDetail(orgId: string, eventId: number, accessToken: string): Promise<BaseApiResponse<EventRevenueV2Data[]>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE}/${orgId}/${eventId}`, {
+      headers: headers
+    });
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+
+    return res.data as BaseApiResponse<EventRevenueV2Data[]>;
+  } catch (error: any) {
+    console.error("Error get event revenue detail:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getRevenueByOrgId(orgId: string, accessToken: string): Promise<BaseApiResponse<OrganizerRevenueData>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE}/${orgId}`, {
+      headers: headers
+    });
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+
+    console.log("🚀 ~ getRevenueByOrgId ~ res.data:", res.data)
+    return res.data as BaseApiResponse<OrganizerRevenueData>;
+  } catch (error: any) {
+    console.error("Error get revenue by org id:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }

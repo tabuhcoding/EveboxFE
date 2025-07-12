@@ -163,3 +163,11 @@ export interface RevenueByTicketPriceData {
   conversionRate: number;
   revenue: number;
 }
+
+// Revenue [orderId, eventId]
+export interface EventRevenueV2Data {
+  showingId: string;
+  startTime: string;
+  endTime: string;
+  revenue: number;
+}

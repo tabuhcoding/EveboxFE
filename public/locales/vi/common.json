@@ -773,5 +773,17 @@
   "totalTickets": "Tổng số lượng vé",
   "actualSoldTicket": "Số vé thực bán",
   "chooseMonth": "Chọn tháng",
-  "errorWhenFetchRevenue": "Lỗi xảy ra khi lấy dữ liệu doanh thu"
+  "errorWhenFetchRevenue": "Lỗi xảy ra khi lấy dữ liệu doanh thu",
+  "detailRevenueInfoOfOrg": "Thông tin doanh thu chi tiết của nhà tổ chức",
+  "chooseOrg": "Chọn nhà tổ chức",
+  "organizedEvent": "Sự kiện đã tổ chức",
+  "priceQuotation": "Đơn giá",
+  "detailRevenueInfoOfEvent": "Thông tin doanh thu chi tiết của sự kiện",
+  "chooseEvent": "Chọn sự kiện",
+  "noShowings": "Không có suất diễn",
+  "dataNotFound": "Không tìm thấy thông tin",
+  "eventNotFoundDesc": "Sự kiện bạn đang tìm kiếm không có suất diễn. Vui lòng kiểm tra lại.",
+  "backToRevenue": "Quay lại quản lý doanh thu",
+  "startDate": "Ngày bắt đầu",
+  "endDate": "Ngày kết thúc"
 }
