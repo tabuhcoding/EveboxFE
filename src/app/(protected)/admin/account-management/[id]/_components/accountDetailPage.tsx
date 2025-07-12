@@ -4,7 +4,8 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ChevronDown, ArrowLeft, Loader2 } from "lucide-react";
+import { ChevronDown, ArrowLeft } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 
 /* Package Application */
@@ -223,7 +224,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
                 {isSaving ? (
                   <>
                     <div className="flex items-center justify-center gap-2">
-                      <Loader2 size={20} className="animate-spin text-white" />
+                      <CircularProgress size={20} />
                       <span className="text-white">{transWithFallback('saving', 'Đang lưu...')}</span>
                     </div>
                   </>
