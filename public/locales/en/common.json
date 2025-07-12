@@ -763,5 +763,6 @@
     "ticketRatio": "Ratio",
     "revenue": "Revenue",
     "selectShowing": "Select showing",
-    "timeAndTicketType": "Time & Ticket Type"
+    "timeAndTicketType": "Time & Ticket Type",
+    "saving": "Saving..."
 }
