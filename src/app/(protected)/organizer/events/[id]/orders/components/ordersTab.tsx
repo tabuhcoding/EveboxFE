@@ -25,9 +25,6 @@ export default function OrderTabs({ ordersData = [], showingId = "" }: { ordersD
     console.log("OrderTabs received data:", ordersData)
   }, [ordersData])
 
-  // Make sure we're working with an array, even if ordersData is undefined
-  const safeOrdersData = Array.isArray(ordersData) ? ordersData : []
-
   if (!mounted) return null // Avoid hydration errors
 
   return (
