@@ -485,6 +485,8 @@ export const getOrdersByShowingId = async (
 
   if (userEmail) {
     queryParams.append("userEmail", userEmail);
+    queryParams.append("page", "1");
+    queryParams.append("limit", "100");
   }
 
   const url = `${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}${
@@ -600,7 +602,7 @@ export async function getAllTicketsOfShowing(
   showingId: string,
   orderId?: number,
   page = 1,
-  limit = 50
+  limit = 100
 ): Promise<any> {
   const query = new URLSearchParams();
 
