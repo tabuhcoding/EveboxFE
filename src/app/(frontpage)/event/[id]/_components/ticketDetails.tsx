@@ -156,10 +156,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                               }}
                             >
                               {loadingButtonId === showing.id ? (
-                                <>
                                   <CircularProgress size={16} />
-                                  {t('loadingBtn') || "Đang xử lý..."}
-                                </>
                               ) : (t('bookNow') || "Mua vé ngay")}
                             </button>
                           );

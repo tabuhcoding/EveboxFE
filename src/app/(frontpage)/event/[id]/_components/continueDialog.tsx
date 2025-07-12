@@ -1,9 +1,10 @@
 'use client'
 
 import { Icon } from "@iconify/react";
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 interface ContinueDialogProps {
   message: string;
@@ -16,10 +17,19 @@ export default function ContinueDialog({ message, onClose, open, href }: Continu
   const t = useTranslations("common");
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
+  };
+
+  const handleContinueClick = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      router.push(href);
+    }, 100);
   };
 
   return (
@@ -38,10 +48,14 @@ export default function ContinueDialog({ message, onClose, open, href }: Continu
         <p className="text-center">{message}</p>
         <div className="flex flex-col gap-4 w-full max-w-xs mt-4">
           <button
-            onClick={() => router.push(href)}
-            className="flex-1 bg-[#0C4762] hover:bg-[#1d3945] text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+            onClick={handleContinueClick} disabled={isLoading}
+            className="flex-1 bg-[#0C4762] hover:bg-[#1d3945] text-white font-bold py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center gap-1"
           >
-            {transWithFallback('continueBookTicket', 'Tiếp tục đặt vé')}
+            {isLoading ? (
+              <CircularProgress size={16} />
+            ) : (
+              transWithFallback('continueBookTicket', 'Tiếp tục đặt vé')
+            )}
           </button>
           <button
             className="flex-1 border-2 border-gray-500 text-gray-500 font-bold py-2 px-4 rounded bg-white hover:!bg-[#0C4762] hover:text-white transition-all duration-200"
