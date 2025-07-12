@@ -153,7 +153,7 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
 
   return (
     <div className="seatmap-container relative overflow-hidden" ref={seatmapRef}>
-      <div className="seatmap-wrapper relative">
+      <div className="seatmap-wrapper relative" style={{ backgroundColor: 'gray'}}>
         <div
           className="seatmap-zoom"
           style={{
@@ -163,30 +163,50 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
             cursor: isDragging ? "grabbing" : "grab"
           }}
         >
-          <svg viewBox={seatMap.viewBox} className="seatmap">
+          <svg viewBox={seatMap.viewBox} className="seatmap"   style={{ backgroundColor: 'gray' }}>
             {/* Vẽ stage section */}
             {stageSections?.map((section) => (
               <g key={section.id}>
-                {section.element?.map((el, index) => (
-                  el.type === 'path' ? (
-                    <path
-                      key={index}
-                      d={el.data}
-                      style={{ fill: el.fill }}
-                      transform={`translate(${el.x}, ${el.y})`}
-                    />
-                  ) : el.type === 'rect' ? (
-                    <rect
-                      key={index}
-                      x={el.x}
-                      y={el.y}
-                      width={el.width}
-                      height={el.height}
-                      style={{ fill: el.fill }}
-                      transform={`translate(${el.x}, ${el.y})`}
-                    />
-                  ) : <h1>DUUDUDUDUDUDUD</h1>
-                ))}
+                {section.element?.map((el, index) => {
+                  const commonProps = {
+                    style: { fill: el.fill },
+                  };
+
+                  if (el.type === 'path') {
+                    return (
+                      <path
+                        key={index}
+                        {...commonProps}
+                        d={el.data}
+                        style={{
+                          fill: el.fill,
+                          // stroke: 'white',
+                          // strokeWidth: 1
+                        }}
+                        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+                      />
+                    );
+                  } else if (el.type === 'rect') {
+                    return (
+                      <rect
+                        key={index}
+                        {...commonProps}
+                        x={el.x}
+                        y={el.y}
+                        width={el.width}
+                        height={el.height}
+                        style={{
+                          fill: el.fill,
+                          stroke: 'white',     
+                          strokeWidth: 1          
+                        }}
+                      />
+                    );
+                  }
+
+                  return null;
+                })}
+
               </g>
             ))}
             {/* Vẽ section thường, click để chọn */}
@@ -203,26 +223,46 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                     opacity: isSoldOut ? 0.5 : 1,
                   }}
                 >
-                  {section.element?.map((el, index) => (
-                    el.type === 'path' ? (
-                      <path
-                        key={index}
-                        d={el.data}
-                        style={{ fill: el.fill }}
-                        transform={`translate(${el.x}, ${el.y})`}
-                      />
-                    ) : el.type === 'rect' ? (
-                      <rect
-                        key={index}
-                        x={el.x}
-                        y={el.y}
-                        width={el.width}
-                        height={el.height}
-                        style={{ fill: el.fill }}
-                        transform={`translate(${el.x}, ${el.y})`}
-                      />
-                    ) : <h1>DUUDUDUDUDUDUD</h1>
-                  ))}
+                  {section.element?.map((el, index) => {
+                    const commonProps = {
+                      style: { fill: el.fill },
+                    };
+
+                    if (el.type === 'path') {
+                      return (
+                        <path
+                          key={index}
+                          {...commonProps}
+                          style={{
+                            fill: el.fill,
+                            // stroke: 'white',
+                            // strokeWidth: 1
+                          }}
+                          d={el.data}
+                          transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+                        />
+                      );
+                    } else if (el.type === 'rect') {
+                      return (
+                        <rect
+                          key={index}
+                          {...commonProps}
+                          x={el.x}
+                          y={el.y}
+                          width={el.width}
+                          height={el.height}
+                          style={{
+                            fill: el.fill,
+                            stroke: 'white',
+                            strokeWidth: 1
+                          }}
+                        />
+                      );
+                    }
+
+                    return null;
+                  })}
+
                 </g>
               )
             })}
