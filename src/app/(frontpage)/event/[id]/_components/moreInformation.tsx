@@ -10,7 +10,6 @@ import { useI18n } from "app/providers/i18nProvider";
 import { convertLocationToVietnamese } from "utils/helpers";
 
 import { MoreInformationProps } from '../../../../../types/models/event/eventdetail/event.interface';
-import { useEffect } from 'react';
 
 export default function MoreInformation({ title, location, locationsString }: MoreInformationProps) {
     const t = useTranslations("common");
