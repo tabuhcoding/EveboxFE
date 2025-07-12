@@ -13,7 +13,6 @@ import { GiftTicketModalProps } from '@/types/models/ticket/ticketInfoById';
 export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicketModalProps) {
   const { session } = useAuth();
   const accessToken = session?.user?.accessToken;
-  console.log('GiftTicketModal - accessToken:', accessToken);
   const [giftEmail, setGiftEmail] = useState('');
   const [giftLoading, setGiftLoading] = useState(false);
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
