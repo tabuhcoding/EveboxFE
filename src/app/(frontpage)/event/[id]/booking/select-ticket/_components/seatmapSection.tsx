@@ -168,35 +168,35 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
             {stageSections?.map((section) => (
               <g key={section.id}>
                 {section.element?.map((el, index) => {
-  const commonProps = {
-    key: index,
-    style: { fill: el.fill },
-  };
+                  const commonProps = {
+                    key: index,
+                    style: { fill: el.fill },
+                  };
 
-  if (el.type === 'path') {
-    return (
-      <path
-        {...commonProps}
-        d={el.data}
-        // chỉ dùng transform nếu x, y khác 0
-        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
-      />
-    );
-  } else if (el.type === 'rect') {
-    return (
-      <rect
-        {...commonProps}
-        x={el.x}
-        y={el.y}
-        width={el.width}
-        height={el.height}
-        // KHÔNG dùng transform nếu đã gán x/y
-      />
-    );
-  }
+                  if (el.type === 'path') {
+                    return (
+                      <path
+                        {...commonProps}
+                        d={el.data}
+                        // chỉ dùng transform nếu x, y khác 0
+                        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+                      />
+                    );
+                  } else if (el.type === 'rect') {
+                    return (
+                      <rect
+                        {...commonProps}
+                        x={el.x}
+                        y={el.y}
+                        width={el.width}
+                        height={el.height}
+                        // KHÔNG dùng transform nếu đã gán x/y
+                      />
+                    );
+                  }
 
-  return null;
-})}
+                  return null;
+                })}
 
               </g>
             ))}
@@ -215,35 +215,35 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                   }}
                 >
                   {section.element?.map((el, index) => {
-  const commonProps = {
-    key: index,
-    style: { fill: el.fill },
-  };
+                    const commonProps = {
+                      key: index,
+                      style: { fill: el.fill },
+                    };
 
-  if (el.type === 'path') {
-    return (
-      <path
-        {...commonProps}
-        d={el.data}
-        // chỉ dùng transform nếu x, y khác 0
-        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
-      />
-    );
-  } else if (el.type === 'rect') {
-    return (
-      <rect
-        {...commonProps}
-        x={el.x}
-        y={el.y}
-        width={el.width}
-        height={el.height}
-        // KHÔNG dùng transform nếu đã gán x/y
-      />
-    );
-  }
+                    if (el.type === 'path') {
+                      return (
+                        <path
+                          {...commonProps}
+                          d={el.data}
+                          // chỉ dùng transform nếu x, y khác 0
+                          transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+                        />
+                      );
+                    } else if (el.type === 'rect') {
+                      return (
+                        <rect
+                          {...commonProps}
+                          x={el.x}
+                          y={el.y}
+                          width={el.width}
+                          height={el.height}
+                          // KHÔNG dùng transform nếu đã gán x/y
+                        />
+                      );
+                    }
 
-  return null;
-})}
+                    return null;
+                  })}
 
                 </g>
               )
