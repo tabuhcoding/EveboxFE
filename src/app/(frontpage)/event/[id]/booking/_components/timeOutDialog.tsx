@@ -1,9 +1,10 @@
 'use client'
 
 import { Icon } from "@iconify/react";
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, CircularProgress } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from 'next-intl';
+import { useState } from "react";
 
 interface TimeOutDialogProps {
   open: boolean;
@@ -16,10 +17,13 @@ export default function TimeOutDialog({ open, onClose }: TimeOutDialogProps) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const match = pathname.match(/\/event\/(\d+)\b/);
   const eventId = match ? match[1] : null;
 
   const handleClick = () => {
+    setIsLoading(true);
     if (eventId) {
       router.push(`/event/${eventId}`);
     } else {
@@ -43,8 +47,15 @@ export default function TimeOutDialog({ open, onClose }: TimeOutDialogProps) {
         <Icon icon="twemoji:bell" width="50" height="50" />
         <p className="text-center">{transWithFallback('timeOutTicket', 'Đã hết thời gian giữ vé!')}</p>
         <p className="text-center">{transWithFallback('bookNewTicketNoti', 'Bạn hãy vui lòng đặt vé mới')}</p>
-        <button onClick={handleClick} className="bg-[#0C4762] hover:bg-[#1d3945] text-white font-bold py-2 px-4 rounded mt-4">
-          {transWithFallback('bookNewTicket', 'Đặt vé mới')}
+        <button onClick={handleClick} className="bg-[#0C4762] hover:bg-[#1d3945] text-white font-bold py-2 px-4 rounded mt-4 flex items-center justify-center gap-1" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <CircularProgress size={20} color="inherit" />
+               {t('loadingBtn') || "Đang xử lý..."}
+            </>
+          ) : (
+            transWithFallback('bookNewTicket', 'Đặt vé mới')
+          )}
         </button>
       </DialogContent>
     </Dialog>

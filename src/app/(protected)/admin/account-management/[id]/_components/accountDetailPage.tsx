@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ArrowLeft } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 
 /* Package Application */
@@ -28,6 +29,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [editedRole, setEditedRole] = useState<UserRole | null>(null)
@@ -107,9 +109,9 @@ export default function AccountDetailPage({ id }: { id: string }) {
     if (!user) return;
 
     let hasChange = false;
+    setIsSaving(true);
 
     try {
-      setLoading(true);
 
       if (editedRole !== mapRoleNumberToString(user.role)) {
         hasChange = true;
@@ -152,7 +154,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
       console.log("🚀 ~ handleSave ~ error:", error)
       toast.error(transWithFallback('errorWhenSave', 'Có lỗi khi lưu thay đổi'));
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   }
 
@@ -218,8 +220,17 @@ export default function AccountDetailPage({ id }: { id: string }) {
             </div>
 
             <div className="mt-10 mb-4 text-center">
-              <button onClick={handleSave} className="bg-[#51DACF] text-[#0C4762] font-semibold px-6 py-2 rounded-md hover:text-white hover:bg-[#0C4762] transition w-60">
-                {transWithFallback('saveChanges', 'Lưu thay đổi')}
+              <button onClick={handleSave} disabled={isSaving} className="items-center justify-center bg-[#51DACF] text-[#0C4762] font-semibold px-6 py-2 rounded-md hover:text-white hover:bg-[#0C4762] transition w-60">
+                {isSaving ? (
+                  <>
+                    <div className="flex items-center justify-center gap-2">
+                      <CircularProgress size={20} />
+                      <span className="text-white">{transWithFallback('saving', 'Đang lưu...')}</span>
+                    </div>
+                  </>
+                ) : (
+                  transWithFallback('saveChanges', 'Lưu thay đổi')
+                )}
               </button>
             </div>
           </div>

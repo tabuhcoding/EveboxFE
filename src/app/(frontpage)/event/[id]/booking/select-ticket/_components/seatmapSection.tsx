@@ -234,7 +234,7 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
       {selectedSection && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50"
           style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div className="bg-white p-6 rounded-lg shadow-lg min-w-[340px] relative">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-[500px] relative">
             <button
               className="absolute right-2 top-2 px-2 py-1 rounded hover:bg-gray-100"
               onClick={handleCancel}
