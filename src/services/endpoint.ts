@@ -45,6 +45,7 @@ export class END_POINT_LIST {
     GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
     GET_ORDER_BY_ID: "/api/ticket/getOrderById",
     GET_USER_ORDER: "/api/ticket/getUserOrder",
+    SEND_EMAIL: '/api/booking/sendEmail'
   }
 
   static readonly ORG_EVENT = {
@@ -76,7 +77,8 @@ export class END_POINT_LIST {
   static readonly ORG_STATISTICS = {
     GET_SUMMARY: "/api/org/statistics/summary",
     GET_ORDERS: "/api/org/statistics/orders",
-    GET_ANALYTIC: "/api/org/statistics/analytic"
+    GET_ANALYTIC: "/api/org/statistics/analytic",
+    GET_TICKETS: "/api/org/statistics/tickets"
   };
 
   static readonly ADMIN_STATISTICS = {

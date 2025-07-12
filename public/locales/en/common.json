@@ -764,7 +764,7 @@
     "revenue": "Revenue",
     "selectShowing": "Select showing",
     "timeAndTicketType": "Time & Ticket Type",
-    "appRevenue": "Application Revenue",
+     "appRevenue": "Application Revenue",
     "orgRevenue": "Organizer Revenue",
     "eventRevenue": "Event Revenue",
     "totalRevenue": "Total revenue",
@@ -795,5 +795,11 @@
     "eventNotFoundDesc": "Your event has no showings. Please check again.",
     "backToRevenue": "Back to revenue page",
     "startDate": "Start date",
-    "endDate": "End date"
+    "endDate": "End date",
+    "success": "Success",
+    "vsLastWeek": "than last week.",
+    "revenueAndTicketsOverTime": "Revenue and Tickets over time",
+    "sendEmailSuccess": "Sending email(s) successfully!",
+    "owner": "Owner",
+    "payment":"Payment"
 }

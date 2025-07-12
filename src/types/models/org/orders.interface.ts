@@ -38,18 +38,69 @@ export interface OrderInfo {
 export interface PaymentInfo {
   id: number;
   paidAt?: Date;
-  OrderInfo: OrderInfo;
+  method: string;
+}
+
+export interface TicketTypeInfo {
+  id: string;
+  tickets: Ticket[];
+}
+
+export interface Ticket {
+  id: string;
+  seatId: string;
+  sectionID: string;
+  qrCode: string;
+  description: string;
+}
+export interface OrderTicket {
+  id: string; // Order ID
+  description: string;
+  seatId: number;
+  ticketTypeId: string;
+  orderId: number;
+  isCheckedIn: boolean;
+  sectionId?: string;
+  checkedBy: string;
+  Order: OrderInfoData;
+}
+
+export interface OrderInfoData {
+  id: number;
+  status: string;
+  price: number;
+  totalPrice: number;
+  userId: string;
+  type: string;
+  mailSent: boolean;
+  showingId: string;
+  createdAt: string;
+  updatedAt: string;
+  formResponseId: number;
+  paymentId: number;
+  voucherCodeId?: string;
+}
+
+
+export interface Pagination {
+  total: number;       // Total number of records
+  page: number;        // Current page number
+  limit: number;       // Items per page
+  totalPages: number;  // Total number of pages
 }
 
 export interface TicketOrderData {
-  id: string;
-  status: number;
+  id: number;
+  status: string;
   price: number;
   type: string;
   mailSent: boolean;
   showingId: string;
-  FormResponse?: FormResponse;
-  PaymentInfo?: PaymentInfo;
+  userId: string;
+  ownerId: string;
+  formResponse?: FormResponse;
+  paymentInfo?: PaymentInfo;
+  Ticket?: TicketTypeInfo[];
 }
 
 export interface GetOrdersResponse extends BaseResponse {

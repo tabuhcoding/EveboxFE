@@ -8,12 +8,16 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-  Dot,
 } from "recharts";
 import { useTranslations } from "next-intl";
 
+interface RawTrafficData {
+  weekStart: string;
+  visits: number;
+}
+
 interface TrafficChartProps {
-  data: { month: string; visits: number }[];
+  data: RawTrafficData[];
 }
 
 export default function TrafficChart({ data }: TrafficChartProps) {
@@ -21,23 +25,36 @@ export default function TrafficChart({ data }: TrafficChartProps) {
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
-    if (!msg || msg.startsWith("common.")) return fallback;
-    return msg;
+    return !msg || msg.startsWith("common.") ? fallback : msg;
   };
 
-  const currentMonth = data[data.length - 1];
-  const lastMonth = data[data.length - 2];
+  // Transform to readable labels for XAxis
+  const formattedData = data.map((item) => {
+    const start = new Date(item.weekStart);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+
+    const formatDate = (date: Date) =>
+      date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
+
+    return {
+      ...item,
+      weekRange: `${formatDate(start)} – ${formatDate(end)}`,
+    };
+  });
+
+  const current = formattedData[formattedData.length - 1];
+  const previous = formattedData[formattedData.length - 2];
 
   let growthText = "0%";
   let growthPositive = true;
 
-  if (currentMonth && lastMonth) {
-    if (lastMonth.visits === 0) {
+  if (current && previous) {
+    if (previous.visits === 0) {
       growthText = "+100%";
       growthPositive = true;
     } else {
-      const growth =
-        ((currentMonth.visits - lastMonth.visits) / lastMonth.visits) * 100;
+      const growth = ((current.visits - previous.visits) / previous.visits) * 100;
       growthPositive = growth >= 0;
       growthText = `${growthPositive ? "+" : ""}${growth.toFixed(1)}%`;
     }
@@ -49,18 +66,18 @@ export default function TrafficChart({ data }: TrafficChartProps) {
         {transWithFallback("visitsOverTime", "Lượt truy cập theo thời gian")}
       </h2>
       <p className="text-4xl font-bold">
-        {data.reduce((sum, item) => sum + item.visits, 0).toLocaleString()}
+        {formattedData.reduce((sum, item) => sum + item.visits, 0).toLocaleString()}
       </p>
       <p className="text-blue-500 flex items-center">
         <span className="mr-1">{growthPositive ? "▲" : "▼"}</span>
-        {growthText} {transWithFallback("vsLastMonth", "so với tháng trước")}
+        {growthText} {transWithFallback("vsLastWeek", "so với tuần trước")}
       </p>
 
       <div className="mt-4 w-full h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
+          <LineChart data={formattedData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
+            <XAxis dataKey="weekRange" />
             <YAxis />
             <Tooltip />
             <Line
@@ -68,13 +85,7 @@ export default function TrafficChart({ data }: TrafficChartProps) {
               dataKey="visits"
               stroke="#0C4762"
               strokeWidth={3}
-              dot={(props) => (
-                <Dot
-                  {...props}
-                  fill={props.payload.month === "January" ? "blue" : "#0C4762"}
-                  r={props.payload.month === "January" ? 6 : 3}
-                />
-              )}
+              dot
             />
           </LineChart>
         </ResponsiveContainer>

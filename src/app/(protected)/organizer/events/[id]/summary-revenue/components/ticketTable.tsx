@@ -1,18 +1,31 @@
 "use client";
 
+import { TicketType } from "@/types/models/admin/showingManagement.interface";
 import { ITicketTypeSummary } from "@/types/models/org/orgEvent.interface";
 import { useTranslations } from "next-intl";
 
 interface TicketTableProps {
   ticketTypes: ITicketTypeSummary[];
+  ticketTypesInfo?: TicketType[];
 }
 
-export const TicketTable = ({ ticketTypes }: TicketTableProps) => {
+export const TicketTable = ({ ticketTypes, ticketTypesInfo }: TicketTableProps) => {
   const t = useTranslations("common");
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     return msg.startsWith("common.") ? fallback : msg;
   };
+
+  const formatDateTime = (dateTime?: string | Date) => {
+      if (!dateTime) return ""
+      try {
+        const date = new Date(dateTime)
+        return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+      } catch (error) {
+        console.error("Error formatting date:", error)
+        return String(dateTime)
+      }
+    }
 
   return (
     <div className="mt-8">
@@ -30,6 +43,15 @@ export const TicketTable = ({ ticketTypes }: TicketTableProps) => {
                 {transWithFallback("ticketPrice", "Giá vé")}
               </th>
               <th className="py-3 px-4 text-left">
+                {transWithFallback("startTime", "Thời gian bắt đầu")}
+              </th>
+              <th className="py-3 px-4 text-left">
+                {transWithFallback("endTime", "Thời gian kết thúc")}
+              </th>
+              <th className="py-3 px-4 text-left">
+                {transWithFallback("ticketQuantity", "Số lượng vé")}
+              </th>
+              <th className="py-3 px-4 text-left">
                 {transWithFallback("ticketSold", "Số vé đã bán")}
               </th>
               <th className="py-3 px-4 text-left">
@@ -42,6 +64,9 @@ export const TicketTable = ({ ticketTypes }: TicketTableProps) => {
               <tr key={index} className="border-b">
                 <td className="py-3 px-4">{ticket.typeName}</td>
                 <td className="py-3 px-4">{ticket.price.toLocaleString()} đ</td>
+                <td className="py-3 px-4">{formatDateTime(ticketTypesInfo?.at(index)?.startTime)}</td>
+                <td className="py-3 px-4">{formatDateTime(ticketTypesInfo?.at(index)?.endTime)}</td>
+                <td className="py-3 px-4">{ticketTypesInfo?.at(index)?.quantity}</td>
                 <td className="py-3 px-4">{ticket.sold}</td>
                 <td className="py-3 px-4">{ticket.ratio}%</td>
               </tr>

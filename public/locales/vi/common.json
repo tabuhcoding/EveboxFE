@@ -753,7 +753,7 @@
   "ticketTypeName": "Tên loại vé",
   "ticketSold": "Số vé đã bán",
   "ticketRatio": "Tỉ lệ",
-  "appRevenue": "Doanh thu ứng dụng",
+   "appRevenue": "Doanh thu ứng dụng",
   "orgRevenue": "Doanh thu nhà tổ chức",
   "eventRevenue": "Doanh thu sự kiện",
   "totalRevenue": "Tổng doanh thu",
@@ -785,5 +785,6 @@
   "eventNotFoundDesc": "Sự kiện bạn đang tìm kiếm không có suất diễn. Vui lòng kiểm tra lại.",
   "backToRevenue": "Quay lại quản lý doanh thu",
   "startDate": "Ngày bắt đầu",
-  "endDate": "Ngày kết thúc"
+  "endDate": "Ngày kết thúc",
+  "timeAndTicketType": "Thời gian & Loại vé"
 }

@@ -110,3 +110,16 @@ export async function getUserTicketResponse(params: string, accessToken: string)
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
+
+export async function sendEmail(orderIds: Array<number>): Promise<BaseApiResponse<RedisInfo> | null> {
+  try {
+    const query = orderIds.map(id => `orderId=${id}`).join("&");
+    const res = await bookingService.post(`${END_POINT_LIST.BOOKING.SEND_EMAIL}?${query}`);
+    if (!res) throw new Error('Failed to send email');
+
+    return res.data as BaseApiResponse<RedisInfo>;
+  } catch (error: any) {
+    console.error("Error sending email:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}

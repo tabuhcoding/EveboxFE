@@ -477,13 +477,29 @@ export async function getEventRoles(): Promise<EventRoleItem[]> {
   }
 }
 
-export const getOrdersByShowingId = async (showingId: string): Promise<GetOrdersResponse> => {
-  // const endpoint = END_POINT_LIST.ORG_STATISTICS.GET_SUMMARY.replace("{showingId}", showingId);
-  const res = await orgService.get(`${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}`);
-  console.log("fetch orders")
-  console.log(res)
+export const getOrdersByShowingId = async (
+  showingId: string,
+  userEmail?: string
+): Promise<GetOrdersResponse> => {
+  const queryParams = new URLSearchParams();
+  queryParams.append("page", "1");
+  queryParams.append("limit", "100");
+
+  if (userEmail) {
+    queryParams.append("userEmail", userEmail); 
+  }
+
+  const url = `${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}${
+    queryParams.toString() ? `?${queryParams.toString()}` : ""
+  }`;
+
+  const res = await orgService.get<BaseApiResponse<GetOrdersResponse>>(url);
+
+  console.log("fetch orders");
+  console.log(res);
+
   if (!res || !res.data) {
-    throw new Error('Failed to fetch event orders');
+    throw new Error("Failed to fetch event orders");
   }
 
   return res.data.data;
@@ -579,5 +595,34 @@ export async function getAllCheckedInTickets(showingId: string): Promise<Checked
     }
 
     return res.data.data;
+  }
+}
+
+export async function getAllTicketsOfShowing(
+  showingId: string,
+  orderId?: number,
+  page = 1,
+  limit = 100
+): Promise<any> {
+  const query = new URLSearchParams();
+
+  if (orderId) query.append("orderId", orderId.toString());
+  if (page) query.append("page", page.toString());
+  if (limit) query.append("limit", limit.toString());
+
+  const url = `${END_POINT_LIST.ORG_STATISTICS.GET_TICKETS}/${showingId}?${query.toString()}`;
+
+  try {
+    const res = await orgService.get(url);
+
+    if (!res || res.status !== 200) {
+      throw new Error(res?.data?.message || "Failed to fetch tickets of showing");
+    }
+
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    console.error("Error fetching tickets of showing:", err?.response?.data?.message || error);
+    throw new Error(err?.response?.data?.message || "Unexpected error while fetching tickets");
   }
 }
