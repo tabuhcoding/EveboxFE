@@ -157,6 +157,8 @@ export default function TicketManagement() {
         return 'bg-yellow-500 text-white';
       case 'CANCELLED':
         return 'bg-red-500 text-white';
+      case 'GIVEAWAY':
+        return 'bg-amber-300 text-black';
       default:
         return 'bg-gray-500 text-white';
     }
@@ -261,7 +263,7 @@ export default function TicketManagement() {
                   </h3>
                   <div className="flex gap-2 mb-2">
                     <span className={`${getStatusColor(ticket.status)} text-xs px-2 py-1 rounded-md`}>
-                      {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : ticket.status === 'CANCELLED' ? "Đã hủy" : ""}
+                      {ticket.status === 'SUCCESS' ? "Thành công" : ticket.status === 'PENDING' ? "Đang xử lý" : ticket.status === 'CANCELLED' ? "Đã hủy" : ticket.status === 'GIVEAWAY' ? "Đã tặng" : ""}
                     </span>
                     <span className={`border border-green-500 text-green-500 text-xs px-2 py-1 rounded-md`}>
                       {ticket.type === 'E_TICKET' ? "Vé điện tử" : "Vé cứng"}
