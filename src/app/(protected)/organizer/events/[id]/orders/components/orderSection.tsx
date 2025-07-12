@@ -4,8 +4,13 @@ import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { TicketOrderData } from "@/types/models/org/orders.interface";
 import { useTranslations } from "next-intl";
+import { getOrdersByShowingId } from "@/services/org.service";
 
-export default function OrderSection({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
+interface OrderSectionProps {
+  showingId: string;
+}
+
+export default function OrderSection({ showingId }: OrderSectionProps) {
   const t = useTranslations("common");
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -13,8 +18,43 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
   };
 
   const [search, setSearch] = useState("");
+  const [ordersData, setOrdersData] = useState<TicketOrderData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+   const fetchOrders = async (emailFilter?: string) => {
+    try {
+      setLoading(true);
+      const data = await getOrdersByShowingId(showingId, emailFilter); 
+      setOrdersData(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders(); // initial load
+  }, [showingId]);
+
+  const handleSearch = async () => {
+    const trimmed = search.trim().toLowerCase();
+    if (trimmed.includes("@")) {
+      await fetchOrders(trimmed); 
+    }
+  };
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      handleSearch();
+    }, 500);
+
+    return () => clearTimeout(debounce);
+  }, [search]);
+
+  
 
   useEffect(() => {
     setMounted(true);
@@ -23,6 +63,14 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
   useEffect(() => {
     setSelectedOrders([]);
   }, [ordersData]);
+
+  if (loading) {
+  return (
+    <div className="flex justify-center items-center py-12">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#0C4762]" />
+    </div>
+  );
+}
 
   const getCustomerName = (order: TicketOrderData): string => {
     const formAnswers = order.formResponse?.FormAnswer || [];
@@ -64,13 +112,6 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
 
   const safeOrdersData = Array.isArray(ordersData) ? ordersData : [];
 
-  const filteredOrders = safeOrdersData.filter((order) => {
-    const customerName = getCustomerName(order).toLowerCase();
-    const orderId = order.id ?? "";
-    const keyword = search.toLowerCase();
-    return customerName.includes(keyword) || orderId.toString().includes(keyword);
-  });
-
   const toggleCheckbox = (orderId: string) => {
     setSelectedOrders((prev) => (prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]));
   };
@@ -84,11 +125,14 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
           <input
             type="text"
             className="w-full px-3 py-2 outline-none"
-            placeholder={transWithFallback("searchByNameOrOrderId", "Tìm kiếm theo tên hoặc mã đơn hàng")}
+            placeholder={transWithFallback("searchByNameOrOrderId", "Tìm kiếm theo email khach hang")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]">
+          <button
+            onClick={() => handleSearch()}
+            className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]"
+          >
             <Search size={24} color="white" />
           </button>
         </div>
@@ -115,8 +159,8 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
             <th className="py-2 px-2">
               <input
                 type="checkbox"
-                onChange={(e) => setSelectedOrders(e.target.checked ? filteredOrders.map((o) => o.id.toString()) : [])}
-                checked={filteredOrders.length > 0 && selectedOrders.length === filteredOrders.length}
+                onChange={(e) => setSelectedOrders(e.target.checked ? ordersData.map((o) => o.id.toString()) : [])}
+                checked={ordersData.length > 0 && selectedOrders.length === ordersData.length}
               />
             </th>
             <th className="py-2 px-4">{transWithFallback("orderId", "Mã đơn hàng")}</th>
@@ -129,8 +173,8 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => {
+          {ordersData.length > 0 ? (
+            ordersData.map((order) => {
               const status = getStatusDisplay(order.status);
               return (
                 <tr key={order.id} className="border-t hover:bg-gray-50">

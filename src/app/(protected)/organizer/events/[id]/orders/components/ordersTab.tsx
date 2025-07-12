@@ -53,7 +53,7 @@ export default function OrderTabs({ ordersData = [], showingId = "" }: { ordersD
       {/* Tab Content */}
       <div className="w-full mt-4">
         {activeTab === "orders" ? (
-          <OrderSection ordersData={safeOrdersData} />
+          <OrderSection showingId={showingId} />
         ) : (
           <TicketSection showingId={showingId} />
         )}

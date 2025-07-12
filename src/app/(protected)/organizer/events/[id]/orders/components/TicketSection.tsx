@@ -22,29 +22,47 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
   const [tickets, setTickets] = useState<OrderTicket[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        setLoading(true);
-        const response = await getAllTicketsOfShowing(showingId);
-        console.log("-------",response.data[0][0].Order);
-        setTickets(response.data[0] || []);
-      } catch (err) {
-        toast.error('Lỗi khi tải dữ liệu vé');
-        console.error('Error loading tickets:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchTickets = async (orderId?: number) => {
+    try {
+      setLoading(true);
+      const response = await getAllTicketsOfShowing(showingId, orderId);
+      setTickets(response.data[0] || []);
+    } catch (err) {
+      toast.error('Lỗi khi tải dữ liệu vé');
+      console.error('Error loading tickets:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (showingId) {
       fetchTickets();
     }
   }, [showingId]);
 
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      const trimmed = search.trim();
+      const orderId = Number(trimmed);
+
+      if (trimmed === '') {
+        fetchTickets(); // No filter
+      } else if (!isNaN(orderId)) {
+        fetchTickets(orderId); // Search by order ID
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [search]);
+
   if (loading) {
-    return <p className="text-center py-6">Đang tải dữ liệu vé...</p>;
-  }
+  return (
+    <div className="flex justify-center items-center py-12">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#0C4762]" />
+    </div>
+  );
+}
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -53,11 +71,18 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
           <input
             type="text"
             className="w-full px-3 py-2 outline-none"
-            placeholder={transWithFallback('searchByName', 'Tìm kiếm theo tên')}
+            placeholder={transWithFallback('searchByOrderId', 'Tìm kiếm theo mã đơn hàng')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]">
+          <button
+            onClick={() => {
+              const orderId = Number(search.trim());
+              if (!isNaN(orderId)) fetchTickets(orderId);
+              else fetchTickets();
+            }}
+            className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]"
+          >
             <Search size={24} color="white" />
           </button>
         </div>
