@@ -96,6 +96,8 @@ export interface TicketOrderData {
   type: string;
   mailSent: boolean;
   showingId: string;
+  userId: string;
+  ownerId: string;
   formResponse?: FormResponse;
   paymentInfo?: PaymentInfo;
   Ticket?: TicketTypeInfo[];

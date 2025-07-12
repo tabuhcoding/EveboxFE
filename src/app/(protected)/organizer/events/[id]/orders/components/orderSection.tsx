@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { TicketOrderData } from "@/types/models/org/orders.interface";
 import { useTranslations } from "next-intl";
 import { getOrdersByShowingId } from "@/services/org.service";
+import { sendEmail } from "@/services/booking.service";
+import toast from "react-hot-toast";
 
 interface OrderSectionProps {
   showingId: string;
@@ -19,7 +21,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
 
   const [search, setSearch] = useState("");
   const [ordersData, setOrdersData] = useState<TicketOrderData[]>([]);
-  const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+  const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +46,27 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
     if (trimmed.includes("@")) {
       await fetchOrders(trimmed); 
     }
+  };
+
+  const handleSendSelectedEmail = async () => {
+    try {
+      await sendEmail(selectedOrders);
+      toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!') );
+    } catch (error) {
+      toast.error("Error sending email!")
+      console.error("Failed to fetch orders:", error);
+    }  
+  };
+
+  const handleSendAllEmails = async () => {
+    try {
+      const unsendOrders = ordersData.filter(order => !order?.mailSent && order?.status?.toLowerCase() === "success")
+      await sendEmail(unsendOrders.map(order => order.id));
+      toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!') );
+    } catch (error) {
+      toast.error("Error sending email!")
+      console.error("Failed to fetch orders:", error);
+    }  
   };
 
   useEffect(() => {
@@ -78,7 +101,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
       const fieldName = answer.FormInput?.fieldName?.toLowerCase() || "";
       return fieldName.includes("name") || fieldName.includes("tên");
     });
-    return nameAnswer?.value || "-";
+    return nameAnswer?.value ?? order.userId ?? "-";
   };
 
   const formatPrice = (price: number): string => {
@@ -93,6 +116,8 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
     switch (statusValue) {
       case "success":
         return { text: transWithFallback("success", "Thành công"), className: "bg-green-100 text-green-800" };
+      case "giveaway":
+        return { text: transWithFallback("giveaway", "Đã tặng"), className: "bg-green-100 text-green-800" };  
       case "processing":
         return { text: transWithFallback("processing", "Đang xử lý"), className: "bg-yellow-100 text-yellow-800" };
       case "cancelled":
@@ -104,7 +129,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
 
   const getQuantity = (order: TicketOrderData): number => {
     let quantity = 0;
-     order?.Ticket?.forEach(ticket => {
+    order?.Ticket?.forEach(ticket => {
        quantity+=ticket.tickets.length;
     });
     return quantity;
@@ -112,7 +137,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
 
   const safeOrdersData = Array.isArray(ordersData) ? ordersData : [];
 
-  const toggleCheckbox = (orderId: string) => {
+  const toggleCheckbox = (orderId: number) => {
     setSelectedOrders((prev) => (prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]));
   };
 
@@ -138,10 +163,13 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
         </div>
 
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-[#48D1CC] text-[#0C4762] rounded-md transition duration-200 hover:bg-[#51DACF]">
-            {transWithFallback("sendAllEmails", "Gửi tất cả email")}
+          <button 
+            onClick={() => handleSendAllEmails()}
+            className="px-4 py-2 bg-[#48D1CC] text-[#0C4762] rounded-md transition duration-200 hover:bg-[#51DACF]">
+               {transWithFallback("sendAllEmails", "Gửi tất cả email")}
           </button>
           <button
+            onClick={() => handleSendSelectedEmail()}
             className={`px-4 py-2 rounded-md transition duration-200 ${selectedOrders.length > 0
               ? "bg-[#48D1CC] text-[#0C4762] hover:bg-[#51DACF]"
               : "bg-gray-300 text-gray-700 cursor-not-allowed"
@@ -159,12 +187,13 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
             <th className="py-2 px-2">
               <input
                 type="checkbox"
-                onChange={(e) => setSelectedOrders(e.target.checked ? ordersData.map((o) => o.id.toString()) : [])}
+                onChange={(e) => setSelectedOrders(e.target.checked ? ordersData.map((o) => o.id) : [])}
                 checked={ordersData.length > 0 && selectedOrders.length === ordersData.length}
               />
             </th>
             <th className="py-2 px-4">{transWithFallback("orderId", "Mã đơn hàng")}</th>
             <th className="py-2 px-4">{transWithFallback("customer", "Khách hàng")}</th>
+            <th className="py-2 px-4">{transWithFallback("owner", "Chủ sở hữu")}</th>
             <th className="py-2 px-4">{transWithFallback("ticketType", "Loại vé")}</th>
             <th className="py-2 px-4">{transWithFallback("quantity", "Số lượng")}</th>
             <th className="py-2 px-4">{transWithFallback("payment", "Thanh toán")}</th>
@@ -179,14 +208,19 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
               return (
                 <tr key={order.id} className="border-t hover:bg-gray-50">
                   <td className="py-2 px-2">
-                    <input
-                      type="checkbox"
-                      onChange={() => toggleCheckbox(order.id.toString())}
-                      checked={selectedOrders.includes(order.id.toString())}
-                    />
+                    {
+                      order?.status?.toLowerCase() === 'success' && !order?.mailSent
+                        ? <input
+                            type="checkbox"
+                            onChange={() => toggleCheckbox(order.id)}
+                            checked={selectedOrders.includes(order.id)}
+                          />
+                        : <></>
+                    }
                   </td>
                   <td className="py-2 px-4">{order.id}</td>
                   <td className="py-2 px-4">{getCustomerName(order)}</td>
+                  <td className="py-2 px-4">{order.ownerId}</td>
                   <td className="py-2 px-4">{order.type}</td>
                   <td className="py-2 px-4">{getQuantity(order)}</td>
                   <td className="py-2 px-4">{order.paymentInfo?.method}</td>

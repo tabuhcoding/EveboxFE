@@ -766,5 +766,8 @@
     "timeAndTicketType": "Time & Ticket Type",
     "success": "Success",
     "vsLastWeek": "than last week.",
-    "revenueAndTicketsOverTime": "Revenue and Tickets over time"
+    "revenueAndTicketsOverTime": "Revenue and Tickets over time",
+    "sendEmailSuccess": "Sending email(s) successfully!",
+    "owner": "Owner",
+    "payment":"Payment"
 }

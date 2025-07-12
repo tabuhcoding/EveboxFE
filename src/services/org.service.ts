@@ -482,11 +482,11 @@ export const getOrdersByShowingId = async (
   userEmail?: string
 ): Promise<GetOrdersResponse> => {
   const queryParams = new URLSearchParams();
+  queryParams.append("page", "1");
+  queryParams.append("limit", "100");
 
   if (userEmail) {
-    queryParams.append("userEmail", userEmail);
-    queryParams.append("page", "1");
-    queryParams.append("limit", "100");
+    queryParams.append("userEmail", userEmail); 
   }
 
   const url = `${END_POINT_LIST.ORG_STATISTICS.GET_ORDERS}/${showingId}${

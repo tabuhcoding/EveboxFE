@@ -45,6 +45,7 @@ export class END_POINT_LIST {
     GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
     GET_ORDER_BY_ID: "/api/ticket/getOrderById",
     GET_USER_ORDER: "/api/ticket/getUserOrder",
+    SEND_EMAIL: '/api/booking/sendEmail'
   }
 
   static readonly ORG_EVENT = {
