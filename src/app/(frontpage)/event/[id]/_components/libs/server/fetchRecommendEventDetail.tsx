@@ -9,7 +9,9 @@ export const fetchRecommendEventDetail = async (eventId: string, limit = 20) => 
       }
     );
 
-    if (!response.ok) throw new Error('Failed to fetch recommended events');
+    if (!response.ok) {
+      return { error: 'Failed to fetch recommended events' };
+    }
     return response.json();
   } catch (error) {
     console.error('Fetch error:', error);
