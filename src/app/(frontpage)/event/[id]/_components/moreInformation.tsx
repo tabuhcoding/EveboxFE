@@ -16,10 +16,6 @@ export default function MoreInformation({ title, location, locationsString }: Mo
     const t = useTranslations("common");
     const { locale } = useI18n(); // Get current locale
 
-    useEffect(() => {
-        console.log('NEXT_PUBLIC_GOOGLE_MAPS_API_KEY', process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
-    }, []);
-
     return (
         <div className="col-lg-4 col-md-12" id="event-location">
             {/* Location */}
@@ -30,7 +26,7 @@ export default function MoreInformation({ title, location, locationsString }: Mo
                     </h2>
                     <div className="ratio ratio-16x9">
                         <GoogleMapsEmbed
-                            apiKey="AIzaSyCNU7igk_2x8_JPATXGJs3oIzcZQSVQHxQ"
+                            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
                             mode="place"
                             q={location}
                             language={locale}
