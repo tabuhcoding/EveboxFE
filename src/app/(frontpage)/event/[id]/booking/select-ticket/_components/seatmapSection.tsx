@@ -167,26 +167,37 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
             {/* Vẽ stage section */}
             {stageSections?.map((section) => (
               <g key={section.id}>
-                {section.element?.map((el, index) => (
-                  el.type === 'path' ? (
-                    <path
-                      key={index}
-                      d={el.data}
-                      style={{ fill: el.fill }}
-                      transform={`translate(${el.x}, ${el.y})`}
-                    />
-                  ) : el.type === 'rect' ? (
-                    <rect
-                      key={index}
-                      x={el.x}
-                      y={el.y}
-                      width={el.width}
-                      height={el.height}
-                      style={{ fill: el.fill }}
-                      transform={`translate(${el.x}, ${el.y})`}
-                    />
-                  ) : <h1>DUUDUDUDUDUDUD</h1>
-                ))}
+                {section.element?.map((el, index) => {
+  const commonProps = {
+    key: index,
+    style: { fill: el.fill },
+  };
+
+  if (el.type === 'path') {
+    return (
+      <path
+        {...commonProps}
+        d={el.data}
+        // chỉ dùng transform nếu x, y khác 0
+        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+      />
+    );
+  } else if (el.type === 'rect') {
+    return (
+      <rect
+        {...commonProps}
+        x={el.x}
+        y={el.y}
+        width={el.width}
+        height={el.height}
+        // KHÔNG dùng transform nếu đã gán x/y
+      />
+    );
+  }
+
+  return null;
+})}
+
               </g>
             ))}
             {/* Vẽ section thường, click để chọn */}
@@ -203,26 +214,37 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                     opacity: isSoldOut ? 0.5 : 1,
                   }}
                 >
-                  {section.element?.map((el, index) => (
-                    el.type === 'path' ? (
-                      <path
-                        key={index}
-                        d={el.data}
-                        style={{ fill: el.fill }}
-                        transform={`translate(${el.x}, ${el.y})`}
-                      />
-                    ) : el.type === 'rect' ? (
-                      <rect
-                        key={index}
-                        x={el.x}
-                        y={el.y}
-                        width={el.width}
-                        height={el.height}
-                        style={{ fill: el.fill }}
-                        transform={`translate(${el.x}, ${el.y})`}
-                      />
-                    ) : <h1>DUUDUDUDUDUDUD</h1>
-                  ))}
+                  {section.element?.map((el, index) => {
+  const commonProps = {
+    key: index,
+    style: { fill: el.fill },
+  };
+
+  if (el.type === 'path') {
+    return (
+      <path
+        {...commonProps}
+        d={el.data}
+        // chỉ dùng transform nếu x, y khác 0
+        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+      />
+    );
+  } else if (el.type === 'rect') {
+    return (
+      <rect
+        {...commonProps}
+        x={el.x}
+        y={el.y}
+        width={el.width}
+        height={el.height}
+        // KHÔNG dùng transform nếu đã gán x/y
+      />
+    );
+  }
+
+  return null;
+})}
+
                 </g>
               )
             })}
