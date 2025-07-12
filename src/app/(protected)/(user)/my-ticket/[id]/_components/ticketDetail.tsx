@@ -12,11 +12,13 @@ import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
 
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 import TicketDetailLoading from '../loading';
+import GiftTicketModal from './giftTicketModal';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
     const [currentTicketIndex, setCurrentTicketIndex] = useState(0);
     const router = useRouter();
+    const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
 
     const t = useTranslations('common');
 
@@ -74,7 +76,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     onClick={() => router.back()}
                     className="p-2 border-2 border-[#0C4762] rounded-md hover:bg-gray-200 absolute top-10 left-4 mt-10 mb-10"
                 >
-                    <ChevronLeft size={20} />
+                    <ChevronLeft size={20} /> 
                 </button>
                 {/* Ticket Details */}
                 <div className="bg-[#0C4762] text-white md:w-1/2 w-full p-6 rounded-lg shadow-lg mt-10">
@@ -135,6 +137,23 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         </div>
                     )}
 
+                    {ticket.status === 'SUCCESS' && (
+                        <>
+                            <div className="mt-8">
+                                <button
+                                    className="w-full bg-[#51DACF] hover:bg-[#3ec8bd] text-[#0C4762] font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200"
+                                    onClick={() => setIsGiftModalOpen(true)}
+                                >
+                                    {transWithFallback('giveAway', 'Tặng vé')}
+                                </button>
+                            </div>
+                            <GiftTicketModal
+                                isOpen={isGiftModalOpen}
+                                onClose={() => setIsGiftModalOpen(false)}
+                                ticketId={ticket.id}
+                            />
+                        </>
+                    )}
                 </div>
 
                 {/* Order Details */}
@@ -146,6 +165,8 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             <p className="text-[#9EF5CF]">{new Date(ticket.PaymentInfo?.paidAt || '').toLocaleString()}</p>
                             <p className="text-gray-300">{transWithFallback('paymentMethod', 'Phương thức thanh toán')}:</p>
                             <p className="text-[#9EF5CF]">{ticket.PaymentInfo?.method}</p>
+                            <p className="text-gray-300">{transWithFallback('owner', 'Chủ sở hữu')}:</p>
+                            <p className="text-[#9EF5CF]">{ticket.ownerId}</p>
                             <p className="text-gray-300">{transWithFallback('orderStatus', 'Tình trạng đơn hàng')}:</p>
                             <p className={`${color} font-bold`}>{text}</p>
                         </div>

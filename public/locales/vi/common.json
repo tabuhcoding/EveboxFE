@@ -752,5 +752,15 @@
   "ticketTypeList": "Danh sách loại vé",
   "ticketTypeName": "Tên loại vé",
   "ticketSold": "Số vé đã bán",
-  "ticketRatio": "Tỉ lệ"
+  "ticketRatio": "Tỉ lệ",
+  "owner": "Chủ sở hữu",
+  "giftTicket": "Tặng vé",
+  "giftTicketEmail": "Tặng vé qua email",
+  "sending": "Đang gửi...",
+  "giftTicketFor": "Nhập email người nhận để tặng vé này",
+  "giftFailed": "Gửi tặng thất bại!",
+  "giftSuccess": "🎉 Tặng vé thành công!",
+  "err": "Lỗi",
+  "giveAway": "Tặng vé",
+  "sendGift": "Gửi tặng"
 }

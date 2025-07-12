@@ -763,5 +763,15 @@
     "ticketRatio": "Ratio",
     "revenue": "Revenue",
     "selectShowing": "Select showing",
-    "timeAndTicketType": "Time & Ticket Type"
+    "timeAndTicketType": "Time & Ticket Type",
+    "owner": "Owner",
+    "giftTicket": "Gift Ticket",
+    "giftTicketEmail": "Gift Ticket via Email",
+    "sending": "Sending...",
+    "giftTicketFor": "Enter the recipient's email to gift this ticket",
+    "giftFailed": "Gift failed!",
+    "giftSuccess": "🎉 Gift ticket successfully!",
+    "err": "Error",
+    "giveAway": "Gift ticket",
+    "sendGift": "Send gift"
 }
