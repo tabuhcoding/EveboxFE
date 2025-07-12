@@ -1,5 +1,5 @@
 /* Package Application */
-import { BaseApiResponse, PaginationData } from "types/baseApiResponse";
+import { BaseApiResponse } from "types/baseApiResponse";
 
 import { END_POINT_LIST } from "./endpoint";
 import { orgService } from "./instance.service";
@@ -10,7 +10,7 @@ import { BasicFormDto, ConnectFormDto, ConnectFormResponseData, ConnectFormRespo
 import { EventOrgFrontDisplayDto, IEventSummaryData, IShowTime } from "@/types/models/org/orgEvent.interface";
 import { AnalyticData } from "@/types/models/org/analytics.interface";
 import { AddEventMemberDto, AddEventMemberResponseDto, EventMember, EventRoleItem, UpdateEventMemberDto, UpdateEventMemberResponseDto } from "@/types/models/org/member.interface";
-import { GetOrdersResponse, OrderTicket } from "@/types/models/org/orders.interface";
+import { GetOrdersResponse } from "@/types/models/org/orders.interface";
 import { CheckedInTicketDto } from "@/types/models/org/checkin.interface";
 
 export async function getOrgPaymentInfo(): Promise<OrgPaymentInfoData> {
