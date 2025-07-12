@@ -305,72 +305,79 @@ export default function RevenueManagementPage() {
   };
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-[#0C4762]">Quản lý doanh thu</h1>
-        <p className="text-gray-700">Quản lý doanh thu của ứng dụng, nhà tổ chức và sự kiện</p>
-        <div className="h-0.5 w-full bg-[#0C4762] mt-4"></div>
-      </div>
-      <div className="mt-6">
-        <RevenueTabs activeTab={activeTab} onTabChange={setActiveTab} />
-      </div>
-
-      {activeTab === "app" && (
-        <div className="mt-4">
-          <RevenueSubTabs activeSubTab={activeSubTab} onSubTabChange={setActiveSubTab} />
-          {renderAppContent()}
+    <>
+      <div className="container mx-auto px-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-[#0C4762]">Quản lý doanh thu</h1>
+          <p className="text-gray-700">Quản lý doanh thu của ứng dụng, nhà tổ chức và sự kiện</p>
+          <div className="h-0.5 w-full bg-[#0C4762] mt-4"></div>
         </div>
-      )}
-      {activeTab === "organization" && (
-        <>
-          <Filter
-            key={activeTab}
-            onFilterChange={(f) => {
-              setFromDate(f.fromDate);
-              setToDate(f.toDate);
-              setSearch(f.search);
-            }} />
-          <RevenueOrgTable
-            loading={loading}
-            organizations={allOrgs}
-            appId={appRevenues[0]?.id ?? ""}
-            toggleOrganization={toggleOrganization}
-            toggleEvent={toggleEvent}
-            toggleEventDetail={toggleEventDetail}
-            formatCurrency={formatCurrency}
-          />
+        <div className="mt-6">
+          <RevenueTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
 
-          <EventPagination
-            currentPage={currentPage}
-            totalItems={totalItems}
-            eventsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            setEventsPerPage={(num) => {
-              setItemsPerPage(num);
-              setCurrentPage(1); // Reset to first page when items per page changes
-            }}
-          />
-        </>
-      )}
-      {activeTab === "event" && (
-        <>
-          <Filter
-            key={activeTab}
-            onFilterChange={(f) => {
-              setFromDate(f.fromDate);
-              setToDate(f.toDate);
-              setSearch(f.search);
-            }} />
-          <EventRevenueTable
-            loading={loading}
-            formatCurrency={formatCurrency}
-            toggleEvent={handleToggleEvent}
-            toggleEventDetail={handleToggleEventDetail}
-            events={allEvents}
-            orgId={appRevenues[0]?.id.toString() ?? ""}
-          />
-        </>
-      )}
-    </div>
+        {activeTab === "app" && (
+          <div className="mt-4">
+            <RevenueSubTabs activeSubTab={activeSubTab} onSubTabChange={setActiveSubTab} />
+            {renderAppContent()}
+          </div>
+        )}
+        {activeTab === "organization" && (
+          <>
+            <Filter
+              key={activeTab}
+              onFilterChange={(f) => {
+                setFromDate(f.fromDate);
+                setToDate(f.toDate);
+                setSearch(f.search);
+              }} />
+            <RevenueOrgTable
+              loading={loading}
+              organizations={allOrgs}
+              appId={appRevenues[0]?.id ?? ""}
+              toggleOrganization={toggleOrganization}
+              toggleEvent={toggleEvent}
+              toggleEventDetail={toggleEventDetail}
+              formatCurrency={formatCurrency}
+            />
+
+            <EventPagination
+              currentPage={currentPage}
+              totalItems={totalItems}
+              eventsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              setEventsPerPage={(num) => {
+                setItemsPerPage(num);
+                setCurrentPage(1); // Reset to first page when items per page changes
+              }}
+            />
+          </>
+        )}
+        {activeTab === "event" && (
+          <>
+            <Filter
+              key={activeTab}
+              onFilterChange={(f) => {
+                setFromDate(f.fromDate);
+                setToDate(f.toDate);
+                setSearch(f.search);
+              }} />
+            <EventRevenueTable
+              loading={loading}
+              formatCurrency={formatCurrency}
+              toggleEvent={handleToggleEvent}
+              toggleEventDetail={handleToggleEventDetail}
+              events={allEvents}
+              orgId={appRevenues[0]?.id.toString() ?? ""}
+            />
+          </>
+        )}
+      </div>
+      <AlertDialog
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        message={alertMessage}
+      />
+    </>
   )
 }

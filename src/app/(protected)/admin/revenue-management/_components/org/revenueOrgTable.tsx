@@ -4,7 +4,7 @@
 import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ChevronDown, ChevronRight, Loader, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 
 /* Package Application */
 import { RevenueOrgTableProps } from "@/types/models/admin/revenueManagement.interface";
