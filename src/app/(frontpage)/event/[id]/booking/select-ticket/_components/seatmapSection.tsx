@@ -153,7 +153,7 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
 
   return (
     <div className="seatmap-container relative overflow-hidden" ref={seatmapRef}>
-      <div className="seatmap-wrapper relative">
+      <div className="seatmap-wrapper relative" style={{ backgroundColor: 'gray'}}>
         <div
           className="seatmap-zoom"
           style={{
@@ -163,7 +163,7 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
             cursor: isDragging ? "grabbing" : "grab"
           }}
         >
-          <svg viewBox={seatMap.viewBox} className="seatmap">
+          <svg viewBox={seatMap.viewBox} className="seatmap"   style={{ backgroundColor: 'gray' }}>
             {/* Vẽ stage section */}
             {stageSections?.map((section) => (
               <g key={section.id}>
@@ -178,7 +178,11 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                       <path
                         {...commonProps}
                         d={el.data}
-                        // chỉ dùng transform nếu x, y khác 0
+                        style={{
+                          fill: el.fill,
+                          // stroke: 'white',
+                          // strokeWidth: 1
+                        }}
                         transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
                       />
                     );
@@ -190,7 +194,11 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                         y={el.y}
                         width={el.width}
                         height={el.height}
-                        // KHÔNG dùng transform nếu đã gán x/y
+                        style={{
+                          fill: el.fill,
+                          stroke: 'white',     
+                          strokeWidth: 1          
+                        }}
                       />
                     );
                   }
@@ -224,8 +232,12 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                       return (
                         <path
                           {...commonProps}
+                          style={{
+                            fill: el.fill,
+                            // stroke: 'white',
+                            // strokeWidth: 1
+                          }}
                           d={el.data}
-                          // chỉ dùng transform nếu x, y khác 0
                           transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
                         />
                       );
@@ -237,7 +249,11 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                           y={el.y}
                           width={el.width}
                           height={el.height}
-                          // KHÔNG dùng transform nếu đã gán x/y
+                          style={{
+                            fill: el.fill,
+                            stroke: 'white',
+                            strokeWidth: 1
+                          }}
                         />
                       );
                     }
