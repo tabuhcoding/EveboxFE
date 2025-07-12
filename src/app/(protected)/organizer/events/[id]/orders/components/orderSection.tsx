@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { TicketOrderData } from "@/types/models/org/orders.interface";
 import { useTranslations } from "next-intl";
