@@ -765,5 +765,6 @@
     "selectShowing": "Select showing",
     "timeAndTicketType": "Time & Ticket Type",
     "success": "Success",
-    "vsLastWeek": "than last week."
+    "vsLastWeek": "than last week.",
+    "revenueAndTicketsOverTime": "Revenue and Tickets over time"
 }

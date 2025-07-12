@@ -10,6 +10,7 @@ import type { IShowTime, IEventSummaryData } from "@/types/models/org/orgEvent.i
 import { getShowingsByEventId, getSummaryByShowingId } from "@/services/org.service"
 import SidebarOrganizer from "../../_components/sidebarOrganizer"
 import { useTranslations } from "next-intl"
+import RevenueChart from "./revenue-chart"
 
 interface PageProps {
   params: { id: string }
@@ -161,6 +162,10 @@ export const SummaryRevenuePage = ({ params }: PageProps) => {
           />
 
           <TicketTable ticketTypes={data.byTicketType}  ticketTypesInfo={selectedShow?.TicketType} />
+
+          {data?.revenueChart && data.revenueChart.length > 0 && (
+  <RevenueChart data={data.revenueChart} />
+)}
         </div>
       </div>
     )
