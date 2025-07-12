@@ -67,7 +67,8 @@ export default function LocationManagementClient() {
         const citySet: Set<string> = new Set();
 
         res.forEach((province) => {
-          const provinceName = locale === "vi" ? province.name.vi : province.name.en
+          let provinceName = locale === "vi" ? province.name.vi : province.name.en
+          provinceName = removeQuotes(provinceName);
           provinceMap[provinceName] = province.id;
           citySet.add(provinceName);
         });
@@ -87,7 +88,7 @@ export default function LocationManagementClient() {
       const venueMap: Record<string, Venue> = {}
 
       group.venues.forEach((v) => {
-        const fullAddress = `${v.street}, ${v.ward}, ${v.district}, ${v.province}`
+        const fullAddress = `${v.street}, ${v.ward}, ${v.district}, ${removeQuotes(v.province)}`
 
         if (!venueMap[fullAddress]) {
           venueMap[fullAddress] = {
@@ -148,6 +149,9 @@ export default function LocationManagementClient() {
     setSelectedCity("")
     await fetchLocations()
   }
+
+  const removeQuotes = (str: string) => str?.replace(/^"(.*)"$/, '$1').replace(/"/g, '');
+
   const handleConfirmFilter = async () => {
     const provinceId = selectedCity ? cityToProvinceId[selectedCity] : undefined;
     const organizerId = selectedOrganizer ? selectedOrganizer : undefined;
