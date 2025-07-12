@@ -7,7 +7,7 @@ import TicketSection from "./TicketSection"
 import { TicketOrderData } from "@/types/models/org/orders.interface"
 import { useTranslations } from "next-intl"
 
-export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
+export default function OrderTabs({ ordersData = [], showingId = "" }: { ordersData?: TicketOrderData[], showingId: string }) {
   const t = useTranslations("common")
     const transWithFallback = (key: string, fallback: string) => {
       const msg = t(key)
@@ -55,7 +55,7 @@ export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrde
         {activeTab === "orders" ? (
           <OrderSection ordersData={safeOrdersData} />
         ) : (
-          <TicketSection showingId={safeOrdersData[0].showingId} />
+          <TicketSection showingId={showingId} />
         )}
       </div>
     </div>

@@ -27,7 +27,8 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
       try {
         setLoading(true);
         const response = await getAllTicketsOfShowing(showingId);
-        setTickets(response.data || []);
+        console.log("-------",response.data[0][0].Order);
+        setTickets(response.data[0] || []);
       } catch (err) {
         toast.error('Lỗi khi tải dữ liệu vé');
         console.error('Error loading tickets:', err);
@@ -40,37 +41,6 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
       fetchTickets();
     }
   }, [showingId]);
-
-  const filteredTickets = tickets.filter((ticket) => {
-    const formResponses = ticket.formResponse?.FormAnswer || [];
-    const nameField = formResponses.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || '';
-      return fieldName.includes('name') || fieldName.includes('tên');
-    });
-
-    const name = nameField?.value || '';
-    return name.toLowerCase().includes(search.toLowerCase()) || ticket.id.toLowerCase().includes(search.toLowerCase());
-  });
-
-  const getCustomerName = (ticket: OrderTicket): string => {
-    const formResponses = ticket.formResponse?.FormAnswer || [];
-    const nameField = formResponses.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || '';
-      return fieldName.includes('name') || fieldName.includes('tên');
-    });
-
-    return nameField?.value || '-';
-  };
-
-  const getCustomerEmail = (ticket: OrderTicket): string => {
-    const formResponses = ticket.formResponse?.FormAnswer || [];
-    const emailField = formResponses.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || '';
-      return fieldName.includes('email');
-    });
-
-    return emailField?.value || '-';
-  };
 
   if (loading) {
     return <p className="text-center py-6">Đang tải dữ liệu vé...</p>;
@@ -96,45 +66,37 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
       <table className="w-full border">
         <thead>
           <tr className="bg-[#0C4762] text-white text-left">
-            <th className="py-2 px-4">Mã vé</th>
-            <th className="py-2 px-4">Khách hàng</th>
-            <th className="py-2 px-4">Email</th>
-            <th className="py-2 px-4">Loại vé</th>
-            <th className="py-2 px-4">Trạng thái</th>
-            <th className="py-2 px-4">Email đã gửi</th>
+            <th className="py-2 px-4">{transWithFallback("ticketId", "Mã vé")}</th>
+            <th className="py-2 px-4">{transWithFallback("customer", "Khách hàng")}</th>
+            <th className="py-2 px-4">{transWithFallback("ticketType", "Loại vé")}</th>
+            <th className="py-2 px-4">{transWithFallback("orderId", "Mã đơn hàng")}</th>
+            <th className="py-2 px-4">{transWithFallback("status", "Trạng thái")}</th>
           </tr>
         </thead>
         <tbody>
-          {filteredTickets.length > 0 ? (
-            filteredTickets.map((ticket) => (
-              <tr key={ticket.id} className="border-t hover:bg-gray-50">
+          {tickets.length > 0 ? (
+            tickets.map((ticket) => (
+              <tr key={`ticket-${ticket.id}`} className="border-t hover:bg-gray-50">
                 <td className="py-2 px-4">{ticket.id}</td>
-                <td className="py-2 px-4">{getCustomerName(ticket)}</td>
-                <td className="py-2 px-4">{getCustomerEmail(ticket)}</td>
-                <td className="py-2 px-4">{ticket.type}</td>
+                <td className="py-2 px-4">{ticket.Order.userId}</td>
+                <td className="py-2 px-4">{ticket.Order.type}</td>
+                <td className="py-2 px-4">{ticket.orderId}</td>
                 <td className="py-2 px-4">
                   <span
                     className={`px-2 py-1 rounded-full text-sm ${
-                      ticket.status === 'PAID'
+                      ticket.Order.status === 'SUCCESS'
                         ? 'bg-green-100 text-green-800'
-                        : ticket.status !== 'PAID'
+                        : ticket.Order.status !== 'SUCCESS'
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-red-100 text-red-800'
                     }`}
                   >
-                    {ticket.status === 'PAID'
+                    {ticket.Order.status === 'SUCCESS'
                       ? 'Hoàn thành'
-                      : ticket.status !== 'PAID'
+                      : ticket.Order.status !== 'SUCCESS'
                       ? 'Đang xử lý'
                       : 'Đã hủy'}
                   </span>
-                </td>
-                <td className="py-2 px-4">
-                  {ticket.mailSent ? (
-                    <span className="px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">Đã gửi</span>
-                  ) : (
-                    <span className="px-2 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">Chưa gửi</span>
-                  )}
                 </td>
               </tr>
             ))

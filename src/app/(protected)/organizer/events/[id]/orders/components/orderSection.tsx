@@ -68,7 +68,7 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
     const customerName = getCustomerName(order).toLowerCase();
     const orderId = order.id ?? "";
     const keyword = search.toLowerCase();
-    return customerName.includes(keyword) || orderId.includes(keyword);
+    return customerName.includes(keyword) || orderId.toString().includes(keyword);
   });
 
   const toggleCheckbox = (orderId: string) => {
@@ -115,7 +115,7 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
             <th className="py-2 px-2">
               <input
                 type="checkbox"
-                onChange={(e) => setSelectedOrders(e.target.checked ? filteredOrders.map((o) => o.id) : [])}
+                onChange={(e) => setSelectedOrders(e.target.checked ? filteredOrders.map((o) => o.id.toString()) : [])}
                 checked={filteredOrders.length > 0 && selectedOrders.length === filteredOrders.length}
               />
             </th>
@@ -137,8 +137,8 @@ export default function OrderSection({ ordersData = [] }: { ordersData?: TicketO
                   <td className="py-2 px-2">
                     <input
                       type="checkbox"
-                      onChange={() => toggleCheckbox(order.id)}
-                      checked={selectedOrders.includes(order.id)}
+                      onChange={() => toggleCheckbox(order.id.toString())}
+                      checked={selectedOrders.includes(order.id.toString())}
                     />
                   </td>
                   <td className="py-2 px-4">{order.id}</td>

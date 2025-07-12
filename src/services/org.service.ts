@@ -587,7 +587,7 @@ export async function getAllTicketsOfShowing(
   orderId?: number,
   page = 1,
   limit = 10
-): Promise<{ data: OrderTicket[]; pagination?: PaginationData }> {
+): Promise<any> {
   const query = new URLSearchParams();
 
   if (orderId) query.append("orderId", orderId.toString());
@@ -597,16 +597,13 @@ export async function getAllTicketsOfShowing(
   const url = `${END_POINT_LIST.ORG_STATISTICS.GET_TICKETS}/${showingId}?${query.toString()}`;
 
   try {
-    const res = await orgService.get<BaseApiResponse<OrderTicket[]>>(url);
+    const res = await orgService.get(url);
 
     if (!res || res.status !== 200) {
       throw new Error(res?.data?.message || "Failed to fetch tickets of showing");
     }
 
-    return {
-      data: res.data.data,
-      pagination: res.data.pagination,
-    };
+    return res.data;
   } catch (error: unknown) {
     const err = error as { response?: { data?: { message?: string } } };
     console.error("Error fetching tickets of showing:", err?.response?.data?.message || error);

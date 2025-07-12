@@ -55,17 +55,32 @@ export interface Ticket {
 }
 export interface OrderTicket {
   id: string; // Order ID
-  showingId: string;
-  status: string;
-  type: string;
-  price: number;
-  mailSent: boolean;
-  userId: string;
-  formResponse?: FormResponse;
-  paymentInfo?: PaymentInfo;
-  createdAt: Date;
-  totalTicket: number;
+  description: string;
+  seatId: number;
+  ticketTypeId: string;
+  orderId: number;
+  isCheckedIn: boolean;
+  sectionId?: string;
+  checkedBy: string;
+  Order: OrderInfoData;
 }
+
+export interface OrderInfoData {
+  id: number;
+  status: string;
+  price: number;
+  totalPrice: number;
+  userId: string;
+  type: string;
+  mailSent: boolean;
+  showingId: string;
+  createdAt: string;
+  updatedAt: string;
+  formResponseId: number;
+  paymentId: number;
+  voucherCodeId?: string;
+}
+
 
 export interface Pagination {
   total: number;       // Total number of records
@@ -75,7 +90,7 @@ export interface Pagination {
 }
 
 export interface TicketOrderData {
-  id: string;
+  id: number;
   status: string;
   price: number;
   type: string;
