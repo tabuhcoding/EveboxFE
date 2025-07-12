@@ -216,13 +216,13 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
               <g key={section.id}>
                 {section.element?.map((el, index) => {
                   const commonProps = {
-                    key: index,
                     style: { fill: el.fill },
                   };
 
                   if (el.type === 'path') {
                     return (
                       <path
+                        key={index}
                         {...commonProps}
                         d={el.data}
                         style={{
@@ -236,6 +236,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                   } else if (el.type === 'rect') {
                     return (
                       <rect
+                        key={index}
                         {...commonProps}
                         x={el.x}
                         y={el.y}
@@ -258,13 +259,13 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
               <g key={section.id}>
                 {section.element?.map((el, index) => {
                   const commonProps = {
-                    key: index,
                     style: { fill: el.fill },
                   };
 
                   if (el.type === 'path') {
                     return (
                       <path
+                        key={index}
                         {...commonProps}
                         d={el.data}
                         style={{
@@ -278,6 +279,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                   } else if (el.type === 'rect') {
                     return (
                       <rect
+                        key={index}
                         {...commonProps}
                         x={el.x}
                         y={el.y}
@@ -320,14 +322,6 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                       default:
                         fillColor = "gray"; 
                     }
-
-                    const seatNumber = parseInt(seat.name, 10);
-                    let labelOffsetX = 0;
-                    if (!isNaN(seatNumber)) {
-                      labelOffsetX = seatNumber % 2 === 0 ? 10 : -10;
-                    }
-
-                    const labelOffsetY = 5;
 
                     return (
                       <g key={seat.id}>

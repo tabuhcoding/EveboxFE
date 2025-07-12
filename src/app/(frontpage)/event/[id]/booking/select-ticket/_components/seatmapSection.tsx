@@ -169,13 +169,13 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
               <g key={section.id}>
                 {section.element?.map((el, index) => {
                   const commonProps = {
-                    key: index,
                     style: { fill: el.fill },
                   };
 
                   if (el.type === 'path') {
                     return (
                       <path
+                        key={index}
                         {...commonProps}
                         d={el.data}
                         style={{
@@ -189,6 +189,7 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                   } else if (el.type === 'rect') {
                     return (
                       <rect
+                        key={index}
                         {...commonProps}
                         x={el.x}
                         y={el.y}
@@ -224,13 +225,13 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                 >
                   {section.element?.map((el, index) => {
                     const commonProps = {
-                      key: index,
                       style: { fill: el.fill },
                     };
 
                     if (el.type === 'path') {
                       return (
                         <path
+                          key={index}
                           {...commonProps}
                           style={{
                             fill: el.fill,
@@ -244,6 +245,7 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                     } else if (el.type === 'rect') {
                       return (
                         <rect
+                          key={index}
                           {...commonProps}
                           x={el.x}
                           y={el.y}
