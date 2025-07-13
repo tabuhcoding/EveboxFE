@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 /* Components */
-import DateRangePicker from "./dateRangePicker";
 import TrafficChart from "./trafficChart";
 import SidebarOrganizer from "../../_components/sidebarOrganizer";
 
@@ -21,21 +20,22 @@ export default function AnalyticsContent() {
   const t = useTranslations('common');
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
-    if (!msg || msg.startsWith('common.')) return fallback;
-    return msg;
+    return msg.startsWith('common.') ? fallback : msg;
   };
 
   const params = useParams();
   const eventId = params?.id?.toString() || "";
-
   const [analytics, setAnalytics] = useState<AnalyticData | null>(null);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const fetchAnalytics = async () => {
     try {
-      const isoStart = startDate?.toISOString();
-      const isoEnd = endDate?.toISOString();
+      const today = new Date();
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(today.getMonth() - 3);
+
+      const isoStart = threeMonthsAgo.toISOString();
+      const isoEnd = today.toISOString();
+
       const res = await getAnalyticByEvent(eventId, isoStart, isoEnd);
       setAnalytics(res);
     } catch (error) {
@@ -59,18 +59,9 @@ export default function AnalyticsContent() {
         <p className="text-sm text-[#51DACF] pt-2">{analytics?.eventTitle}</p>
         <div className="border-t-2 border-[#0C4762] mt-2"></div>
 
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="mt-4 text-xl font-bold text-[#0C4762] mb-6">
-            {transWithFallback('marketingToolsAndReports', 'Công cụ & Báo cáo Marketing')}
-          </h3>
-          <DateRangePicker
-            startDate={startDate}
-            endDate={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-            onConfirm={fetchAnalytics}
-          />
-        </div>
+        <h3 className="mt-4 text-xl font-bold text-[#0C4762] mb-6">
+          {transWithFallback('marketingToolsAndReports', 'Công cụ & Báo cáo Marketing')}
+        </h3>
 
         {analytics ? (
           <div>
@@ -102,9 +93,9 @@ export default function AnalyticsContent() {
             </div>
           </div>
         ) : (
-          <div className="col-span-4 text-center text-gray-500">
-            {transWithFallback('loadingData', 'Đang tải dữ liệu...')}
-          </div>
+          <div className="flex justify-center items-center py-12">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#0C4762]" />
+    </div>
         )}
       </div>
     </div>

@@ -10,10 +10,10 @@ import { CircularProgress } from '@mui/material';
 
 /* Package Application */
 import { useAuth } from 'contexts/auth.context';
-import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
 import { SidebarProps } from '../libs/interface/dashboard.interface';
+import { getCurrentUser } from '@/services/auth.service';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
@@ -51,8 +51,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     } else {
       if (href === '/organizer/create-event') {
         try {
-          const res = await getOrgPaymentInfo();
-          if (!res) {
+          const res = await getCurrentUser();
+          if (res.role !== 1 && res.role !== 2) {
             // Show dialog
             setPendingNavigation(href);
             setShowPaymentWarning(true);

@@ -769,6 +769,7 @@
   "receiveProcessing": "Hệ thống đang xử lý...",
   "failedToReceive": "Nhận vé thất bại!",
   "giftReceiveExpired": "Rất tiếc, thời gian nhận vé từ người tặng đã kết thúc. Vui lòng liên hệ ban tổ chức để được hỗ trợ.",
+   "appRevenue": "Doanh thu ứng dụng",
   "saving": "Đang lưu...",
   "appRevenue": "Doanh thu ứng dụng",
   "orgRevenue": "Doanh thu nhà tổ chức",
@@ -803,5 +804,6 @@
   "backToRevenue": "Quay lại quản lý doanh thu",
   "startDate": "Ngày bắt đầu",
   "endDate": "Ngày kết thúc",
-  "receivingProcessingNotice": "Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát..."
+  "receivingProcessingNotice": "Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát...",
+  "timeAndTicketType": "Thời gian & Loại vé"
 }

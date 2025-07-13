@@ -779,6 +779,7 @@
     "receiveProcessing": "System is processing...",
     "failedToReceive": "Failed to receive ticket!",
     "giftReceiveExpired": "Sorry, the time to receive tickets from the sender has expired. Please contact the organizer for assistance.",
+     "appRevenue": "Application Revenue",
     "saving": "Saving...",
     "appRevenue": "Application Revenue",
     "orgRevenue": "Organizer Revenue",
@@ -812,5 +813,11 @@
     "backToRevenue": "Back to revenue page",
     "startDate": "Start date",
     "endDate": "End date",
-    "receivingProcessingNotice": "The system is processing your request, please wait a moment..."
+    "receivingProcessingNotice": "The system is processing your request, please wait a moment...",
+    "success": "Success",
+    "vsLastWeek": "than last week.",
+    "revenueAndTicketsOverTime": "Revenue and Tickets over time",
+    "sendEmailSuccess": "Sending email(s) successfully!",
+    "owner": "Owner",
+    "payment":"Payment"
 }
