@@ -4,11 +4,12 @@
 import ReceiveTicket from "./_components/receiveTicketSuccessPage";
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     sendKey?: string;
-  };
+  }>;
 }
 
-export default function Page({ searchParams }: PageProps) {
-  return <ReceiveTicket sendKey={searchParams.sendKey ?? ''} />
+export default async function Page({ searchParams }: PageProps) {
+  const { sendKey: key } = await searchParams;
+  return <ReceiveTicket sendKey={key ?? ''} />
 }
