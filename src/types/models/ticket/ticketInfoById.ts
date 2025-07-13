@@ -4,6 +4,12 @@ export interface TicketDetailProps {
   ticketId: string;
 }
 
+export interface GiftTicketModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  ticketId: string;
+}
+
 export interface IImagesResponseData {
   imageUrl: string;
 }
@@ -56,6 +62,8 @@ export interface IUserTicketById {
   type: string;
   price: number;
   createdAt: string;
+  canGiveAway: boolean;
+  ownerId: string;
   PaymentInfo?: IPaymentInfo;
   Showing?: IUserShowing;
   Ticket: IUserTicketType[];

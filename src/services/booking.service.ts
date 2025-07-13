@@ -111,6 +111,34 @@ export async function getUserTicketResponse(params: string, accessToken: string)
   }
 }
 
+export async function receiveTicket(key: string): Promise<BaseApiResponse<boolean>> {
+  try {
+    const encodedKey = encodeURIComponent(key)
+      .replace(/%2B/g, '+') // Giữ lại dấu + vì BE không decode
+      .replace(/%2F/g, '/') // Giữ lại dấu / nếu có
+      .replace(/%3D/g, '=');
+
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (key && key !== "") {
+      headers['x-send-key'] = encodedKey;
+    }
+
+    const res = await bookingService.post(END_POINT_LIST.BOOKING.RECEIVE_TICKET, null, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to receive ticket');
+
+    return res.data as BaseApiResponse<boolean>;
+  } catch (error: any) {
+    console.error("Error get ticket by id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
 export async function sendEmail(orderIds: Array<number>): Promise<BaseApiResponse<RedisInfo> | null> {
   try {
     const query = orderIds.map(id => `orderId=${id}`).join("&");
