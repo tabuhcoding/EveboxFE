@@ -10,7 +10,7 @@ import type { IShowTime, IEventSummaryData } from "@/types/models/org/orgEvent.i
 import { getShowingsByEventId, getSummaryByShowingId } from "@/services/org.service"
 import SidebarOrganizer from "../../_components/sidebarOrganizer"
 import { useTranslations } from "next-intl"
-
+import RevenueChart from "./revenue-chart"
 
 interface PageProps {
   params: { id: string }
@@ -29,6 +29,7 @@ export const SummaryRevenuePage = ({ params }: PageProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showingId, setShowingId] = useState<string | null>(null);
+  const [selectedShow, setSelectedShow] = useState<IShowTime | null>(null);
 
   const fetchShowingId = useCallback(async () => {
     try {
@@ -38,6 +39,7 @@ export const SummaryRevenuePage = ({ params }: PageProps) => {
       if (showings && showings.length > 0) {
         const selectedShowing = showings.find((show: IShowTime) => show.isSelected) || showings[0]
         setShowingId(selectedShowing.id)
+        setSelectedShow(selectedShowing);
       } else {
         setError("Không tìm thấy suất diễn nào")
       }
@@ -159,7 +161,11 @@ export const SummaryRevenuePage = ({ params }: PageProps) => {
             percentageSold={data.percentageSold}
           />
 
-          <TicketTable ticketTypes={data.byTicketType} />
+          <TicketTable ticketTypes={data.byTicketType}  ticketTypesInfo={selectedShow?.TicketType} />
+
+          {data?.revenueChart && data.revenueChart.length > 0 && (
+  <RevenueChart data={data.revenueChart} />
+)}
         </div>
       </div>
     )

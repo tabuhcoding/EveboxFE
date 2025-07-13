@@ -124,7 +124,7 @@ export function OrdersPage({ eventId }: OrdersPageProps) {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#0C4762]"></div>
             </div>
           ) : (
-            <OrderTabs ordersData={ordersData} />
+            <OrderTabs ordersData={ordersData} showingId={showingId} />
           )}
         </div>
       </div>

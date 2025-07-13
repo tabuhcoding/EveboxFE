@@ -1,3 +1,4 @@
+import { UserInfo } from './../types/models/userInfo';
 /* Package Application */
 import { UserFavEvent } from "@/types/models/dashboard/user.interface";
 import { BaseApiResponse } from "types/baseApiResponse";
@@ -23,6 +24,7 @@ import {
   from "./interface/auth.interface";
 
 import { UserAdminApiResponse, UserAdminParams, User } from "@/types/models/admin/accountManagement.interface";
+import { UserInfoResponse } from "@/types/models/userInfo";
 
 export const forgotPassword = async (email: string): Promise<BaseApiResponse<ForgotPasswordResponse>> => {
   const result = await authService.post<BaseApiResponse<ForgotPasswordResponse>>(END_POINT_LIST.USER.FORGOT_PASSWORD, { email });
@@ -169,6 +171,19 @@ export async function getUserById(id: string): Promise<BaseApiResponse<User>> {
     return res.data as BaseApiResponse<User>;
   } catch (error: any) {
     console.error("Error get user by id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getCurrentUser(): Promise<UserInfo> {
+  try {
+    const res = await authService.get<UserInfoResponse>(`${END_POINT_LIST.USER.GET_USER_INFO}`);
+
+    if (!res) throw new Error('Failed to get user by id');
+
+    return res.data.data
+  } catch (error: any) {
+    console.error("Error get user:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }

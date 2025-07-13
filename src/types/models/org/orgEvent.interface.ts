@@ -43,6 +43,13 @@ export interface IEventSummaryData {
   totalTickets: number
   percentageSold: number
   byTicketType: ITicketTypeSummary[]
+  revenueChart: IRevenueChartData[]
+}
+
+export interface IRevenueChartData {
+  date: string | Date,
+  revenue: number,
+  ticketsSold: number
 }
 
 export interface IFormattedShowingData {
