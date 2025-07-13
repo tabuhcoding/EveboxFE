@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { getOrdersByShowingId } from "@/services/org.service";
 import { sendEmail } from "@/services/booking.service";
 import toast from "react-hot-toast";
+import { usePathname, useRouter } from "next/navigation";
 
 interface OrderSectionProps {
   showingId: string;
@@ -24,6 +25,9 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
    const fetchOrders = async (emailFilter?: string) => {
     try {
@@ -60,14 +64,24 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
 
   const handleSendAllEmails = async () => {
     try {
-      const unsendOrders = ordersData.filter(order => !order?.mailSent && order?.status?.toLowerCase() === "success")
-      await sendEmail(unsendOrders.map(order => order.id));
-      toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!') );
+      const unsendOrders = ordersData.filter(order => !order?.mailSent && order?.status?.toLowerCase() === "success");
+      if (unsendOrders.length===0){
+          toast.error("No order selected to send!")
+      }
+      else{
+          await sendEmail(unsendOrders.map(order => order.id));
+          toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!') );
+
+      }
     } catch (error) {
-      toast.error("Error sending email!")
+      toast.error("Error sending email!");
       console.error("Failed to fetch orders:", error);
     }  
   };
+
+  const handleRowClick = (orderId: number) => {
+  router.push(`${pathname}/${orderId}`);
+};
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -206,7 +220,11 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
             ordersData.map((order) => {
               const status = getStatusDisplay(order.status);
               return (
-                <tr key={order.id} className="border-t hover:bg-gray-50">
+                <tr
+  key={order.id}
+  className="border-t hover:bg-gray-100 cursor-pointer"
+  onClick={() => handleRowClick(order.id)}
+>
                   <td className="py-2 px-2">
                     {
                       order?.status?.toLowerCase() === 'success' && !order?.mailSent
