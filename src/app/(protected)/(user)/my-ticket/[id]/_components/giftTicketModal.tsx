@@ -106,7 +106,6 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
           className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#51DACF] ${alertMsg && !giftLoading && !isValidEmail(giftEmail) ? 'border-red-600' : ''
             }`}
           disabled={giftLoading}
-          autoFocus
         />
         {alertMsg && (
           <p

@@ -3,8 +3,9 @@
 /* Package System */
 import { useEffect, useState } from 'react';
 import { useTranslations } from "next-intl";
+import Link from 'next/link';
 
-export default function ReceiveTicket({ sendKey }: {sendKey?: string}) {
+export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
   const [status, setStatus] = useState<'loading' | 'success' | 'fail'>('loading');
 
   const t = useTranslations('common');
@@ -66,12 +67,12 @@ export default function ReceiveTicket({ sendKey }: {sendKey?: string}) {
               <br />
               <span className="font-medium">
                 {transWithFallback('youCanCheckTicket', 'Bạn có thể kiểm tra vé trong mục')}{' '}
-                <a
+                <Link
                   href="/my-ticket"
                   className="font-bold rounded px-2 py-1 transition-colors hover:bg-[#0C4762] hover:text-blue-100"
                 >
                   {transWithFallback('myTicket', 'Vé của tôi')}
-                </a>
+                </Link>
               </span>
             </>
           )}
@@ -85,7 +86,7 @@ export default function ReceiveTicket({ sendKey }: {sendKey?: string}) {
           {isLoading && (
             <span>
               {transWithFallback(
-                'ticketProcessingNotice',
+                'receivingProcessingNotice',
                 'Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát...'
               )}
             </span>

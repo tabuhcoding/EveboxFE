@@ -811,5 +811,6 @@
     "eventNotFoundDesc": "Your event has no showings. Please check again.",
     "backToRevenue": "Back to revenue page",
     "startDate": "Start date",
-    "endDate": "End date"
+    "endDate": "End date",
+    "receivingProcessingNotice": "The system is processing your request, please wait a moment..."
 }

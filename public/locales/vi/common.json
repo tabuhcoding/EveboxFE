@@ -802,5 +802,6 @@
   "eventNotFoundDesc": "Sự kiện bạn đang tìm kiếm không có suất diễn. Vui lòng kiểm tra lại.",
   "backToRevenue": "Quay lại quản lý doanh thu",
   "startDate": "Ngày bắt đầu",
-  "endDate": "Ngày kết thúc"
+  "endDate": "Ngày kết thúc",
+  "receivingProcessingNotice": "Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát..."
 }
