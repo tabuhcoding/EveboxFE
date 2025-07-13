@@ -778,7 +778,7 @@
     "receiveSuccess": "Receive ticket successfully!",
     "receiveProcessing": "System is processing...",
     "failedToReceive": "Failed to receive ticket!",
-    "giftReceiveExpired": "Sorry, the time to receive tickets from the sender has expired. Please contact the organizer for assistance.",
+    "giftReceiveExpired": "Sorry, errors happened in receiving process. Please contact the organizer for assistance.",
     "saving": "Saving...",
     "appRevenue": "Application Revenue",
     "orgRevenue": "Organizer Revenue",

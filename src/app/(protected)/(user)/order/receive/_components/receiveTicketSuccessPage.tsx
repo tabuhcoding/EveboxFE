@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from "next-intl";
 import Link from 'next/link';
 
+/* Package Application */
+import { receiveTicket } from '@/services/booking.service';
+
 export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
   const [status, setStatus] = useState<'loading' | 'success' | 'fail'>('loading');
 
@@ -16,12 +19,19 @@ export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
   };
 
   useEffect(() => {
-    const receiveTicket = async () => {
+    const handleReceiveTicket = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        const result = true;  //Gán cứng
+        setStatus('loading');
+        const res = await receiveTicket(sendKey || "");
 
-        setStatus(result ? 'success' : 'fail');
+        if (res?.statusCode !== 200) {
+          setStatus('fail');
+        }
+        else if (!res?.data) {
+          setStatus('fail');
+        } else {
+          setStatus('success');
+        }
       } catch (error) {
         console.error('Error during fetch:', error);
         setStatus('fail');
@@ -29,7 +39,7 @@ export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
     };
 
     if (sendKey && sendKey.trim() !== '') {
-      receiveTicket();
+      handleReceiveTicket();
     } else {
       setStatus('fail');
     }
@@ -42,11 +52,11 @@ export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-6 min-h-[60vh]">
       <div className="text-center w-full max-w-2xl flex flex-col items-center mb-4">
-        <div className={`text-6xl pb-2 ${isSuccess ? 'text-green-500 animate-bounce' : 'text-red-500'}`}>
+        <div className={`text-6xl pb-2 ${isSuccess ? 'text-green-500 animate-bounce' : isLoading ? 'text-blue-500' : 'text-red-500'}`}>
           {isSuccess ? '🎉' : isLoading ? '⏳' : '😞'}
         </div>
 
-        <h1 className={`text-3xl font-bold pb-2 ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>
+        <h1 className={`text-3xl font-bold pb-2 ${isSuccess ? 'text-green-600' : isLoading ? 'text-blue-600' : 'text-red-600'}`}>
           {isSuccess
             ? transWithFallback('receiveSuccess', 'Nhận vé thành công!')
             : isLoading

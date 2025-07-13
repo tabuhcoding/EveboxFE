@@ -768,7 +768,7 @@
   "receiveSuccess": "Nhận vé thành công!",
   "receiveProcessing": "Hệ thống đang xử lý...",
   "failedToReceive": "Nhận vé thất bại!",
-  "giftReceiveExpired": "Rất tiếc, thời gian nhận vé từ người tặng đã kết thúc. Vui lòng liên hệ ban tổ chức để được hỗ trợ.",
+  "giftReceiveExpired": "Rất tiếc, có lỗi xảy ra trong quá trình tặng vé. Vui lòng liên hệ ban tổ chức để được hỗ trợ.",
   "saving": "Đang lưu...",
   "appRevenue": "Doanh thu ứng dụng",
   "orgRevenue": "Doanh thu nhà tổ chức",
