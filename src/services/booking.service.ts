@@ -113,20 +113,15 @@ export async function getUserTicketResponse(params: string, accessToken: string)
 
 export async function receiveTicket(key: string): Promise<BaseApiResponse<boolean>> {
   try {
-    const encodedKey = encodeURIComponent(key)
-      .replace(/%2B/g, '+') // Giữ lại dấu + vì BE không decode
-      .replace(/%2F/g, '/') // Giữ lại dấu / nếu có
-      .replace(/%3D/g, '=');
-
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
     };
 
     if (key && key !== "") {
-      headers['x-send-key'] = encodedKey;
+      headers['x-send-key'] = key;
     }
 
-    const res = await bookingService.post(END_POINT_LIST.BOOKING.RECEIVE_TICKET, null, {
+    const res = await bookingService.post(END_POINT_LIST.BOOKING.RECEIVE_TICKET, {}, {
       headers: headers
     });
 
