@@ -171,6 +171,7 @@ export type SelectedTicketsState = {
 
 export interface TicketInforProps {
   event: EventProps;
+  showingStartTime: Date | string | null;
   totalTickets: number;
   totalAmount: number;
   hasSelectedTickets: boolean;

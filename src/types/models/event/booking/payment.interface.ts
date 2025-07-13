@@ -85,5 +85,7 @@ export interface PaymentCheckoutPayload {
 
 export interface PaymentCheckoutResponse {
   paymentLink: string;
+  orderCode?: string;
+  checkoutType?: string;
 }
 
