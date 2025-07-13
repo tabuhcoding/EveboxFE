@@ -765,7 +765,6 @@
     "revenue": "Revenue",
     "selectShowing": "Select showing",
     "timeAndTicketType": "Time & Ticket Type",
-    "owner": "Owner",
     "giftTicket": "Gift Ticket",
     "giftTicketEmail": "Gift Ticket via Email",
     "sending": "Sending...",
@@ -812,5 +811,11 @@
     "backToRevenue": "Back to revenue page",
     "startDate": "Start date",
     "endDate": "End date",
-    "receivingProcessingNotice": "The system is processing your request, please wait a moment..."
+    "receivingProcessingNotice": "The system is processing your request, please wait a moment...",
+    "success": "Success",
+    "vsLastWeek": "than last week.",
+    "revenueAndTicketsOverTime": "Revenue and Tickets over time",
+    "sendEmailSuccess": "Sending email(s) successfully!",
+    "owner": "Owner",
+    "payment":"Payment"
 }

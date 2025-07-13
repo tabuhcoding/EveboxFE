@@ -1,7 +1,7 @@
 
 // Define Statistic structure inside analytics
 export interface StatisticData {
-  month: string;
+  weekStart: string;
   visits: number;
 }
 

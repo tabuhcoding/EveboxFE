@@ -803,5 +803,6 @@
   "backToRevenue": "Quay lại quản lý doanh thu",
   "startDate": "Ngày bắt đầu",
   "endDate": "Ngày kết thúc",
-  "receivingProcessingNotice": "Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát..."
+  "receivingProcessingNotice": "Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát...",
+  "timeAndTicketType": "Thời gian & Loại vé"
 }
