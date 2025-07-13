@@ -762,5 +762,9 @@
   "giftSuccess": "🎉 Tặng vé thành công!",
   "err": "Lỗi",
   "giveAway": "Tặng vé",
-  "sendGift": "Gửi tặng"
+  "sendGift": "Gửi tặng",
+  "receiveSuccess": "Nhận vé thành công!",
+  "receiveProcessing": "Hệ thống đang xử lý...",
+  "failedToReceive": "Nhận vé thất bại!",
+  "giftReceiveExpired": "Rất tiếc, thời gian nhận vé từ người tặng đã kết thúc. Vui lòng liên hệ ban tổ chức để được hỗ trợ."
 }

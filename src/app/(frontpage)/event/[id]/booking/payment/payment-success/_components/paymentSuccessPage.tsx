@@ -152,7 +152,7 @@ export default function PaymentSuccessPage({ orderCode, status }: { orderCode?: 
               <span className="font-medium">
                 {transWithFallback('youCanCheckTicket', 'Bạn có thể kiểm tra vé trong mục')}{' '}
                 <a
-                  href="/ticket"
+                  href="/my-ticket"
                   className="font-bold rounded px-2 py-1 transition-colors hover:bg-[#0C4762] hover:text-blue-100"
                 >
                   {transWithFallback('myTicket', 'Vé của tôi')}

@@ -773,5 +773,9 @@
     "giftSuccess": "🎉 Gift ticket successfully!",
     "err": "Error",
     "giveAway": "Gift ticket",
-    "sendGift": "Send gift"
+    "sendGift": "Send gift",
+    "receiveSuccess": "Receive ticket successfully!",
+    "receiveProcessing": "System is processing...",
+    "failedToReceive": "Failed to receive ticket!",
+    "giftReceiveExpired": "Sorry, the time to receive tickets from the sender has expired. Please contact the organizer for assistance."
 }
