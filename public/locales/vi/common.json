@@ -44,6 +44,7 @@
   "phone": "Số điện thoại",
   "save": "Lưu",
   "login": "Đăng nhập",
+  "goToLogin": "Đến trang đăng nhập",
   "password": "MẬT KHẨU",
   "emailPlaceholder": "Nhập email của bạn",
   "passwordPlaceholder": "Nhập mật khẩu của bạn",
@@ -444,7 +445,8 @@
   "taxLocation": "Địa điểm đăng ký thuế",
   "orgName": "Tên nhà tổ chức",
   "noStt": "STT",
-  "findByLocation": "Tìm kiếm theo tên địa điểm...",
+  "city": "Thành phố",
+  "findByLocation": "Tìm kiếm theo tên địa điểm",
   "myEvents": "Sự kiện của tôi",
   "reportManagement": "Quản lý báo cáo",
   "legalDocument": "Điều khoản cho Ban tổ chức",
@@ -753,6 +755,8 @@
   "ticketTypeName": "Tên loại vé",
   "ticketSold": "Số vé đã bán",
   "ticketRatio": "Tỉ lệ",
+   "appRevenue": "Doanh thu ứng dụng",
+  "saving": "Đang lưu...",
   "appRevenue": "Doanh thu ứng dụng",
   "orgRevenue": "Doanh thu nhà tổ chức",
   "eventRevenue": "Doanh thu sự kiện",
@@ -785,5 +789,6 @@
   "eventNotFoundDesc": "Sự kiện bạn đang tìm kiếm không có suất diễn. Vui lòng kiểm tra lại.",
   "backToRevenue": "Quay lại quản lý doanh thu",
   "startDate": "Ngày bắt đầu",
-  "endDate": "Ngày kết thúc"
+  "endDate": "Ngày kết thúc",
+  "timeAndTicketType": "Thời gian & Loại vé"
 }

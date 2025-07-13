@@ -36,7 +36,7 @@ export default function AdminSidebar() {
             <li key={i}>
               <Link
                 href={item.href as string}
-                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
+                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors text-white no-underline ${
                   pathName === item.href ? "bg-sky-700" : "hover:bg-sky-800"
                 }`}
               >

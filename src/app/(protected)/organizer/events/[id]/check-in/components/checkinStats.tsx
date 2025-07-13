@@ -27,6 +27,7 @@ export default function CheckinStats({ showingId }: CheckinStatsProps) {
       setLoading(true)
       try {
         const result = await getAllCheckedInTickets(showingId)
+        setError("")
         setCheckedInTickets(result)
       } catch {
         setError(transWithFallback("checkinError", "Không thể tải dữ liệu check-in"))

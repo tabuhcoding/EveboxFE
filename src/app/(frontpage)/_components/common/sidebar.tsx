@@ -6,13 +6,14 @@ import Link from 'next/link';
 import { useTranslations } from "next-intl";
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { CircularProgress } from '@mui/material';
 
 /* Package Application */
 import { useAuth } from 'contexts/auth.context';
-import { getOrgPaymentInfo } from 'services/org.service';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
 import { SidebarProps } from '../libs/interface/dashboard.interface';
+import { getCurrentUser } from '@/services/auth.service';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
@@ -25,6 +26,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [showPaymentWarning, setShowPaymentWarning] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   const [showOrgRegisterPopup, setShowOrgRegisterPopup] = useState(false);
+  const [loadingContinue, setLoadingContinue] = useState(false);
+  const [loadingRegister, setLoadingRegister] = useState(false);
 
   const handleLogout = async () => {
     if (!isAuthenticated) {
@@ -48,8 +51,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     } else {
       if (href === '/organizer/create-event') {
         try {
-          const res = await getOrgPaymentInfo();
-          if (!res) {
+          const res = await getCurrentUser();
+          if (res.role !== 1 && res.role !== 2) {
             // Show dialog
             setPendingNavigation(href);
             setShowPaymentWarning(true);
@@ -198,22 +201,34 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <div className="mt-4 flex flex-col space-y-2">
               <button
                 onClick={() => {
+                  setLoadingContinue(true);
                   setShowPaymentWarning(false);
                   localStorage.setItem("isRegisterPayment", "false");
                   if (pendingNavigation) window.location.href = pendingNavigation;
                 }}
-                className="px-4 py-2 bg-teal-500 text-white rounded"
+                disabled={loadingContinue}
+                className="px-4 py-2 bg-teal-500 text-white rounded flex items-center justify-center gap-1"
               >
-                {transWithFallback("continueAnyway", "Tiếp tục tạo sự kiện")}
+                {loadingContinue ? (
+                  <CircularProgress size={16} />
+                ) : (
+                  transWithFallback("continueAnyway", "Tiếp tục tạo sự kiện")
+                )}
               </button>
               <button
                 onClick={() => {
+                  setLoadingRegister(true);
                   setShowPaymentWarning(false);
                   setShowOrgRegisterPopup(true);
                 }}
-                className="px-4 py-2 bg-gray-300 rounded w-full"
+                className="px-4 py-2 bg-gray-300 rounded w-full flex items-center justify-center gap-1"
+                disabled={loadingRegister}
               >
-                {transWithFallback("registerOrganizer", "Đăng ký tổ chức")}
+                {loadingRegister ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  transWithFallback("registerOrganizer", "Đăng ký tổ chức")
+                )}
               </button>
               <button
                 onClick={() => setShowPaymentWarning(false)}

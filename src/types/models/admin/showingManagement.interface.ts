@@ -7,6 +7,19 @@ export interface Event {
 
 export interface TicketType {
   id: string;
+  name: string;
+  description: string;
+  color: string;
+  isFree: boolean;
+  originalPrice: number;
+  startTime: string;
+  endTime: string;
+  position: number;
+  quantity: number;
+  maxQtyPerOrder: number;
+  minQtyPerOrder: number;
+  imageUrl: string;
+  isHidden: boolean;
 }
 
 export interface Showing {

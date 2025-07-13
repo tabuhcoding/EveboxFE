@@ -1,5 +1,6 @@
 import DashboardLoading from "@/app/(frontpage)/loading"
 import { Suspense } from "react"
+import { Toaster } from "react-hot-toast"
 
 export default function DefaultLayout({
   children,
@@ -9,6 +10,7 @@ export default function DefaultLayout({
   return (
     <Suspense fallback={<DashboardLoading />}>
       <main>{children}</main>
+       <Toaster reverseOrder={false} />
     </Suspense>
   )
 }

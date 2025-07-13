@@ -44,6 +44,7 @@
     "phone": "Phone Number",
     "save": "Save",
     "login": "Sign in",
+    "goToLogin": "Go to Login",
     "password": "PASSWORD",
     "emailPlaceholder": "Input your email",
     "passwordPlaceholder": "Input your password",
@@ -449,7 +450,7 @@
     "orgName": "Organizer name",
     "noStt": "No.",
     "city": "City",
-    "findByLocation": "Find by location...",
+    "findByLocation": "Find by location name",
     "myEvents": "My events",
     "reportManagement": "Report management",
     "legalDocument": "Legal document",
@@ -764,6 +765,8 @@
     "revenue": "Revenue",
     "selectShowing": "Select showing",
     "timeAndTicketType": "Time & Ticket Type",
+     "appRevenue": "Application Revenue",
+    "saving": "Saving...",
     "appRevenue": "Application Revenue",
     "orgRevenue": "Organizer Revenue",
     "eventRevenue": "Event Revenue",
@@ -795,5 +798,11 @@
     "eventNotFoundDesc": "Your event has no showings. Please check again.",
     "backToRevenue": "Back to revenue page",
     "startDate": "Start date",
-    "endDate": "End date"
+    "endDate": "End date",
+    "success": "Success",
+    "vsLastWeek": "than last week.",
+    "revenueAndTicketsOverTime": "Revenue and Tickets over time",
+    "sendEmailSuccess": "Sending email(s) successfully!",
+    "owner": "Owner",
+    "payment":"Payment"
 }

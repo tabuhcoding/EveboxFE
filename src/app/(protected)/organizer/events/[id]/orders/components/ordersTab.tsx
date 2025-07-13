@@ -7,7 +7,7 @@ import TicketSection from "./TicketSection"
 import { TicketOrderData } from "@/types/models/org/orders.interface"
 import { useTranslations } from "next-intl"
 
-export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrderData[] }) {
+export default function OrderTabs({ ordersData = [], showingId = "" }: { ordersData?: TicketOrderData[], showingId: string }) {
   const t = useTranslations("common")
     const transWithFallback = (key: string, fallback: string) => {
       const msg = t(key)
@@ -24,9 +24,6 @@ export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrde
   useEffect(() => {
     console.log("OrderTabs received data:", ordersData)
   }, [ordersData])
-
-  // Make sure we're working with an array, even if ordersData is undefined
-  const safeOrdersData = Array.isArray(ordersData) ? ordersData : []
 
   if (!mounted) return null // Avoid hydration errors
 
@@ -53,9 +50,9 @@ export default function OrderTabs({ ordersData = [] }: { ordersData?: TicketOrde
       {/* Tab Content */}
       <div className="w-full mt-4">
         {activeTab === "orders" ? (
-          <OrderSection ordersData={safeOrdersData} />
+          <OrderSection showingId={showingId} />
         ) : (
-          <TicketSection ordersData={safeOrdersData} />
+          <TicketSection showingId={showingId} />
         )}
       </div>
     </div>
