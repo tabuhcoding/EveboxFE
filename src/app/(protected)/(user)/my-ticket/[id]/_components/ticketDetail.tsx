@@ -39,9 +39,9 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
     const getStatusInfo = (status: string) => {
         switch (status) {
-            case 'CANCELED': return { text: 'Đã hủy', color: 'text-red-500' };
-            case 'SUCCESS': return { text: 'Thành công', color: 'text-green-500' };
-            case 'PENDING': return { text: 'Đang chờ xử lý', color: 'text-yellow-500' };
+            case 'CANCELED': return { text: transWithFallback('orderCancelled', 'Đã hủy'), color: 'text-red-500' };
+            case 'SUCCESS': return { text: transWithFallback('orderSuccess', 'Thành công'), color: 'text-green-500' };
+            case 'PENDING': return { text: transWithFallback('orderPending', 'Đang chờ xử lý'), color: 'text-yellow-500' };
             default: return { text: 'Không xác định', color: 'text-white' };
         }
     };
@@ -76,7 +76,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                     onClick={() => router.back()}
                     className="p-2 border-2 border-[#0C4762] rounded-md hover:bg-gray-200 absolute top-10 left-4 mt-10 mb-10"
                 >
-                    <ChevronLeft size={20} /> 
+                    <ChevronLeft size={20} />
                 </button>
                 {/* Ticket Details */}
                 <div className="bg-[#0C4762] text-white md:w-1/2 w-full p-6 rounded-lg shadow-lg mt-10">
@@ -136,24 +136,6 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             </button>
                         </div>
                     )}
-
-                    {ticket.status === 'SUCCESS' && ticket.canGiveAway && (
-                        <>
-                            <div className="mt-8">
-                                <button
-                                    className="w-full bg-[#51DACF] hover:bg-[#3ec8bd] text-[#0C4762] font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200"
-                                    onClick={() => setIsGiftModalOpen(true)}
-                                >
-                                    {transWithFallback('giveAway', 'Tặng vé')}
-                                </button>
-                            </div>
-                            <GiftTicketModal
-                                isOpen={isGiftModalOpen}
-                                onClose={() => setIsGiftModalOpen(false)}
-                                ticketId={ticket.id}
-                            />
-                        </>
-                    )}
                 </div>
 
                 {/* Order Details */}
@@ -162,9 +144,9 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         <h3 className="text-lg font-bold mb-2">{transWithFallback('orderInfo', 'Thông tin đơn hàng')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             <p className="text-gray-300">{transWithFallback('orderDated', 'Ngày đặt hàng:')}</p>
-                            <p className="text-[#9EF5CF]">{new Date(ticket.PaymentInfo?.paidAt || '').toLocaleString()}</p>
+                            <p className="text-[#9EF5CF]">{new Date(ticket.PaymentInfo?.paidAt || ticket.createdAt || '').toLocaleString()}</p>
                             <p className="text-gray-300">{transWithFallback('paymentMethod', 'Phương thức thanh toán')}:</p>
-                            <p className="text-[#9EF5CF]">{ticket.PaymentInfo?.method}</p>
+                            <p className="text-[#9EF5CF]">{ticket.PaymentInfo?.method || transWithFallback('free', 'Miễn phí')}</p>
                             <p className="text-gray-300">{transWithFallback('owner', 'Chủ sở hữu')}:</p>
                             <p className="text-[#9EF5CF]">{ticket.ownerId}</p>
                             <p className="text-gray-300">{transWithFallback('orderStatus', 'Tình trạng đơn hàng')}:</p>
@@ -209,6 +191,24 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             </p>
                         </div>
                     </div>
+
+                    {ticket.status === 'SUCCESS' && ticket.canGiveAway && (
+                        <>
+                            <div className="mt-8">
+                                <button
+                                    className="w-full bg-[#51DACF] hover:bg-[#3ec8bd] text-[#0C4762] font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200"
+                                    onClick={() => setIsGiftModalOpen(true)}
+                                >
+                                    {transWithFallback('giveAway', 'Tặng vé')}
+                                </button>
+                            </div>
+                            <GiftTicketModal
+                                isOpen={isGiftModalOpen}
+                                onClose={() => setIsGiftModalOpen(false)}
+                                ticketId={ticket.id}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div >
