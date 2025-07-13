@@ -79,7 +79,6 @@ export default function TicketInformation({
       if (res.statusCode === 200) {
         localStorage.setItem('submittedForm', JSON.stringify(formData));
         const showingStatus = localStorage.getItem('showingStatus');
-        localStorage.removeItem('showingStatus');
         if (showingStatus === 'BOOK_NOW') {
           if (seatMapId && seatMapId !== 0) {
             router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);

@@ -25,7 +25,7 @@ export default function MoreInformation({ title, location, locationsString }: Mo
                     </h2>
                     <div className="ratio ratio-16x9">
                         <GoogleMapsEmbed
-                            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
+                            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
                             mode="place"
                             q={location}
                             language={locale}

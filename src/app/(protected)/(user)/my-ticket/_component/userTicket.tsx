@@ -4,6 +4,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { CircularProgress } from '@mui/material';
 
 /* Package Application */
 import { IUserTicket } from '@/types/models/ticket/ticketInfo';
@@ -28,6 +29,7 @@ export default function TicketManagement() {
   const [cancelledTickets, setCancelledTickets] = useState<IUserTicket[]>([]);
   const [allTickets, setAllTickets] = useState<IUserTicket[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState<number>(1);
 
   function setUrlParams({
@@ -134,10 +136,15 @@ export default function TicketManagement() {
     fetchTicketsByPage(1, tabToStatus(selectedTab), num, searchKeyword, selectedSubTab);
   };
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    setUrlParams({ q: searchKeyword, page: 1 });
-    fetchTicketsByPage(1, tabToStatus(selectedTab), ticketsPerPage, searchKeyword, selectedSubTab);
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      setCurrentPage(1);
+      setUrlParams({ q: searchKeyword, page: 1 });
+      await fetchTicketsByPage(1, tabToStatus(selectedTab), ticketsPerPage, searchKeyword, selectedSubTab);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getTicketsByTab = (): IUserTicket[] => {
@@ -188,10 +195,14 @@ export default function TicketManagement() {
             className="w-full sm:max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#51DACF]"
           />
           <button
-            onClick={handleSearch}
-            className="bg-[#51DACF] text-black font-bold px-4 py-2 rounded"
+            onClick={handleSearch} disabled={isLoading}
+            className="bg-[#51DACF] text-black font-bold px-4 py-2 rounded flex items-center justify-center gap-1 min-w-[120px]"
           >
-            {transWithFallback('searchButton', 'Tìm kiếm')}
+            {isLoading ? (
+                <CircularProgress size={20} />
+            ) : (
+              transWithFallback('searchButton', 'Tìm kiếm')
+            )}
           </button>
         </div>
 
@@ -227,7 +238,12 @@ export default function TicketManagement() {
         </div>
 
         {loading ? (
-          <p className="text-center mb-8">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
+          <>
+            <div className="flex items-center gap-2 justify-center mb-8">
+              <CircularProgress size={20} />
+              <p className="text-center">{transWithFallback('loadingData', 'Đang tải dữ liệu...')}</p>
+            </div>
+          </>
         ) : getTicketsByTab().length === 0 ? (
           <p className="text-center mb-8">{transWithFallback('noTickets', 'Bạn chưa có vé nào.')}</p>
         ) : (
