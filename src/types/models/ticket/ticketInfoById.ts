@@ -62,6 +62,7 @@ export interface IUserTicketById {
   type: string;
   price: number;
   createdAt: string;
+  canGiveAway: boolean;
   ownerId: string;
   PaymentInfo?: IPaymentInfo;
   Showing?: IUserShowing;

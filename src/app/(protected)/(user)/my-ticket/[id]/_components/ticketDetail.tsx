@@ -137,7 +137,7 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         </div>
                     )}
 
-                    {ticket.status === 'SUCCESS' && (
+                    {ticket.status === 'SUCCESS' && ticket.canGiveAway && (
                         <>
                             <div className="mt-8">
                                 <button
