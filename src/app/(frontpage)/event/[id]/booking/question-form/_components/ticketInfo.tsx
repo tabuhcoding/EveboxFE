@@ -12,6 +12,7 @@ import SuccessDialog from './successDialog';
 import { submitForm, unselectSeat } from '@/services/booking.service';
 import { TicketInformationProps } from 'types/models/event/booking/questionForm.interface';
 import { useAuth } from '@/contexts/auth.context';
+import { checkoutPayment } from '@/services/payment.service';
 
 import ConfirmDialog from './confirmDialog';
 
@@ -85,9 +86,7 @@ export default function TicketInformation({
           }
           else router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
         } else {
-          setSuccessMessage(transWithFallback('registerTicketSuccess', 'Bạn đã đăng ký vé thành công! Tiếp tục đến trang Vé của tôi để xem chi tiết'));
-          setSuccessOpen(true);
-          setHref('/my-ticket');
+          return await handleCheckout();
         }
       } else {
         setAlertMessage(transWithFallback('errorSubmitForm', 'Lỗi khi gửi form đi'));
@@ -95,6 +94,34 @@ export default function TicketInformation({
       }
     } catch (error: any) {
       console.error('Lỗi khi gọi API submit form:', error);
+      setAlertMessage(error.toString());
+      setAlertOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true);
+      const res = await checkoutPayment({
+        showingID: showingId || "",
+        paymentMethod: "",
+        paymentSuccessUrl: "",
+        paymentCancelUrl: ""
+      }, session?.user?.accessToken);
+
+      if (res?.statusCode === 200) {
+        setSuccessMessage(transWithFallback('registerTicketSuccess', 'Bạn đã đăng ký vé thành công! Tiếp tục đến trang Vé của tôi để xem chi tiết'));
+        setSuccessOpen(true);
+        setHref(`/my-ticket/${res.data.orderCode}`);
+      }
+      else {
+        setAlertMessage(transWithFallback('errorCheckout', 'Lỗi khi thanh toán vé'));
+        setAlertOpen(true);
+      }
+    } catch (error: any) {
+      console.error('Lỗi khi gọi API checkout:', error);
       setAlertMessage(error.toString());
       setAlertOpen(true);
     } finally {
