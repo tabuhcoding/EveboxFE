@@ -118,6 +118,8 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
 
                     {/* Button: Show Availability */}
                     {(() => {
+                      const showingStatus = localStorage.getItem('showingStatus');
+                      if (showingStatus) localStorage.removeItem('showingStatus');
                       switch (showing.status) {
                         case "SOLD_OUT":
                           return (
