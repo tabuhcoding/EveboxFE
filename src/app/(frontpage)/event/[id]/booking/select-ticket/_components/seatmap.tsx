@@ -201,7 +201,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
         </div>
       </div>
 
-      <div className="seatmap-wrapper relative">
+      <div className="seatmap-wrapper relative" style={{ backgroundColor: 'gray' }}>
         <div
           className="seatmap-zoom"
           style={{
@@ -211,58 +211,91 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
             cursor: isDragging ? "grabbing" : "grab"
           }}
         >
-          <svg viewBox={seatMap.viewBox} className="seatmap">
+          <svg viewBox={seatMap.viewBox} className="seatmap" style={{ backgroundColor: 'gray' }}>
             {stageSections?.map((section) => (
               <g key={section.id}>
-                {section.element?.map((el, index) => (
-                  el.type === 'path' ? (
-                  <path
-                    key={index}
-                    d={el.data}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : el.type === 'rect' ? (
-                  <rect
-                    key={index}
-                    x={el.x}
-                    y={el.y}
-                    width={el.width}
-                    height={el.height}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : <h1>DUUDUDUDUDUDUD</h1>
-                ))}
-              </g>
+                {section.element?.map((el, index) => {
+                  const commonProps = {
+                    style: { fill: el.fill },
+                  };
+
+                  if (el.type === 'path') {
+                    return (
+                      <path
+                        key={index}
+                        {...commonProps}
+                        d={el.data}
+                        style={{
+                          fill: el.fill,
+                          // stroke: 'white',
+                          // strokeWidth: 1
+                        }}
+                        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+                      />
+                    );
+                  } else if (el.type === 'rect') {
+                    return (
+                      <rect
+                        key={index}
+                        {...commonProps}
+                        x={el.x}
+                        y={el.y}
+                        width={el.width}
+                        height={el.height}
+                        style={{
+                          fill: el.fill,
+                          stroke: 'white',     
+                          strokeWidth: 1          
+                        }}
+                      />
+                    );
+                  }
+
+                  return null;
+                })}</g>
             ))}
 
             {normalSections?.map((section) => (
               <g key={section.id}>
-                {section.element?.map((el, index) => (
-                  el.type === 'path' ? (
-                  <path
-                    key={index}
-                    d={el.data}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : el.type === 'rect' ? (
-                  <rect
-                    key={index}
-                    x={el.x}
-                    y={el.y}
-                    width={el.width}
-                    height={el.height}
-                    // fill={el.fill}
-                    style={{ fill: el.fill }}
-                    transform={`translate(${el.x}, ${el.y})`}
-                  />
-                ) : <h1>DUUDUDUDUDUDUD</h1>
-                ))}
+                {section.element?.map((el, index) => {
+                  const commonProps = {
+                    style: { fill: el.fill },
+                  };
+
+                  if (el.type === 'path') {
+                    return (
+                      <path
+                        key={index}
+                        {...commonProps}
+                        d={el.data}
+                        style={{
+                          fill: el.fill,
+                          // stroke: 'white',
+                          // strokeWidth: 1
+                        }}
+                        transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
+                      />
+                    );
+                  } else if (el.type === 'rect') {
+                    return (
+                      <rect
+                        key={index}
+                        {...commonProps}
+                        x={el.x}
+                        y={el.y}
+                        width={el.width}
+                        height={el.height}
+                        style={{
+                          fill: el.fill,
+                          stroke: 'white',     
+                          strokeWidth: 1          
+                        }}
+                      />
+                    );
+                  }
+
+                  return null;
+                })}
 
                 {section.Row?.map((row) =>
                   row.Seat.map((seat) => {
@@ -290,14 +323,6 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                         fillColor = "gray"; 
                     }
 
-                    const seatNumber = parseInt(seat.name, 10);
-                    let labelOffsetX = 0;
-                    if (!isNaN(seatNumber)) {
-                      labelOffsetX = seatNumber % 2 === 0 ? 10 : -10;
-                    }
-
-                    const labelOffsetY = 5;
-
                     return (
                       <g key={seat.id}>
                         <circle
@@ -312,8 +337,8 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                         />
                         {zoom >= 1.5 && (
                           <text
-                            x={(typeof seat.positionX === "number" ? seat.positionX : seat.positionX[0] ?? 0) + labelOffsetX}
-                            y={(typeof seat.positionY === "number" ? seat.positionY : seat.positionY[0] ?? 0) + labelOffsetY + 2}
+                            x={(typeof seat.positionX === "number" ? seat.positionX : seat.positionX[0] ?? 0) }
+                            y={(typeof seat.positionY === "number" ? seat.positionY : seat.positionY[0] ?? 0) }
                             fontSize={4}
                             fill="#000"
                             textAnchor="middle"

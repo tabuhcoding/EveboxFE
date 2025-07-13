@@ -2,6 +2,7 @@
 
 /* Package System */
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -18,6 +19,7 @@ import AlertDialog from "@/components/common/alertDialog";
 const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventDetail }) => {
   const [expandedShowId, setExpandedShowId] = useState<string | null>(null);
   const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
+  const [loadingButtonId, setLoadingButtonId] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations("common");
   const { session } = useAuth();
@@ -34,9 +36,11 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  const handleBuyButton = async (eventId: number, showingId: string, seatMapId: number) => {
+  const handleBuyButton = async (eventId: number, showingId: string, seatMapId: number, buttonId: string) => {
+    setLoadingButtonId(buttonId);
     const accessToken = session?.user?.accessToken;
     if (!accessToken) {
+      setLoadingButtonId(null);
       setAlertMessage(transWithFallback("pleaseLogin", "Vui lòng đăng nhập để truy cập vào trang này!"));
       setHref("/login");
       setAlertOpen(true);
@@ -63,6 +67,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
     }
     const timeLeft = redisSeat.expiredTime;
     if (timeLeft && timeLeft > 0) {
+      setLoadingButtonId(null);
       setContinueMessage(transWithFallback("continueBooking", "Bạn đang mua vé trước đó, bạn có muốn tiếp tục tiến trình mua vé không?"));
       setContinueHref(`/event/${eventId}/booking/select-ticket?showingId=${showingId}&eventId=${eventId}${(seatMapId && seatMapId !== 0) ? `&seatMapId=${seatMapId}` : ""}`);
       setContinueOpen(true);
@@ -125,11 +130,19 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
 
                         case "REGISTER_NOW":
                           return (
-                            <button type="button" className="btn-buy" onClick={() => {
-                              localStorage.setItem('showingStatus', 'REGISTER_NOW')
-                              handleBuyButton(showing.eventId, showing.id, showing.seatMapId)}
-                            }>
-                              {t('registerNow') || "Đăng ký ngay"}
+                            <button type="button" className="btn-buy flex items-center justify-center gap-1"
+                              onClick={() => {
+                                localStorage.setItem('showingStatus', 'REGISTER_NOW')
+                                handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id)
+                              }}
+                              disabled={loadingButtonId === showing.id}
+                            >
+                              {loadingButtonId === showing.id ? (
+                                <>
+                                  <CircularProgress size={16} />
+                                  {t('loadingBtn') || "Đang xử lý..."}
+                                </>
+                              ) : (t('registerNow') || "Đăng ký ngay")}
                             </button>
                           );
 
@@ -137,13 +150,16 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                           return (
                             <button
                               type="button"
-                              className="btn-buy"
+                              disabled={loadingButtonId === showing.id}
+                              className="btn-buy flex items-center justify-center gap-1"
                               onClick={() => {
                                 localStorage.setItem('showingStatus', 'BOOK_NOW')
-                                handleBuyButton(showing.eventId, showing.id, showing.seatMapId)
+                                handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id)
                               }}
                             >
-                              {t('bookNow') || "Mua vé ngay"}
+                              {loadingButtonId === showing.id ? (
+                                  <CircularProgress size={16} />
+                              ) : (t('bookNow') || "Mua vé ngay")}
                             </button>
                           );
 
