@@ -25,6 +25,7 @@ export default function LocationManagementClient() {
   const [selectedCity, setSelectedCity] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [organizers, setOrganizers] = useState<string[]>([]);
+  const [allOrganizers, setAllOrganizers] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [cityToProvinceId, setCityToProvinceId] = useState<Record<string, number>>({});
 
@@ -67,7 +68,8 @@ export default function LocationManagementClient() {
         const citySet: Set<string> = new Set();
 
         res.forEach((province) => {
-          const provinceName = locale === "vi" ? province.name.vi : province.name.en
+          let provinceName = locale === "vi" ? province.name.vi : province.name.en
+          provinceName = removeQuotes(provinceName);
           provinceMap[provinceName] = province.id;
           citySet.add(provinceName);
         });
@@ -87,7 +89,7 @@ export default function LocationManagementClient() {
       const venueMap: Record<string, Venue> = {}
 
       group.venues.forEach((v) => {
-        const fullAddress = `${v.street}, ${v.ward}, ${v.district}, ${v.province}`
+        const fullAddress = `${v.street}, ${v.ward}, ${v.district}, ${removeQuotes(v.province)}`
 
         if (!venueMap[fullAddress]) {
           venueMap[fullAddress] = {
@@ -134,9 +136,20 @@ export default function LocationManagementClient() {
     }
   };
 
+  const fetchAllOrganizers = async () => {
+    try {
+      const res = await getAllLocations(session?.user?.accessToken || "");
+      const unique = Array.from(new Set(res.data.map(loc => loc.organizerId)));
+      setAllOrganizers(unique);
+    } catch (error) {
+      console.error("Error fetching all organizers:", error);
+    }
+  };
+
   useEffect(() => {
     // Load all on mount
     fetchLocations()
+    fetchAllOrganizers();
   }, [])
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -148,6 +161,9 @@ export default function LocationManagementClient() {
     setSelectedCity("")
     await fetchLocations()
   }
+
+  const removeQuotes = (str: string) => str?.replace(/^"(.*)"$/, '$1').replace(/"/g, '');
+
   const handleConfirmFilter = async () => {
     const provinceId = selectedCity ? cityToProvinceId[selectedCity] : undefined;
     const organizerId = selectedOrganizer ? selectedOrganizer : undefined;
@@ -163,7 +179,7 @@ export default function LocationManagementClient() {
       <div className="flex flex-wrap items-center gap-4 mb-2 mt-6">
         <FilterDropdown label={transWithFallback('city', 'Thành phố')} options={cities} value={selectedCity} onChange={setSelectedCity} />
 
-        <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={organizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
+        <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={selectedCity ? organizers : allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
 
 
         <button
@@ -187,7 +203,7 @@ export default function LocationManagementClient() {
         <form onSubmit={handleSearch} className="flex w-full sm:w-auto mb-4 sm:mb-0">
           <input
             type="text"
-            placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm, ...")}
+            placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm")}
             className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg w-full sm:w-80 focus:outline-none"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
