@@ -21,6 +21,7 @@ import { useAuth } from "@/contexts/auth.context";
 
 export default function TicketInfor({
   event,
+  showingStartTime,
   totalTickets,
   totalAmount,
   hasSelectedTickets,
@@ -55,10 +56,10 @@ export default function TicketInfor({
             setRedisSeatInfo(null);
           }
         } catch (error: any) {
-         setRedisSeatInfo(null);
-         if (!error?.toString().includes('expired')) {
-           console.error('Error fetching redis seat:', error);
-         }
+          setRedisSeatInfo(null);
+          if (!error?.toString().includes('expired')) {
+            console.error('Error fetching redis seat:', error);
+          }
         }
       }
     }
@@ -183,12 +184,19 @@ export default function TicketInfor({
             <div className="text-gray-500 flex items-center space-x-2 mt-4">
               <Calendar size={18} />
               <span>
-                {new Date(event.startDate).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {showingStartTime
+                  ? new Date(showingStartTime).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                  : new Date(event.startDate).toLocaleString(locale === "vi" ? 'vi-VN' : 'en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
               </span>
             </div>
             <div className="text-gray-500 flex items-center space-x-2 mt-2">
@@ -199,33 +207,33 @@ export default function TicketInfor({
 
           <div className='action-wrapper pb-4'>
             {/* Selected tickets */}
-            {!isLoading && 
+            {!isLoading &&
               Object.entries(selectedTickets).filter(([_, info]) => info.quantity > 0).length > 0 && (
-              <div className="mb-2">
-                <div className="text-sm font-semibold text-[#0C4762] mb-1">{transWithFallback('selectedTickets', 'Các vé đã chọn')}:</div>
-                <ul className="space-y-1">
-                  {Object.entries(selectedTickets).map(([ticketTypeId, info]) => {
-                    if (!info.quantity || info.quantity === 0) return null;
+                <div className="mb-2">
+                  <div className="text-sm font-semibold text-[#0C4762] mb-1">{transWithFallback('selectedTickets', 'Các vé đã chọn')}:</div>
+                  <ul className="space-y-1">
+                    {Object.entries(selectedTickets).map(([ticketTypeId, info]) => {
+                      if (!info.quantity || info.quantity === 0) return null;
 
-                    const ticketTypeObj = ticketType?.find(tt => tt.id === ticketTypeId);
-                    return (
-                      <li key={ticketTypeId} className="flex items-center gap-2 text-sm">
-                        <span className="inline-block w-3 h-3 rounded mr-1" style={{ background: ticketTypeObj?.color }} />
-                        <span className="font-semibold">{ticketTypeObj?.name || ticketTypeId}</span>
-                        {info.sectionId && info.name && (
-                          <span className="ml-1 text-xs text-gray-500">
-                            (
-                            {Array.isArray(info.name) ? info.name.join(', ') : info.name}
-                            )
-                          </span>
-                        )}
-                        <span className="ml-auto">×{info.quantity}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
+                      const ticketTypeObj = ticketType?.find(tt => tt.id === ticketTypeId);
+                      return (
+                        <li key={ticketTypeId} className="flex items-center gap-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded mr-1" style={{ background: ticketTypeObj?.color }} />
+                          <span className="font-semibold">{ticketTypeObj?.name || ticketTypeId}</span>
+                          {info.sectionId && info.name && (
+                            <span className="ml-1 text-xs text-gray-500">
+                              (
+                              {Array.isArray(info.name) ? info.name.join(', ') : info.name}
+                              )
+                            </span>
+                          )}
+                          <span className="ml-auto">×{info.quantity}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
 
             {/* Total amount of selected tickets */}
             <div className="flex justify-between items-center mt-4 px-2 py-2 bg-gray-50 rounded-lg shadow-sm">
