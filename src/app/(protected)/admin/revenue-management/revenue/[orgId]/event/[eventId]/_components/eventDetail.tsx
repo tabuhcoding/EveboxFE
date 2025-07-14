@@ -80,7 +80,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          revenue: s.revenue,
+          revenue: s.revenue * 1000,
           totalTickets: 0,      // Placeholder
           soldTickets: 0,       // Placeholder
           percentageSold: 0,    // Placeholder
@@ -174,7 +174,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
 
   return (
     event ? (
-      <div className="container p-4 ml-64 pr-28">
+      <div className="container p-4">
         {/* Breadcrumb */}
         <div className="mb-6">
           <div className="flex items-center text-[#0C4762] font-bold text-xl mb-2">

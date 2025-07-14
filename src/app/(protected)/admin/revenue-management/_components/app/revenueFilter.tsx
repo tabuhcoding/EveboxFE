@@ -10,7 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 /* Package Application */
 import { RevenueFilterProps } from "@/types/models/admin/revenueManagement.interface";
 
-export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps) {
+export default function RevenueFilter({ onConfirm, onReset, isLoading }: RevenueFilterProps) {
   const t = useTranslations('common');
 
   const [filterType, setFilterType] = useState<"month" | "year">("month")
@@ -86,7 +86,7 @@ export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps
               dateFormat="MM/yyyy"
               showMonthYearPicker
               locale={vi}
-              placeholderText="Chọn tháng"
+              placeholderText={transWithFallback('chooseMonth', 'Chọn tháng')}
               className="w-36 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
               calendarClassName="!rounded-xl !shadow-xl !border border-gray-200 p-4"
               popperClassName="z-50"
@@ -101,7 +101,7 @@ export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps
               dateFormat="MM/yyyy"
               showMonthYearPicker
               locale={vi}
-              placeholderText="Chọn tháng"
+              placeholderText={transWithFallback('chooseMonth', 'Chọn tháng')}
               className="w-36 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
               calendarClassName="!rounded-xl !shadow-xl !border border-gray-200 p-4"
               popperClassName="z-50"
@@ -114,7 +114,7 @@ export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps
       {filterType === "year" && (
         <div className="flex items-center bg-gray-100 px-4 py-2 rounded-md space-x-4">
           <div className="flex items-center space-x-2 text-sm">
-            <span className="text-sm text-gray-600">Từ năm</span>
+            <span className="text-sm text-gray-600">{transWithFallback('from', 'Từ')}</span>
             <DatePicker
               selected={fromYear ? new Date(`${fromYear}-01-01`) : null}
               onChange={(date) => {
@@ -126,7 +126,7 @@ export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps
               showYearPicker
               dateFormat="yyyy"
               locale={vi}
-              placeholderText="Chọn năm"
+              placeholderText={transWithFallback('chooseYear', 'Chọn năm')}
               className="w-36 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
               calendarClassName="!rounded-xl !shadow-xl !border border-gray-200 p-4"
               popperClassName="z-50"
@@ -134,14 +134,14 @@ export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps
           </div>
           <span>|</span>
           <div className="flex items-center space-x-2 text-sm">
-            <span className="text-sm text-gray-600">Đến năm</span>
+            <span className="text-sm text-gray-600">{transWithFallback('to', 'Đến')}</span>
             <DatePicker
               selected={toYear ? new Date(`${toYear}-01-01`) : null}
               onChange={(date) => setToYear(date ? format(date, "yyyy") : "")}
               showYearPicker
               dateFormat="yyyy"
               locale={vi}
-              placeholderText="Chọn năm"
+              placeholderText={transWithFallback('chooseYear', 'Chọn năm')}
               className="w-36 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
               calendarClassName="!rounded-xl !shadow-xl !border border-gray-200 p-4"
               popperClassName="z-50"
@@ -155,8 +155,9 @@ export default function RevenueFilter({ onConfirm, onReset }: RevenueFilterProps
         <button
           onClick={handleConfirm}
           className="bg-[#0C4762] text-white px-6 py-2 rounded-md hover:bg-[#0c4b78] transition-colors"
+          disabled={isLoading}
         >
-          {transWithFallback('confirm', 'Xác nhận')}
+          {isLoading ? transWithFallback('loadingData', 'Đang tải dữ liệu...') : transWithFallback('confirm', 'Xác nhận')}
         </button>
         <button
           onClick={handleReset}
