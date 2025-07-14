@@ -6,7 +6,7 @@ import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /* Package Application */
 import { EventDetail, Showing } from "../../../../../types/models/event/eventdetail/event.interface";
@@ -30,6 +30,16 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
   const [continueMessage, setContinueMessage] = useState("");
   const [href, setHref] = useState("");
   const [continueHref, setContinueHref] = useState("");
+
+  useEffect(() => {
+    const showingStatus = localStorage.getItem('showingStatus');
+    if (showingStatus) {
+      console.log("Showing status từ localStorage:", showingStatus);
+      setTimeout(() => {
+        localStorage.removeItem('showingStatus');
+      }, 500);
+    }
+  }, []);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -118,8 +128,6 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
 
                     {/* Button: Show Availability */}
                     {(() => {
-                      const showingStatus = localStorage.getItem('showingStatus');
-                      if (showingStatus) localStorage.removeItem('showingStatus');
                       switch (showing.status) {
                         case "SOLD_OUT":
                           return (
@@ -158,7 +166,7 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                               }}
                             >
                               {loadingButtonId === showing.id ? (
-                                  <CircularProgress size={16} />
+                                <CircularProgress size={16} />
                               ) : (t('bookNow') || "Mua vé ngay")}
                             </button>
                           );
