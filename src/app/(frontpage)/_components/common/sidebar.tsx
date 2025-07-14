@@ -1,14 +1,14 @@
 "use client"
 
 /* Package System */
-import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser } from 'lucide-react';
+import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser, BookOpenText } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '@mui/material';
 
-/* Package Application */
+/* Package Application */ 
 import { useAuth } from 'contexts/auth.context';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
@@ -102,6 +102,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         onClick: handleLogout,
       });
     }
+
+    items.push({
+        icon: <BookOpenText size={20} />,
+        text: t("instructionManual"),
+        onClick:() => handleProtectedClick('/instruction'),
+      });
 
     return items;
   }, [user, t, handleLogout, router]);
