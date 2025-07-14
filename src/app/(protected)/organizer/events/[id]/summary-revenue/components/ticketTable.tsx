@@ -16,6 +16,10 @@ export const TicketTable = ({ ticketTypes, ticketTypesInfo }: TicketTableProps) 
     return msg.startsWith("common.") ? fallback : msg;
   };
 
+  const formatRatio = (ratio: number) =>{
+    return (ratio*100).toFixed(2);
+  }
+
   const formatDateTime = (dateTime?: string | Date) => {
       if (!dateTime) return ""
       try {
@@ -68,7 +72,7 @@ export const TicketTable = ({ ticketTypes, ticketTypesInfo }: TicketTableProps) 
                 <td className="py-3 px-4">{formatDateTime(ticketTypesInfo?.at(index)?.endTime)}</td>
                 <td className="py-3 px-4">{ticketTypesInfo?.at(index)?.quantity}</td>
                 <td className="py-3 px-4">{ticket.sold}</td>
-                <td className="py-3 px-4">{ticket.ratio}%</td>
+                <td className="py-3 px-4">{formatRatio(ticket.ratio)}%</td>
               </tr>
             ))}
           </tbody>

@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { getOrdersByShowingId } from "@/services/org.service";
 import { sendEmail } from "@/services/booking.service";
 import toast from "react-hot-toast";
+import { usePathname, useRouter } from "next/navigation";
 
 interface OrderSectionProps {
   showingId: string;
@@ -25,10 +26,13 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-   const fetchOrders = async (emailFilter?: string) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const fetchOrders = async (emailFilter?: string) => {
     try {
       setLoading(true);
-      const data = await getOrdersByShowingId(showingId, emailFilter); 
+      const data = await getOrdersByShowingId(showingId, emailFilter);
       setOrdersData(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
@@ -44,29 +48,39 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   const handleSearch = async () => {
     const trimmed = search.trim().toLowerCase();
     if (trimmed.includes("@")) {
-      await fetchOrders(trimmed); 
+      await fetchOrders(trimmed);
     }
   };
 
   const handleSendSelectedEmail = async () => {
     try {
       await sendEmail(selectedOrders);
-      toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!') );
+      toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!'));
     } catch (error) {
       toast.error("Error sending email!")
       console.error("Failed to fetch orders:", error);
-    }  
+    }
   };
 
   const handleSendAllEmails = async () => {
     try {
-      const unsendOrders = ordersData.filter(order => !order?.mailSent && order?.status?.toLowerCase() === "success")
-      await sendEmail(unsendOrders.map(order => order.id));
-      toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!') );
+      const unsendOrders = ordersData.filter(order => !order?.mailSent && order?.status?.toLowerCase() === "success");
+      if (unsendOrders.length === 0) {
+        toast.error("No order selected to send!")
+      }
+      else {
+        await sendEmail(unsendOrders.map(order => order.id));
+        toast.success(transWithFallback('sendEmailSuccess', 'Gửi email thành công!'));
+
+      }
     } catch (error) {
-      toast.error("Error sending email!")
+      toast.error("Error sending email!");
       console.error("Failed to fetch orders:", error);
-    }  
+    }
+  };
+
+  const handleRowClick = (orderId: number) => {
+    router.push(`${pathname}/${orderId}`);
   };
 
   useEffect(() => {
@@ -77,7 +91,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
     return () => clearTimeout(debounce);
   }, [search]);
 
-  
+
 
   useEffect(() => {
     setMounted(true);
@@ -88,12 +102,12 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   }, [ordersData]);
 
   if (loading) {
-  return (
-    <div className="flex justify-center items-center py-12">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#0C4762]" />
-    </div>
-  );
-}
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#0C4762]" />
+      </div>
+    );
+  }
 
   const getCustomerName = (order: TicketOrderData): string => {
     const formAnswers = order.formResponse?.FormAnswer || [];
@@ -117,7 +131,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
       case "success":
         return { text: transWithFallback("success", "Thành công"), className: "bg-green-100 text-green-800" };
       case "giveaway":
-        return { text: transWithFallback("giveaway", "Đã tặng"), className: "bg-green-100 text-green-800" };  
+        return { text: transWithFallback("giveaway", "Đã tặng"), className: "bg-green-100 text-green-800" };
       case "processing":
         return { text: transWithFallback("processing", "Đang xử lý"), className: "bg-yellow-100 text-yellow-800" };
       case "cancelled":
@@ -130,7 +144,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   const getQuantity = (order: TicketOrderData): number => {
     let quantity = 0;
     order?.Ticket?.forEach(ticket => {
-       quantity+=ticket.tickets.length;
+      quantity += ticket.tickets.length;
     });
     return quantity;
   };
@@ -163,10 +177,10 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
         </div>
 
         <div className="flex gap-3">
-          <button 
+          <button
             onClick={() => handleSendAllEmails()}
             className="px-4 py-2 bg-[#48D1CC] text-[#0C4762] rounded-md transition duration-200 hover:bg-[#51DACF]">
-               {transWithFallback("sendAllEmails", "Gửi tất cả email")}
+            {transWithFallback("sendAllEmails", "Gửi tất cả email")}
           </button>
           <button
             onClick={() => handleSendSelectedEmail()}
@@ -206,15 +220,19 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
             ordersData.map((order) => {
               const status = getStatusDisplay(order.status);
               return (
-                <tr key={order.id} className="border-t hover:bg-gray-50">
+                <tr
+                  key={order.id}
+                  className="border-t hover:bg-gray-200 cursor-pointer"
+                  onClick={() => handleRowClick(order.id)}
+                >
                   <td className="py-2 px-2">
                     {
                       order?.status?.toLowerCase() === 'success' && !order?.mailSent
                         ? <input
-                            type="checkbox"
-                            onChange={() => toggleCheckbox(order.id)}
-                            checked={selectedOrders.includes(order.id)}
-                          />
+                          type="checkbox"
+                          onChange={() => toggleCheckbox(order.id)}
+                          checked={selectedOrders.includes(order.id)}
+                        />
                         : <></>
                     }
                   </td>

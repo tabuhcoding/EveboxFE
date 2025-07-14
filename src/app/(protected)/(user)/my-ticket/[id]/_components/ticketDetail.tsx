@@ -12,11 +12,13 @@ import { TicketDetailProps } from '@/types/models/ticket/ticketInfoById';
 
 import { useTicketById } from '../../_component/libs/hooks/useTicketById';
 import TicketDetailLoading from '../loading';
+import GiftTicketModal from './giftTicketModal';
 
 const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
     const { ticket, loading, error } = useTicketById(ticketId);
     const [currentTicketIndex, setCurrentTicketIndex] = useState(0);
     const router = useRouter();
+    const [isGiftModalOpen, setIsGiftModalOpen] = useState(false);
 
     const t = useTranslations('common');
 
@@ -37,9 +39,9 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
 
     const getStatusInfo = (status: string) => {
         switch (status) {
-            case 'CANCELED': return { text: 'Đã hủy', color: 'text-red-500' };
-            case 'SUCCESS': return { text: 'Thành công', color: 'text-green-500' };
-            case 'PENDING': return { text: 'Đang chờ xử lý', color: 'text-yellow-500' };
+            case 'CANCELED': return { text: transWithFallback('orderCancelled', 'Đã hủy'), color: 'text-red-500' };
+            case 'SUCCESS': return { text: transWithFallback('orderSuccess', 'Thành công'), color: 'text-green-500' };
+            case 'PENDING': return { text: transWithFallback('orderPending', 'Đang chờ xử lý'), color: 'text-yellow-500' };
             default: return { text: 'Không xác định', color: 'text-white' };
         }
     };
@@ -134,7 +136,6 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             </button>
                         </div>
                     )}
-
                 </div>
 
                 {/* Order Details */}
@@ -143,9 +144,11 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                         <h3 className="text-lg font-bold mb-2">{transWithFallback('orderInfo', 'Thông tin đơn hàng')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             <p className="text-gray-300">{transWithFallback('orderDated', 'Ngày đặt hàng:')}</p>
-                            <p className="text-[#9EF5CF]">{new Date(ticket.PaymentInfo?.paidAt || '').toLocaleString()}</p>
+                            <p className="text-[#9EF5CF]">{new Date(ticket.PaymentInfo?.paidAt || ticket.createdAt || '').toLocaleString()}</p>
                             <p className="text-gray-300">{transWithFallback('paymentMethod', 'Phương thức thanh toán')}:</p>
-                            <p className="text-[#9EF5CF]">{ticket.PaymentInfo?.method}</p>
+                            <p className="text-[#9EF5CF]">{ticket.PaymentInfo?.method || transWithFallback('free', 'Miễn phí')}</p>
+                            <p className="text-gray-300">{transWithFallback('owner', 'Chủ sở hữu')}:</p>
+                            <p className="text-[#9EF5CF]">{ticket.ownerId}</p>
                             <p className="text-gray-300">{transWithFallback('orderStatus', 'Tình trạng đơn hàng')}:</p>
                             <p className={`${color} font-bold`}>{text}</p>
                         </div>
@@ -188,6 +191,24 @@ const TicketDetailClient = ({ ticketId }: TicketDetailProps) => {
                             </p>
                         </div>
                     </div>
+
+                    {ticket.status === 'SUCCESS' && ticket.canGiveAway && (
+                        <>
+                            <div className="mt-8">
+                                <button
+                                    className="w-full bg-[#51DACF] hover:bg-[#3ec8bd] text-[#0C4762] font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200"
+                                    onClick={() => setIsGiftModalOpen(true)}
+                                >
+                                    {transWithFallback('giveAway', 'Tặng vé')}
+                                </button>
+                            </div>
+                            <GiftTicketModal
+                                isOpen={isGiftModalOpen}
+                                onClose={() => setIsGiftModalOpen(false)}
+                                ticketId={ticket.id}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div >

@@ -59,45 +59,53 @@ export default function RevenueManagementPage() {
       setLoading(true);
       const response = await getOrganizerRevenue(session.user.accessToken, currentPage, itemsPerPage, fromDate, toDate, search);
 
-      if (response.statusCode === HttpStatusCode.Ok && response.data.length > 0) {
-        const organizations = response.data.map((org): AppRevenue["organizations"][0] => ({
-          id: org.orgId,
-          name: org.organizerName,
-          actualRevenue: org.actualRevenue,
-          events: org.events.map((event): EventRevenueInEventTable => ({
-            id: event.eventId,
-            name: event.eventName,
-            totalRevenue: event.totalRevenue,
-            platformFee: event.platformFeePercent,
-            actualRevenue: event.actualRevenue,
-            showings: event.showings.map((show): ShowingRevenueInEventTable => ({
-              showingId: show.showingId,
-              startDate: show.startDate,
-              endDate: show.endDate,
-              revenue: show.revenue,
-              ticketTypes: show.ticketTypes.map((ticket): TicketTypeRevenueData => ({
-                ticketTypeId: ticket.ticketTypeId,
-                name: ticket.name,
-                price: ticket.price,
-                sold: ticket.sold,
-                revenue: ticket.revenue,
+      if (response.statusCode === HttpStatusCode.Ok) {
+        if (response.data.length > 0) {
+          const organizations = response.data.map((org): AppRevenue["organizations"][0] => ({
+            id: org.orgId,
+            name: org.organizerName,
+            actualRevenue: org.actualRevenue * 1000,
+            events: org.events.map((event): EventRevenueInEventTable => ({
+              id: event.eventId,
+              name: event.eventName,
+              totalRevenue: event.totalRevenue * 1000,
+              platformFee: event.platformFeePercent,
+              actualRevenue: event.actualRevenue * 1000,
+              isExpanded: false,
+              showings: event.showings.map((show): ShowingRevenueInEventTable => ({
+                showingId: show.showingId,
+                startDate: show.startDate,
+                endDate: show.endDate,
+                revenue: show.revenue * 1000,
+                isExpanded: false,
+                ticketTypes: show.ticketTypes.map((ticket): TicketTypeRevenueData => ({
+                  ticketTypeId: ticket.ticketTypeId,
+                  name: ticket.name,
+                  price: ticket.price,
+                  sold: ticket.sold,
+                  revenue: ticket.revenue * 1000,
+                })),
               })),
             })),
-          })),
-        }));
+          }));
 
-        const app: AppRevenue = {
-          id: 1,
-          totalRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0),
-          systemDiscount: response.data[0].platformFeePercent ?? 10,
-          actualRevenue: response.data.reduce((sum, org) => sum + org.actualRevenue, 0),
-          isExpanded: true,
-          organizations,
-        };
+          const app: AppRevenue = {
+            id: 1,
+            totalRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0),
+            systemDiscount: response.data[0].platformFeePercent ?? 10,
+            actualRevenue: response.data.reduce((sum, org) => sum + org.actualRevenue, 0),
+            isExpanded: true,
+            organizations,
+          };
 
-        setAppRevenues([app]);
-        setTotalItems(response.pagination?.totalItems || 0);
-        setTotalPages(response.pagination?.totalPages || 0);
+          setAppRevenues([app]);
+          setTotalItems(response.pagination?.totalItems || 0);
+          setTotalPages(response.pagination?.totalPages || 0);
+        } else {
+          setAppRevenues([]);
+          setTotalItems(response.pagination?.totalItems || 0);
+          setTotalPages(response.pagination?.totalPages || 0);
+        }
       } else {
         setAppRevenues([]);
         setAlertMessage(`${transWithFallback('errorWhenFetchRevenue', 'Lỗi xảy ra khi lấy dữ liệu doanh thu')}`);
@@ -169,7 +177,7 @@ export default function RevenueManagementPage() {
       case "day":
         return (
           <>
-            <RevenueFilter onConfirm={handleConfirm} onReset={handleReset} />
+            <RevenueFilter onConfirm={handleConfirm} onReset={handleReset} isLoading={loading} />
             <RevenueAppTable
               fromDate={fromDate}
               toDate={toDate}
@@ -368,7 +376,7 @@ export default function RevenueManagementPage() {
               toggleEvent={handleToggleEvent}
               toggleEventDetail={handleToggleEventDetail}
               events={allEvents}
-              orgId={appRevenues[0]?.id.toString() ?? ""}
+              orgId={appRevenues[0]?.organizations[0]?.id || ""}
             />
           </>
         )}

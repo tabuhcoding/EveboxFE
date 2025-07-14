@@ -40,6 +40,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
   const [isLoadingSeatmap, setIsLoadingSeatmap] = useState(true);
   const [seatmapError, setSeatmapError] = useState<string | "">("");
   const [selectedSeatIds, setSelectedSeatIds] = useState<number[]>([]);
+  const [startShowTime, setStartShowTime] = useState<Date | null>(null);
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -111,6 +112,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
         .then((data) => {
           if (data?.data) {
             setSeatMapData(data.data);
+            setStartShowTime(data.data.startTime);
             setTicketType(data.data?.TicketType || []);
           }
           else {
@@ -137,6 +139,9 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
           if (showingResponse?.data?.TicketType) {
             const sortedTicketType = [...showingResponse.data.TicketType].sort((a, b) => a.position - b.position);
             setTicketType(sortedTicketType);
+          }
+          if (showingResponse?.data?.startTime) {
+            setStartShowTime(showingResponse.data.startTime);
           }
         })
         .catch(() => setSeatmapError(transWithFallback('errorShowing', 'Lỗi khi dữ liệu showing')))
@@ -226,6 +231,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
         <Navigation title={transWithFallback('chooseTicket', 'Chọn vé')} />
         {(event) ? (
           <TicketInfor
+            showingStartTime={startShowTime}
             event={event}
             totalTickets={totalTickets}
             totalAmount={totalAmount}

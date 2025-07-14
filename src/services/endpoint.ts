@@ -43,8 +43,10 @@ export class END_POINT_LIST {
     GET_REDIS_SEAT: "/api/booking/getRedisSeat",
     UNSELECT_SEAT: "/api/booking/unSelectSeat",
     GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
+    GET_ORDER_BY_ID_ORG: "/api/ticket/org/getOrderById",
     GET_ORDER_BY_ID: "/api/ticket/getOrderById",
     GET_USER_ORDER: "/api/ticket/getUserOrder",
+    RECEIVE_TICKET: "api/booking/receive-ticket",
     SEND_EMAIL: '/api/booking/sendEmail'
   }
 
@@ -83,7 +85,9 @@ export class END_POINT_LIST {
 
   static readonly ADMIN_STATISTICS = {
     GET_REVENUE: "/api/admin/revenue",
+    GET_REVENUE_V2: "/api/admin/revenue-v2",
     GET_REVENUE_CHART: "/api/admin/revenue-chart",
+    GET_REVENUE_CHART_V2: "/api/admin/revenue-chart-v2",
     GET_REVENUE_BY_PROVINCE: "/api/admin/revenue-by-province",
     GET_REVENUE_BY_TICKETPRICE: "/api/admin/revenue-by-ticket-price"
   };

@@ -15,7 +15,7 @@ function PercentageCircle({ percentage }: { percentage: number }) {
   const normalizedRadius = radius - stroke / 2;
   const circumference = 2 * Math.PI * normalizedRadius;
   const strokeDashoffset =
-    circumference - (percentage / 100) * circumference;
+    circumference - (percentage) * circumference;
 
   return (
     <svg height={radius * 2} width={radius * 2} className="rotate-[-90deg]">

@@ -9,6 +9,7 @@ export interface RevenueTabsProps {
 export interface RevenueFilterProps {
   onConfirm: (fromDate?: string, toDate?: string, type?: "month" | "year") => void;
   onReset: () => void;
+  isLoading: boolean;
 }
 
 export interface FilterProps {
