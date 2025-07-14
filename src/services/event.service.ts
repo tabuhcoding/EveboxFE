@@ -592,7 +592,7 @@ export async function getOrganizerRevenue(accessToken: string, page: number, lim
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE}?${params.toString()}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_V2}?${params.toString()}`, {
       headers: headers
     });
 
@@ -617,7 +617,7 @@ export async function getEventRevenueDetail(orgId: string, eventId: number, acce
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE}/${orgId}/${eventId}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_V2}/${orgId}/${eventId}`, {
       headers: headers
     });
 

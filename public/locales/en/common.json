@@ -817,5 +817,6 @@
     "revenueAndTicketsOverTime": "Revenue and Tickets over time",
     "sendEmailSuccess": "Sending email(s) successfully!",
     "owner": "Owner",
-    "payment":"Payment"
+    "payment":"Payment",
+    "chooseYear": "Choose year"
 }

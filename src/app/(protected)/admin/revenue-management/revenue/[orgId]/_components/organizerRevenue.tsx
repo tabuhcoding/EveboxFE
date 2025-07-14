@@ -254,7 +254,7 @@ export default function OrganizerRevenuePage({ orgId }: { orgId: string }) {
 
   return (
     organization && (
-      <div className="container p-4 ml-64 pr-28">
+      <div className="container p-4">
         {/* Header */}
         <div className="mb-6 flex items-center space-x-2">
           <Link href="/admin/revenue-management" className="flex items-center text-[#0C4762] font-bold text-xl mb-2">

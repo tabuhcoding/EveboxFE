@@ -36,7 +36,7 @@ export default function RevenueChart({ type, from, to }: RevenueChartProps) {
           return;
         }
 
-        setChartData({ labels: res.data.map((item) => item.period), values: res.data.map((item) => item.actualRevenue) });
+        setChartData({ labels: res.data.map((item) => item.period), values: res.data.map((item) => item.actualRevenue * 1000) });
       } catch (error) {
         console.error('Error when fetch chart data:', error);
         setAlertMessage(`${transWithFallback('errorWhenFetchChartData', 'Lỗi xảy ra khi lấy dữ liệu biểu đồ')}: ${error}`);
