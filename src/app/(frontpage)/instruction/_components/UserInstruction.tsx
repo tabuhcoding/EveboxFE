@@ -223,8 +223,15 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
     
               {activeDetail === 'buy-ticket' && (
                 <>
-                  <ul className="list-disc list-inside text-sm space-y-1 text-gray-700">
                    <h2 className="text-xl font-semibold mb-2 mt-2">Mua vé</h2>
+                     <iframe
+        className="w-full h-full rounded-md"
+        src="https://www.youtube.com/embed/pFZaSNFWSU8"
+        title="Hướng dẫn tạo sự kiện"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+                  <ul className="list-disc list-inside text-sm space-y-1 text-gray-700">
                     <li>Tại trang chi tiết sự kiện, chọn một suất diễn (Showing) phù hợp</li>
                     <div className="flex justify-center my-2">
           <Image
@@ -345,7 +352,16 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
     
                {activeDetail === 'create-event' && (
                 <>
-                              <h2 className="text-xl font-semibold mb-2">Tạo mới sự kiện</h2>
+                  <h2 className="text-xl font-semibold mb-2">Tạo mới sự kiện</h2>
+                  <div className="w-full aspect-video mb-4">
+      <iframe
+        className="w-full h-full rounded-md"
+        src="https://www.youtube.com/embed/mzEw-JrKGts"
+        title="Hướng dẫn tạo sự kiện"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+    </div>
                   <ul className="list-disc list-inside text-sm space-y-1 text-gray-700">
                     <li>Sau khi đã đăng nhập thành công, tại thanh bên người dùng bấm “Tạo sự kiện”</li>
                     <div className="flex justify-center my-2">
