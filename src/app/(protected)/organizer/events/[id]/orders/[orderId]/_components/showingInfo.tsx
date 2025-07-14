@@ -27,7 +27,7 @@ export default function ShowingInfo({ showing }: { showing: OrderShowingResponse
       <div className="md:w-2/3 flex flex-col justify-center gap-2">
         <h3 className="font-bold text-xl mb-1">{showing.title}</h3>
         <div><b>{transWithFallback('location', 'Địa điểm')}:</b> {showing.venue}</div>
-        <div><b>{transWithFallback('address', 'Địa chỉ')}:</b> {showing.locationsString}</div>
+        <div><b>{transWithFallback('address', 'Địa chỉ')}:</b> {showing.locationsString.replace(/"/g, '')}</div>
         <div>
           <b>{transWithFallback('time', 'Thời gian')}:</b>{" "}
           {showing.startTime
