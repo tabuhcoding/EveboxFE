@@ -228,7 +228,6 @@ export default function RevenueManagementPage() {
 
   const toggleEvent = (appId: number, orgId: string, eventId: number) => {
     if (!appId) return;
-    console.log("Toggling event:", { appId, orgId, eventId });
 
     setAppRevenues((prev) =>
       prev.map((app) => ({
