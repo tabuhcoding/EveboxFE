@@ -43,6 +43,7 @@ export class END_POINT_LIST {
     GET_REDIS_SEAT: "/api/booking/getRedisSeat",
     UNSELECT_SEAT: "/api/booking/unSelectSeat",
     GET_ORDER_BY_ORIGINAL_ID: "/api/ticket/getOrderByOriginalId",
+    GET_ORDER_BY_ID_ORG: "/api/ticket/org/getOrderById",
     GET_ORDER_BY_ID: "/api/ticket/getOrderById",
     GET_USER_ORDER: "/api/ticket/getUserOrder",
     RECEIVE_TICKET: "api/booking/receive-ticket",

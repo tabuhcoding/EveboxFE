@@ -75,6 +75,24 @@ export async function unselectSeat(showingId: string, accessToken: string): Prom
   }
 }
 
+export async function getOrderById(id: string, accessToken: string): Promise<IGetUserTicketByIdResponse> {
+  try {
+    const res = await bookingService.get(`${END_POINT_LIST.BOOKING.GET_ORDER_BY_ID_ORG}?orderId=${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      }
+    });
+
+    if (!res) throw new Error('Failed to get ticket by id');
+
+    return res.data as IGetUserTicketByIdResponse;
+  } catch (error: any) {
+    console.error("Error get ticket by id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
 export async function getTicketById(id: string, accessToken: string): Promise<IGetUserTicketByIdResponse> {
   try {
     const res = await bookingService.get(`${END_POINT_LIST.BOOKING.GET_ORDER_BY_ID}?orderId=${id}`, {

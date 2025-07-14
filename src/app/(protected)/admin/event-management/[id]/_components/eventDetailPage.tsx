@@ -90,7 +90,7 @@ export default function EventDetailPage({ eventId }: { eventId: number }) {
                 <House size={18} /> {event?.venue}
               </p>
               <p className="mt-2 flex items-center gap-1">
-                <MapPin size={18} /> {event?.locationsString}
+                <MapPin size={18} /> {event?.locationsString.replace(/"/g, '')}
               </p>
               <div className="mt-2">
                 <span className="font-semibold">{transWithFallback('description', 'Mô tả')}: </span>
