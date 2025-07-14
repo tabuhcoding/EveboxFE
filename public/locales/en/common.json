@@ -818,5 +818,6 @@
     "sendEmailSuccess": "Sending email(s) successfully!",
     "owner": "Owner",
     "payment":"Payment",
-    "chooseYear": "Choose year"
+    "chooseYear": "Choose year",
+    "instructionManual": "Instruction Manual"
 }

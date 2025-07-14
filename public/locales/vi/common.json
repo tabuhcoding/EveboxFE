@@ -805,5 +805,6 @@
   "endDate": "Ngày kết thúc",
   "receivingProcessingNotice": "Hệ thống đang xử lý yêu cầu của bạn, vui lòng đợi trong giây lát...",
   "timeAndTicketType": "Thời gian & Loại vé",
-  "chooseYear": "Chọn năm"
+  "chooseYear": "Chọn năm",
+  "instructionManual": "Hướng dẫn sử dụng"
 }
