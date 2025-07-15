@@ -53,34 +53,40 @@ export default function ShowingDetailPage({ showingId }: { showingId: string }) 
 
   function renderShowingStatus(status: string) {
     switch (status) {
-      case "register_now":
+      case "REGISTER_NOW":
         return (
           <span className="text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#C7F2A4] text-[#166534] border-[#A3E635]">
             {transWithFallback('registerNow', 'Đang mở đăng ký')}
           </span>
         );
-      case "book_now":
+      case "BOOK_NOW":
         return (
           <span className="text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#9EF5CF] text-[#0C4762] border-[#9EF5CF]">
             {transWithFallback('bookNow', 'Đang mở bán vé')}
           </span>
         );
-      case "sold_out":
+      case "SOLD_OUT":
         return (
           <span className="text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#FFC9C9] text-[#FF0000] border-[#FFC9C9]">
             {transWithFallback('soldOut', 'Hết vé')}
           </span>
         );
-      case "not_open":
+      case "NOT_OPEN":
         return (
           <span className="text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-gray-200 text-gray-700 border-gray-300">
             {transWithFallback('notOpen', 'Chưa mở bán')}
           </span>
         );
-      case "register_closed":
+      case "REGISTER_CLOSED":
         return (
           <span className="text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-orange-100 text-orange-700 border-orange-300">
             {transWithFallback('registerClosed', 'Đã đóng đăng ký')}
+          </span>
+        );
+      case "SALE_CLOSED":
+        return (
+          <span className="text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-orange-100 text-orange-700 border-orange-300">
+            {transWithFallback('saleClosed', 'Vé ngừng bán')}
           </span>
         );
       default:
