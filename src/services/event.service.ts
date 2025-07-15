@@ -510,7 +510,7 @@ export async function getOrgRevenueChart(accessToken: string, filterType: "month
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
     
-    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_CHART}?${params.toString()}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_CHART_V2}?${params.toString()}`, {
       headers: headers
     });
 

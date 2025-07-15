@@ -37,7 +37,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
         <div className="relative w-full md:w-80 lg:w-96">
           <input
             type="text"
-            placeholder={transWithFallback('searchByEventOrOrg', 'Tìm kiếm theo tên sự kiện hoặc tên nhà tổ chức')}
+            placeholder={transWithFallback('searchByEventOrOrg', 'Tìm kiếm theo email nhà tổ chức')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-4 pr-12 py-2 h-11 bg-white border border-gray-200 rounded-md w-full outline-none"

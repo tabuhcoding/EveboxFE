@@ -34,7 +34,7 @@ export default function RevenueManagementPage() {
   const [toDate, setToDate] = useState<string | undefined>();
   const [search, setSearch] = useState<string | undefined>();
 
-  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -45,11 +45,18 @@ export default function RevenueManagementPage() {
   const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
-    console.log("Active-----", activeTab);
     // Reset filters when switching tabs
     setFromDate(undefined);
     setToDate(undefined);
     setSearch(undefined);
+    if (activeTab === "app") {
+      setItemsPerPage(0);
+      setCurrentPage(0);
+      setActiveSubTab("day");
+    } else {
+      setItemsPerPage(10);
+      setCurrentPage(1);
+    }
   }, [activeTab]);
 
   const fetchAppRevenue = useCallback(async () => {
@@ -91,9 +98,9 @@ export default function RevenueManagementPage() {
 
           const app: AppRevenue = {
             id: 1,
-            totalRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0),
+            totalRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0) * 1000,
             systemDiscount: response.data[0].platformFeePercent ?? 10,
-            actualRevenue: response.data.reduce((sum, org) => sum + org.actualRevenue, 0),
+            actualRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0) * 1000 * response.data[0].platformFeePercent || 10,
             isExpanded: true,
             organizations,
           };
@@ -123,7 +130,7 @@ export default function RevenueManagementPage() {
 
   useEffect(() => {
     fetchAppRevenue();
-  }, [fetchAppRevenue]);
+  }, [fetchAppRevenue, activeTab]);
 
   const [filter, setFilter] = useState<{
     type: "month" | "year"
