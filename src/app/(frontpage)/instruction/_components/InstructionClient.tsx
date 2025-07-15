@@ -108,6 +108,7 @@ export default function InstructionClient() {
                 <div className="mt-3 space-y-2 ml-4">
                   <CardButton label={transWithFallback('creatEventProcess', 'Quy trình tạo mới sự kiện')} onClick={() => setActiveDetail('create-event')} />
                   <CardButton label={transWithFallback('manageForOrg', 'Quản lý cho organizer')} onClick={() => setActiveDetail('org-management')} />
+                  <CardButton label={transWithFallback('orgCheckin', 'Checkin QR code')} onClick={() => setActiveDetail('org-checkin')} />
                 </div>
               </details>
 
