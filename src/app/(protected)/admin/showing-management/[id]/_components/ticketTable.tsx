@@ -19,37 +19,37 @@ export default function TicketTable({ showingID, ticketTypes }: TicketTableProps
 
   const renderTicketStatus = (status: string) => {
     switch (status) {
-      case "book_now":
+      case "BOOK_NOW":
         return (
           <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#9EF5CF] text-[#0C4762] border-[#9EF5CF]">
             {transWithFallback('bookNow', 'Đang mở bán vé')}
           </span>
         );
-      case "sold_out":
+      case "SOLD_OUT":
         return (
           <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#FFC9C9] text-[#FF0000] border-[#FFC9C9]">
             {transWithFallback('soldOut', 'Hết vé')}
           </span>
         );
-      case "sale_closed":
+      case "SALE_CLOSED":
         return (
           <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#F4EEEE] text-[#979797] border-[#F4EEEE]">
             {transWithFallback('sale_closed', 'Ngừng bán')}
           </span>
         );
-      case "not_open":
+      case "NOT_OPEN":
         return (
           <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#F4EEEE] text-[#979797] border-[#F4EEEE]">
             {transWithFallback('notOpen', 'Chưa mở bán')}
           </span>
         );
-      case "register_now":
+      case "REGISTER_NOW":
         return (
           <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#9EF5CF] text-[#0C4762] border-[#9EF5CF]">
             {transWithFallback('registerNow', 'Đang mở đăng ký')}
           </span>
         );
-      case "register_closed":
+      case "REGISTER_CLOSED":
         return (
           <span className="min-w-[100px] text-center inline-block px-4 py-1 rounded-full text-xs font-semibold border bg-[#F4EEEE] text-[#979797] border-[#F4EEEE]">
             {transWithFallback('registerClosed', 'Đã đóng đăng ký')}

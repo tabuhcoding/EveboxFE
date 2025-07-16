@@ -6,7 +6,7 @@ export const NAVIGATE_ROUTES = {
   MY_TICKETS_PAGE: '/my-ticket',
   SEARCH_PAGE: '/search',
   EVENT_PAGE: '/event',
-  TUTORIAL_PAGE: '/tutorial',
+  TUTORIAL_PAGE: '/instruction',
   POLICY_PAGE: '/policy',
   LEGAL_DOCUMENT_PAGE: '/legal-document',
   CHANGE_PASSWORD_PAGE: '/change-password',

@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 /* Services + Types */
 import { getAnalyticByEvent } from "@/services/org.service";
 import { AnalyticData } from "@/types/models/org/analytics.interface";
+import { AIAnalyst } from "./ai-analyst";
 
 export default function AnalyticsContent() {
   const t = useTranslations('common');
@@ -87,8 +88,11 @@ export default function AnalyticsContent() {
                 <p className="text-gray-500">{transWithFallback('conversionRate', 'Tỉ lệ chuyển đổi')}</p>
               </div>
             </div>
-
             <div className="mb-6">
+              <AIAnalyst eventId={eventId}  />
+            </div>
+            <div className="mb-6">
+              
               <TrafficChart data={analytics.statistic || []} />
             </div>
           </div>

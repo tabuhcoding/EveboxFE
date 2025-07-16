@@ -1,7 +1,7 @@
 "use client"
 
 /* Package System */
-import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser } from 'lucide-react';
+import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser, BookOpenText } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
 import { useState, useMemo } from 'react';
@@ -94,6 +94,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         },
       });
     }
+
+    items.push({
+      icon: <BookOpenText size={20} />,
+      text: t("instructionManual"),
+      onClick: () => handleProtectedClick('/instruction'),
+    });
 
     if (user) {
       items.push({

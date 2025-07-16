@@ -11,6 +11,7 @@ import { getShowingsByEventId, getSummaryByShowingId } from "@/services/org.serv
 import SidebarOrganizer from "../../_components/sidebarOrganizer"
 import { useTranslations } from "next-intl"
 import RevenueChart from "./revenue-chart"
+import { AIAnalyst } from "./ai-analyst"
 
 interface PageProps {
   params: { id: string }
@@ -162,10 +163,13 @@ export const SummaryRevenuePage = ({ params }: PageProps) => {
           />
 
           <TicketTable ticketTypes={data.byTicketType}  ticketTypesInfo={selectedShow?.TicketType} />
-
+          { 
+            showingId && <AIAnalyst showingId={showingId} />
+          }
+          {/* Hiển thị biểu đồ doanh thu nếu có dữ liệu */}
           {data?.revenueChart && data.revenueChart.length > 0 && (
-  <RevenueChart data={data.revenueChart} />
-)}
+            <RevenueChart data={data.revenueChart} />
+          )}
         </div>
       </div>
     )
