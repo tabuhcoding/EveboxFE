@@ -98,7 +98,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     items.push({
       icon: <BookOpenText size={20} />,
       text: t("instructionManual"),
-      onClick: () => handleProtectedClick('/instruction'),
+      onClick: (async () => router.push('/instruction')),
     });
 
     if (user) {
