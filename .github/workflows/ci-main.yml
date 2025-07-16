@@ -2,7 +2,7 @@ name: CI on PR to Main
 
 on:
   pull_request:
-    branches: [main]
+    branches: []
     types: [opened, synchronize, reopened]
 
 jobs:
