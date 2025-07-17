@@ -290,7 +290,7 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                         <div className='flex items-center'>
                           <span
                             className="inline-block ticket-type-color w-10 h-6 rounded mr-2"
-                            style={{ backgroundColor: type.color }}
+                            style={{ backgroundColor: type.color.replace(/"/g, '') }}
                           ></span>
                           <span className='ticket-type-name'>{type.name}</span>
                         </div>
