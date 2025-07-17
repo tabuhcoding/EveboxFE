@@ -291,7 +291,6 @@ export async function getTicketTypeDetailAdmin(showingId: string, ticketTypeId: 
 
     if (!res) throw new Error('Failed to get ticket type detail by admin');
 
-    console.log("🚀 ~ getTicketTypeDetailAdmin ~ res.data:", res.data)
     return res.data as BaseApiResponse<ShowingInTicketTypeDetail>;
   } catch (error: any) {
     console.error("Error get ticket type detail by admin:", error?.response?.data?.message);
