@@ -421,6 +421,7 @@
   "errorWhenFetchTicketType": "Lỗi khi tải dữ liệu loại vé",
   "ticketTypeDetailInfo": "Thông tin chi tiết loại vé",
   "saleOpenTime": "Thời gian mở bán",
+  "saleStartTime": "Thời gian mở bán",
   "saleEndTime": "Thời gian ngừng bán",
   "maxQtyPerOrder": "Số lượng vé mua tối đa/lần",
   "minQtyPerOrder": "Số lượng vé mua tối thiểu/lần",
