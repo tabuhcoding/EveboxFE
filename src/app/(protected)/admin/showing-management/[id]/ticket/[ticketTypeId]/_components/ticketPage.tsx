@@ -135,7 +135,7 @@ export default function TicketDetailPage() {
           <div className="detail-event max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6 mt-3 mb-6">
             <div className="flex justify-center">
               <img className="rounded-md mt-4" alt="Ticket"
-                src={(ticketType?.imageUrl && ticketType?.imageUrl !== "" && !ticketType?.imageUrl.includes('https://domain.com') && ticketType?.imageUrl !== "Default Image URL") ? ticketType?.imageUrl : "https://res.cloudinary.com/de66mx8mw/image/upload/v1744458011/defaultImgEvent_spjrst.png"}
+                src={(ticketType?.imageUrl.replace(/"/g, '') && ticketType?.imageUrl.replace(/"/g, '') !== "" && !ticketType?.imageUrl.replace(/"/g, '').includes('https://domain.com') && ticketType?.imageUrl.replace(/"/g, '') !== "Default Image URL") ? ticketType?.imageUrl.replace(/"/g, '') : "https://res.cloudinary.com/de66mx8mw/image/upload/v1744458011/defaultImgEvent_spjrst.png"}
                 width={800} height={150}
               />
             </div>
