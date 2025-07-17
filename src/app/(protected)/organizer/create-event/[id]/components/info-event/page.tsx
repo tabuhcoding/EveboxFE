@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 // import { useRef } from 'react';
 import { Divider } from '@nextui-org/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 // import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
@@ -26,6 +26,8 @@ export default function InformationEventClientPage() {
     const [step] = useState(1);
     const [btnValidate, setBtnValidate] = useState("");
     const t = useTranslations('common');
+    const params = useParams();
+    const currentEventId = params?.id;
 
     const transWithFallback = (key: string, fallback: string) => {
         const msg = t(key);
@@ -71,7 +73,7 @@ export default function InformationEventClientPage() {
     return (
         <>
             <div className="flex flex-col items-center justify-center p-10 relative">
-                <span className="text-3xl font-semibold mb-6">{transWithFallback('createEvent', 'Tạo sự kiện')}</span>
+                <span className="text-3xl font-semibold mb-6">{currentEventId ? 'Chỉnh sửa sự kiện' : transWithFallback('createEvent', 'Tạo sự kiện')}</span>
                 <div className="w-full flex justify-center">
                     <ol className="flex space-x-6">
                         <Navigation step={step} />

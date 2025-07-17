@@ -28,7 +28,7 @@ export default function Navigation({ step }: { step: number }) {
   ];
 
   const handleStepClick = (targetStep: number, stepKey: string) => {
-    if (targetStep <= step) {
+    if (targetStep <= step || eventId !== '') {
       router.push(`/organizer/create-event/${eventId}?step=${stepKey}`);
     }
   };
@@ -43,7 +43,7 @@ export default function Navigation({ step }: { step: number }) {
             key={index}
             className={`flex items-center space-x-2.5 transition-colors duration-200
               ${isActive ? 'text-black-600' : 'text-gray-500'} 
-              ${s.number <= step ? 'cursor-pointer hover:text-[#51DACF] hover:font-semibold' : 'cursor-not-allowed'}`}
+              ${s.number <= step || eventId !== '' ? 'cursor-pointer hover:text-[#51DACF] hover:font-semibold' : 'cursor-not-allowed'}`}
             onClick={() => handleStepClick(s.number, s.key)}
           >
             <span className={`text-xs mb-2 flex items-center justify-center w-8 h-8 border rounded-full 
