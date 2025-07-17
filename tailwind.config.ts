@@ -18,9 +18,6 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-      },
-      fontFamily: {
-        sans: ['var(--font-montserrat)', 'sans-serif'],
       }
     },
     fontWeight: {

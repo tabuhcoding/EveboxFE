@@ -1,6 +1,5 @@
 /* Package System */
 import { ReactNode } from 'react';
-import { Montserrat } from 'next/font/google';
 
 /* Package Application */
 import { Providers } from "./provider";
@@ -15,17 +14,10 @@ export const metadata = {
   },
 };
 
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-montserrat',
-  display: 'swap'
-});
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={montserrat.variable}>
-      <body className="font-sans">
+    <html lang="en">
+      <body>
         <>
           <Providers>
             <div className="tt-content relative">
