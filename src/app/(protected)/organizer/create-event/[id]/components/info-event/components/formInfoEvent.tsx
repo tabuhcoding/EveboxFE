@@ -14,13 +14,12 @@ import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
 import UpdateConfirmModal from "./updateConfirmDialog";
 
-import { getAllCategories, getAllDistricts, getEventDetail, updateEvent } from "services/event.service";
+import { getAllCategories, getAllDistricts, getEventDetail, updateEvent, getCreatedLocationsOfOrg } from "services/event.service";
 import { Province } from "types/models/event/location.interface";
 import { CreateEventDto, EventDescriptionGenDto } from "types/models/event/createEvent.dto";
 import { useEventImageUpload } from "../../../libs/hooks/useEventImageUpload";
 import { Category } from "@/types/models/dashboard/frontDisplay";
 import { CreatedLocationData } from "../../../libs/interface/infoevent.interface";
-import { getCreatedLocationsOfOrg } from "services/event.service";
 import { useAuth } from "@/contexts/auth.context";
 
 interface FormInformationEventClientProps {
