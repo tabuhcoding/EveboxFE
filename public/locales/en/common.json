@@ -902,5 +902,7 @@
     "mobileOpsAndStatsTitle": "Operations and Statistics (on the mobile app)",
     "viewRevenueAndTicketsSold": "View revenue and number of tickets sold.",
     "trackVisitsAndInteractions": "Track visits and interactions.",
-    "exportReportsAndAnalyze": "Export reports and analyze performance."
+    "exportReportsAndAnalyze": "Export reports and analyze performance.",
+    "member": "Member",
+    "actions": "Actions"
 }

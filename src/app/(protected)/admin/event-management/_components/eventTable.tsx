@@ -23,7 +23,7 @@ import { sortEvents } from "./libs/sortEvent";
 import { getEventsAdmin, updateEventAdmin } from "@/services/event.service";
 import { useAuth } from "@/contexts/auth.context";
 
-export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo }: EventTableProps) {
+export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo,  onLoadFinish }: EventTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
   const { session } = useAuth();
@@ -86,6 +86,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
       setEvents([]);
     } finally {
       setIsLoadingEvents(false);
+      onLoadFinish?.();
     }
   }, [activeTab, categoryFilter, currentPage, dateFrom, dateTo, eventsPerPage, searchKeyword]);
 

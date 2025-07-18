@@ -22,6 +22,8 @@ export default function EventPage() {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setDebouncedSearch(searchKeyword);
@@ -59,12 +61,21 @@ export default function EventPage() {
         />
       </div>
 
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Tabs
+        activeTab={activeTab}
+        setActiveTab={(tabId: string) => {
+          setLoading(true); // start spinner
+          setActiveTab(tabId);
+        }}
+        loading={loading}
+      />
+
       <EventTable
         activeTab={activeTab}
         searchKeyword={debouncedSearch}
         categoryFilter={categoryFilter}
         dateFrom={dateFrom} dateTo={dateTo}
+        onLoadFinish={() => setLoading(false)}
       />
     </>
   )
