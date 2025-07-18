@@ -890,5 +890,8 @@
     "mobileOpsAndStatsTitle": "Vận hành và Thống kê (trên ứng dụng di động)",
     "viewRevenueAndTicketsSold": "Xem doanh thu, lượt vé đã bán.",
     "trackVisitsAndInteractions": "Theo dõi lượt truy cập và tương tác.",
-    "exportReportsAndAnalyze": "Xuất báo cáo và phân tích hiệu quả."
+    "exportReportsAndAnalyze": "Xuất báo cáo và phân tích hiệu quả.",
+    "checking": "Đang kiểm tra...",
+    "checkUser": "Kiểm tra người nhận",
+    "userName": "Tên người dùng"
 }
