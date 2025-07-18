@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import EventCard from "./eventCard";
@@ -17,6 +18,7 @@ export default function Tabs({ events }: TabsProps) {
   const t = useTranslations("common");
   const [activeTab, setActiveTab] = useState("sap-toi");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loadingTab, setLoadingTab] = useState<string | null>(null);
 
   const now = new Date();
 
@@ -31,6 +33,15 @@ export default function Tabs({ events }: TabsProps) {
     { id: "da-qua", label: transWithFallback("past", "Đã qua") },
     { id: "cho-duyet", label: transWithFallback("pendingApproval", "Chờ duyệt") },
   ];
+
+  const handleTabClick = (tabId: string) => {
+    setLoadingTab(tabId);
+    setTimeout(() => {
+      setActiveTab(tabId);
+      setLoadingTab(null);
+    }, 400);
+  };
+
 
   // Tab filtering logic
   const tabFilteredEvents = events.filter((event) => {
@@ -72,13 +83,18 @@ export default function Tabs({ events }: TabsProps) {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`px-6 py-2 rounded-full ${
-                activeTab === tab.id
-                  ? "bg-[#0C4762] text-[#9EF5CF]"
-                  : "bg-[#9EF5CF] text-gray-700"
-              }`}
-              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-2 rounded-full ${activeTab === tab.id
+                ? "bg-[#0C4762] text-[#9EF5CF]"
+                : "bg-[#9EF5CF] text-gray-700"
+                }`}
+              onClick={() => handleTabClick(tab.id)}
+              disabled={loadingTab === tab.id}
             >
+              {loadingTab === tab.id ? (
+                <CircularProgress size={16} sx={{ color: "white" }} />
+              ) : (
+                null
+              )}
               {tab.label}
             </button>
           ))}

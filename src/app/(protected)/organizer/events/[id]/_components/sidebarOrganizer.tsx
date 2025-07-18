@@ -50,12 +50,6 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
         { text: transWithFallback('edit', 'Chỉnh sửa'), href: `/organizer/create-event/${eventId}?step=info`, icon: <Edit size={18} /> },
       ],
     },
-    {
-      title: transWithFallback('marketing', 'Marketing'),
-      items: [
-        { text: transWithFallback('voucher', 'Voucher'), href: `/organizer/events/${eventId}/vouchers/voucher-list`, icon: <Ticket size={18} /> },
-      ],
-    },
   ];
 
   return (
