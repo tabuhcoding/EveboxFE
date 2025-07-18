@@ -19,7 +19,6 @@ import { MenuItem } from '../libs/interface/dashboard.interface';
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const t = useTranslations("common");
@@ -31,20 +30,20 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [loadingRegister, setLoadingRegister] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
-  const handleLogout = async () => {
+  const handleLogout = async (index: number) => {
     if (!isAuthenticated) {
       menuItems
       console.error('User not authenticated');
       return;
     }
 
-    setLoading(true);
+    setLoadingIndex(index);
     try {
       await logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      setLoading(false);
+      setLoadingIndex(null);
     }
   };
 
@@ -114,9 +113,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       items.push({
         icon: <LogOut size={20} />,
         text: t("logout"),
-        onClick: async () => {
-          await logout();
-        }
+        onClick: () => { },
       });
     }
 
@@ -164,9 +161,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       try {
                         if (item.href) {
                           await handleProtectedClick(item.href, setLoadingIndex, index);
+                        } else if (item.text === t("logout")) {
+                          console.log("Logout button clicked");
+                          await handleLogout(index);
                         } else if (item.onClick) {
                           await item.onClick();
-                          setLoadingIndex(null);
                         }
                       } catch (e) {
                         console.error(e);

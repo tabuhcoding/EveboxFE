@@ -28,7 +28,7 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <div className="fixed top-0 left-0 h-full w-64 bg-sky-900 text-white p-4">
+    <div className="sidebar-admin fixed top-0 left-0 h-full w-64 bg-sky-900 text-white p-4">
       <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-[#51DACF] text-transparent bg-clip-text">ADMIN CENTER</h2>
       <nav>
         <ul className="space-y-3">
