@@ -73,7 +73,7 @@ export default function InformationEventClientPage() {
     return (
         <>
             <div className="flex flex-col items-center justify-center p-10 relative">
-                <span className="text-3xl font-semibold mb-6">{currentEventId ? 'Chỉnh sửa sự kiện' : transWithFallback('createEvent', 'Tạo sự kiện')}</span>
+                <span className="text-3xl font-semibold mb-6">{currentEventId ? transWithFallback('editEvent', 'Chỉnh sửa sự kiện') : transWithFallback('createEvent', 'Tạo sự kiện')}</span>
                 <div className="w-full flex justify-center">
                     <ol className="flex space-x-6">
                         <Navigation step={step} />

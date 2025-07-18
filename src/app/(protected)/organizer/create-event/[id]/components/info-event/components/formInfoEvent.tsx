@@ -14,11 +14,13 @@ import EventLocationInput from "./eventLocationInput";
 import EventImageUpload from "./eventImageUpload";
 import UpdateConfirmModal from "./updateConfirmDialog";
 
-import { getAllCategories, getAllDistricts, getEventDetail, updateEvent } from "services/event.service";
+import { getAllCategories, getAllDistricts, getEventDetail, updateEvent, getCreatedLocationsOfOrg } from "services/event.service";
 import { Province } from "types/models/event/location.interface";
 import { CreateEventDto, EventDescriptionGenDto } from "types/models/event/createEvent.dto";
 import { useEventImageUpload } from "../../../libs/hooks/useEventImageUpload";
 import { Category } from "@/types/models/dashboard/frontDisplay";
+import { CreatedLocationData } from "../../../libs/interface/infoevent.interface";
+import { useAuth } from "@/contexts/auth.context";
 
 interface FormInformationEventClientProps {
   onNextStep: (payload: CreateEventDto) => void;
@@ -31,6 +33,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   const currentEventId = params?.id;
   const t = useTranslations('common');
   const locale = useLocale();
+  const { session } = useAuth();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -57,36 +60,8 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [allProvinces, setAllProvinces] = useState<Province[]>([]);
 
-  // const [generationForm, setGenerationForm] = useState<GenerationProps>({
-  //   name: "",
-  //   description: "",
-  //   isOnlineEvent: eventTypeSelected === "offline" ? false : true,
-  //   location: "",
-  //   venue: "",
-  //   organizer: "",
-  //   organizerDescription: "",
-  //   categoryIds: [],
-  // });
-
   //Gán cứng địa điểm đã tạo
-  const createdLocations = [
-    {
-      name: "Nhà hát Ánh Trăng",
-      eventAddress: "Nhà hát Ánh Trăng",
-      province: "Ho Chi Minh City",
-      districtName: "1 District",
-      ward: "Phường 6",
-      street: "123 Phổ Quang",
-    },
-    {
-      name: "Nhà văn hóa Thanh Niên",
-      eventAddress: "Nhà văn hóa Thanh Niên",
-      province: "Ho Chi Minh City",
-      districtName: "Binh Thanh District",
-      ward: "Phường Bến Nghé",
-      street: "4 Phạm Ngọc Thạch",
-    },
-  ];
+  const [createdLocations, setCreatedLocations] = useState<CreatedLocationData[]>([]);
 
   //Nội dung sẵn trong Thông tin sự kiện
   const [post, setPost] = useState('');
@@ -98,6 +73,25 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
     checkMessage?: string;
     eventId?: number;
   }>({});
+
+  useEffect(() => {
+    const fetchOrgLocations = async () => {
+      try {
+        const res = await getCreatedLocationsOfOrg(session?.user?.accessToken || "");
+
+        if (res.statusCode === 200) {
+          setCreatedLocations(res.data);
+        }
+        else setCreatedLocations([]);
+      } catch (error) {
+        setCreatedLocations([]);
+        console.error("Error fetching event types:", error);
+        toast.error(transWithFallback("errorLoadEvent", "Lỗi khi tải danh sách thể loại sự kiện!"), { duration: 5000 });
+      }
+    }
+
+    if (session?.user?.accessToken) fetchOrgLocations();
+  }, []);
 
   useEffect(() => {
     const defaultPost = `
@@ -371,7 +365,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
       setEventName(value);
       updateGenerationForm("name", value);
     }
-    if (field === "eventAddress") {
+    if (field === "venue") {
       setEventAddress(value);
       updateGenerationForm("venue", value);
     }
@@ -622,7 +616,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
           />
 
           <EventLocationInput
-            eventTypeSelected={eventTypeSelected} eventAddress={eventAddress}
+            eventTypeSelected={eventTypeSelected} venue={eventAddress}
             province={province} district={district} ward={ward} street={street}
             errors={errors} provinces={allProvinces.map((p) => p.name.vi)}
             districts={

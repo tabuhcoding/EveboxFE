@@ -15,6 +15,11 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
         return msg;
     };
 
+    const normalizedOptions = input.options?.map((opt: any) =>
+        typeof opt === 'string' ? opt : opt.optionText
+    );
+
+
     return (
         <div className="flex flex-col">
             <div className="flex items-center w-full mt-4">
@@ -46,7 +51,7 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
                             {input.required && <span className="text-red-500">* </span>} {input.fieldName}
                         </label>
                         <div className="flex items-center ml-3">
-                            {input.options?.map((opt, i) => (
+                            {normalizedOptions?.map((opt, i) => (
                                 <label key={`input-${input.id}-option-${i}`} className="flex items-center mr-4">
                                     <input type="radio" name={`checkbox-group-${input.id}`} className="w-3.5 h-3.5 accent-blue-500" />
                                     <span className="text-sm ml-2">{opt}</span>
@@ -63,7 +68,7 @@ export default function FormInputItem({ input, index }: FormInputItemProps) {
                             {input.required && <span className="text-red-500">* </span>} {input.fieldName}
                         </label>
                         <div className="flex flex-wrap items-center ml-3">
-                            {input.options?.map((opt, i) => (
+                            {normalizedOptions?.map((opt, i) => (
                                 <label key={`input-${input.id}-option-${i}`} className="flex items-center mr-4">
                                     <input type="radio" name={`checkbox-group-${input.id}`} className="w-3.5 h-3.5 accent-blue-500" />
                                     <span className="text-sm ml-2">{opt}</span>

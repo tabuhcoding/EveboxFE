@@ -11,9 +11,18 @@ export interface OrganizationInfoFormProps {
     imageLogoErrors: { [key: string]: string };
 }
 
+export interface CreatedLocationData {
+    id: number;
+    venue: string;
+    province: string;
+    district: string;
+    ward: string;
+    street: string;
+}
+
 export interface EventLocationInputProps {
     eventTypeSelected: string;
-    eventAddress: string;
+    venue: string;
     province: string;
     district: string;
     ward: string;
@@ -21,14 +30,7 @@ export interface EventLocationInputProps {
     errors: { [key: string]: boolean };
     provinces: string[];
     districts: string[];
-    createdLocations: {
-        name: string;
-        eventAddress: string;
-        province: string;
-        districtName: string;
-        ward: string;
-        street: string;
-    }[]
+    createdLocations: CreatedLocationData[];
     // wards: string[]; 
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>, field: string) => void;
     handleSelectChange: (e: React.ChangeEvent<HTMLSelectElement>, field: string) => void;
