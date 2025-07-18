@@ -162,7 +162,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                         if (item.href) {
                           await handleProtectedClick(item.href, setLoadingIndex, index);
                         } else if (item.text === t("logout")) {
-                          console.log("Logout button clicked");
                           await handleLogout(index);
                         } else if (item.onClick) {
                           await item.onClick();
@@ -176,17 +175,13 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                     className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base w-full text-left"
                   >
                     {loadingIndex === index ? (
-                      <>
-                        {item.icon}
-                        <span>{item.text}</span>
-                        <CircularProgress size={18} color="inherit" />
-                      </>
+                      <CircularProgress size={18} color="inherit" />
                     ) : (
                       <>
                         {item.icon}
-                        <span>{item.text}</span>
                       </>
                     )}
+                    <span>{item.text}</span>
                   </button>
                 </li>
               ))}
