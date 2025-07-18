@@ -91,7 +91,7 @@ export default function Tabs({ events }: TabsProps) {
               disabled={loadingTab === tab.id}
             >
               {loadingTab === tab.id ? (
-                <CircularProgress size={16} sx={{ color: "white" }} />
+                <CircularProgress size={16} sx={{ color: "[#51DACF]" }} className="mr-1" />
               ) : (
                 null
               )}
