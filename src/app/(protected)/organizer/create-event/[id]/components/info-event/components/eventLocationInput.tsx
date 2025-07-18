@@ -9,7 +9,7 @@ import { EventLocationInputProps } from '../../../libs/interface/infoevent.inter
 
 export default function EventLocationInput({
   eventTypeSelected,
-  eventAddress,
+  venue,
   province,
   district,
   ward,
@@ -34,8 +34,8 @@ export default function EventLocationInput({
 
   const [selectedLocation, setSelectedLocation] = useState("");
 
-  const setFormField = (field: string, value: string) => {
-    if (["eventAddress", "ward", "street"].includes(field)) {
+  const setFormField = (field: string, value: string | number) => {
+    if (["venue", "ward", "street"].includes(field)) {
       handleInputChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>, field);
     } else {
       handleSelectChange({ target: { value } } as React.ChangeEvent<HTMLSelectElement>, field);
@@ -47,13 +47,14 @@ export default function EventLocationInput({
   useEffect(() => {
     if (!selectedLocation || !createdLocations?.length || hasAutoFilled) return;
 
-    const location = createdLocations.find(loc => loc.name === selectedLocation);
+    const location = createdLocations.find(loc => loc.venue === selectedLocation);
     if (location) {
-      setFormField("eventAddress", location.eventAddress);
+      setFormField("venue", location.venue);
       setFormField("province", location.province);
-      setFormField("district", location.districtName);
+      setFormField("district", location.district);
       setFormField("ward", location.ward);
       setFormField("street", location.street);
+      setFormField("id", location.id);
       setHasAutoFilled(true);
     }
   }, [selectedLocation, createdLocations, hasAutoFilled]);
@@ -61,7 +62,7 @@ export default function EventLocationInput({
   const clearSelection = () => {
     setSelectedLocation("");
     // Optionally clear fields
-    setFormField("eventAddress", "");
+    setFormField("venue", "");
     setFormField("province", "");
     setFormField("district", "");
     setFormField("ward", "");
@@ -119,7 +120,7 @@ export default function EventLocationInput({
             <div className="w-full px-3">
               <SelectField
                 label={transWithFallback('createdLocation', 'Địa điểm đã từng tạo sự kiện')}
-                options={createdLocations.map(loc => loc.name)}
+                options={createdLocations.map(loc => loc.venue)}
                 value={selectedLocation}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setHasAutoFilled(false);
@@ -144,9 +145,9 @@ export default function EventLocationInput({
               <InputField
                 label={transWithFallback('locationName', 'Tên địa điểm')}
                 placeholder={transWithFallback('locationNamePlaceholder', 'Nhập tên địa điểm')}
-                value={eventAddress}
-                onChange={(e) => handleInputChange(e, "eventAddress")}
-                error={errors.eventAddress}
+                value={venue}
+                onChange={(e) => handleInputChange(e, "venue")}
+                error={errors.venue}
                 maxLength={80}
                 required
               />
