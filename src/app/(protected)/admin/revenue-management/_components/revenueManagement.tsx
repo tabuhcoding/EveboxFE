@@ -323,12 +323,12 @@ export default function RevenueManagementPage() {
     <>
       <div className="container mx-auto px-4">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-[#0C4762]">Quản lý doanh thu</h1>
-          <p className="text-gray-700">Quản lý doanh thu của ứng dụng, nhà tổ chức và sự kiện</p>
+          <h1 className="text-3xl font-bold text-[#0C4762]">{transWithFallback("revenueManagement", "Quản lý doanh thu")}</h1>
+          <p className="text-gray-700">{transWithFallback("revenueManagementNote", "Quản lý doanh thu của ứng dụng, nhà tổ chức và sự kiện")}</p>
           <div className="h-0.5 w-full bg-[#0C4762] mt-4"></div>
         </div>
         <div className="mt-6">
-          <RevenueTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <RevenueTabs activeTab={activeTab} onTabChange={setActiveTab} loading={loading} />
         </div>
 
         {activeTab === "app" && (
@@ -345,7 +345,8 @@ export default function RevenueManagementPage() {
                 setFromDate(f.fromDate);
                 setToDate(f.toDate);
                 setSearch(f.search);
-              }} />
+              }}
+              isLoading = {loading} />
             <RevenueOrgTable
               loading={loading}
               organizations={allOrgs}
@@ -376,7 +377,8 @@ export default function RevenueManagementPage() {
                 setFromDate(f.fromDate);
                 setToDate(f.toDate);
                 setSearch(f.search);
-              }} />
+              }} 
+              isLoading = {loading} />
             <EventRevenueTable
               loading={loading}
               formatCurrency={formatCurrency}
