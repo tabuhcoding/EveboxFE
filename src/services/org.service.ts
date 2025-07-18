@@ -479,11 +479,12 @@ export async function getEventRoles(): Promise<EventRoleItem[]> {
 
 export const getOrdersByShowingId = async (
   showingId: string,
-  userEmail?: string
+  userEmail?: string,
+  page?: string,
 ): Promise<GetOrdersResponse> => {
   const queryParams = new URLSearchParams();
-  queryParams.append("page", "1");
-  queryParams.append("limit", "100");
+  queryParams.append("page", page? page: "1");
+  queryParams.append("limit", "10");
 
   if (userEmail) {
     queryParams.append("userEmail", userEmail); 
@@ -493,7 +494,7 @@ export const getOrdersByShowingId = async (
     queryParams.toString() ? `?${queryParams.toString()}` : ""
   }`;
 
-  const res = await orgService.get<BaseApiResponse<GetOrdersResponse>>(url);
+  const res = await orgService.get<GetOrdersResponse>(url);
 
   console.log("fetch orders");
   console.log(res);
@@ -502,7 +503,7 @@ export const getOrdersByShowingId = async (
     throw new Error("Failed to fetch event orders");
   }
 
-  return res.data.data;
+  return res.data;
 };
 
 export async function addEventMember(
@@ -601,8 +602,8 @@ export async function getAllCheckedInTickets(showingId: string): Promise<Checked
 export async function getAllTicketsOfShowing(
   showingId: string,
   orderId?: number,
-  page = 1,
-  limit = 100
+  page?: number,
+  limit = 10
 ): Promise<any> {
   const query = new URLSearchParams();
 

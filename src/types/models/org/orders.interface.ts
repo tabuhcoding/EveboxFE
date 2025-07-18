@@ -7,13 +7,6 @@ type JsonValue =
   | JsonValue[]
   | { [key: string]: JsonValue };
 
-// Define BaseResponse interface to replace the missing import
-interface BaseResponse {
-  success: boolean;
-  message: string;
-  statusCode: number;
-}
-
 export interface FormInput {
   fieldName: string;
   options?: JsonValue;
@@ -83,7 +76,7 @@ export interface OrderInfoData {
 
 
 export interface Pagination {
-  total: number;       // Total number of records
+  totalItems: number;       // Total number of records
   page: number;        // Current page number
   limit: number;       // Items per page
   totalPages: number;  // Total number of pages
@@ -103,6 +96,10 @@ export interface TicketOrderData {
   Ticket?: TicketTypeInfo[];
 }
 
-export interface GetOrdersResponse extends BaseResponse {
+export interface GetOrdersResponse{
+  statusCode: number;
+  message: string;
+  status?: number;
   data: TicketOrderData[];
+  pagination: Pagination;
 }

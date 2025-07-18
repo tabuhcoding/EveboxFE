@@ -906,5 +906,7 @@
     "checking": "Checking...",
     "checkUser": "Check user",
     "userName": "User name",
-    "editEvent": "Edit event"
+    "editEvent": "Edit event",
+    "searchByEmail": "Search by customer email",
+    "searchByOrderId": "Search by order id"
 }
