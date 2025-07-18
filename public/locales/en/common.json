@@ -905,5 +905,6 @@
     "exportReportsAndAnalyze": "Export reports and analyze performance.",
     "checking": "Checking...",
     "checkUser": "Check user",
-    "userName": "User name"
+    "userName": "User name",
+    "editEvent": "Edit event"
 }

@@ -893,5 +893,6 @@
     "exportReportsAndAnalyze": "Xuất báo cáo và phân tích hiệu quả.",
     "checking": "Đang kiểm tra...",
     "checkUser": "Kiểm tra người nhận",
-    "userName": "Tên người dùng"
+    "userName": "Tên người dùng",
+    "editEvent": "Chỉnh sửa sự kiện"
 }
