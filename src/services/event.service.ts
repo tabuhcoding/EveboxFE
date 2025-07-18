@@ -39,6 +39,8 @@ import {
   EventRevenueV2Data
 } from "@/types/models/admin/revenueManagement.interface";
 
+import { CreatedLocationData } from "@/app/(protected)/organizer/create-event/[id]/libs/interface/infoevent.interface";
+
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
     const res = await fetch(
@@ -651,6 +653,32 @@ export async function getRevenueByOrgId(orgId: string, accessToken: string): Pro
 
     console.log("🚀 ~ getRevenueByOrgId ~ res.data:", res.data)
     return res.data as BaseApiResponse<OrganizerRevenueData>;
+  } catch (error: any) {
+    console.error("Error get revenue by org id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getCreatedLocationsOfOrg(accessToken: string): Promise<BaseApiResponse<CreatedLocationData[]>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(END_POINT_LIST.LOCATION.GET_ORG_LOCATIONS, {
+      headers: headers
+    });
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+
+    console.log("🚀 ~ getRevenueByOrgId ~ res.data:", res.data)
+    return res.data as BaseApiResponse<CreatedLocationData[]>;
   } catch (error: any) {
     console.error("Error get revenue by org id:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);

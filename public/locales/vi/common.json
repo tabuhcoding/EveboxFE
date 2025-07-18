@@ -896,5 +896,9 @@
     "exportReportsAndAnalyze": "Xuất báo cáo và phân tích hiệu quả.",
     "member": "Thành viên",
     "actions": "Thao tác",
-    "revenueManagementNote": "Quản lý doanh thu của ứng dụng, nhà tổ chức và sự kiện"
+    "revenueManagementNote": "Quản lý doanh thu của ứng dụng, nhà tổ chức và sự kiện",
+    "checking": "Đang kiểm tra...",
+    "checkUser": "Kiểm tra người nhận",
+    "userName": "Tên người dùng",
+    "editEvent": "Chỉnh sửa sự kiện"
 }

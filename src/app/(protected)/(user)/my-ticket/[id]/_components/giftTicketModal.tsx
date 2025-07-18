@@ -10,11 +10,19 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/auth.context';
 import { GiftTicketModalProps } from '@/types/models/ticket/ticketInfoById';
 
+type ReceiverInfo = {
+  name: string;
+  email: string;
+  phone: string;
+}
+
 export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicketModalProps) {
   const { session } = useAuth();
   const accessToken = session?.user?.accessToken;
   const [giftEmail, setGiftEmail] = useState('');
   const [giftLoading, setGiftLoading] = useState(false);
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [receiver, setReceiver] = useState<ReceiverInfo | null>(null);
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
   const t = useTranslations('common');
 
@@ -31,8 +39,49 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
       setGiftEmail('');
       setAlertMsg(null);
       setGiftLoading(false);
+      setReceiver(null);
+      setCheckLoading(false);
     }
   }, [isOpen]);
+
+  const handleCheckUser = async () => {
+    if (!isValidEmail(giftEmail)) {
+      setAlertMsg(transWithFallback('invalidEmail', 'Email không hợp lệ'));
+      setReceiver(null);
+      return;
+    }
+
+    setCheckLoading(true);
+    setAlertMsg(null);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/email/${encodeURIComponent(giftEmail)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        setReceiver({
+          name: result.data.name,
+          email: result.data.email,
+          phone: result.data.phone,
+        });
+        setAlertMsg(null);
+      } else {
+        setAlertMsg(`${transWithFallback('userNotFound', 'Không tìm thấy người dùng')}`);
+        setReceiver(null);
+      }
+    } catch {
+      setAlertMsg(transWithFallback('checkFailed', 'Kiểm tra thất bại!'));
+      setReceiver(null);
+    } finally {
+      setCheckLoading(false);
+    }
+  };
 
   const handleSendGift = async () => {
     if (!isValidEmail(giftEmail)) {
@@ -87,7 +136,7 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
           onClick={onClose}
           className="absolute right-2 top-2 px-1 py-1 close-btn"
           aria-label="Close modal"
-          disabled={giftLoading}
+          disabled={giftLoading || checkLoading}
         >
           <Icon icon="ic:baseline-close" width="20" height="20" />
         </button>
@@ -105,34 +154,47 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
           placeholder="example@email.com"
           className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#51DACF] ${alertMsg && !giftLoading && !isValidEmail(giftEmail) ? 'border-red-600' : ''
             }`}
-          disabled={giftLoading}
+          disabled={giftLoading || checkLoading}
         />
+        <button
+          onClick={handleCheckUser}
+          disabled={checkLoading || !giftEmail}
+          className="mt-3 px-4 py-2 bg-[#51DACF] text-[#0C4762] font-bold rounded hover:bg-[#3ec8bd] disabled:opacity-50"
+        >
+          {checkLoading ? transWithFallback('checking', 'Đang kiểm tra...') : transWithFallback('checkUser', 'Kiểm tra người nhận')}
+        </button>
+        {receiver && (
+          <div className="mt-4 bg-gray-100 text-sm text-black p-4 rounded-lg">
+            <p><strong>{transWithFallback('name', 'Tên')}:</strong> {receiver.name}</p>
+            <p><strong>{transWithFallback('email', 'Email')}:</strong> {receiver.email}</p>
+            <p><strong>{transWithFallback('phone', 'SĐT')}:</strong> {receiver.phone}</p>
+          </div>
+        )}
+
         {alertMsg && (
-          <p
-            className={`mt-2 text-sm select-none ${alertMsg.includes('🎉') ? 'text-green-600' : 'text-red-600'
-              }`}
-            style={{ textAlign: 'left' }}
-          >
+          <p className={`mt-2 text-sm select-none ${alertMsg.includes('🎉') ? 'text-green-600' : 'text-red-600'}`}>
             {alertMsg}
           </p>
         )}
 
         {/* Buttons */}
-        <div className="flex justify-center gap-4 mt-6 w-full max-w-xs mb-2 mx-auto">
+        <div className="flex flex-col justify-center gap-4 mt-6 w-full mb-2">
           <button
             onClick={onClose}
             disabled={giftLoading}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 w-full"
           >
             {transWithFallback('btnCancel', 'Hủy')}
           </button>
-          <button
-            disabled={giftLoading || !giftEmail}
-            onClick={handleSendGift}
-            className="px-4 py-2 bg-[#51DACF] text-[#0C4762] font-bold rounded hover:bg-[#3ec8bd] disabled:opacity-50"
-          >
-            {giftLoading ? transWithFallback('sending', 'Đang gửi...') : transWithFallback('sendGift', 'Gửi tặng')}
-          </button>
+          {receiver && (
+            <button
+              disabled={giftLoading}
+              onClick={handleSendGift}
+              className="px-4 py-2 bg-[#51DACF] text-[#0C4762] font-bold rounded hover:bg-[#3ec8bd] disabled:opacity-50"
+            >
+              {giftLoading ? transWithFallback('sending', 'Đang gửi...') : transWithFallback('sendGift', 'Gửi tặng')}
+            </button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

@@ -102,7 +102,8 @@ export class END_POINT_LIST {
 
   static readonly LOCATION = {
     GET_ALL_LOCATIONS: "/api/location/all",
-    GET_ALL_DISTRICTS: "/api/location/all-districts"
+    GET_ALL_DISTRICTS: "/api/location/all-districts",
+    GET_ORG_LOCATIONS: "/api/location/org"
   };
 
   static readonly PAYMENT = {

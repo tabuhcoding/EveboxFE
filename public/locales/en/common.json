@@ -905,5 +905,9 @@
     "exportReportsAndAnalyze": "Export reports and analyze performance.",
     "member": "Member",
     "actions": "Actions",
-    "revenueManagementNote": "Manage the revenue of the application, organizers, and events."
+    "revenueManagementNote": "Manage the revenue of the application, organizers, and events.",
+    "checking": "Checking...",
+    "checkUser": "Check user",
+    "userName": "User name",
+    "editEvent": "Edit event"
 }
