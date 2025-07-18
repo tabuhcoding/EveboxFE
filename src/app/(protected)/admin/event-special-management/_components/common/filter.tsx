@@ -45,14 +45,8 @@ export default function FilterBar({
 
   return (
     <div className="filter-event-management flex items-center gap-2 bg-white border rounded-lg px-2 py-4 shadow-sm text-sm">
-      {/* Filter Icon */}
-      <div className="flex items-center gap-2 text-gray-700 font-medium">
-        <Filter size={18} />
-        Filter By
-      </div>
-
       {/* Filter - Loại sự kiện */}
-      <div className="filter-type-btn flex items-center gap-1 border-l pl-4 pr-2">
+      <div className="filter-type-btn flex items-center gap-1 pr-2">
         <span className="text-black font-semibold mr-1">Loại sự kiện</span>
 
         <select value={categoryFilter} className="border px-2 py-1 rounded-md"
