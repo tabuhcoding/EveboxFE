@@ -169,6 +169,11 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
             <div className="flex justify-center my-2">
               <Image src="/images/instruction/user/buy8.png" alt="Payment Success" width={500} height={400} />
             </div>
+            <h2 className="text-xl font-semibold mb-2 mt-2">{transWithFallback('buyTicketTitle', 'Mua vé')}</h2>
+            <div className="w-full aspect-video mb-4">
+              {/* Note: Iframe titles should also be translated */}
+              <iframe className="w-full h-full rounded-md" src="https://www.youtube.com/embed/7WYNCYs4-5M" title={transWithFallback('user-booking', 'Hướng dẫn mua vé sự kiện trên di động')} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            </div>
           </ul>
         </>
       )}
@@ -193,6 +198,10 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
               <Image src="/images/instruction/user/qr4.png" alt="Ticket Details 2" width={500} height={400} />
             </div>
             <li>{transWithFallback('viewQRMobilInstruction', 'Xem mã QR (dành cho ứng dụng di động)')}</li>
+            <div className="w-full aspect-video mb-4">
+                {/* Note: Iframe titles should also be translated */}
+                <iframe className="w-full h-full rounded-md" src="https://youtube.com/embed/h7XOm25p2qA" title={transWithFallback('view-qrcode', 'Hướng dẫn người dùng xem mã QR')} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            </div>
           </ul>
         </>
       )}
@@ -303,6 +312,16 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
               <Image src="/images/instruction/org/cr25.png" alt="Redirect to My Events" width={500} height={400} />
             </div>
           </ul>
+        </>
+      )}
+
+      {activeDetail === 'org-checkin' && (
+        <>
+          <h2 className="text-xl font-semibold mb-2">{transWithFallback('org-checkin', 'Checkin QR code')}</h2>
+          <div className="w-full aspect-video mb-4">
+            {/* Note: Iframe titles should also be translated */}
+            <iframe className="w-full h-full rounded-md" src="https://youtube.com/embed/BMiloThu5Ng?si=_ZIeLiv_qhh3mSF6" title={transWithFallback('org-checkin', 'Checkin QR code')} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+          </div>
         </>
       )}
 
