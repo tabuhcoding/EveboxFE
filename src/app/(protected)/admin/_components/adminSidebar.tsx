@@ -6,13 +6,15 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, CircleDollarSign, ChartColumnIncreasing } from 'lucide-react';
 import { CircularProgress } from '@mui/material';
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from 'next/navigation';
 
 export default function AdminSidebar() {
   const t = useTranslations('common');
   const router = useRouter();
   const pathName = usePathname();
+
+  const [isPending, startTransition] = useTransition();
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
   const transWithFallback = (key: string, fallback: string) => {
@@ -32,19 +34,17 @@ export default function AdminSidebar() {
     { text: transWithFallback('revenueManagement', 'Quản lý doanh thu'), href: '/admin/revenue-management', icon: <ChartColumnIncreasing size={20} /> },
   ];
 
-  const handleClick = async (href: string, index: number) => {
-    setLoadingIndex(index);
-    try {
-      if (href.startsWith('http')) {
-        window.location.href = href;
-      } else {
-        await router.push(href);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoadingIndex(null);
+  const handleClick = (href: string, index: number) => {
+    if (href.startsWith("http")) {
+      window.location.href = href;
+      return;
     }
+
+    setLoadingIndex(index);
+
+    startTransition(() => {
+      router.push(href);
+    });
   };
 
   return (
@@ -55,12 +55,12 @@ export default function AdminSidebar() {
           {menuSections.filter(item => item.href).map((item, i) => (
             <li key={i}>
               <button
-                disabled={loadingIndex !== null}
+                disabled={isPending}
                 onClick={() => handleClick(item.href as string, i)}
                 className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors text-white w-full text-left
                   ${pathName === item.href ? "bg-sky-700" : "hover:bg-sky-800"}`}
               >
-                {loadingIndex === i ? (
+                {loadingIndex === i && isPending ? (
                   <CircularProgress size={20} color="inherit" />
                 ) : (
                   item.icon
