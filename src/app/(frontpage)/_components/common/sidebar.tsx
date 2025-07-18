@@ -14,6 +14,7 @@ import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_
 
 import { SidebarProps } from '../libs/interface/dashboard.interface';
 import { getCurrentUser } from '@/services/auth.service';
+import { MenuItem } from '../libs/interface/dashboard.interface';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
@@ -28,9 +29,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [showOrgRegisterPopup, setShowOrgRegisterPopup] = useState(false);
   const [loadingContinue, setLoadingContinue] = useState(false);
   const [loadingRegister, setLoadingRegister] = useState(false);
+  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
   const handleLogout = async () => {
     if (!isAuthenticated) {
+      menuItems
       console.error('User not authenticated');
       return;
     }
@@ -45,9 +48,15 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     }
   };
 
-  const handleProtectedClick = async (href: string) => {
+  const handleProtectedClick = async (
+    href: string,
+    setLoadingIndex: (i: number | null) => void,
+    index: number) => {
+    setLoadingIndex(index);
+
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
+      setLoadingIndex(null);
     } else {
       if (href === '/organizer/create-event') {
         try {
@@ -56,6 +65,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             // Show dialog
             setPendingNavigation(href);
             setShowPaymentWarning(true);
+            setLoadingIndex(null);
             return;
           }
           else {
@@ -63,6 +73,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           }
         } catch (err) {
           console.error("Failed to check organizer payment info:", err);
+          setLoadingIndex(null);
           // Optionally show an error dialog
           return;
         }
@@ -77,40 +88,40 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     return msg;
   };
 
-  const menuItems = useMemo(() => {
-    const items = [
-      { icon: <User size={20} />, text: t("accountManagement"), onClick: () => handleProtectedClick('/my-profile') },
-      { icon: <Ticket size={20} />, text: t("ticketManagement"), onClick: () => handleProtectedClick('/my-ticket') },
-      { icon: <Calendar size={20} />, text: t("createEvent"), onClick: () => handleProtectedClick('/organizer/create-event') },
-      { icon: <Lock size={20} />, text: t("changePassword"), onClick: () => handleProtectedClick('/change-password') },
+  const menuItems: MenuItem[] = useMemo(() => {
+    const items: MenuItem[] = [
+      { icon: <User size={20} />, text: t("accountManagement"), href: '/my-profile' },
+      { icon: <Ticket size={20} />, text: t("ticketManagement"), href: '/my-ticket' },
+      { icon: <Calendar size={20} />, text: t("createEvent"), href: '/organizer/create-event' },
+      { icon: <Lock size={20} />, text: t("changePassword"), href: '/change-password' },
     ];
 
     if (user?.role === 1) {
       items.unshift({
         icon: <ShieldUser size={20} />,
         text: t("goToAdmin"),
-        onClick: async () => {
-          router.push('/admin/account-management');
-        },
+        href: '/admin/account-management',
       });
     }
 
     items.push({
       icon: <BookOpenText size={20} />,
       text: t("instructionManual"),
-      onClick: () => handleProtectedClick('/instruction'),
+      href: '/instruction',
     });
 
     if (user) {
       items.push({
         icon: <LogOut size={20} />,
         text: t("logout"),
-        onClick: handleLogout,
+        onClick: async () => {
+          await logout();
+        }
       });
     }
 
     return items;
-  }, [user, t, handleLogout, router]);
+  }, [user, t, logout, router]);
 
   return (
     <>
@@ -147,34 +158,37 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <ul className="space-y-3 sm:space-y-4">
               {menuItems.map((item, index) => (
                 <li key={index}>
-                  {/* {item.href ? (
-                    <Link
-                      href={item.href}
-                      className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base"
-                    >
-                      {item.icon}
-                      <span>{item.text}</span>
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={item.onClick}
-                      disabled={loading}
-                      className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base"
-                    >
-                      {item.icon}
-                      <span>{item.text}</span>
-                    </button>
-                  )} */}
-                  {item.onClick ? (
-                    <button
-                      onClick={item.onClick}
-                      disabled={loading}
-                      className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base w-full text-left"
-                    >
-                      {item.icon}
-                      <span>{item.text}</span>
-                    </button>
-                  ) : null}
+                  <button
+                    onClick={async () => {
+                      setLoadingIndex(index);
+                      try {
+                        if (item.href) {
+                          await handleProtectedClick(item.href, setLoadingIndex, index);
+                        } else if (item.onClick) {
+                          await item.onClick();
+                          setLoadingIndex(null);
+                        }
+                      } catch (e) {
+                        console.error(e);
+                        setLoadingIndex(null);
+                      }
+                    }}
+                    disabled={loadingIndex !== null}
+                    className="no-underline text-white flex items-center gap-3 py-2 px-3 sm:px-4 hover:bg-sky-800 rounded-md transition-colors text-sm sm:text-base w-full text-left"
+                  >
+                    {loadingIndex === index ? (
+                      <>
+                        {item.icon}
+                        <span>{item.text}</span>
+                        <CircularProgress size={18} color="inherit" />
+                      </>
+                    ) : (
+                      <>
+                        {item.icon}
+                        <span>{item.text}</span>
+                      </>
+                    )}
+                  </button>
                 </li>
               ))}
             </ul>
