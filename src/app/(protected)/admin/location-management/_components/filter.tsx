@@ -28,7 +28,7 @@ export default function FilterDropdown({ label, options, value, onChange }: Filt
       </button>
 
       {isOpen && (
-        <div className="absolute z-20 mt-1 max-w-[300px] bg-white border border-gray-300 rounded-lg shadow-lg">
+        <div className="absolute z-20 mt-1 max-w-[300px] max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg">
           {options.map((option) => (
             <div
               key={option}
