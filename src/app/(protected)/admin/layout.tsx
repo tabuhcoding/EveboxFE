@@ -1,5 +1,5 @@
 /* Package System */
-import { ReactNode } from "react";
+import { ReactNode, use } from "react";
 import { Toaster } from "react-hot-toast";
 
 /* Package Application */
@@ -13,12 +13,13 @@ export default async function DefaultLayout({ children }: { children: ReactNode 
 
   try {
     user = await getCurrentUser();
+    console.log('-----', user);
   } catch (err) {
     console.error('Failed to fetch user info:', err);
     redirect('/login'); // if not logged in or failed
   }
 
-  if (user?.role !== 1) {
+  if (user.role !== 1) {
     return (
       <div className="flex min-h-screen flex-col md:flex-row">
       <div className="flex-1 p-6 bg-gray-100 text-black">
