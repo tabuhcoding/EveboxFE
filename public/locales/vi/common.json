@@ -664,7 +664,7 @@
   "foryou": "Sự kiện",
   "recommendForyou": "Dành cho bạn",
   "updateNeedReview": "Thay đổi của bạn có thể cần duyệt lại, vì: ",
-  "updateWillWaitApproval" : "Nếu tiếp tục, sự kiện của bạn sẽ được cập nhật và cần đợi đến đợt duyệt tiếp theo.",
+  "updateWillWaitApproval": "Nếu tiếp tục, sự kiện của bạn sẽ được cập nhật và cần đợi đến đợt duyệt tiếp theo.",
   "confirmUpdate": "Xác nhận cập nhật",
   "myEvent": "Sự kiện của tôi",
   "organizerLegalDoc": "Điều khoản cho Ban tổ chức",
@@ -906,5 +906,7 @@
     "errorWhenAnalyze": "Có lỗi xảy ra khi phân tích",
     "analyzing": "Đang phân tích...",
     "noResult": "Không có kết quả.",
-    "AIRevenueAnalyst": "Phân tích doanh thu với AI"
+    "AIRevenueAnalyst": "Phân tích doanh thu với AI",
+    "editMember": "Sửa thành viên",
+  "deleteMember": "Xóa thành viên"
 }
