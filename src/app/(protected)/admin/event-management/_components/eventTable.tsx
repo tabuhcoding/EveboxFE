@@ -23,7 +23,7 @@ import { sortEvents } from "./libs/sortEvent";
 import { getEventsAdmin, updateEventAdmin } from "@/services/event.service";
 import { useAuth } from "@/contexts/auth.context";
 
-export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo, adminFilter, onLoadFinish }: EventTableProps) {
+export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo, adminFilter }: EventTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
   const { session } = useAuth();

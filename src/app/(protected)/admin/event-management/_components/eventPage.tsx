@@ -24,9 +24,6 @@ export default function EventPage() {
 
   const [adminFilter, setAdminFilter] = useState("");
 
-
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setDebouncedSearch(searchKeyword);
