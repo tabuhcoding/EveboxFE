@@ -34,7 +34,7 @@ export default function LocationManagementClient() {
   const [cityToProvinceId, setCityToProvinceId] = useState<Record<string, number>>({});
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -296,7 +296,10 @@ export default function LocationManagementClient() {
             setCurrentPage(page);
           }
         }}
-        setEventsPerPage={() => { }} // optional
+        setEventsPerPage={(num) => {
+          setItemsPerPage(num);
+          setCurrentPage(1);
+        }}
       />
 
     </>
