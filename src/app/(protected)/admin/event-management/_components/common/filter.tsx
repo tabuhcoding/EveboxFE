@@ -68,7 +68,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="filter-event-management flex items-center gap-2 bg-white border rounded-lg px-2 py-4 shadow-sm text-sm">
+    <div className="filter-event-management flex items-center gap-2 bg-white border rounded-lg px-2 ml-4 py-4 shadow-sm text-sm">
       {/* Filter - Loại sự kiện */}
       <div className="filter-type-btn flex items-center gap-1 pr-2">
         <span className="text-black font-semibold mr-1">{transWithFallback('eventCategory', 'Thể loại')}</span>
