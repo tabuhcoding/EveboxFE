@@ -156,8 +156,8 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
           <table className="min-w-full border border-gray-200">
             <thead>
               <tr className="bg-[#0C4762] text-white text-sm text-left rounded-t-lg">
-                <th className="px-4 py-3 text-center">STT</th>
-                <th className="px-4 py-3 cursor-pointer" /* onClick={() => handleSort('name')} */>
+                <th className="px-4 py-3 text-center">{transWithFallback("noStt", "STT")}</th>
+                <th className="px-4 py-3 cursor-pointer" onClick={() => handleSort('name')} >
                   {transWithFallback('fullName', 'Họ và tên')} <SortIcon field="name" sortConfig={sortConfig} />
                 </th>
                 <th className="px-4 py-3 cursor-pointer">
@@ -167,10 +167,10 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
                   {transWithFallback('role', 'Vai trò')}
                 </th>
                 <th className="px-4 py-3 cursor-pointer text-center" onClick={() => handleSort('created_at')}>
-                  {transWithFallback('createdDate', 'Ngày tạo')} <SortIcon field="createdAt" sortConfig={sortConfig} />
+                  {transWithFallback('createdDate', 'Ngày tạo')} <SortIcon field="created_at" sortConfig={sortConfig} />
                 </th>
-                <th className="px-4 py-3 cursor-pointer text-center" onClick={() => handleSort('status')}>
-                  {transWithFallback('status', 'Trạng thái')} <SortIcon field="status" sortConfig={sortConfig} />
+                <th className="px-4 py-3 cursor-pointer text-center" >
+                  {transWithFallback('status', 'Trạng thái')} 
                 </th>
               </tr>
             </thead>

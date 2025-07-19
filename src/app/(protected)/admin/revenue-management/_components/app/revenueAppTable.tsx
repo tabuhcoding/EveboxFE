@@ -164,9 +164,9 @@ export default function RevenueAppTable({
                     )}
                     {app.id}
                   </td>
-                  <td className="py-3 px-4 border-t">{formatCurrency(app.totalRevenue)}</td>
-                  <td className="py-3 px-4 border-t">{app.systemDiscount}%</td>
                   <td className="py-3 px-4 border-t">{formatCurrency(app.actualRevenue)}</td>
+                  <td className="py-3 px-4 border-t">{app.systemDiscount}%</td>
+                  <td className="py-3 px-4 border-t">{formatCurrency(app.totalRevenue)}</td>
                 </tr>
 
                 {app.isExpanded && app.organizations.length > 0 && (
