@@ -8,6 +8,7 @@ import { getOrdersByShowingId } from "@/services/org.service";
 import { sendEmail } from "@/services/booking.service";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
+import Pagination from "../../check-in/components/common/pagination";
 
 interface OrderSectionProps {
   showingId: string;
@@ -29,28 +30,49 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const fetchOrders = async (emailFilter?: string) => {
-    try {
-      setLoading(true);
-      const data = await getOrdersByShowingId(showingId, emailFilter);
-      setOrdersData(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch orders:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [page, setPage] = useState(1);
+const [totalItems, setTotalItems] = useState(0);
+const itemsPerPage = 10;
+
+  const fetchOrders = async (emailFilter?: string, pageParam: number = 1) => {
+  try {
+    setLoading(true);
+    const data = await getOrdersByShowingId(showingId, emailFilter, pageParam.toString());
+    console.log("------",data.pagination.totalItems);
+    setTotalItems(data.pagination?data.pagination.totalItems: 10);
+    setOrdersData(Array.isArray(data.data) ? data.data : []);
+  } catch (error) {
+    console.error("Failed to fetch orders:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchOrders(); // initial load
   }, [showingId]);
 
-  const handleSearch = async () => {
-    const trimmed = search.trim().toLowerCase();
-    if (trimmed.includes("@")) {
-      await fetchOrders(trimmed);
-    }
-  };
+  useEffect(() => {
+  fetchOrders(search.trim() || undefined, page);
+}, [page]);
+
+ const handleSearch = async () => {
+  const trimmed = search.trim().toLowerCase();
+  setPage(1); // Reset to first page on search
+
+  if (trimmed === "") {
+    await fetchOrders(undefined, 1);
+    return;
+  }
+
+  if (trimmed.includes("@")) {
+    await fetchOrders(trimmed, 1);
+  } else {
+    toast.error("Vui lòng nhập đúng định dạng email để tìm kiếm.");
+  }
+};
+
 
   const handleSendSelectedEmail = async () => {
     try {
@@ -84,16 +106,6 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
   };
 
   useEffect(() => {
-    const debounce = setTimeout(() => {
-      handleSearch();
-    }, 500);
-
-    return () => clearTimeout(debounce);
-  }, [search]);
-
-
-
-  useEffect(() => {
     setMounted(true);
   }, []);
 
@@ -108,15 +120,6 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
       </div>
     );
   }
-
-  const getCustomerName = (order: TicketOrderData): string => {
-    const formAnswers = order.formResponse?.FormAnswer || [];
-    const nameAnswer = formAnswers.find((answer) => {
-      const fieldName = answer.FormInput?.fieldName?.toLowerCase() || "";
-      return fieldName.includes("name") || fieldName.includes("tên");
-    });
-    return nameAnswer?.value ?? order.userId ?? "-";
-  };
 
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("vi-VN", {
@@ -162,12 +165,15 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
       <div className="flex justify-between items-center pt-6">
         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
           <input
-            type="text"
-            className="w-full px-3 py-2 outline-none"
-            placeholder={transWithFallback("searchByNameOrOrderId", "Tìm kiếm theo email khach hang")}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+  type="text"
+  className="w-full px-3 py-2 outline-none"
+  placeholder={transWithFallback("searchByEmail", "Tìm kiếm theo email khách hàng")}
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") handleSearch();
+  }}
+/>
           <button
             onClick={() => handleSearch()}
             className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]"
@@ -237,7 +243,7 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
                     }
                   </td>
                   <td className="py-2 px-4">{order.id}</td>
-                  <td className="py-2 px-4">{getCustomerName(order)}</td>
+                  <td className="py-2 px-4">{order.userId}</td>
                   <td className="py-2 px-4">{order.ownerId}</td>
                   <td className="py-2 px-4">{order.type}</td>
                   <td className="py-2 px-4">{getQuantity(order)}</td>
@@ -259,7 +265,17 @@ export default function OrderSection({ showingId }: OrderSectionProps) {
             </tr>
           )}
         </tbody>
-      </table>
+      </table> 
+      {ordersData.length > 0 && (
+  <Pagination
+    currentPage={page}
+    totalItems={totalItems}
+    itemsPerPage={itemsPerPage}
+    onPrevious={() => setPage(prev => Math.max(prev - 1, 1))}
+    onNext={() => setPage(prev => prev + 1)}
+  />
+)}
     </div>
+    
   );
 }

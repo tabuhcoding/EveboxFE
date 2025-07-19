@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { getAllTicketsOfShowing } from '@/services/org.service'; // import your fetch method
 import { OrderTicket } from '@/types/models/org/orders.interface'; // assume you have these
 import { toast } from 'react-toastify';
+import Pagination from '../../check-in/components/common/pagination';
 
 interface TicketSectionProps {
   showingId: string;
@@ -22,10 +23,15 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
   const [tickets, setTickets] = useState<OrderTicket[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchTickets = async (orderId?: number) => {
+  const [page, setPage] = useState(1);
+const [totalItems, setTotalItems] = useState(0);
+const itemsPerPage = 10;
+
+  const fetchTickets = async (orderId?: number, page?: number) => {
     try {
       setLoading(true);
-      const response = await getAllTicketsOfShowing(showingId, orderId);
+      const response = await getAllTicketsOfShowing(showingId, orderId, page);
+      setTotalItems(response.data[1]? response.data[1].totalItems: response.data[0].length);
       setTickets(response.data[0] || []);
     } catch (err) {
       toast.error('Lỗi khi tải dữ liệu vé');
@@ -42,19 +48,15 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
   }, [showingId]);
 
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      const trimmed = search.trim();
-      const orderId = Number(trimmed);
-
-      if (trimmed === '') {
-        fetchTickets(); // No filter
-      } else if (!isNaN(orderId)) {
-        fetchTickets(orderId); // Search by order ID
-      }
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [search]);
+  if (showingId) {
+    const orderId = Number(search.trim());
+    if (!isNaN(orderId) && orderId > 0) {
+      fetchTickets(orderId, page);
+    } else {
+      fetchTickets(undefined, page);
+    }
+  }
+}, [showingId, page]);
 
   if (loading) {
   return (
@@ -63,28 +65,39 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
     </div>
   );
 }
+const handleSearch = () => {
+  const trimmed = search.trim();
+  const orderId = Number(trimmed);
+  setPage(1); // reset to page 1 on search
 
+  if (trimmed === '') {
+    fetchTickets(undefined, 1);
+  } else if (!isNaN(orderId)) {
+    fetchTickets(orderId, 1);
+  } else {
+    toast.error("Vui lòng nhập mã đơn hàng hợp lệ!");
+  }
+};
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="flex justify-between items-center pt-6">
         <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
           <input
-            type="text"
-            className="w-full px-3 py-2 outline-none"
-            placeholder={transWithFallback('searchByOrderId', 'Tìm kiếm theo mã đơn hàng')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              const orderId = Number(search.trim());
-              if (!isNaN(orderId)) fetchTickets(orderId);
-              else fetchTickets();
-            }}
-            className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]"
-          >
-            <Search size={24} color="white" />
-          </button>
+  type="text"
+  className="w-full px-3 py-2 outline-none"
+  placeholder={transWithFallback('searchByOrderId', 'Tìm kiếm theo mã đơn hàng')}
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') handleSearch(); // Optional: press Enter to search
+  }}
+/>
+<button
+  onClick={handleSearch}
+  className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]"
+>
+  <Search size={24} color="white" />
+</button>
         </div>
       </div>
 
@@ -134,6 +147,15 @@ export default function TicketSection({ showingId }: TicketSectionProps) {
           )}
         </tbody>
       </table>
+      {tickets.length > 0 && (
+  <Pagination
+    currentPage={page}
+    totalItems={totalItems}
+    itemsPerPage={itemsPerPage}
+    onPrevious={() => setPage((prev) => Math.max(prev - 1, 1))}
+    onNext={() => setPage((prev) => prev + 1)}
+  />
+)}
     </div>
   );
 }
