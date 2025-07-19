@@ -22,6 +22,9 @@ export default function EventPage() {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
+  const [adminFilter, setAdminFilter] = useState("");
+
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -36,6 +39,7 @@ export default function EventPage() {
     setCategoryFilter('');
     setDateFrom('');
     setDateTo('');
+    setAdminFilter('');
   };
 
   const transWithFallback = (key: string, fallback: string) => {
@@ -58,6 +62,10 @@ export default function EventPage() {
           onDateFromChange={setDateFrom}
           onDateToChange={setDateTo}
           onReset={handleResetFilter}
+          adminFilter={adminFilter}
+  onAdminChange={(val) => {
+    setAdminFilter(val);
+  }}
         />
       </div>
 
@@ -73,6 +81,7 @@ export default function EventPage() {
       <EventTable
         activeTab={activeTab}
         searchKeyword={debouncedSearch}
+        adminFilter={adminFilter}
         categoryFilter={categoryFilter}
         dateFrom={dateFrom} dateTo={dateTo}
         onLoadFinish={() => setLoading(false)}

@@ -23,7 +23,7 @@ import { sortEvents } from "./libs/sortEvent";
 import { getEventsAdmin, updateEventAdmin } from "@/services/event.service";
 import { useAuth } from "@/contexts/auth.context";
 
-export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo,  onLoadFinish }: EventTableProps) {
+export default function EventTable({ activeTab, searchKeyword, categoryFilter, dateFrom, dateTo, adminFilter, onLoadFinish }: EventTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
   const { session } = useAuth();
@@ -74,6 +74,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
         categoryId: categoryFilter ? mapCategoryNameToId(categoryFilter) : undefined,
         isDeleted: activeTab === "deleted" ? true : undefined,
         title: searchKeyword ?? "",
+        admin: adminFilter? adminFilter: session?.user?.email
       }, session?.user?.accessToken || "");
 
       if (res.statusCode === 200) {
@@ -88,7 +89,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
       setIsLoadingEvents(false);
       onLoadFinish?.();
     }
-  }, [activeTab, categoryFilter, currentPage, dateFrom, dateTo, eventsPerPage, searchKeyword]);
+  }, [activeTab, adminFilter, categoryFilter, currentPage, dateFrom, dateTo, eventsPerPage, searchKeyword]);
 
   useEffect(() => {
     fetchEvents();
@@ -275,12 +276,12 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
                     {!event.deleteAt && (
                       <td className="px-4 py-3 border-r border-gray-200 text-center">
                         <div className="flex justify-center items-center gap-x-2">
-                          {!event.deleteAt && !event.isApproved && (
+                          {!event.deleteAt  && !event.isApproved && event.canManage && (
                             <Check className="p-1 bg-teal-400 text-white rounded w-6 h-6 cursor-pointer"
                               onClick={() => handleApprovalClick(event)} />
                           )}
 
-                          {!event.deleteAt && event.isApproved && (
+                          {!event.deleteAt && event.isApproved && event.canManage && (
                             <CalendarOff className="p-1 bg-yellow-400 text-white rounded w-6 h-6 cursor-pointer"
                               onClick={() => handleSupspendClick(event)} />
                           )}

@@ -11,6 +11,7 @@ export interface EventTableProps {
   categoryFilter: string
   dateFrom: string;
   dateTo: string;
+  adminFilter: string;
   onLoadFinish?: () => void;
 }
 
@@ -78,6 +79,8 @@ export interface EventAdminDataDto {
   isOnlyOnEve: boolean;
   isOnline: boolean;
   categories: Category[];
+  canManage: boolean;
+  manageBy: string;
 }
 
 export interface EventManagementApiResponse {
@@ -99,6 +102,7 @@ export interface EventAdminParams {
   createdTo?: string;
   categoryId?: number;
   title?: string;
+  admin?: string;
 }
 
 export interface EventPaginationProps {
@@ -130,6 +134,8 @@ export interface FilterProps {
   onDateFromChange: (value: string) => void;
   onDateToChange: (value: string) => void;
   onReset: () => void;
+  adminFilter: string;
+  onAdminChange: (value: string) => void;
 }
 
 export interface UpdateEventAdminPayload {

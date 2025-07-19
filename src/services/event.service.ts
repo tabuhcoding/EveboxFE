@@ -121,7 +121,8 @@ export async function getEventsAdmin(params: EventAdminParams, accessToken: stri
     const cleanedParams = {
       ...Object.fromEntries(cleanedEntries),
       page: params.page,
-      limit: params.limit
+      limit: params.limit,
+      admin: params.admin
     } as EventAdminParams;
 
     const headers: { [key: string]: string } = {
