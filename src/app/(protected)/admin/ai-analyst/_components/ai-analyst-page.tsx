@@ -11,7 +11,6 @@ import Markdown from "react-markdown";
 
 export default function AIAnalystPage() {
   const t = useTranslations('common');
-  const showingId = 'clone31370137035742231370';
 
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<string | null>(null);
@@ -20,7 +19,7 @@ export default function AIAnalystPage() {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/org/statistics/summary-ai/${showingId}`, { query });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/admin/revenue-chart-ai`, { query });
       setResult(res.data.data || transWithFallback('noResult', 'Không có kết quả.'));
     } catch (error) {
       console.error("Fetch AI error:", error);
