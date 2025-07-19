@@ -243,7 +243,7 @@ export default function LocationManagementClient() {
         {/* Filters */}
         <FilterDropdown label={transWithFallback('city', 'Thành phố')} options={cities} value={selectedCity} onChange={setSelectedCity} />
 
-        <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={selectedCity ? organizers : allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
+        <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
 
 
         <button
