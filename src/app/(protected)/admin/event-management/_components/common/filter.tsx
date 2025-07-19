@@ -10,17 +10,34 @@ import { FilterProps } from "@/types/models/admin/eventManagement.interface";
 import { Category } from "@/types/models/dashboard/frontDisplay";
 
 import { getAllCategories } from "@/services/event.service";
+import { getAllAdmin } from "@/services/auth.service";
 
 export default function FilterBar({
   categoryFilter, onCategoryChange,
   dateFrom, dateTo,
   onDateFromChange, onDateToChange,
+  adminFilter, onAdminChange,
   onReset
 }: FilterProps) {
   const t = useTranslations('common');
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [showDateFilter, setShowDateFilter] = useState(false);
+
+  const [admins, setAdmins] = useState<string[]>([]);
+
+useEffect(() => {
+  const loadAdmins = async () => {
+    try {
+      const data = await getAllAdmin();
+      setAdmins(data);
+    } catch (error) {
+      console.error("Failed to load admins:", error);
+    }
+  };
+
+  loadAdmins();
+}, []);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -67,6 +84,25 @@ export default function FilterBar({
           ))}
         </select>
       </div>
+
+      {/* Filter - Quản trị viên */}
+<div className="filter-admin-btn flex items-center gap-1 border-l pl-4 pr-2">
+  <span className="text-black font-semibold mr-1">
+    {transWithFallback('admin', 'Quản trị viên')}
+  </span>
+  <select
+    value={adminFilter}
+    className="border px-2 py-1 rounded-md"
+    onChange={(e) => onAdminChange(e.target.value)}
+  >
+    <option value="">{transWithFallback('all', 'Tất cả')}</option>
+    {admins.map((admin) => (
+      <option key={admin} value={admin}>
+        {admin}
+      </option>
+    ))}
+  </select>
+</div>
 
       {/* Filter - Ngày tạo */}
       <div className="filter-created-btn relative border-l pl-4 pr-2">

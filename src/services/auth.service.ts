@@ -187,3 +187,16 @@ export async function getCurrentUser(): Promise<UserInfo> {
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
+
+export async function getAllAdmin(): Promise<string[]> {
+  try {
+    const res = await authService.get<BaseApiResponse<string[]>>(`${END_POINT_LIST.ADMIN.ALL_ADMINS}`);
+
+    if (!res) throw new Error('Failed to get all admins');
+
+    return res.data.data
+  } catch (error: any) {
+    console.error("Error get all admins:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
