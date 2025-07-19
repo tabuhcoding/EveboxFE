@@ -917,5 +917,7 @@
     "errorWhenAnalyze": "Error when analyzing",
     "analyzing": "Analyzing...",
     "noResult": "No result",
-    "AIRevenueAnalyst": "Revenue Analyst With AI"
+    "AIRevenueAnalyst": "Revenue Analyst With AI",
+    "editMember": "Edit member",
+    "deleteMember": "Xóa thành viên"
 }

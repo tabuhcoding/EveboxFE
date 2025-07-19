@@ -204,13 +204,7 @@ const itemsPerPage = 10;
       <table className="w-full border">
         <thead>
           <tr className="bg-[#0C4762] text-white text-left">
-            <th className="py-2 px-2">
-              <input
-                type="checkbox"
-                onChange={(e) => setSelectedOrders(e.target.checked ? ordersData.map((o) => o.id) : [])}
-                checked={ordersData.length > 0 && selectedOrders.length === ordersData.length}
-              />
-            </th>
+            <th className="py-2 px-2"></th>
             <th className="py-2 px-4">{transWithFallback("orderId", "Mã đơn hàng")}</th>
             <th className="py-2 px-4">{transWithFallback("customer", "Khách hàng")}</th>
             <th className="py-2 px-4">{transWithFallback("owner", "Chủ sở hữu")}</th>
@@ -229,7 +223,6 @@ const itemsPerPage = 10;
                 <tr
                   key={order.id}
                   className="border-t hover:bg-gray-200 cursor-pointer"
-                  onClick={() => handleRowClick(order.id)}
                 >
                   <td className="py-2 px-2">
                     {
@@ -242,16 +235,16 @@ const itemsPerPage = 10;
                         : <></>
                     }
                   </td>
-                  <td className="py-2 px-4">{order.id}</td>
-                  <td className="py-2 px-4">{order.userId}</td>
-                  <td className="py-2 px-4">{order.ownerId}</td>
-                  <td className="py-2 px-4">{order.type}</td>
-                  <td className="py-2 px-4">{getQuantity(order)}</td>
-                  <td className="py-2 px-4">{order.paymentInfo?.method}</td>
-                  <td className="py-2 px-4">
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.id}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.userId}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.ownerId}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.type}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{getQuantity(order)}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.paymentInfo?.method}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>
                     <span className={`px-2 py-1 rounded-full text-sm ${status.className}`}>{status.text}</span>
                   </td>
-                  <td className="py-2 px-4">{formatPrice(order.price)}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{formatPrice(order.price)}</td>
                 </tr>
               );
             })
