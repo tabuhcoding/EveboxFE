@@ -2,7 +2,7 @@
 
 /* Package System */
 import Link from 'next/link';
-import { User, Ticket, Calendar, BarChart, Edit, Users, ArrowLeft, Menu } from 'lucide-react';
+import { User, Ticket, Calendar, BarChart, Edit, Users, ArrowLeft, Menu, Armchair } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
@@ -48,6 +48,7 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
       items: [
         { text: transWithFallback('members', 'Thành viên'), href: 'member', icon: <Users size={18} /> },
         { text: transWithFallback('edit', 'Chỉnh sửa'), href: `/organizer/create-event/${eventId}?step=info`, icon: <Edit size={18} /> },
+        { text: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"), href: `/organizer/events/${eventId}/seatmap`, icon: <Armchair size={18} /> },
       ],
     },
   ];

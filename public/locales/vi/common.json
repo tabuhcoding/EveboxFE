@@ -900,5 +900,19 @@
     "checking": "Đang kiểm tra...",
     "checkUser": "Kiểm tra người nhận",
     "userName": "Tên người dùng",
-    "editEvent": "Chỉnh sửa sự kiện"
+    "editEvent": "Chỉnh sửa sự kiện",
+    "searchByEmail": "Tìm theo email khách hàng",
+    "searchByOrderId": "Tìm theo mã đơn hàng",
+    "retry": "Thử lại",
+    "selectSeatMap": "Chọn sơ đồ chỗ ngồi",
+    "seatMapType": "Loại sơ đồ chỗ ngồi",
+    "regularTicketSale": "Sự kiện bán vé thường",
+    "loadingSeatMap": "Đang tải sơ đồ chỗ ngồi",
+    "noTicketTypes": "Chưa có loại vé",
+    "errorConnectShowingToSeatmap": "Có lỗi khi kết nối suất diễn với sơ đồ chỗ ngồi",
+    "connectSeatmap": "Kết nối suất diễn với sơ đồ chỗ ngồi thành công",
+    "notFoundSection": "Không có dữ liệu khu vực",
+    "section": "Khu vực",
+    "confirmMapping": "Xác nhận ánh xạ",
+    "mapping": "Đang ánh xạ..."
 }
