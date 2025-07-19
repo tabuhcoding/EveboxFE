@@ -12,24 +12,26 @@ export default function EventPagination({ currentPage, totalItems, eventsPerPage
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
+  const totalPages = Math.ceil(totalItems / eventsPerPage);
+
   const getPageNumbers = (): (number | string)[] => {
     const maxVisible = 3;
     const pages: (number | string)[] = [];
 
-    if (totalItems <= maxVisible + 2) {
-      for (let i = 1; i <= totalItems; i++) pages.push(i);
+    if (totalPages <= maxVisible + 2) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       const showLeft = currentPage <= maxVisible;
-      const showRight = currentPage >= totalItems - maxVisible + 1;
+      const showRight = currentPage >= totalPages - maxVisible + 1;
 
       if (showLeft) {
         for (let i = 1; i <= maxVisible; i++) pages.push(i);
         pages.push('...');
-        pages.push(totalItems);
+        pages.push(totalPages);
       } else if (showRight) {
         pages.push(1);
         pages.push('...');
-        for (let i = totalItems - maxVisible + 1; i <= totalItems; i++) pages.push(i);
+        for (let i = totalPages - maxVisible + 1; i <= totalPages; i++) pages.push(i);
       } else {
         pages.push(1);
         pages.push('...');
@@ -37,7 +39,7 @@ export default function EventPagination({ currentPage, totalItems, eventsPerPage
         pages.push(currentPage);
         pages.push(currentPage + 1);
         pages.push('...');
-        pages.push(totalItems);
+        pages.push(totalPages);
       }
     }
     return pages;
@@ -50,7 +52,7 @@ export default function EventPagination({ currentPage, totalItems, eventsPerPage
         <select
           className="px-2 py-1 border rounded"
           value={eventsPerPage}
-          onChange={(e) => setEventsPerPage(Number(e.target.value))}
+          onChange={(e) => { setEventsPerPage(Number(e.target.value)); onPageChange(1); }}
         >
           {[10, 20, 50].map(n => <option key={n} value={n}>{n}</option>)}
         </select>
