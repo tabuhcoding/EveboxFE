@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import { BarChart3, Users, Package, Edit } from "lucide-react";
+import { BarChart3, Users, Package, Edit, Armchair } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -44,6 +44,11 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
       icon: <Edit size={18} />,
       label: transWithFallback("edit", "Chỉnh sửa"),
     },
+    {
+      href: `/organizer/events/${event.id}/seatmap`,
+      icon: <Armchair size={18} />,
+      label: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
+    }
   ];
 
   const handleClick = (href: string, index: number) => {
@@ -89,7 +94,7 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
             key={i}
             onClick={() => handleClick(item.href, i)}
             disabled={isPending}
-            className="flex flex-col items-center text-white focus:outline-none"
+            className="flex flex-col items-center text-white focus:outline-none px-3 py-2 rounded-md hover:bg-[#51DACF] hover:text-[#0C4762] transition-colors duration-200"
           >
             {isPending && loadingIndex === i ? (
               <CircularProgress size={18} color="inherit" />
