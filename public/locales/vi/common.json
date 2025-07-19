@@ -900,5 +900,11 @@
     "checking": "Đang kiểm tra...",
     "checkUser": "Kiểm tra người nhận",
     "userName": "Tên người dùng",
-    "editEvent": "Chỉnh sửa sự kiện"
+    "editEvent": "Chỉnh sửa sự kiện",
+    "AIRevenueAnalystWithAI": "Phân tích doanh thu của bạn với AI",
+    "AIStatisticsAnalystWithAI": "Phân tích thống kê của bạn với AI",
+    "errorWhenAnalyze": "Có lỗi xảy ra khi phân tích",
+    "analyzing": "Đang phân tích...",
+    "noResult": "Không có kết quả.",
+    "AIRevenueAnalyst": "Phân tích doanh thu với AI"
 }

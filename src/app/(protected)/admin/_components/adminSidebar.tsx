@@ -3,7 +3,7 @@
 /* Package System */
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
-import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, CircleDollarSign, ChartColumnIncreasing } from 'lucide-react';
+import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, CircleDollarSign, ChartColumnIncreasing, Bot } from 'lucide-react';
 import { CircularProgress } from '@mui/material';
 import { useState, useTransition } from "react";
 
@@ -30,6 +30,7 @@ export default function AdminSidebar() {
     // { text: 'Quản lý Voucher', href: '/admin/voucher-management', icon: <TicketPercent size={20} /> },
     { text: transWithFallback('paymentManagement', 'Quản lý thanh toán'), href: 'https://my.payos.vn/login', icon: <CircleDollarSign size={20} /> },
     { text: transWithFallback('revenueManagement', 'Quản lý doanh thu'), href: '/admin/revenue-management', icon: <ChartColumnIncreasing size={20} /> },
+    { text: transWithFallback('AIRevenueAnalyst', 'Phân tích doanh thu với AI'), href: '/admin/ai-analyst', icon: <Bot size={20} /> }
   ];
 
   const handleClick = (href: string, index: number) => {

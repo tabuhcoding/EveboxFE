@@ -911,5 +911,11 @@
     "userName": "User name",
     "editEvent": "Edit event",
     "searchByEmail": "Search by customer email",
-    "searchByOrderId": "Search by order id"
+    "searchByOrderId": "Search by order id",
+    "AIRevenueAnalystWithAI": "Revenue Analyst With AI",
+    "AIStatisticsAnalystWithAI": "Statistics Analyst With AI",
+    "errorWhenAnalyze": "Error when analyzing",
+    "analyzing": "Analyzing...",
+    "noResult": "No result",
+    "AIRevenueAnalyst": "Revenue Analyst With AI"
 }
