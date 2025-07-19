@@ -3,7 +3,7 @@
 /* Package System */
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
-import { Filter, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 
 /* Package Application */
 import { FilterProps, OptionType } from "@/types/models/admin/eventSpecialManagement.interface";

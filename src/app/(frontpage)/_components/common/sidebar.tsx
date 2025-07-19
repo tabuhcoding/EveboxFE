@@ -12,9 +12,8 @@ import { CircularProgress } from '@mui/material';
 import { useAuth } from 'contexts/auth.context';
 import OrganizerRegistrationPopup from "../../../(protected)/(user)/my-profile/_components/orgRegisterPopup"; // Adjust path if needed
 
-import { SidebarProps } from '../libs/interface/dashboard.interface';
+import { SidebarProps, MenuItem } from '../libs/interface/dashboard.interface';
 import { getCurrentUser } from '@/services/auth.service';
-import { MenuItem } from '../libs/interface/dashboard.interface';
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user } = useAuth();
@@ -32,7 +31,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const handleLogout = async (index: number) => {
     if (!isAuthenticated) {
-      menuItems
+      // menuItems
       console.error('User not authenticated');
       return;
     }

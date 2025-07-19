@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import { ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 

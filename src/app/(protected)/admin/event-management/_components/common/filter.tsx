@@ -2,7 +2,7 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import { ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { useState, useEffect } from "react";
 
 /* Package Application */

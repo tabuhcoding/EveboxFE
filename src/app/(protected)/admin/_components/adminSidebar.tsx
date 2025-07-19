@@ -2,11 +2,10 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, CircleDollarSign, ChartColumnIncreasing } from 'lucide-react';
 import { CircularProgress } from '@mui/material';
 import { useState, useTransition } from "react";
-import { useRouter } from 'next/navigation';
 
 export default function AdminSidebar() {
   const t = useTranslations('common');
