@@ -11,11 +11,10 @@ import LocationTable from "./locationTable";
 import FilterDropdown from "./filter";
 import { useI18n } from "@/app/providers/i18nProvider";
 import { Province } from "@/types/models/event/location.interface";
-import { OrganizerLocationGroup, Venue, Location } from "@/types/models/admin/locationManagement.interface";
+import { OrganizerLocationGroup, Venue, Location, FlatEventRow } from "@/types/models/admin/locationManagement.interface";
 import { getAllDistricts, getAllLocations } from "@/services/event.service";
 import { useAuth } from "@/contexts/auth.context";
 import EventPagination from "../../event-management/_components/common/pagination";
-import { FlatEventRow } from "@/types/models/admin/locationManagement.interface";
 
 export default function LocationManagementClient() {
   const { session } = useAuth();
@@ -28,7 +27,6 @@ export default function LocationManagementClient() {
   const [selectedOrganizer, setSelectedOrganizer] = useState<string | null>(null)
   const [selectedCity, setSelectedCity] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [organizers, setOrganizers] = useState<string[]>([]);
   const [allOrganizers, setAllOrganizers] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [cityToProvinceId, setCityToProvinceId] = useState<Record<string, number>>({});
@@ -134,8 +132,8 @@ export default function LocationManagementClient() {
       setLocations(mapped);
 
       // Extract unique organizer IDs (emails)
-      const uniqueOrganizers = Array.from(new Set(res.data.map(loc => loc.organizerId)));
-      setOrganizers(uniqueOrganizers);
+      // const uniqueOrganizers = Array.from(new Set(res.data.map(loc => loc.organizerId)));
+      // setAllOrganizers(uniqueOrganizers);
     } catch (error) {
       console.error("Error loading locations:", error);
     } finally {
@@ -245,7 +243,7 @@ export default function LocationManagementClient() {
         {/* Filters */}
         <FilterDropdown label={transWithFallback('city', 'Thành phố')} options={cities} value={selectedCity} onChange={setSelectedCity} />
 
-        <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={selectedCity ? organizers : allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
+        <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
 
         <button
           onClick={handleConfirmFilter}
