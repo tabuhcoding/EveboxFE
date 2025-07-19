@@ -3,11 +3,10 @@
 /* Package System */
 import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
-// import { useRef } from 'react';
 import { Divider } from '@nextui-org/react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-// import { useSession } from 'next-auth/react';
+import { useParams, useRouter, useSearchParams, usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { CircularProgress } from '@mui/material';
 
 /* Package Application */
 import NoteDialog from '../dialogs/noteDialog';
@@ -28,6 +27,11 @@ export default function InformationEventClientPage() {
     const t = useTranslations('common');
     const params = useParams();
     const currentEventId = params?.id;
+    const [isSaving, setIsSaving] = useState(false);
+    const [isContinuing, setIsContinuing] = useState(false);
+    const pathname = usePathname();
+    const [isRedirecting, setIsRedirecting] = useState(false);
+    const [previousPath, setPreviousPath] = useState(pathname);
 
     const transWithFallback = (key: string, fallback: string) => {
         const msg = t(key);
@@ -54,21 +58,41 @@ export default function InformationEventClientPage() {
         const access_token = user?.accessToken;
         if (!access_token) return;
 
+        if (btnValidate === "Save") {
+            setIsSaving(true);
+            setIsContinuing(false);
+        } else if (btnValidate === "Continue") {
+            setIsContinuing(true);
+            setIsSaving(false);
+        }
+
         try {
             const result = await createEvent(payload, access_token);
 
             const newEventId = result.id;
 
             if (btnValidate === "Continue") {
+                setIsRedirecting(true);
+                setPreviousPath(pathname);
                 router.push(`/organizer/create-event/${newEventId}?step=showing`);
             } else {
                 toast.success(transWithFallback('createEventSuccess', 'Tạo sự kiện thành công!'));
+                setIsSaving(false);
             }
         } catch (error: any) {
             toast.error(error.message || transWithFallback('createEventError', 'Có lỗi xảy ra trong quá trình tạo sự kiện.'));
             console.error("Error creating event:", error);
+            setIsSaving(false);
+            setIsContinuing(false);
         }
     };
+
+    useEffect(() => {
+        if (isRedirecting && pathname !== previousPath) {
+            setIsContinuing(false);
+            setIsRedirecting(false);
+        }
+    }, [pathname, previousPath, isRedirecting]);
 
     return (
         <>
@@ -79,15 +103,21 @@ export default function InformationEventClientPage() {
                         <Navigation step={step} />
 
                         <div className="flex gap-4 mt-4 mb-6">
-                            <button className="text-xs w-18 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
-                                type="submit" form="event-form" onClick={handleSave}>
+                            <button className="flex items-center justify-center gap-1 text-xs w-18 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
+                                type="submit" form="event-form" onClick={handleSave} disabled={isSaving || isContinuing}>
+                                {isSaving && btnValidate === 'Save' && (
+                                    <CircularProgress size={16} color="inherit" aria-label="Loading" />
+                                )}
                                 {transWithFallback('save', 'Lưu')}
                             </button>
                         </div>
 
                         <div className="flex gap-4 mt-4 mb-6">
-                            <button className="text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
-                                type="submit" form="event-form" onClick={handleContinue}>
+                            <button className="flex items-center justify-center gap-1 text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
+                                type="submit" form="event-form" onClick={handleContinue} disabled={isSaving || isContinuing}>
+                                {isContinuing && (
+                                    <CircularProgress size={16} color="inherit" aria-label="Loading" />
+                                )}
                                 {transWithFallback('continue', 'Tiếp tục')}
                             </button>
                         </div>
