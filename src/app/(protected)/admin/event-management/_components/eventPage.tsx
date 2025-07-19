@@ -24,6 +24,9 @@ export default function EventPage() {
 
   const [adminFilter, setAdminFilter] = useState("");
 
+
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setDebouncedSearch(searchKeyword);
@@ -60,9 +63,9 @@ export default function EventPage() {
           onDateToChange={setDateTo}
           onReset={handleResetFilter}
           adminFilter={adminFilter}
-  onAdminChange={(val) => {
-    setAdminFilter(val);
-  }}
+          onAdminChange={(val) => {
+            setAdminFilter(val);
+          }}
         />
       </div>
 
