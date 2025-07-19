@@ -1,6 +1,7 @@
 'use client';
 
 /* Package System */
+import { useTranslations } from "next-intl";
 import React, { useState, useEffect, useRef } from "react";
 
 /* Package Application */
@@ -8,7 +9,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { SeatMapProps } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapSectionComponent({ seatMap }: SeatMapProps) {
+export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedTickets = {} }: SeatMapProps) {
+  const t = useTranslations("common");
 
   const [zoom, setZoom] = useState<number>(1);
   const [isDragging, setIsDragging] = useState(false);
