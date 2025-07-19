@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import React, { useState, useEffect, useRef } from "react";
 
 /* Package Application */
-import AlertDialog from "components/common/alertDialog";
 import { SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
