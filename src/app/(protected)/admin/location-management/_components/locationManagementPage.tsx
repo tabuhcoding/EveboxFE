@@ -221,12 +221,31 @@ export default function LocationManagementClient() {
       <h1 className="text-2xl font-bold text-[#0C4762]">{transWithFallback('locationManagement', 'Quản lý địa điểm')}</h1>
       <div className="h-0.5 w-full bg-[#0C4762] mt-4"></div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-4 mb-2 mt-6">
+      <div className="flex items-center gap-2 mb-2 mt-6 flex-nowrap">
+        {/* Search and Export */}
+        <div className="">
+          <form onSubmit={handleSearch} className="flex">
+            <input
+              type="text"
+              placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm")}
+              className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-l-lg w-52 md:w-60 focus:outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-teal-400 text-white rounded-r-lg hover:bg-teal-500 transition-colors"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+          </form>
+        </div>
+
+        <div className="ml-auto"></div>
+        {/* Filters */}
         <FilterDropdown label={transWithFallback('city', 'Thành phố')} options={cities} value={selectedCity} onChange={setSelectedCity} />
 
         <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={selectedCity ? organizers : allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
-
 
         <button
           onClick={handleConfirmFilter}
@@ -251,25 +270,6 @@ export default function LocationManagementClient() {
           <span>{transWithFallback('resetFilter', 'Đặt lại')}</span>
           <RotateCcw className="ml-2 w-4 h-4 text-red-500" />
         </button>
-
-        {/* Search and Export */}
-        <div className="ml-auto">
-          <form onSubmit={handleSearch} className="flex">
-            <input
-              type="text"
-              placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm")}
-              className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg w-full sm:w-80 focus:outline-none"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-teal-400 text-white rounded-r-lg hover:bg-teal-500 transition-colors"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-          </form>
-        </div>
       </div>
 
       {!loading && (
