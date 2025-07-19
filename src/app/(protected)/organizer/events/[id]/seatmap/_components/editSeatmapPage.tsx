@@ -45,7 +45,6 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   const [sections, setSections] = useState<any[]>([])
   const [isLoadingMapping, setIsLoadingMapping] = useState<boolean>(false);
   const [showingData, setShowingData] = useState<Showing | null>(null)
-  const [isLoadingSeatmap, setIsLoadingSeatmap] = useState<boolean>(false);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -149,7 +148,6 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
       if (!selectedSeatMapId) return
 
       try {
-        setIsLoadingSeatmap(true);
         const response = await getSeatmapDetail(Number(selectedSeatMapId));
 
         if (response.statusCode === 200) {
@@ -159,8 +157,6 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
       } catch (error) {
         console.error("Error fetching seatmap details:", error)
         setError(transWithFallback("errorFoundSeatmap", "Lỗi khi tải chi tiết sơ đồ chỗ ngồi"))
-      } finally {
-        setIsLoadingSeatmap(false);
       }
     }
 
