@@ -905,5 +905,6 @@
   "searchByOrderId": "Tìm kiếm theo mã đơn hàng",
   "editMember": "Sửa thành viên",
   "deleteMember": "Xóa thành viên",
-  "noDataSearch": "Không có kết quả tìm kiếm phù hợp"
+  "noDataSearch": "Không có kết quả tìm kiếm phù hợp",
+  "totalEvents": "Tổng số sự kiện"
 }

@@ -16,7 +16,7 @@ export default function LocationTable({ rows }: LocationTableProps) {
   };
 
   return (
-    <div className="table-location-management overflow-x-auto rounded-xl shadow-md mt-6">
+    <div className="table-location-management overflow-x-auto rounded-xl shadow-md mt-4">
       <table className="min-w-full border border-gray-200">
         <thead className="sticky top-0 z-10 bg-[#0C4762] text-white text-xs rounded-t-lg">
           <tr>

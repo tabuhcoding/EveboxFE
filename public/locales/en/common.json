@@ -914,5 +914,6 @@
     "searchByOrderId": "Search by order id",
     "editMember": "Edit member",
     "deleteMember": "Delete member",
-    "noDataSearch": "No matching search results"
+    "noDataSearch": "No matching search results",
+    "totalEvents": "Total events"
 }
