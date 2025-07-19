@@ -89,7 +89,7 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
         text: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
         href: `/organizer/events/${eventId}/seatmap`,
         icon: <Armchair size={18} />
-      }
+      },
     ].filter(Boolean) as MenuItem[],
   },
   {
