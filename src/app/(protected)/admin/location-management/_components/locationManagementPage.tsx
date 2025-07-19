@@ -166,6 +166,7 @@ export default function LocationManagementClient() {
   const handleResetFilter = async () => {
     setSelectedOrganizer("")
     setSelectedCity("")
+    setSearchQuery("")
     await fetchLocations()
   }
 
@@ -250,26 +251,32 @@ export default function LocationManagementClient() {
           <span>{transWithFallback('resetFilter', 'Đặt lại')}</span>
           <RotateCcw className="ml-2 w-4 h-4 text-red-500" />
         </button>
+
+        {/* Search and Export */}
+        <div className="ml-auto">
+          <form onSubmit={handleSearch} className="flex">
+            <input
+              type="text"
+              placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm")}
+              className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg w-full sm:w-80 focus:outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-teal-400 text-white rounded-r-lg hover:bg-teal-500 transition-colors"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+          </form>
+        </div>
       </div>
 
-      {/* Search and Export */}
-      <div className="flex flex-wrap justify-between items-center mb-6">
-        <form onSubmit={handleSearch} className="flex w-full sm:w-auto mb-4 sm:mb-0">
-          <input
-            type="text"
-            placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm")}
-            className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg w-full sm:w-80 focus:outline-none"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-teal-400 text-white rounded-r-lg hover:bg-teal-500 transition-colors"
-          >
-            <Search className="w-5 h-5" />
-          </button>
-        </form>
-      </div>
+      {!loading && (
+        <div className="text-sm text-gray-700 mt-4">
+          {transWithFallback('totalEvents', 'Tổng số sự kiện')}: <strong>{flattenedEventRows.length}</strong>
+        </div>
+      )}
 
       {/* Table */}
       {loading ? (

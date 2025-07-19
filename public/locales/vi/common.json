@@ -909,5 +909,6 @@
     "AIRevenueAnalyst": "Phân tích doanh thu với AI",
     "editMember": "Sửa thành viên",
   "deleteMember": "Xóa thành viên",
-    "noDataSearch": "Không có kết quả tìm kiếm phù hợp"
+  "noDataSearch": "Không có kết quả tìm kiếm phù hợp",
+  "totalEvents": "Tổng số sự kiện"
 }
