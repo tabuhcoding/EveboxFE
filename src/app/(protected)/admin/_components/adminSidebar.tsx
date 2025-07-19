@@ -1,14 +1,19 @@
 'use client';
 
 /* Package System */
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CalendarPlus, UserRoundCog, Ticket, FilePenLine, MapPin, CircleDollarSign, ChartColumnIncreasing } from 'lucide-react';
+import { CircularProgress } from '@mui/material';
+import { useState, useTransition } from "react";
 
 export default function AdminSidebar() {
   const t = useTranslations('common');
+  const router = useRouter();
   const pathName = usePathname();
+
+  const [isPending, startTransition] = useTransition();
+  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -27,22 +32,39 @@ export default function AdminSidebar() {
     { text: transWithFallback('revenueManagement', 'Quản lý doanh thu'), href: '/admin/revenue-management', icon: <ChartColumnIncreasing size={20} /> },
   ];
 
+  const handleClick = (href: string, index: number) => {
+    if (href.startsWith("http")) {
+      window.location.href = href;
+      return;
+    }
+
+    setLoadingIndex(index);
+
+    startTransition(() => {
+      router.push(href);
+    });
+  };
+
   return (
-    <div className="fixed top-0 left-0 h-full w-64 bg-sky-900 text-white p-4">
+    <div className="sidebar-admin fixed top-0 left-0 h-full w-64 bg-sky-900 text-white p-4">
       <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-white to-[#51DACF] text-transparent bg-clip-text">ADMIN CENTER</h2>
       <nav>
         <ul className="space-y-3">
           {menuSections.filter(item => item.href).map((item, i) => (
             <li key={i}>
-              <Link
-                href={item.href as string}
-                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors text-white no-underline ${
-                  pathName === item.href ? "bg-sky-700" : "hover:bg-sky-800"
-                }`}
+              <button
+                disabled={isPending}
+                onClick={() => handleClick(item.href as string, i)}
+                className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors text-white w-full text-left
+                  ${pathName === item.href ? "bg-sky-700" : "hover:bg-sky-800"}`}
               >
-                {item.icon}
+                {loadingIndex === i && isPending ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  item.icon
+                )}
                 {item.text}
-              </Link>
+              </button>
             </li>
           ))}
         </ul>

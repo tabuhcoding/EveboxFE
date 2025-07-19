@@ -2,8 +2,9 @@
 import { Dispatch, SetStateAction } from "react";
 
 export interface RevenueTabsProps {
-  activeTab: "app" | "organization" | "event"
-  onTabChange: (tab: "app" | "organization" | "event") => void
+  activeTab: "app" | "organization" | "event";
+  onTabChange: (tab: "app" | "organization" | "event") => void;
+  loading: boolean;
 }
 
 export interface RevenueFilterProps {
@@ -14,6 +15,7 @@ export interface RevenueFilterProps {
 
 export interface FilterProps {
   onFilterChange: (filter: { fromDate?: string; toDate?: string; search?: string }) => void;
+  isLoading?: boolean
 }
 
 export type SubTabType = "day" | "location" | "price"

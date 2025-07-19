@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import { ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -28,14 +28,8 @@ export default function FilterBar({
 
   return (
     <div className="filter-account-management flex items-center gap-4 bg-white border rounded-lg px-4 py-4 shadow-sm text-sm">
-      {/* Filter Icon */}
-      <div className="flex items-center gap-2 text-gray-700 font-medium">
-        <Filter size={18} />
-        {transWithFallback('filterBy', 'Lọc')}
-      </div>
-
       {/* Filter - Vai trò */}
-      <div className="filter-role flex items-center gap-1 border-l pl-4 pr-2">
+      <div className="filter-role flex items-center gap-1 pr-2">
         <span className="text-black font-semibold mr-1">Vai trò</span>
 
         <select value={roleFilter} className="border px-2 py-1 rounded-md"

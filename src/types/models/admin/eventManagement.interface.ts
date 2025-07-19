@@ -11,6 +11,7 @@ export interface EventTableProps {
   categoryFilter: string
   dateFrom: string;
   dateTo: string;
+  onLoadFinish?: () => void;
 }
 
 //Pagination
@@ -112,6 +113,7 @@ export interface EventPaginationProps {
 export interface TabsProps {
   activeTab: string;
   setActiveTab: (tabId: string) => void;
+  loading?: boolean;
 }
 
 //Search

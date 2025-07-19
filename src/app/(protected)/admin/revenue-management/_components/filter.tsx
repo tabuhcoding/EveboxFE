@@ -4,11 +4,12 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import { FilterProps } from "@/types/models/admin/revenueManagement.interface";
 
-export default function Filter({ onFilterChange }: FilterProps) {
+export default function Filter({ onFilterChange, isLoading }: FilterProps) {
   const t = useTranslations("common");
 
   const [searchQuery, setSearchQuery] = useState("")
@@ -17,7 +18,23 @@ export default function Filter({ onFilterChange }: FilterProps) {
     toDate: "",
   })
 
-  const handleSearch = () => {
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearch = async () => {
+    setIsSearching(true);
+
+    try {
+      await onFilterChange({
+        search: searchQuery || undefined,
+        fromDate: undefined,
+        toDate: undefined,
+      });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleConfirm = () => {
     onFilterChange({
       fromDate: dateRange.fromDate || undefined,
       toDate: dateRange.toDate || undefined,
@@ -34,6 +51,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
   return (
     <div className="w-full p-4 mt-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        {/* Search Input */}
         <div className="relative w-full md:w-80 lg:w-96">
           <input
             type="text"
@@ -44,12 +62,18 @@ export default function Filter({ onFilterChange }: FilterProps) {
           />
           <button
             onClick={handleSearch}
+            disabled={isSearching}
             className="absolute right-0 top-0 h-11 w-12 bg-teal-400 hover:bg-teal-500 rounded-r-md flex items-center justify-center"
           >
-            <Search className="h-5 w-5 text-white" />
+            {isSearching ? (
+              <CircularProgress size={18} sx={{ color: "white" }} />
+            ) : (
+              <Search className="h-5 w-5 text-white" />
+            )}
           </button>
         </div>
 
+        {/* Date Range & Confirm */}
         <div className="flex gap-4 items-end">
           <div className="flex border border-gray-300 rounded-md bg-white">
             <div className="flex items-center px-4 py-2">
@@ -86,9 +110,11 @@ export default function Filter({ onFilterChange }: FilterProps) {
           </div>
 
           <button
-            onClick={handleSearch}
-            className="bg-teal-400 hover:bg-teal-500 text-white px-6 py-2 rounded-md"
+            onClick={handleConfirm}
+            disabled={isLoading}
+            className="bg-teal-400 hover:bg-teal-500 text-white px-6 py-2 rounded-md flex items-center justify-center gap-2"
           >
+            {isLoading && <CircularProgress size={18} color="inherit" />}
             {transWithFallback('confirm', 'Xác nhận')}
           </button>
         </div>

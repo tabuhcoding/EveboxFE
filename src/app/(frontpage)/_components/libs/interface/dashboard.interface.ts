@@ -10,6 +10,13 @@ export interface SidebarProps {
   onClose: () => void;
 }
 
+export interface MenuItem {
+  icon: React.ReactNode;
+  text: string;
+  href?: string;
+  onClick?: () => Promise<void> | void;
+}
+
 export interface Event {
   id: number;
   title: string;

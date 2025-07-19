@@ -1,22 +1,36 @@
 "use client";
 
+/* Package System */
 import Link from 'next/link';
 import { User, Ticket, Calendar, BarChart, Edit, Users, ArrowLeft, Menu } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useState, useTransition } from 'react';
+import { CircularProgress } from '@mui/material';
 
+/* Package Application */
 import { SidebarProps } from '../libs/interface/organizer.interface';
 
 const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
+  const router = useRouter();
   const pathName = usePathname();
   const parts = pathName?.split("/");
   const eventId = parts?.[3] ?? '';
+  const [loadingHref, setLoadingHref] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const t = useTranslations('common');
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith('common.')) return fallback;
     return msg;
+  };
+
+  const handleClick = (href: string) => {
+    setLoadingHref(href);
+    startTransition(() => {
+      router.push(href);
+    });
   };
 
   const menuSections = [
@@ -34,12 +48,6 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
       items: [
         { text: transWithFallback('members', 'Thành viên'), href: 'member', icon: <Users size={18} /> },
         { text: transWithFallback('edit', 'Chỉnh sửa'), href: `/organizer/create-event/${eventId}?step=info`, icon: <Edit size={18} /> },
-      ],
-    },
-    {
-      title: transWithFallback('marketing', 'Marketing'),
-      items: [
-        { text: transWithFallback('voucher', 'Voucher'), href: `/organizer/events/${eventId}/vouchers/voucher-list`, icon: <Ticket size={18} /> },
       ],
     },
   ];
@@ -71,15 +79,20 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
             <ul className="space-y-3">
               {section.items.map((item, i) => (
                 <li key={i}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
+                  <button
+                    onClick={() => handleClick(item.href)}
+                    disabled={isPending}
+                    className={`w-full text-left flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
                       pathName === item.href ? "bg-sky-700" : "hover:bg-sky-800"
                     }`}
                   >
-                    {item.icon}
+                    {loadingHref === item.href ? (
+                      <CircularProgress size={18} color="inherit" />
+                    ) : (
+                      item.icon
+                    )}
                     {item.text}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>

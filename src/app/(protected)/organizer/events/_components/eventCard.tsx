@@ -2,20 +2,55 @@
 
 /* Package System */
 import { BarChart3, Users, Package, Edit } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import { EventOrgFrontDisplayDto } from "@/types/models/org/orgEvent.interface";
 
 export default function EventCard({ event }: { event: EventOrgFrontDisplayDto }) {
   const t = useTranslations("common");
+  const router = useRouter();
+  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith("common.")) return fallback;
     return msg;
+  };
+
+  const navItems = [
+    {
+      href: `/organizer/events/${event.id}/summary-revenue`,
+      icon: <BarChart3 size={18} />,
+      label: transWithFallback("overview", "Tổng quan"),
+    },
+    {
+      href: `/organizer/events/${event.id}/member`,
+      icon: <Users size={18} />,
+      label: transWithFallback("members", "Thành viên"),
+    },
+    {
+      href: `/organizer/events/${event.id}/orders`,
+      icon: <Package size={18} />,
+      label: transWithFallback("orders", "Đơn hàng"),
+    },
+    {
+      href: `/organizer/create-event/${event.id}?step=info`,
+      icon: <Edit size={18} />,
+      label: transWithFallback("edit", "Chỉnh sửa"),
+    },
+  ];
+
+  const handleClick = (href: string, index: number) => {
+    setLoadingIndex(index);
+    startTransition(() => {
+      router.push(href);
+    });
   };
 
   return (
@@ -45,36 +80,25 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
           )}
         </div>
       </div>
+
       <hr className="border-t border-white opacity-30 my-4" />
+
       <div className="flex justify-center space-x-14 text-center">
-        <Link
-          href={`/organizer/events/${event.id}/summary-revenue`}
-          className="flex flex-col items-center"
-        >
-          <BarChart3 size={18} />
-          <span className="text-sm mt-1">{transWithFallback("overview", "Tổng quan")}</span>
-        </Link>
-        <Link
-          href={`/organizer/events/${event.id}/member`}
-          className="flex flex-col items-center"
-        >
-          <Users size={18} />
-          <span className="text-sm mt-1">{transWithFallback("members", "Thành viên")}</span>
-        </Link>
-        <Link
-          href={`/organizer/events/${event.id}/orders`}
-          className="flex flex-col items-center"
-        >
-          <Package size={18} />
-          <span className="text-sm mt-1">{transWithFallback("orders", "Đơn hàng")}</span>
-        </Link>
-        <Link
-          href={`/organizer/create-event/${event.id}?step=info`}
-          className="flex flex-col items-center"
-        >
-          <Edit size={18} />
-          <span className="text-sm mt-1">{transWithFallback("edit", "Chỉnh sửa")}</span>
-        </Link>
+        {navItems.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => handleClick(item.href, i)}
+            disabled={isPending}
+            className="flex flex-col items-center text-white focus:outline-none"
+          >
+            {isPending && loadingIndex === i ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : (
+              item.icon
+            )}
+            <span className="text-sm mt-1">{item.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

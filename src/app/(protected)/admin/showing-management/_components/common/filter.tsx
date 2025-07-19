@@ -2,7 +2,7 @@
 
 /* Package System */
 import { useTranslations } from "next-intl";
-import { ChevronDown, Filter, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 /* Package Application */
@@ -25,14 +25,8 @@ export default function FilterBar({
 
   return (
     <div className="filter-showing-management flex items-center gap-2 bg-white border rounded-lg px-2 py-4 shadow-sm">
-      {/* Filter Icon */}
-      <div className="flex items-center gap-2 text-gray-700 font-medium text-sm">
-        <Filter size={18} />
-        {transWithFallback('filterBy', 'Lọc')}
-      </div>
-
       {/* Filter - Ngày bắt đầu - kết thúc */}
-      <div className="filter-created-btn relative border-l pl-4 pr-2">
+      <div className="filter-created-btn relative pr-2">
         <div className="flex items-center gap-1 cursor-pointer text-sm"
           onClick={() => setShowDateFilter(!showDateFilter)}
         >

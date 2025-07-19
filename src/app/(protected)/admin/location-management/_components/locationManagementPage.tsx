@@ -4,6 +4,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Search, RotateCcw, Loader } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import LocationTable from "./locationTable";
@@ -18,6 +19,7 @@ export default function LocationManagementClient() {
   const { session } = useAuth();
   const t = useTranslations('common');
   const { locale } = useI18n();
+  const [isConfirming, setIsConfirming] = useState(false);
 
   const [locations, setLocations] = useState<Location[]>([])
   const [searchQuery, setSearchQuery] = useState("")
@@ -165,9 +167,17 @@ export default function LocationManagementClient() {
   const removeQuotes = (str: string) => str?.replace(/^"(.*)"$/, '$1').replace(/"/g, '');
 
   const handleConfirmFilter = async () => {
-    const provinceId = selectedCity ? cityToProvinceId[selectedCity] : undefined;
-    const organizerId = selectedOrganizer ? selectedOrganizer : undefined;
-    await fetchLocations(organizerId, provinceId);
+    setIsConfirming(true);
+
+    try {
+      const provinceId = selectedCity ? cityToProvinceId[selectedCity] : undefined;
+      const organizerId = selectedOrganizer ? selectedOrganizer : undefined;
+      await fetchLocations(organizerId, provinceId);
+    } catch (error) {
+      console.error("Error filtering:", error);
+    } finally {
+      setIsConfirming(false);
+    }
   };
 
   return (
@@ -184,8 +194,17 @@ export default function LocationManagementClient() {
 
         <button
           onClick={handleConfirmFilter}
-          className="px-4 py-2 bg-[#0a3d62] text-white rounded-lg hover:bg-[#0C4762] transition-colors"
+          disabled={isConfirming}
+          className={`px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 ${isConfirming ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0a3d62] hover:bg-[#0C4762]'
+            } text-white`}
         >
+          {isConfirming ? (
+            <>
+              <CircularProgress size={18} color="inherit" />
+            </>
+          ) : (
+            null
+          )}
           {transWithFallback('confirm', 'Xác nhận')}
         </button>
 
