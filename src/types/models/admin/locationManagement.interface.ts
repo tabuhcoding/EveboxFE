@@ -7,6 +7,15 @@ export interface Venue {
   organizers: string[];
 }
 
+export interface FlatEventRow {
+  locationId: number;
+  organizerEmail: string;
+  venueName: string;
+  taxLocation: string;
+  eventName: string;
+  organizerName: string;
+};
+
 export interface Location {
   id: number;
   email: string;

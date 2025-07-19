@@ -908,5 +908,6 @@
     "noResult": "Không có kết quả.",
     "AIRevenueAnalyst": "Phân tích doanh thu với AI",
     "editMember": "Sửa thành viên",
-  "deleteMember": "Xóa thành viên"
+  "deleteMember": "Xóa thành viên",
+    "noDataSearch": "Không có kết quả tìm kiếm phù hợp"
 }

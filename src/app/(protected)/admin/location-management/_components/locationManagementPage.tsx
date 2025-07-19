@@ -1,7 +1,7 @@
 'use client';
 
 /* Package System */
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Search, RotateCcw, Loader } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CircularProgress } from "@mui/material";
@@ -14,6 +14,8 @@ import { Province } from "@/types/models/event/location.interface";
 import { OrganizerLocationGroup, Venue, Location } from "@/types/models/admin/locationManagement.interface";
 import { getAllDistricts, getAllLocations } from "@/services/event.service";
 import { useAuth } from "@/contexts/auth.context";
+import EventPagination from "../../event-management/_components/common/pagination";
+import { FlatEventRow } from "@/types/models/admin/locationManagement.interface";
 
 export default function LocationManagementClient() {
   const { session } = useAuth();
@@ -30,6 +32,9 @@ export default function LocationManagementClient() {
   const [allOrganizers, setAllOrganizers] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [cityToProvinceId, setCityToProvinceId] = useState<Record<string, number>>({});
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -180,6 +185,36 @@ export default function LocationManagementClient() {
     }
   };
 
+  const flattenedEventRows = useMemo(() => {
+    const rows: FlatEventRow[] = [];
+
+    filteredLocations.forEach((location) => {
+      location.venues.forEach((venue) => {
+        venue.events.forEach((eventName, index) => {
+          rows.push({
+            locationId: location.id,
+            organizerEmail: location.email,
+            venueName: venue.name,
+            taxLocation: venue.taxLocations[index] || "",
+            eventName,
+            organizerName: venue.organizers[index] || "",
+          });
+        });
+      });
+    });
+
+    return rows;
+  }, [filteredLocations]);
+
+  const paginatedEventRows = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return flattenedEventRows.slice(start, start + itemsPerPage);
+  }, [flattenedEventRows, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedOrganizer, selectedCity]);
+
   return (
     <>
       <h1 className="text-2xl font-bold text-[#0C4762]">{transWithFallback('locationManagement', 'Quản lý địa điểm')}</h1>
@@ -242,8 +277,21 @@ export default function LocationManagementClient() {
           <Loader className="w-6 h-6 animate-spin text-gray-500" />
         </div>
       ) : (
-        <LocationTable locations={filteredLocations} />
+        <LocationTable rows={paginatedEventRows} />
       )}
+
+      <EventPagination
+        currentPage={currentPage}
+        totalItems={flattenedEventRows.length}
+        eventsPerPage={itemsPerPage}
+        onPageChange={(page) => {
+          if (page >= 1 && page <= Math.ceil(flattenedEventRows.length / itemsPerPage)) {
+            setCurrentPage(page);
+          }
+        }}
+        setEventsPerPage={() => { }} // optional
+      />
+
     </>
   )
 }
