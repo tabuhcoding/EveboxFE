@@ -1,16 +1,14 @@
 'use client';
 
 /* Package System */
-import { useTranslations } from "next-intl";
 import React, { useState, useEffect, useRef } from "react";
 
 /* Package Application */
 // import AlertDialog from "components/common/alertDialog";
-import { SeatMapProps, Section } from "types/models/event/booking/seatmap.interface";
+import { SeatMapProps } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange, ticketType, selectedTickets = {} }: SeatMapProps) {
-  const t = useTranslations("common");
+export default function SeatMapSectionComponent({ seatMap }: SeatMapProps) {
 
   const [zoom, setZoom] = useState<number>(1);
   const [isDragging, setIsDragging] = useState(false);
@@ -22,12 +20,6 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
   const normalSections = seatMap.Section?.filter(s => !s.isStage);
 
   const seatmapRef = useRef<HTMLDivElement>(null);
-
-  const transWithFallback = (key: string, fallback: string) => {
-    const msg = t(key);
-    if (!msg || msg.startsWith('common.')) return fallback;
-    return msg;
-  };
 
   useEffect(() => {
     const container = seatmapRef.current;
