@@ -941,5 +941,17 @@
     "selectSeat": "Select seat/section",
     "clickToSelect": "Click to select",
     "tip": "Tip",
-    "zoomTip": "Zoom in to see seat number and position clearly"
+    "zoomTip": "Zoom in to see seat number and position clearly",
+    "retry": "Retry",
+    "selectSeatMap": "Select seat map",
+    "seatMapType": "Seat map type",
+    "regularTicketSale": "Regular ticket sale event",
+    "loadingSeatMap": "Loading seat map...",
+    "noTicketTypes": "No ticket types",
+    "errorConnectShowingToSeatmap": "Error when connect showing to seatmap",
+    "connectSeatmap": "Connect showing to seatmap successfully",
+    "notFoundSection": "Not found section",
+    "section": "Section",
+    "confirmMapping": "Confirm mapping",
+    "mapping": "Mapping..."
 }
