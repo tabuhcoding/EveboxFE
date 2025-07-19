@@ -268,6 +268,25 @@ export default function LocationManagementClient() {
           <span>{transWithFallback('resetFilter', 'Đặt lại')}</span>
           <RotateCcw className="ml-2 w-4 h-4 text-red-500" />
         </button>
+
+        {/* Search and Export */}
+        <div className="ml-auto">
+          <form onSubmit={handleSearch} className="flex">
+            <input
+              type="text"
+              placeholder={transWithFallback('findByLocation', "Tìm kiếm theo tên địa điểm")}
+              className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg w-full sm:w-80 focus:outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-teal-400 text-white rounded-r-lg hover:bg-teal-500 transition-colors"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+          </form>
+        </div>
       </div>
 
       {!loading && (
