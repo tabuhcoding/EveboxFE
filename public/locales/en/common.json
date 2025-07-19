@@ -913,5 +913,6 @@
     "searchByEmail": "Search by customer email",
     "searchByOrderId": "Search by order id",
     "editMember": "Edit member",
-    "deleteMember": "Xóa thành viên"
+    "deleteMember": "Delete member",
+    "noDataSearch": "No matching search results"
 }

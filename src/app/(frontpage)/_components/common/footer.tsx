@@ -81,15 +81,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
-      <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-8">
-        <a href="#" className="no-underline	text-white over:text-teal-200"> {transWithFallback("homepageTitle", "Trang chủ")}</a>
-        <a href="#" className="no-underline	text-white hover:text-teal-200">{transWithFallback("introTitle", "Giới thiệu")}</a>
-        <a href="#" className="no-underline	text-white hover:text-teal-200">{transWithFallback("serviceTitle", "Dịch vụ")}</a>
-        <a href="#" className="no-underline	text-white hover:text-teal-200">{transWithFallback("contactTitle", "Liên hệ")}</a>
-        <a href="#" className="no-underline	text-white hover:text-teal-200">{transWithFallback("qaTitle", "Hỏi đáp")}</a>
-      </div>
-
       {/* Divider and Bottom Section */}
       <div className="border-t-2 border-slate-400">
         <div className="max-w-6xl mx-auto px-4 pt-8">
