@@ -669,7 +669,7 @@
   "foryou": "Sự kiện",
   "recommendForyou": "Dành cho bạn",
   "updateNeedReview": "Thay đổi của bạn có thể cần duyệt lại, vì: ",
-  "updateWillWaitApproval": "Nếu tiếp tục, sự kiện của bạn sẽ được cập nhật và cần đợi đến đợt duyệt tiếp theo.",
+  "updateWillWaitApproval" : "Nếu tiếp tục, sự kiện của bạn sẽ được cập nhật và cần đợi đến đợt duyệt tiếp theo.",
   "confirmUpdate": "Xác nhận cập nhật",
   "myEvent": "Sự kiện của tôi",
   "organizerLegalDoc": "Điều khoản cho Ban tổ chức",
@@ -833,11 +833,6 @@
   "toSignUpAccount": "Người dùng truy cập trang “Đăng ký”, điền các thông tin bắt buộc như họ tên, email, số điện thoại và mật khẩu.",
   "systemSendsVerificationEmail": "Hệ thống sẽ gửi email xác thực để hoàn tất.",
   "editMember": "Sửa thành viên",
-  "signIn": "Đăng nhập",
-  "signInMethods": "Người dùng có thể đăng nhập bằng tài khoản email đã đăng ký hoặc sử dụng phương thức đăng nhập nhanh qua Google.",
-  "updateProfileTitle": "Cập nhật thông tin và mật khẩu",
-  "accessAccountManagementInstruction": "Sau khi đăng nhập, truy cập vào mục “Quản lý tài khoản” bằng cách mở thanh bên và bấm vào nút “Quản lý tài khoản” hoặc bấm vào tên đăng nhập ở góc trên bên phải.",
-  "defaultProfileTabInstruction": "Mặc định là sẽ ở tab “Thông tin cá nhân”, có thể xem và chỉnh sửa họ tên, số điện thoại cùng ảnh đại diện.",
   "updateAvatarInstruction": "Khi cập nhật ảnh đại diện, có thể lựa chọn “Tải ảnh lên” để tải ảnh lên từ máy tính hoặc “Chọn từ ảnh đã tải lên” để chọn ảnh đã được tải lên trước đó.",
   "changePasswordInstruction": "Ở thanh bên, bấm nút “Đổi mật khẩu mới” để cập nhật mật khẩu mới sau khi xác thực mật khẩu cũ.",
   "searchAndFilterEventsTitle": "Tìm kiếm và Lọc sự kiện",
@@ -944,5 +939,10 @@
   "selectSeat": "Chọn ghế/khu vực",
   "clickToSelect": "Nhấp chuột để chọn",
   "tip": "Mẹo",
-  "zoomTip": "Phóng to để xem rõ hơn số ghế và vị trí"
+  "zoomTip": "Phóng to để xem rõ hơn số ghế và vị trí",
+    "signIn": "Đăng nhập",
+    "signInMethods": "Người dùng có thể đăng nhập bằng tài khoản email đã đăng ký hoặc sử dụng phương thức đăng nhập nhanh qua Google.",
+    "updateProfileTitle": "Cập nhật thông tin và mật khẩu",
+    "accessAccountManagementInstruction": "Sau khi đăng nhập, truy cập vào mục “Quản lý tài khoản” bằng cách mở thanh bên và bấm vào nút “Quản lý tài khoản” hoặc bấm vào tên đăng nhập ở góc trên bên phải.",
+    "defaultProfileTabInstruction": "Mặc định là sẽ ở tab “Thông tin cá nhân”, có thể xem và chỉnh sửa họ tên, số điện thoại cùng ảnh đại diện."
 }

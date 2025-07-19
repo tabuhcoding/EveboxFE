@@ -2,7 +2,7 @@
 
 /* Package System */
 import Link from 'next/link';
-import { User, Ticket, Calendar, BarChart, Edit, Users, ArrowLeft, Menu } from 'lucide-react';
+import { User, Ticket, Calendar, BarChart, Edit, Users, ArrowLeft, Menu, Armchair } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
@@ -85,6 +85,11 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
         href: `/organizer/events/${eventId}/check-in`,
         icon: <User size={18} />,
       },
+      rolePermission?.checkin && {
+        text: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
+        href: `/organizer/events/${eventId}/seatmap`,
+        icon: <Armchair size={18} />
+      }
     ].filter(Boolean) as MenuItem[],
   },
   {

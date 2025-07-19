@@ -43,6 +43,7 @@ import {
 } from "@/types/models/admin/revenueManagement.interface";
 
 import { CreatedLocationData } from "@/app/(protected)/organizer/create-event/[id]/libs/interface/infoevent.interface";
+import { Showing, ConnectShowingToSeatMapPayload } from "@/types/models/org/editSeatmap.interface";
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
@@ -762,11 +763,60 @@ export async function getCreatedLocationsOfOrg(accessToken: string): Promise<Bas
     if (!res || res.status !== 200) {
       throw new Error("Failed to fetch event revenue detail");
     }
-
-    console.log("🚀 ~ getRevenueByOrgId ~ res.data:", res.data)
+    
     return res.data as BaseApiResponse<CreatedLocationData[]>;
   } catch (error: any) {
     console.error("Error get revenue by org id:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getShowingsOfEvent(eventId: number, accessToken: string): Promise<BaseApiResponse<Showing[]>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ORG_SHOWING.SHOWING}/${eventId}`, {
+      headers: headers,
+    })
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+    
+    return res.data as BaseApiResponse<Showing[]>;
+  } catch (error: any) {
+    console.error("Error showings of event:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function connectShowingToSeatmap(payload: ConnectShowingToSeatMapPayload, accessToken: string): Promise<BaseApiResponse<any>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.post(END_POINT_LIST.SHOWING.SEATMAP_CONNECT, payload, {
+      headers: headers
+    });
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+    
+    return res.data;
+  } catch (error: any) {
+    console.error("Error connect showing to seatmap:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
