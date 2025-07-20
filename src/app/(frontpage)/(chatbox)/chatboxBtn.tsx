@@ -24,7 +24,7 @@ export default function ChatboxButton() {
         onClick={handleOpenChatbox}
       >
         <Image src={logoPath} alt='logo chatbox' height={56} width={71.3} />
-        <span className="chat-box-name">Eve Chatbox</span>
+        <span className="chat-box-name">Eve Chatbot</span>
       </button>
       <div className={`chat-box-wrapper ${isOpen ? 'open' : ''}`}>
         {isOpen && (
