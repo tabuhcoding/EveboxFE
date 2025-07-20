@@ -45,7 +45,7 @@ export default function AIAnalystPage() {
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <input
             type="text"
-            placeholder="Nhập câu hỏi"
+            placeholder={transWithFallback("inputQues", "Nhập câu hỏi")}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
