@@ -170,18 +170,6 @@ export default function ChatBoxWrapper({ handleOpen }: ChatBoxWrapperProps) {
     return !msg || msg.startsWith('common.') ? fallback : msg;
   };
 
-  // const getRouteDisplayText = (route: string) => {
-  //   const routeTextMap: Record<string, string> = {
-  //     'HOME_PAGE': transWithFallback('goToHomePage', 'Go to homepage'),
-  //     'PROFILE_PAGE': transWithFallback('goToProfilePage', 'Đi tới trang cá nhân'),
-  //     'SEARCH_PAGE': transWithFallback('goToSearchPage', 'Đi tới trang tìm kiếm'),
-  //     'MY_TICKETS_PAGE': transWithFallback('goToMyTicketPage', 'Đi tới trang vé của tôi'),
-  //     'CREATE_EVENT_PAGE': transWithFallback('goToCreateEventPage', 'Đi tới trang tạo sự kiện')
-  //   };
-
-  //   return routeTextMap[route] || `${transWithFallback('goToPage', 'Đi tới trang')} ${route}`;
-  // }
-
   const renderMessageWithLinks = (text: string) => {
     const routeRegex = /<([A-Z_]+)>/g;
 
@@ -203,7 +191,7 @@ export default function ChatBoxWrapper({ handleOpen }: ChatBoxWrapperProps) {
 
   return (
     <>
-      <div className="chat-box flex w-[397px] h-[70vh] max-h-[72vh] fixed bottom-16 right-10 bg-white flex-col rounded-2xl shadow-md z-[999]">
+      <div className="chat-box flex w-[29%] h-[70vh] max-h-[72vh] fixed bottom-16 right-10 bg-white flex-col rounded-2xl shadow-md z-[999]">
         <div className="chat-box__header flex p-2 rounded-tl-2xl rounded-tr-2xl bg-[#0C4762] border-b border-[#ddd]">
           <div className="chat-box__header-img mt-4 mr-1 mb-3 ml-3">
             <Image className="rounded-[50%] mr-3" src={chatBoxLogo} width={36} height={28.39} alt="chat-box-logo" />
