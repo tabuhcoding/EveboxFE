@@ -128,6 +128,10 @@ export default function SpecialEventTable({ searchKeyword, categoryFilter }: Eve
         <SpecialEventTableLoading />
       ) : (
         <>
+          <div className="text-sm text-gray-700 mt-4">
+            {transWithFallback('totalEvents', 'Tổng số sự kiện')}: <strong>{totalItems}</strong>
+          </div>
+
           <div className="table-event-special-management overflow-x-auto rounded-xl shadow-md mt-6">
             <table className="min-w-full border border-gray-200">
               <thead>

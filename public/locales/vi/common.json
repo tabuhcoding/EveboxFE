@@ -912,5 +912,7 @@
   "errorWhenAnalyze": "Có lỗi xảy ra khi phân tích",
   "analyzing": "Đang phân tích...",
   "noResult": "Không có kết quả.",
-  "AIRevenueAnalyst": "Phân tích doanh thu với AI"
+  "AIRevenueAnalyst": "Phân tích doanh thu với AI",
+  "totalAccounts": "Tổng số tài khoản",
+  "totalShowings": "Tổng số suất diễn"
 }

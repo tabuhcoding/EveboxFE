@@ -13,6 +13,7 @@ export interface EventTableProps {
   dateTo: string;
   adminFilter: string;
   onLoadFinish?: () => void;
+  onTotalChange?: (total: number) => void;
 }
 
 //Pagination
