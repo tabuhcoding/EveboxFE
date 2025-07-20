@@ -921,5 +921,7 @@
     "editMember": "Edit member",
     "deleteMember": "Delete member",
     "noDataSearch": "No matching search results",
-    "totalEvents": "Total events"
+    "totalEvents": "Total events",
+    "totalAccounts": "Total accounts",
+    "totalShowings": "Total showings"
 }

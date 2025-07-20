@@ -47,7 +47,7 @@ export default function FilterBar({
     <div className="filter-event-management flex items-center gap-2 bg-white border rounded-lg px-2 py-4 shadow-sm text-sm">
       {/* Filter - Loại sự kiện */}
       <div className="filter-type-btn flex items-center gap-1 pr-2">
-        <span className="text-black font-semibold mr-1">Loại sự kiện</span>
+        <span className="text-black font-semibold mr-1">{transWithFallback("categoryTitle", "Loại sự kiện")}</span>
 
         <select value={categoryFilter} className="border px-2 py-1 rounded-md"
           onChange={(e) => {

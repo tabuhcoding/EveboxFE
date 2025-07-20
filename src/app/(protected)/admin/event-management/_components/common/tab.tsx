@@ -32,7 +32,7 @@ export default function Tabs({ activeTab, setActiveTab, loading }: TabsProps) {
   };
 
   return (
-    <div className="tabs-event-management flex justify-end space-x-4 mt-6 text-sm">
+    <div className="tabs-event-management flex justify-end space-x-4 text-sm">
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
         const isLoading = loadingTabId === tab.id;

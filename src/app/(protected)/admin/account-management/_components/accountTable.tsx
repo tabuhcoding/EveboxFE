@@ -157,7 +157,11 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
       <AccountSkeletonLoading />
     ) : (
       <>
-        <div className="table-account-management overflow-x-auto rounded-xl shadow-md mt-6">
+        <div className="text-sm text-gray-700 mt-4">
+          {transWithFallback('totalAccounts', 'Tổng số tài khoản')}: <strong>{totalItems}</strong>
+        </div>
+
+        <div className="table-account-management overflow-x-auto rounded-xl shadow-md mt-4">
           <table className="min-w-full border border-gray-200">
             <thead>
               <tr className="bg-[#0C4762] text-white text-sm text-left rounded-t-lg">

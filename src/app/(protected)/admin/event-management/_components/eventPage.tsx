@@ -23,7 +23,7 @@ export default function EventPage() {
   const [dateTo, setDateTo] = useState('');
 
   const [adminFilter, setAdminFilter] = useState("");
-
+  const [totalEvents, setTotalEvents] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
@@ -69,14 +69,20 @@ export default function EventPage() {
         />
       </div>
 
-      <Tabs
-        activeTab={activeTab}
-        setActiveTab={(tabId: string) => {
-          setLoading(true); // start spinner
-          setActiveTab(tabId);
-        }}
-        loading={loading}
-      />
+      <div className="flex justify-between items-center mt-6">
+        <div className="text-sm text-gray-700 whitespace-nowrap">
+          {transWithFallback('totalEvents', 'Tổng số sự kiện')}: <strong>{totalEvents}</strong>
+        </div>
+
+        <Tabs
+          activeTab={activeTab}
+          setActiveTab={(tabId: string) => {
+            setLoading(true);
+            setActiveTab(tabId);
+          }}
+          loading={loading}
+        />
+      </div>
 
       <EventTable
         activeTab={activeTab}
@@ -85,6 +91,7 @@ export default function EventPage() {
         categoryFilter={categoryFilter}
         dateFrom={dateFrom} dateTo={dateTo}
         onLoadFinish={() => setLoading(false)}
+        onTotalChange={(total) => setTotalEvents(total)}
       />
     </>
   )
