@@ -31,8 +31,8 @@ export default function FilterBar({
     <div className="filter-account-management flex items-center gap-4 bg-white border rounded-lg px-4 py-4 shadow-sm text-sm">
       {/* Filter - Vai trò */}
       <div className="filter-role flex items-center gap-1 pr-2">
-        <span className="text-black font-semibold mr-1">{transWithFallback("role", "Vai trò")}</span>
-
+        <span className="text-black font-semibold mr-1">{transWithFallback('role', 'Vai trò')}</span>
+        
         <select value={roleFilter} className="border px-2 py-1 rounded-md"
           onChange={(e) => onRoleChange(e.target.value)}
         >
