@@ -42,6 +42,7 @@ const itemsPerPage = 10;
     setTotalItems(data.pagination?data.pagination.totalItems: 10);
     setOrdersData(Array.isArray(data.data) ? data.data : []);
   } catch (error) {
+    setLoading(false);
     console.error("Failed to fetch orders:", error);
   } finally {
     setLoading(false);
