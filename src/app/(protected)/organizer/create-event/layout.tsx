@@ -14,6 +14,9 @@ export default async function CreateEventLayout({
 
    try {
       user = await getCurrentUser();
+      if (!user){
+        redirect('/login');
+      }
     } catch (err) {
       console.error('Failed to fetch user info:', err);
       redirect('/login'); // if not logged in or failed
