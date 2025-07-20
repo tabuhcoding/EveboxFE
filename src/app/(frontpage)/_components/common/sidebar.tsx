@@ -4,7 +4,7 @@
 import { User, Ticket, Calendar, LogOut, Lock, Menu, ShieldUser, BookOpenText } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from "next-intl";
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '@mui/material';
 
@@ -55,6 +55,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
       setLoadingIndex(null);
+      return;
     } else {
       if (href === '/organizer/create-event') {
         try {
@@ -72,7 +73,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         } catch (err) {
           console.error("Failed to check organizer payment info:", err);
           setLoadingIndex(null);
-          // Optionally show an error dialog
           return;
         }
       }
@@ -118,6 +118,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
     return items;
   }, [user, t, logout, router]);
+
+  useEffect(() => {
+    setLoadingIndex(null);
+  }, []);
 
   return (
     <>
@@ -256,9 +260,13 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
       {showOrgRegisterPopup && (
         <OrganizerRegistrationPopup
-          onClose={() => setShowOrgRegisterPopup(false)}
+          onClose={() => {
+            setShowOrgRegisterPopup(false)
+            setLoadingRegister(false);
+          }}
           onSuccess={() => {
             setShowOrgRegisterPopup(false);
+            setLoadingRegister(false);
             localStorage.setItem("isRegisterPayment", "true");
             if (pendingNavigation) window.location.href = pendingNavigation;
           }}
