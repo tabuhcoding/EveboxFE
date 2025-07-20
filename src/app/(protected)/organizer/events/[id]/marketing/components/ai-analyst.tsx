@@ -27,6 +27,7 @@ export function AIAnalyst({ eventId }: AIAnalystProps) {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/org/statistics/analytic-ai/${eventId}`, { query });
       setResult(res.data.data || transWithFallback('noResult', 'Không có kết quả.'));
     } catch (error) {
+      setLoading(false);
       console.error("Fetch AI error:", error);
       setResult(`❌ ${transWithFallback('errorWhenAnalyze', 'Có lỗi xảy ra khi gửi yêu cầu.')}`)
     } finally {
