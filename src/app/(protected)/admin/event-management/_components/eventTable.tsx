@@ -209,7 +209,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
                 </th>
                 <th className="px-4 py-3 min-w-[85px]">{transWithFallback('poster', 'Poster')}</th>
                 <th className="px-4 py-3 cursor-pointer min-w-[160px]" onClick={() => handleSort('title')}>
-                  {transWithFallback('eventName', 'Tên sự kiện')} <SortIcon field="name" sortConfig={sortConfig} />
+                  {transWithFallback('eventName', 'Tên sự kiện')} <SortIcon field="title" sortConfig={sortConfig} />
                 </th>
                 <th className="px-4 py-3 cursor-pointer min-w-[100px]">
                   {transWithFallback('eventCategory', 'Thể loại')}
