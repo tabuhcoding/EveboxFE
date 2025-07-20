@@ -12,11 +12,12 @@ export default function FilterBar({
   roleFilter, onRoleChange,
   dateFrom, dateTo,
   onDateFromChange, onDateToChange,
+  statusFilter, onStatusChange,
   onReset
 }: FilterProps) {
   const t = useTranslations('common');
 
-  const roles = Object.values(UserRole).map(role => role);
+  const roles = Object.values(UserRole).filter(role => role !== 'SYSTEM_ADMIN');
 
   const [showDateFilter, setShowDateFilter] = useState(false);
 
@@ -41,6 +42,19 @@ export default function FilterBar({
               {role}
             </option>
           ))}
+        </select>
+      </div>
+
+      {/* Filter - Trạng thái */}
+      <div className="filter-status flex items-center gap-1 pr-2 border-l pl-4">
+        <span className="text-black font-semibold mr-1">{transWithFallback("status", "Trạng thái")}</span>
+
+        <select value={statusFilter} className="border px-2 py-1 rounded-md"
+          onChange={(e) => onStatusChange(e.target.value)}
+        >
+          <option value="">{transWithFallback('all', 'Tất cả')}</option>
+          <option value="ACTIVE">{transWithFallback('active', 'Đang hoạt động')}</option>
+          <option value="BLOCKED">{transWithFallback('blocked', 'Bị khóa')}</option>
         </select>
       </div>
 

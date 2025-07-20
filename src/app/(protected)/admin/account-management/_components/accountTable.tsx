@@ -18,7 +18,7 @@ import AccountSkeletonLoading from "../loading";
 import EventPagination from "../../event-management/_components/common/pagination";
 import ConfirmStatusDialog from "./confirmStatusDialog";
 
-export default function AccountTable({ searchKeyword, roleFilter, dateFrom, dateTo }: AccountTableProps) {
+export default function AccountTable({ searchKeyword, roleFilter, dateFrom, dateTo, statusFilter }: AccountTableProps) {
   const router = useRouter();
   const t = useTranslations('common');
   const { session } = useAuth();
@@ -72,7 +72,8 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
         createdFrom: dateFrom || undefined,
         createdTo: adjustedDateTo?.toISOString() || undefined,
         role_id: getRoleIdByName(roleFilter) || undefined,
-        search: searchKeyword
+        search: searchKeyword,
+        status: statusFilter || undefined 
       }, session?.user?.accessToken || "");
 
       if (res?.statusCode === HttpStatusCode.Ok) {
@@ -92,7 +93,7 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
     } finally {
       setIsLoadingUsers(false);
     }
-  }, [searchKeyword, roleFilter, currentPage, dateFrom, dateTo, usersPerPage]);
+  }, [searchKeyword, roleFilter, statusFilter, currentPage, dateFrom, dateTo, usersPerPage]);
 
   useEffect(() => {
     fetchUsers();

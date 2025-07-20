@@ -103,6 +103,7 @@ export interface AccountTableProps {
   roleFilter: string;
   dateFrom: string;
   dateTo: string;
+  statusFilter: string;
 }
 
 //Filter
@@ -113,6 +114,8 @@ export interface FilterProps {
   dateTo: string;
   onDateFromChange: (value: string) => void;
   onDateToChange: (value: string) => void;
+  statusFilter: string;
+  onStatusChange: (status: string) => void;
   onReset: () => void;
 }
 
