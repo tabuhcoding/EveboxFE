@@ -923,5 +923,7 @@
     "noDataSearch": "No matching search results",
     "totalEvents": "Total events",
     "totalAccounts": "Total accounts",
-    "totalShowings": "Total showings"
+    "totalShowings": "Total showings",
+    "updateAreaSuccess": "Update account status successfully!",
+    "errorWhenUpdateAccountArea": "Error when update account area"
 }

@@ -138,6 +138,30 @@ export async function updateUserStatus(email: string, newStatus: string, accessT
   }
 }
 
+export async function updateUserArea(email: string, newArea: string, accessToken: string): Promise<BaseApiResponse<boolean>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    const res = await authService.put(`${END_POINT_LIST.ADMIN.USERS}/${email}/area`, {
+      area: newArea
+    }, {
+      headers: headers
+    });
+
+    if (!res) throw new Error('Failed to update user status by admin')
+
+    return res.data as BaseApiResponse<boolean>;
+  } catch (error: any) {
+    console.error("Error update user status by admin:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
 export async function updateUserRole(userId: string, newRole: number, accessToken: string): Promise<BaseApiResponse<boolean>> {
   try {
     const headers: { [key: string]: string } = {

@@ -5,6 +5,15 @@ export enum UserStatus {
   BLOCKED = 'BLOCKED',
 }
 
+export enum AreaCode {
+  HANOI = "HANOI",
+  HCM_TRUNGTAM = "HCM_TRUNGTAM",
+  HCM_BAC = "HCM_BAC",
+  HCM_CONLAI = "HCM_CONLAI",
+  MIENBAC = "MIENBAC",
+  MIENNAM = "MIENNAM"
+}
+
 export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   ADMIN = 'ADMIN',
@@ -28,6 +37,7 @@ export interface User {
   created_at: string;
   status: UserStatus;
   avatar_id?: number;
+  area: string;
 };
 
 export interface Role {

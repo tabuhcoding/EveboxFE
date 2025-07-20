@@ -13,9 +13,9 @@ import FormInput from "./formInput";
 import AlertDialog from "@/components/common/alertDialog";
 import Loading from "../loading";
 
-import { User, UserRole, UserStatus } from "@/types/models/admin/accountManagement.interface";
+import { User, UserRole, UserStatus, AreaCode } from "@/types/models/admin/accountManagement.interface";
 import useAvatar from "@/app/(protected)/(user)/my-profile/_components/libs/hooks/useAvatar";
-import { getUserById, updateUserRole, updateUserStatus } from "@/services/auth.service";
+import { getUserById, updateUserRole, updateUserStatus, updateUserArea } from "@/services/auth.service";
 import { mapRoleNumberToString, mapRoleStringToNumber } from "@/utils/helpers";
 import { useAuth } from "@/contexts/auth.context";
 
@@ -26,6 +26,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
 
   const roles = Object.values(UserRole);
   const status = Object.values(UserStatus);
+  const areas = Object.values(AreaCode);
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -34,6 +35,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
   const [alertMessage, setAlertMessage] = useState('');
   const [editedRole, setEditedRole] = useState<UserRole | null>(null)
   const [editedStatus, setEditedStatus] = useState<UserStatus | null>(null);
+  const [editedArea, setEditedArea] = useState<AreaCode | null>(null);
   const [isDirty, setIsDirty] = useState(false)
   const [avatarId, setAvatarId] = useState<number | undefined>(undefined);
   const { imageUrl } = useAvatar({ avatar_id: avatarId });
@@ -49,11 +51,10 @@ export default function AccountDetailPage({ id }: { id: string }) {
         setLoading(true);
         const res = await getUserById(id);
         if (res?.statusCode === 200) {
-          console.log("🚀 ~ fetchUserData ~ res.data.role:", res.data.role)
-          console.log("🚀 ~ fetchUserData ~ res.data.status:", res.data.status)
           setUser(res.data);
           setEditedRole(mapRoleNumberToString(res.data.role));
           setEditedStatus(res.data.status)
+          setEditedArea(res.data.area as AreaCode);
           setAvatarId(res.data.avatar_id);
         } else {
           setAlertMessage(res.message.toString());
@@ -135,6 +136,17 @@ export default function AccountDetailPage({ id }: { id: string }) {
         }
       }
 
+      if (editedArea !== user.area) {
+        hasChange = true;
+        const res = await updateUserArea(user.email, editedArea as string, session?.user?.accessToken || "");
+        if (res?.statusCode === 200) {
+          toast.success(transWithFallback('updateAreaSuccess', 'Cập nhật khu vực quản lý của tài khoản thành công!'));
+        } else {
+          toast.error(transWithFallback('errorWhenUpdateAccountArea', 'Lỗi khi cập nhật khu vực quản lý của tài khoản'));
+          // return;
+        }
+      }
+
       // 3. Reload lại data nếu có đổi, và reset isDirty
       if (hasChange) {
         setIsDirty(false);
@@ -144,6 +156,7 @@ export default function AccountDetailPage({ id }: { id: string }) {
           setUser(res.data);
           setEditedRole(mapRoleNumberToString(res.data.role));
           setEditedStatus(res.data.status);
+          setEditedArea(res.data.area as AreaCode);
           setAvatarId(res.data.avatar_id);
         }
       } else {
@@ -209,6 +222,21 @@ export default function AccountDetailPage({ id }: { id: string }) {
                   <select id="status-select" className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
                     value={editedStatus || ''} onChange={(e) => setEditedStatus(e.target.value as UserStatus)} >
                     {status.map(s => (
+                      <option key={s}>{s}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 mt-1">
+                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="area-select" className="block text-sm font-medium text-gray-700">{transWithFallback('area', 'Khu vực')}</label>
+                <div className="relative">
+                  <select id="area-select" className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
+                    value={editedArea || ''} onChange={(e) => setEditedArea(e.target.value as AreaCode)} >
+                    {areas.map(s => (
                       <option key={s}>{s}</option>
                     ))}
                   </select>
