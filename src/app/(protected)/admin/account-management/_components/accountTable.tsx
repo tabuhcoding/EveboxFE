@@ -60,12 +60,17 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
   const fetchUsers = useCallback(async () => {
     setIsLoadingUsers(true);
 
+    const adjustedDateTo = dateTo ? new Date(dateTo) : undefined;
+    if (adjustedDateTo) {
+      adjustedDateTo.setHours(23, 59, 59, 999);
+    }
+
     try {
       const res = await getUsersByAdmin({
         page: currentPage,
         limit: usersPerPage,
         createdFrom: dateFrom || undefined,
-        createdTo: dateTo || undefined,
+        createdTo: adjustedDateTo?.toISOString() || undefined,
         role_id: getRoleIdByName(roleFilter) || undefined,
         search: searchKeyword
       }, session?.user?.accessToken || "");
@@ -121,16 +126,16 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
 
       if (res?.statusCode === 200) {
         toast.success(transWithFallback('updateStatusSuccess', 'Cập nhật trạng thái tài khoản thành công'))
-        setIsDialogOpen(false); 
+        setIsDialogOpen(false);
         fetchUsers();
       }
       else {
         toast.error(`${transWithFallback('errorWhenUpdateAccountStatus', 'Lỗi khi cập nhật trạng thái tài khoản')}: ${res.message}`)
-        setIsDialogOpen(false); 
+        setIsDialogOpen(false);
       }
     } catch (error) {
       toast.error(`${transWithFallback('errorWhenUpdateAccountStatus', 'Lỗi khi cập nhật trạng thái tài khoản')}: ${error}`);
-      setIsDialogOpen(false); 
+      setIsDialogOpen(false);
     } finally {
       setIsLoadingAction(false);
     }
@@ -170,7 +175,7 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
                   {transWithFallback('createdDate', 'Ngày tạo')} <SortIcon field="created_at" sortConfig={sortConfig} />
                 </th>
                 <th className="px-4 py-3 cursor-pointer text-center" >
-                  {transWithFallback('status', 'Trạng thái')} 
+                  {transWithFallback('status', 'Trạng thái')}
                 </th>
               </tr>
             </thead>
