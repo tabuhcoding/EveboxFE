@@ -910,6 +910,7 @@
   "analyzing": "Đang phân tích...",
   "noResult": "Không có kết quả.",
   "AIRevenueAnalyst": "Phân tích doanh thu với AI",
+<<<<<<< HEAD
   "deleteMember": "Xóa thành viên",
   "noDataSearch": "Không có kết quả tìm kiếm phù hợp",
   "totalEvents": "Tổng số sự kiện",
@@ -917,4 +918,8 @@
   "totalShowings": "Tổng số suất diễn",
   "active": "Đang hoạt động",
   "blocked": "Bị khóa"
+=======
+  "totalAccounts": "Tổng số tài khoản",
+  "totalShowings": "Tổng số suất diễn"
+>>>>>>> 5b64378 (add total)
 }

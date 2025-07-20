@@ -923,7 +923,11 @@
     "noResult": "No result",
     "AIRevenueAnalyst": "Revenue Analyst With AI",
     "totalAccounts": "Total accounts",
+<<<<<<< HEAD
     "totalShowings": "Total showings",
     "active": "Active",
     "blocked": "Blocked"
+=======
+    "totalShowings": "Total showings"
+>>>>>>> 5b64378 (add total)
 }
