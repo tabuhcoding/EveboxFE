@@ -66,7 +66,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
       };
 
       const res = await getEventsAdmin({
-        page: currentPage,
+        page: searchKeyword && searchKeyword !== "" ? 1 : currentPage,
         limit: eventsPerPage,
         createdFrom: dateFrom || undefined,
         createdTo: dateTo || undefined,
@@ -74,7 +74,7 @@ export default function EventTable({ activeTab, searchKeyword, categoryFilter, d
         categoryId: categoryFilter ? mapCategoryNameToId(categoryFilter) : undefined,
         isDeleted: activeTab === "deleted" ? true : undefined,
         title: searchKeyword ?? "",
-        admin: adminFilter ? adminFilter : session?.user?.email
+        admin: adminFilter ? adminFilter : undefined
       }, session?.user?.accessToken || "");
 
       if (res.statusCode === 200) {

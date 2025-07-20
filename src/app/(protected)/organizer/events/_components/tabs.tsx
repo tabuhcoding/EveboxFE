@@ -20,8 +20,6 @@ export default function Tabs({ events }: TabsProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingTab, setLoadingTab] = useState<string | null>(null);
 
-  const now = new Date();
-
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
     if (!msg || msg.startsWith("common.")) return fallback;
@@ -45,14 +43,13 @@ export default function Tabs({ events }: TabsProps) {
 
   // Tab filtering logic
   const tabFilteredEvents = events.filter((event) => {
-    const start = new Date(event.startDate);
     switch (activeTab) {
       case "cho-duyet":
         return event.isApproved === false;
       case "da-qua":
-        return event.isApproved === true && start < now;
+        return event.isApproved === true && !event.isHasShowingInFuture;
       case "sap-toi":
-        return event.isApproved === true && start >= now;
+        return event.isApproved === true && event.isHasShowingInFuture;
       default:
         return false;
     }

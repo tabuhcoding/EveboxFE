@@ -11,6 +11,7 @@ export interface EventOrgFrontDisplayDto {
   venue: string;
   isApproved: boolean;
   role: number;
+  isHasShowingInFuture: boolean;
 }
 
 // Define interfaces to match the DTO structures
