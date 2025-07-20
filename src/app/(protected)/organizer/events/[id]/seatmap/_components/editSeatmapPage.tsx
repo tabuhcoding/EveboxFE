@@ -14,9 +14,10 @@ import {
   TicketType,
   SeatmapType,
 } from "@/types/models/event/booking/seatmap.interface"
+import { SeatmapResponse, Showing } from "@/types/models/org/editSeatmap.interface"
 import SeatMapComponent from "./seatmapComponent"
 import SeatMapSectionComponent from "./seatmapSectionComponent"
-import { getSeatMap, getShowingsOfEvent, connectShowingToSeatmap } from "@/services/event.service"
+import { getShowingsOfEvent, connectShowingToSeatmap, getAllSeatmaps, getSeatmapDetail } from "@/services/event.service"
 
 interface SeatMapPageProps {
   eventId: number
@@ -32,7 +33,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   const [error, setError] = useState<string>("");
 
   // State for seat map data
-  const [seatMaps, setSeatMaps] = useState<SeatMap[]>([]);
+  const [allSeatmaps, setAllSeatmaps] = useState<SeatmapResponse[]>([])
   const [selectedSeatMapId, setSelectedSeatMapId] = useState<number>(0);
   const [seatMapData, setSeatMapData] = useState<SeatMap | null>(null);
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
@@ -43,6 +44,8 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   const [ticketTypeSectionMap, setTicketTypeSectionMap] = useState<{ [ticketTypeId: string]: number[] }>({})
   const [sections, setSections] = useState<any[]>([])
   const [isLoadingMapping, setIsLoadingMapping] = useState<boolean>(false);
+  const [showingData, setShowingData] = useState<Showing | null>(null)
+  const [isLoadingSeatmap, setIsLoadingSeatmap] = useState<boolean>(false);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -52,55 +55,82 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
 
   // Fetch showings and seatmaps on component mount
   useEffect(() => {
-    const fetchShowingsAndSeatMaps = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true)
 
-        const response = await getShowingsOfEvent(eventId, session?.user?.accessToken || "");
+        const response = await getAllSeatmaps();
 
         if (response?.statusCode === 200) {
-          const showings = response.data;
-
-          const seatMapPromises = showings
-            .filter((showing) => showing.seatMapId > 0)
-            .map(async (showing) => {
-              try {
-                const seatMapResponse = await getSeatMap(showing.id)
-                if (seatMapResponse?.data) {
-                  return {
-                    ...seatMapResponse.data,
-                    showingId: showing.id,
-                    ticketTypes: showing.TicketType,
-                  }
-                }
-              } catch (error) {
-                console.error(`Error fetching seatmap for showing ${showing.id}:`, error)
-                return null
-              }
-            });
-          const seatMapsResults = await Promise.all(seatMapPromises)
-          const validSeatMaps = seatMapsResults
-            .filter(Boolean)
-            .map((seatMap: any) => ({
-              ...seatMap,
-              ticketTypes: seatMap.ticketTypes.map((tt: any) => ({
-                ...tt,
-                effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
-                effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
-              })),
-            })) as (SeatMap & {
-              showingId: string
-              ticketTypes: TicketType[]
-            })[]
-
-          setSeatMaps(validSeatMaps)
-
-          if (validSeatMaps.length > 0) {
-            setSelectedSeatMapId(Number(validSeatMaps[0].id))
-          } else {
-            setError(transWithFallback("notFoundSeatmap", "Không tìm thấy sơ đồ chỗ ngồi nào"))
+          setAllSeatmaps(response.data);
+          if (response.data.length > 0) {
+            setSelectedSeatMapId(response.data[0].id)
           }
         }
+
+        const showingsResponse = await getShowingsOfEvent(eventId, session?.user?.accessToken || "")
+        if (showingsResponse?.statusCode === 200 && showingsResponse.data.length > 0) {
+          const firstShowing = showingsResponse.data[0]
+          setShowingData(firstShowing)
+
+          // Set ticket types from the first showing
+          const sortedTicketTypes = [...firstShowing.TicketType].sort((a, b) => a.position - b.position)
+          setTicketTypes(
+            sortedTicketTypes.map((tt: any) => ({
+              ...tt,
+              effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
+              effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
+            })),
+          )
+        }
+
+        if (response.data.length === 0) {
+          setError(transWithFallback("notFoundSeatmap", "Không tìm thấy sơ đồ chỗ ngồi nào"))
+        }
+
+        // if (response?.statusCode === 200) {
+        //   const showings = response.data;
+
+        //   const seatMapPromises = showings
+        //     .filter((showing) => showing.seatMapId > 0)
+        //     .map(async (showing) => {
+        //       try {
+        //         const seatMapResponse = await getSeatMap(showing.id)
+        //         if (seatMapResponse?.data) {
+        //           return {
+        //             ...seatMapResponse.data,
+        //             showingId: showing.id,
+        //             ticketTypes: showing.TicketType,
+        //           }
+        //         }
+        //       } catch (error) {
+        //         console.error(`Error fetching seatmap for showing ${showing.id}:`, error)
+        //         return null
+        //       }
+        //     });
+        //   const seatMapsResults = await Promise.all(seatMapPromises)
+        //   const validSeatMaps = seatMapsResults
+        //     .filter(Boolean)
+        //     .map((seatMap: any) => ({
+        //       ...seatMap,
+        //       ticketTypes: seatMap.ticketTypes.map((tt: any) => ({
+        //         ...tt,
+        //         effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
+        //         effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
+        //       })),
+        //     })) as (SeatMap & {
+        //       showingId: string
+        //       ticketTypes: TicketType[]
+        //     })[]
+
+        //   setSeatMaps(validSeatMaps)
+
+        //   if (validSeatMaps.length > 0) {
+        //     setSelectedSeatMapId(Number(validSeatMaps[0].id))
+        //   } else {
+        //     setError(transWithFallback("notFoundSeatmap", "Không tìm thấy sơ đồ chỗ ngồi nào"))
+        //   }
+        // }
       } catch (error) {
         console.error("Error fetching seatmaps:", error)
         setError(transWithFallback("errorFoundSeatmap", "Lỗi khi tải sơ đồ chỗ ngồi"))
@@ -110,28 +140,32 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
     }
 
     if (eventId) {
-      fetchShowingsAndSeatMaps()
+      fetchData()
     }
-  }, [eventId])
+  }, [eventId]);
 
-  // Handle seatmap selection
   useEffect(() => {
-    const handleSeatMapSelection = () => {
+    const fetchSeatmapDetails = async () => {
       if (!selectedSeatMapId) return
 
-      const selectedSeatMap = seatMaps.find((sm) => sm.id === selectedSeatMapId)
-      if (selectedSeatMap) {
-        setSeatMapData(selectedSeatMap)
-        setSeatmapType(selectedSeatMap.seatMapType || SeatmapType.NOT_A_SEATMAP)
+      try {
+        setIsLoadingSeatmap(true);
+        const response = await getSeatmapDetail(Number(selectedSeatMapId));
 
-        // Set ticket types from the seatmap's associated showing
-        const sortedTicketTypes = [...(selectedSeatMap as any).ticketTypes].sort((a, b) => a.position - b.position)
-        setTicketTypes(sortedTicketTypes)
+        if (response.statusCode === 200) {
+          setSeatMapData(response.data)
+          setSeatmapType(response.data.seatMapType || SeatmapType.NOT_A_SEATMAP)
+        }
+      } catch (error) {
+        console.error("Error fetching seatmap details:", error)
+        setError(transWithFallback("errorFoundSeatmap", "Lỗi khi tải chi tiết sơ đồ chỗ ngồi"))
+      } finally {
+        setIsLoadingSeatmap(false);
       }
     }
 
-    handleSeatMapSelection()
-  }, [selectedSeatMapId, seatMaps])
+    fetchSeatmapDetails()
+  }, [selectedSeatMapId])
 
   useEffect(() => {
     if (seatMapData?.Section) {
@@ -143,6 +177,9 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   const handleSeatMapChange = (seatMapId: string | number) => {
     setSelectedSeatMapId(Number(seatMapId))
     setIsDropdownOpen(false)
+    // Reset mapping when changing seatmap
+    setTicketTypeSectionMap({})
+    setSelectedTicketTypeId("")
   }
 
   const handleTicketTypeSelect = (ticketTypeId: string) => {
@@ -176,7 +213,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
     try {
       setIsLoadingMapping(true);
       const payload = {
-        showingId: (seatMaps.find((sm) => sm.id === selectedSeatMapId) as any)?.showingId || "",
+        showingId: showingData?.id || "",
         seatmapId: selectedSeatMapId,
         ticketTypeSectionMap,
       }
@@ -203,7 +240,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
     return ticketTypeSectionMap[ticketTypeId]?.includes(sectionId) || false
   }
 
-  const selectedSeatMapName = seatMaps.find((seatMap) => seatMap.id === selectedSeatMapId)?.name || ""
+  const selectedSeatMapName = allSeatmaps.find((seatMap) => seatMap.id === selectedSeatMapId)?.name || ""
 
   if (isLoading) {
     return (
@@ -277,8 +314,8 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-w-md">
-                    {seatMaps.map((seatMap) => (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-w-md max-h-60 overflow-y-auto">
+                    {allSeatmaps.map((seatMap) => (
                       <button
                         key={seatMap.id}
                         onClick={() => handleSeatMapChange(seatMap.id)}
@@ -286,7 +323,8 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                       >
                         <div className="font-medium">{seatMap.name}</div>
                         <div className="text-sm text-gray-500">
-                          {transWithFallback("seatMapType", "Loại")}: {seatMap.seatMapType}
+                          {transWithFallback("createdDate", "Tạo lúc")}:{" "}
+                          {new Date(seatMap.createdAt).toLocaleDateString("vi-VN")}
                         </div>
                       </button>
                     ))}

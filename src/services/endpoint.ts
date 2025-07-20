@@ -35,7 +35,9 @@ export class END_POINT_LIST {
     GET_SHOWING: "/api/showing",
     GET_SEAT_MAP: "/api/showing/seatmap",
     GET_FORM: "/api/showing/get-form",
-    SEATMAP_CONNECT: "/api/showing/connect-showing-seatmap"
+    SEATMAP_CONNECT: "/api/showing/connect-showing-seatmap",
+    GET_ALL_SEATMAP: "/api/showing/all-seatmaps",
+    GET_SEATMAP_DETAIL: "api/showing/seatmap-details"
   };
 
   static readonly BOOKING = {
