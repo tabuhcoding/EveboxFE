@@ -14,3 +14,11 @@ export interface ConnectShowingToSeatMapPayload {
   seatmapId: number;
   ticketTypeSectionMap: Record<string, number[]>;
 }
+
+export interface SeatmapResponse {
+  id: number;
+  name: string;
+  createdAt: Date;
+  viewBox: string;
+  status: number;
+}

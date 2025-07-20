@@ -4,7 +4,7 @@ import { IForm } from "@/types/models/event/booking/questionForm.interface";
 import { BaseApiResponse } from "types/baseApiResponse";
 import { Category, Event, FrontDisplayResponse } from "types/models/dashboard/frontDisplay";
 import { SearchEventsParams } from "types/models/dashboard/searchEventParams.interface";
-import { SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
+import { SeatMap, SeatMapResponse, ShowingData } from "types/models/event/booking/seatmap.interface";
 import {
   EventAdminParams,
   EventManagementApiResponse,
@@ -43,7 +43,7 @@ import {
 } from "@/types/models/admin/revenueManagement.interface";
 
 import { CreatedLocationData } from "@/app/(protected)/organizer/create-event/[id]/libs/interface/infoevent.interface";
-import { Showing, ConnectShowingToSeatMapPayload } from "@/types/models/org/editSeatmap.interface";
+import { Showing, ConnectShowingToSeatMapPayload, SeatmapResponse } from "@/types/models/org/editSeatmap.interface";
 
 export async function getFrontDisplayEvents(): Promise<FrontDisplayResponse> {
   if (typeof window === "undefined") {
@@ -817,6 +817,36 @@ export async function connectShowingToSeatmap(payload: ConnectShowingToSeatMapPa
     return res.data;
   } catch (error: any) {
     console.error("Error connect showing to seatmap:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getAllSeatmaps(): Promise<BaseApiResponse<SeatmapResponse[]>> {
+  try {
+    const res = await eventService.get(END_POINT_LIST.SHOWING.GET_ALL_SEATMAP);
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch all seatmaps");
+    }
+
+    return res.data as BaseApiResponse<SeatmapResponse[]>;
+  } catch (error: any) {
+    console.error("Error get all seatmap:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getSeatmapDetail(id: number): Promise<BaseApiResponse<SeatMap>> {
+  try {
+    const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_SEATMAP_DETAIL}/${id}`);
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch all seatmaps");
+    }
+
+    return res.data as BaseApiResponse<SeatMap>;
+  } catch (error: any) {
+    console.error("Error get seatmap detail:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }
