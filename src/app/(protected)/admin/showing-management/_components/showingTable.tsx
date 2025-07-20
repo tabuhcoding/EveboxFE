@@ -48,11 +48,16 @@ export default function ShowingTable({ searchKeyword, dateFrom, dateTo }: Showin
       setIsLoading(true);
       setShowings([]);
 
+      const adjustedEndTime = dateTo ? new Date(dateTo) : undefined;
+      if (adjustedEndTime) {
+        adjustedEndTime.setHours(23, 59, 59, 999);
+      }
+
       const res = await getShowingsByAdmin({
         page: currentPage,
         limit: showingsPerPage,
         startTime: dateFrom || undefined,
-        endTime: dateTo || undefined,
+        endTime: adjustedEndTime?.toISOString() || undefined,
         search: searchKeyword || undefined,
       }, session?.user?.accessToken || "");
 
