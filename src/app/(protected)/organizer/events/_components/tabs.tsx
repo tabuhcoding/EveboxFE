@@ -50,9 +50,9 @@ export default function Tabs({ events }: TabsProps) {
       case "cho-duyet":
         return event.isApproved === false;
       case "da-qua":
-        return event.isApproved === true && start < now;
+        return event.isApproved === true && !event.isHasShowingInFuture;
       case "sap-toi":
-        return event.isApproved === true && start >= now;
+        return event.isApproved === true && event.isHasShowingInFuture;
       default:
         return false;
     }
