@@ -912,16 +912,18 @@
     "editEvent": "Edit event",
     "searchByEmail": "Search by customer email",
     "searchByOrderId": "Search by order id",
+    "editMember": "Edit member",
+    "deleteMember": "Delete member",
+    "noDataSearch": "No matching search results",
+    "totalEvents": "Total events",
     "AIRevenueAnalystWithAI": "Revenue Analyst With AI",
     "AIStatisticsAnalystWithAI": "Statistics Analyst With AI",
     "errorWhenAnalyze": "Error when analyzing",
     "analyzing": "Analyzing...",
     "noResult": "No result",
     "AIRevenueAnalyst": "Revenue Analyst With AI",
-    "editMember": "Edit member",
-    "deleteMember": "Delete member",
-    "noDataSearch": "No matching search results",
-    "totalEvents": "Total events",
     "totalAccounts": "Total accounts",
-    "totalShowings": "Total showings"
+    "totalShowings": "Total showings",
+    "active": "Active",
+    "blocked": "Blocked"
 }
