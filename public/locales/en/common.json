@@ -915,5 +915,11 @@
     "editMember": "Edit member",
     "deleteMember": "Delete member",
     "noDataSearch": "No matching search results",
-    "totalEvents": "Total events"
+    "totalEvents": "Total events",
+    "AIRevenueAnalystWithAI": "Revenue Analyst With AI",
+    "AIStatisticsAnalystWithAI": "Statistics Analyst With AI",
+    "errorWhenAnalyze": "Error when analyzing",
+    "analyzing": "Analyzing...",
+    "noResult": "No result",
+    "AIRevenueAnalyst": "Revenue Analyst With AI"
 }

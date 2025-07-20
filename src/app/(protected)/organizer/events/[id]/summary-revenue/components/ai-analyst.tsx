@@ -3,24 +3,32 @@
 import { useState } from "react";
 import axios from "axios";
 import Markdown from "react-markdown";
+import { useTranslations } from "next-intl";
 
 interface AIAnalystProps {
   showingId: string;
 }
 
 export function AIAnalyst({ showingId }: AIAnalystProps) {
+  const t = useTranslations('common');
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    if (!msg || msg.startsWith('common.')) return fallback;
+    return msg;
+  };
 
   const handleSearch = async () => {
     setLoading(true);
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/org/statistics/summary-ai/${showingId}`, { query });
-      setResult(res.data.data || "Không có kết quả.");
+      setResult(res.data.data || transWithFallback('noResult', 'Không có kết quả.'));
     } catch (error) {
       console.error("Fetch AI error:", error);
-      setResult("❌ Có lỗi xảy ra khi gửi yêu cầu.");
+      setResult(`❌ ${transWithFallback('errorWhenAnalyze', 'Có lỗi xảy ra khi gửi yêu cầu.')}`)
     } finally {
       setLoading(false);
     }
@@ -29,7 +37,7 @@ export function AIAnalyst({ showingId }: AIAnalystProps) {
   return (
     <div className="mt-8">
       <h3 className="text-lg font-bold text-[#0C4762] mb-2">
-        Phân tích doanh thu của bạn với AI
+        {transWithFallback('AIRevenueAnalystWithAI', 'Phân tích doanh thu của bạn với AI')}
       </h3>
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
@@ -45,7 +53,7 @@ export function AIAnalyst({ showingId }: AIAnalystProps) {
           disabled={loading}
           className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
-          {loading ? "Đang phân tích..." : "Phân tích"}
+          {loading ? transWithFallback('analyzing', 'Đang phân tích...') : transWithFallback('analysis', 'Phân tích')}        
         </button>
       </div>
 
