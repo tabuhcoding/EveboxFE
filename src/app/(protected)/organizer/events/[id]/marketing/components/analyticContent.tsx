@@ -97,9 +97,8 @@ export default function AnalyticsContent() {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center py-12">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#0C4762]" />
-    </div>
+          <div className="flex justify-center items-center py-12"><h2 className="text-red-500">Không thể tải thông tin phân tích</h2></div>
+          
         )}
       </div>
     </div>

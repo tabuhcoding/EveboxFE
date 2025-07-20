@@ -45,8 +45,9 @@ export const SummaryRevenuePage = ({ params }: PageProps) => {
         setError("Không tìm thấy suất diễn nào")
       }
     } catch (error) {
-      console.error("Error fetching showing ID:", error)
-      setError("Không thể tải thông tin suất diễn")
+        setIsLoading(false)
+        console.error("Error fetching showing ID:", error)
+        setError("Không thể tải thông tin suất diễn")
     } finally {
       setIsLoading(false)
     }

@@ -34,6 +34,7 @@ const itemsPerPage = 10;
       setTotalItems(response.data[1]? response.data[1].totalItems: response.data[0].length);
       setTickets(response.data[0] || []);
     } catch (err) {
+      setLoading(false);
       toast.error('Lỗi khi tải dữ liệu vé');
       console.error('Error loading tickets:', err);
     } finally {

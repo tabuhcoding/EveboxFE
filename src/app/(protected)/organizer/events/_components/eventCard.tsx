@@ -10,12 +10,16 @@ import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import { EventOrgFrontDisplayDto } from "@/types/models/org/orgEvent.interface";
+import { getEventMembers } from "@/services/org.service";
+import { useAuth } from "@/contexts/auth.context";
+import toast from "react-hot-toast";
 
 export default function EventCard({ event }: { event: EventOrgFrontDisplayDto }) {
   const t = useTranslations("common");
   const router = useRouter();
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { session } = useAuth();
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -30,9 +34,9 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
       label: transWithFallback("overview", "Tổng quan"),
     },
     {
-      href: `/organizer/events/${event.id}/member`,
+      href: `/organizer/events/${event.id}/marketing`,
       icon: <Users size={18} />,
-      label: transWithFallback("members", "Thành viên"),
+      label: transWithFallback("analysis", "Phân tích"),
     },
     {
       href: `/organizer/events/${event.id}/orders`,
@@ -44,13 +48,54 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
       icon: <Edit size={18} />,
       label: transWithFallback("edit", "Chỉnh sửa"),
     },
+    {
+      href: `/organizer/events/${event.id}/check-in`,
+      icon: <Edit size={18} />,
+      label: transWithFallback("checkIn", "Checkin"),
+    }
   ];
 
   const handleClick = (href: string, index: number) => {
-    setLoadingIndex(index);
-    startTransition(() => {
-      router.push(href);
-    });
+    const allowRoles=[0,1,3]
+    if (allowRoles.includes(index)){
+       const fetchMember = async () => {
+            const member = await getEventMembers(event.id, session?.user?.email);
+            if (!member[0]) return;
+            if (member[0].role!==1 && member[0].role!==2){
+              toast.error("You don't have permission to access this page");
+              return;
+            }
+            else{
+              setLoadingIndex(index);
+              startTransition(() => {
+                    router.push(href);
+              });
+            }
+       }
+      fetchMember();
+    }
+    else{
+       const fetchMember = async () => {
+            const member = await getEventMembers(event.id, session?.user?.email);
+            if (!member[0]) return;
+            if (index === 2 && (member[0].role===1 || member[0].role===2 || member[0].role===6)){
+              toast.error("You don't have permission to access this page");
+              return;
+            }
+            else if (index === 2 && (member[0].role===1 || member[0].role===2 || member[0].role===6 || member[0].role===4)){
+              toast.error("You don't have permission to access this page");
+              return;
+            }
+            else{
+              setLoadingIndex(index);
+              startTransition(() => {
+                    router.push(href);
+              });
+            }
+       }
+      fetchMember();
+    }
+    
   };
 
   return (
