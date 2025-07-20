@@ -17,7 +17,7 @@ export default function FilterBar({
 }: FilterProps) {
   const t = useTranslations('common');
 
-  const roles = Object.values(UserRole).map(role => role);
+  const roles = Object.values(UserRole).filter(role => role !== 'SYSTEM_ADMIN');
 
   const [showDateFilter, setShowDateFilter] = useState(false);
 
@@ -32,7 +32,7 @@ export default function FilterBar({
       {/* Filter - Vai trò */}
       <div className="filter-role flex items-center gap-1 pr-2">
         <span className="text-black font-semibold mr-1">{transWithFallback('role', 'Vai trò')}</span>
-        
+
         <select value={roleFilter} className="border px-2 py-1 rounded-md"
           onChange={(e) => onRoleChange(e.target.value)}
         >
