@@ -19,6 +19,7 @@ export default function AccountPage() {
   const [roleFilter, setRoleFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -32,6 +33,7 @@ export default function AccountPage() {
     setRoleFilter('');
     setDateFrom('');
     setDateTo('');
+    setStatusFilter('');
   };
 
   const transWithFallback = (key: string, fallback: string) => {
@@ -57,6 +59,8 @@ export default function AccountPage() {
             dateTo={dateTo}
             onDateFromChange={setDateFrom}
             onDateToChange={setDateTo}
+            statusFilter={statusFilter}
+            onStatusChange={setStatusFilter}
             onReset={handleResetFilter}
           />
         </div>
@@ -66,6 +70,7 @@ export default function AccountPage() {
           roleFilter={roleFilter}
           dateFrom={dateFrom}
           dateTo={dateTo}
+          statusFilter={statusFilter}
         />
       </>
     </>

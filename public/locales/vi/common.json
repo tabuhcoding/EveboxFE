@@ -914,5 +914,7 @@
   "noResult": "Không có kết quả.",
   "AIRevenueAnalyst": "Phân tích doanh thu với AI",
   "totalAccounts": "Tổng số tài khoản",
-  "totalShowings": "Tổng số suất diễn"
+  "totalShowings": "Tổng số suất diễn",
+  "active": "Đang hoạt động",
+  "blocked": "Bị khóa"
 }

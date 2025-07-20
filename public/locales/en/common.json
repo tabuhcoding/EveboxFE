@@ -923,5 +923,7 @@
     "noResult": "No result",
     "AIRevenueAnalyst": "Revenue Analyst With AI",
     "totalAccounts": "Total accounts",
-    "totalShowings": "Total showings"
+    "totalShowings": "Total showings",
+    "active": "Active",
+    "blocked": "Blocked"
 }
