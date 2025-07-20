@@ -74,9 +74,8 @@ export default function FilterBar({
       </div>
 
       {/* Reset Filter */}
-      <div onClick={onReset} className="reset-filter-btn flex items-center gap-1 border-l pl-4 pr-2 text-red-500 cursor-pointer hover:underline ml-auto">
+      <div onClick={onReset} title={`${transWithFallback('resetFilter', 'Thiết lập lại bộ lọc')}`} className="reset-filter-btn flex items-center gap-1 border-l pl-4 pr-2 text-red-500 cursor-pointer hover:underline ml-auto">
         <RotateCcw size={16} />
-        <span>{transWithFallback('resetFilter', 'Thiết lập lại bộ lọc')}</span>
       </div>
     </div>
   )

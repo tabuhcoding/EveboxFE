@@ -26,18 +26,18 @@ export default function FilterBar({
 
   const [admins, setAdmins] = useState<string[]>([]);
 
-useEffect(() => {
-  const loadAdmins = async () => {
-    try {
-      const data = await getAllAdmin();
-      setAdmins(data);
-    } catch (error) {
-      console.error("Failed to load admins:", error);
-    }
-  };
+  useEffect(() => {
+    const loadAdmins = async () => {
+      try {
+        const data = await getAllAdmin();
+        setAdmins(data);
+      } catch (error) {
+        console.error("Failed to load admins:", error);
+      }
+    };
 
-  loadAdmins();
-}, []);
+    loadAdmins();
+  }, []);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -55,14 +55,14 @@ useEffect(() => {
   };
 
   const standardCateogry = (cate: string): string => {
-    switch(cate) {
-      case 'music': 
+    switch (cate) {
+      case 'music':
         return transWithFallback('music', 'Âm nhạc');
       case 'theatersandart':
         return transWithFallback('theatersandart', 'Sân khấu & Nghệ thuật');
       case 'sport':
         return transWithFallback('sport', 'Thể thao');
-      default: 
+      default:
         return transWithFallback('other', 'Khác');
     }
   }
@@ -86,23 +86,23 @@ useEffect(() => {
       </div>
 
       {/* Filter - Quản trị viên */}
-<div className="filter-admin-btn flex items-center gap-1 border-l pl-4 pr-2">
-  <span className="text-black font-semibold mr-1">
-    {transWithFallback('admin', 'Quản trị viên')}
-  </span>
-  <select
-    value={adminFilter}
-    className="border px-2 py-1 rounded-md"
-    onChange={(e) => onAdminChange(e.target.value)}
-  >
-    <option value="">{transWithFallback('all', 'Tất cả')}</option>
-    {admins.map((admin) => (
-      <option key={admin} value={admin}>
-        {admin}
-      </option>
-    ))}
-  </select>
-</div>
+      <div className="filter-admin-btn flex items-center gap-1 border-l pl-4 pr-2">
+        <span className="text-black font-semibold mr-1">
+          {transWithFallback('admin', 'Quản trị viên')}
+        </span>
+        <select
+          value={adminFilter}
+          className="border px-2 py-1 rounded-md w-[160px]"
+          onChange={(e) => onAdminChange(e.target.value)}
+        >
+          <option value="">{transWithFallback('all', 'Tất cả')}</option>
+          {admins.map((admin) => (
+            <option key={admin} value={admin}>
+              {admin}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Filter - Ngày tạo */}
       <div className="filter-created-btn relative border-l pl-4 pr-2">
@@ -134,9 +134,8 @@ useEffect(() => {
       </div>
 
       {/* Reset Filter */}
-      <div onClick={onReset} className="reset-filter-btn flex items-center gap-1 border-l pl-4 pr-2 text-red-500 cursor-pointer hover:underline ml-auto">
+      <div onClick={onReset} title={`${transWithFallback('resetFilter', 'Thiết lập lại bộ lọc')}`} className="reset-filter-btn flex items-center gap-1 border-l pl-4 pr-2 text-red-500 cursor-pointer hover:underline ml-auto">
         <RotateCcw size={16} />
-        <span>{transWithFallback('resetFilter', 'Thiết lập lại bộ lọc')}</span>
       </div>
     </div>
   )
