@@ -56,46 +56,46 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
   ];
 
   const handleClick = (href: string, index: number) => {
-    const allowRoles=[0,1,3]
-    if (allowRoles.includes(index)){
-       const fetchMember = async () => {
-            const member = await getEventMembers(event.id, session?.user?.email);
-            if (!member[0]) return;
-            if (member[0].role!==1 && member[0].role!==2){
-              toast.error("You don't have permission to access this page");
-              return;
-            }
-            else{
-              setLoadingIndex(index);
-              startTransition(() => {
-                    router.push(href);
-              });
-            }
-       }
+    const allowRoles = [0, 1, 3]
+    if (allowRoles.includes(index)) {
+      const fetchMember = async () => {
+        const member = await getEventMembers(event.id, session?.user?.email);
+        if (!member[0]) return;
+        if (member[0].role !== 1 && member[0].role !== 2) {
+          toast.error("You don't have permission to access this page");
+          return;
+        }
+        else {
+          setLoadingIndex(index);
+          startTransition(() => {
+            router.push(href);
+          });
+        }
+      }
       fetchMember();
     }
-    else{
-       const fetchMember = async () => {
-            const member = await getEventMembers(event.id, session?.user?.email);
-            if (!member[0]) return;
-            if (index === 2 && (member[0].role===1 || member[0].role===2 || member[0].role===6)){
-              toast.error("You don't have permission to access this page");
-              return;
-            }
-            else if (index === 2 && (member[0].role===1 || member[0].role===2 || member[0].role===6 || member[0].role===4)){
-              toast.error("You don't have permission to access this page");
-              return;
-            }
-            else{
-              setLoadingIndex(index);
-              startTransition(() => {
-                    router.push(href);
-              });
-            }
-       }
+    else {
+      const fetchMember = async () => {
+        const member = await getEventMembers(event.id, session?.user?.email);
+        if (!member[0]) return;
+        if (index === 2 && (member[0].role === 1 || member[0].role === 2 || member[0].role === 6)) {
+          toast.error("You don't have permission to access this page");
+          return;
+        }
+        else if (index === 4 && (member[0].role === 1 || member[0].role === 2 || member[0].role === 6 || member[0].role === 4)) {
+          toast.error("You don't have permission to access this page");
+          return;
+        }
+        else {
+          setLoadingIndex(index);
+          startTransition(() => {
+            router.push(href);
+          });
+        }
+      }
       fetchMember();
     }
-    
+
   };
 
   return (
@@ -114,15 +114,18 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
             📅 {new Date(event.startDate).toLocaleString("vi-VN")}
           </p>
           {event.locationString && event.venue ? (
-            <p className="text-sm flex items-center mt-2">
+            <p className="text-sm flex items-center mt-2 text-[#51DACF]">
               📍 {event.venue} <br />
               {event.locationString}
             </p>
           ) : (
-            <p className="text-sm flex items-center mt-2">
+            <p className="text-sm flex items-center mt-2 text-[#51DACF]">
               📍 {event.venue || transWithFallback("online", "Online")}
             </p>
           )}
+          <p className="text-sm flex items-center mt-3 text-[#51DACF]">
+            👤 {event.role === 1 ? transWithFallback('org', 'Nhà tổ chức') : transWithFallback('member', 'Thành viên')}
+          </p>
         </div>
       </div>
 

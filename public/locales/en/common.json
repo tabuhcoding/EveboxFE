@@ -925,6 +925,8 @@
     "totalAccounts": "Total accounts",
 <<<<<<< HEAD
     "totalShowings": "Total showings",
+    "updateAreaSuccess": "Update account status successfully!",
+    "errorWhenUpdateAccountArea": "Error when update account area",
     "active": "Active",
     "blocked": "Blocked"
 =======
