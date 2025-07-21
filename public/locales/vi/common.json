@@ -827,8 +827,6 @@
   "viewDetailInstruction": "Chọn một mục để xem hướng dẫn chi tiết tại đây.",
   "toSignUpAccount": "Người dùng truy cập trang “Đăng ký”, điền các thông tin bắt buộc như họ tên, email, số điện thoại và mật khẩu.",
   "systemSendsVerificationEmail": "Hệ thống sẽ gửi email xác thực để hoàn tất.",
-  "searchByEmail": "Tìm kiếm theo email khách hàng",
-  "searchByOrderId": "Tìm kiếm theo mã đơn hàng",
   "editMember": "Sửa thành viên",
   "signIn": "Đăng nhập",
   "signInMethods": "Người dùng có thể đăng nhập bằng tài khoản email đã đăng ký hoặc sử dụng phương thức đăng nhập nhanh qua Google.",
