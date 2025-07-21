@@ -62,7 +62,20 @@ export default function TicketInformation({
   }
 
   const handlePayment = async () => {
-    if (!session?.user?.accessToken || !event || !formId || !showingId) return;
+    if (!session?.user?.accessToken || !event || !showingId) return;
+
+    const showingStatus = localStorage.getItem('showingStatus');
+
+    if (!formId && isFormValid) {
+      if (showingStatus === 'BOOK_NOW') {
+          if (seatMapId && seatMapId !== 0) {
+            return router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);
+          }
+          else return router.push(`/event/${event.id}/booking/payment?showingId=${showingId}`);
+        } else {
+          return await handleCheckout();
+        }
+    }
 
     setLoading(true);
 
@@ -79,7 +92,6 @@ export default function TicketInformation({
 
       if (res.statusCode === 200) {
         localStorage.setItem('submittedForm', JSON.stringify(formData));
-        const showingStatus = localStorage.getItem('showingStatus');
         if (showingStatus === 'BOOK_NOW') {
           if (seatMapId && seatMapId !== 0) {
             router.push(`/event/${event.id}/booking/payment?showingId=${showingId}&seatMapId=${seatMapId}`);

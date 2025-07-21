@@ -61,8 +61,8 @@ export default function QuestionFormPage({ showingId, seatMapId }: { showingId: 
       } catch (error: any) {
         console.error('Lỗi khi gọi API lock-seat:', error);
         // setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
-        setAlertMessage(error.toString());
-        setAlertOpen(true);
+        setFormId(null);
+        setFormInputs([]);
       } finally {
         setIsLoadingForm(false);
       }
@@ -154,7 +154,7 @@ export default function QuestionFormPage({ showingId, seatMapId }: { showingId: 
               event={event}
               totalTickets={totalTickets}
               totalAmount={totalAmount}
-              isFormValid={isFormValid && allRequiredFilled}
+              isFormValid={isFormValid && (allRequiredFilled || formId === null)}
               selectedTickets={selectedTickets}
               ticketType={ticketType}
               formData={formAnswers}
