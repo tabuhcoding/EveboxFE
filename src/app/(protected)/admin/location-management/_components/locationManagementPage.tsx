@@ -245,6 +245,7 @@ export default function LocationManagementClient() {
 
         <FilterDropdown label={transWithFallback('org', 'Nhà tổ chức')} options={allOrganizers} value={selectedOrganizer} onChange={setSelectedOrganizer} />
 
+
         <button
           onClick={handleConfirmFilter}
           disabled={isConfirming}

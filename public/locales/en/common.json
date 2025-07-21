@@ -923,9 +923,13 @@
     "noResult": "No result",
     "AIRevenueAnalyst": "Revenue Analyst With AI",
     "totalAccounts": "Total accounts",
+<<<<<<< HEAD
     "totalShowings": "Total showings",
     "updateAreaSuccess": "Update account status successfully!",
     "errorWhenUpdateAccountArea": "Error when update account area",
     "active": "Active",
     "blocked": "Blocked"
+=======
+    "totalShowings": "Total showings"
+>>>>>>> 5b64378 (add total)
 }

@@ -180,7 +180,15 @@ export default function AccountTable({ searchKeyword, roleFilter, dateFrom, date
                   {transWithFallback('createdDate', 'Ngày tạo')} <SortIcon field="created_at" sortConfig={sortConfig} />
                 </th>
                 <th className="px-4 py-3 cursor-pointer text-center" >
+<<<<<<< HEAD
+<<<<<<< HEAD
                   {transWithFallback('status', 'Trạng thái')}
+=======
+                  {transWithFallback('status', 'Trạng thái')} 
+>>>>>>> 40dbc1e (fix: total revenue and icon filter)
+=======
+                  {transWithFallback('status', 'Trạng thái')}
+>>>>>>> 3d4119c (fix: created date filter of acc and show)
                 </th>
               </tr>
             </thead>
