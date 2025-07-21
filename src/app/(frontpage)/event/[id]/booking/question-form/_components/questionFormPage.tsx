@@ -52,17 +52,23 @@ export default function QuestionFormPage({ showingId, seatMapId }: { showingId: 
         const response = await getFormOfShowing(showingId);
 
         if (response?.statusCode === 200) {
-          setFormId(response.data.id);
-          setFormInputs(response.data.FormInput);
+          if (response.data) {
+            setFormId(response.data.id);
+            setFormInputs(response.data.FormInput);
+          } else {
+            setFormId(null);
+            setFormInputs([]);
+          }
         } else {
           setFormId(null);
           setFormInputs([]);
         }
       } catch (error: any) {
         console.error('Lỗi khi gọi API lock-seat:', error);
-        // setAlertMessage(transWithFallback("errorLockSeat", "Lỗi khi khóa ghế. Vui lòng thử lại sau."));
-        setFormId(null);
-        setFormInputs([]);
+        // setFormId(null);
+        // setFormInputs([]);
+        setAlertMessage(error.toString());
+        setAlertOpen(true);
       } finally {
         setIsLoadingForm(false);
       }
