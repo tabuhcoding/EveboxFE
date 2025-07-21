@@ -231,20 +231,22 @@ export default function AccountDetailPage({ id }: { id: string }) {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="area-select" className="block text-sm font-medium text-gray-700">{transWithFallback('area', 'Khu vực')}</label>
-                <div className="relative">
-                  <select id="area-select" className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
-                    value={editedArea || ''} onChange={(e) => setEditedArea(e.target.value as AreaCode)} >
-                    {areas.map(s => (
-                      <option key={s}>{s}</option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 mt-1">
-                    <ChevronDown className="h-5 w-5 text-gray-400" />
+              {user.area && (
+                <div>
+                  <label htmlFor="area-select" className="block text-sm font-medium text-gray-700">{transWithFallback('area', 'Khu vực')}</label>
+                  <div className="relative">
+                    <select id="area-select" className="appearance-none mt-1 w-full px-4 py-2 pr-10 border rounded-md"
+                      value={editedArea || ''} onChange={(e) => setEditedArea(e.target.value as AreaCode)} >
+                      {areas.map(s => (
+                        <option key={s}>{s}</option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 mt-1">
+                      <ChevronDown className="h-5 w-5 text-gray-400" />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="mt-10 mb-4 text-center">
