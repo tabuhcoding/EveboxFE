@@ -944,5 +944,8 @@
     "signInMethods": "Người dùng có thể đăng nhập bằng tài khoản email đã đăng ký hoặc sử dụng phương thức đăng nhập nhanh qua Google.",
     "updateProfileTitle": "Cập nhật thông tin và mật khẩu",
     "accessAccountManagementInstruction": "Sau khi đăng nhập, truy cập vào mục “Quản lý tài khoản” bằng cách mở thanh bên và bấm vào nút “Quản lý tài khoản” hoặc bấm vào tên đăng nhập ở góc trên bên phải.",
-    "defaultProfileTabInstruction": "Mặc định là sẽ ở tab “Thông tin cá nhân”, có thể xem và chỉnh sửa họ tên, số điện thoại cùng ảnh đại diện."
+    "defaultProfileTabInstruction": "Mặc định là sẽ ở tab “Thông tin cá nhân”, có thể xem và chỉnh sửa họ tên, số điện thoại cùng ảnh đại diện.",
+  "payment": "Thanh toán",
+  "success": "Thành công",
+  "notFindTicket": "Không tìm thấy vé phù hợp."
 }
