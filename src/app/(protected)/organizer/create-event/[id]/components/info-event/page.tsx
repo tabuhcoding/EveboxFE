@@ -82,6 +82,10 @@ export default function InformationEventClientPage() {
         }
     }, [pathname, previousPath, isRedirecting]);
 
+    useEffect(() => {
+        setBtnValidate(""); // Reset lại sau khi back
+    }, [pathname]);
+
     return (
         <>
             <div className="flex flex-col items-center justify-center p-10 relative">
