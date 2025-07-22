@@ -22,6 +22,7 @@ import LocationRevenueView from "./app/locationRevenue";
 import TicketPriceRevenueView from "./app/ticketPriceRevenue";
 import { HttpStatusCode } from "axios";
 import EventPagination from "../../event-management/_components/common/pagination";
+import { AIAnalyst } from "./app/ai-analyst";
 
 
 export default function RevenueManagementPage() {
@@ -193,6 +194,9 @@ export default function RevenueManagementPage() {
               loading={loading}
               setLoading={setLoading}
             />
+            <div className="mb-6">
+              <AIAnalyst type = {"day"}/>
+            </div>
             {!loading && appRevenues.length > 0 && (
               <RevenueChart type={filter.type} from={filter.from} to={filter.to} />
             )}

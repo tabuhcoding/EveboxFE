@@ -9,6 +9,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { useAuth } from "@/contexts/auth.context";
 import { getOrgRevenueByProvince } from "@/services/event.service";
 import { ProvinceRevenueData } from "@/types/models/admin/revenueManagement.interface";
+import { AIAnalyst } from "./ai-analyst";
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -84,6 +85,10 @@ export default function LocationRevenueView() {
             </BarChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <AIAnalyst type = {"location"}/>
       </div>
 
       {/* Table */}

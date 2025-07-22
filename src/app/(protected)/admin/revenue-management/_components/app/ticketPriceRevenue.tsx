@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/contexts/auth.context";
 import { getOrgRevenueByTicketPrice } from "@/services/event.service";
 import { RevenueByTicketPriceData } from "@/types/models/admin/revenueManagement.interface";
+import { AIAnalyst } from "./ai-analyst";
 
 export default function TicketPriceRevenueView() {
   const t = useTranslations("common");
@@ -145,6 +146,9 @@ export default function TicketPriceRevenueView() {
         </div>
       </div>
 
+      <div className="mb-6">
+        <AIAnalyst type = {"price"}/>
+      </div>
       {/* Table */}
       <div className="overflow-hidden rounded-lg border border-gray-200">
         <table className="w-full border-collapse">
