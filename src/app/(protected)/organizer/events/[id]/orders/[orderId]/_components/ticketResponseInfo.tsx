@@ -18,19 +18,19 @@ export default function TicketResponseInfo({ ticketTypes }: { ticketTypes: Order
       <div className="flex flex-col gap-3">
         {ticketTypes.map((ticketType) => (
           <div key={ticketType.id} className="pl-2">
-            <div className="font-semibold">
-              {ticketType.name} <span className="text-[#0C4762]">{ticketType.price.toLocaleString("vi-VN")}đ</span>
-            </div>
+            <li className="font-semibold">
+              {ticketType.name} <span className="text-[#0C4762]">- {ticketType.price.toLocaleString("vi-VN")}đ</span>
+            </li>
             {ticketType.tickets && ticketType.tickets.length > 0 && (
-              <ul className="pl-4 text-sm text-gray-700 list-disc">
+              <div className="pl-4 text-sm text-gray-700 list-disc">
                 {ticketType.tickets.map((tk) => (
-                  <li key={tk.id} className="my-1">
+                  <span key={tk.id} className="my-1">
                     {tk.seatname ? <span><b>Ghế:</b> <span className="font-semibold">{tk.seatname}</span></span> : null}
                     {tk.sectionname ? <span> | <b>Khu:</b> <span className="font-semibold">{tk.sectionname}</span></span> : null}
                     {tk.description ? <span> ({tk.description})</span> : null}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         ))}

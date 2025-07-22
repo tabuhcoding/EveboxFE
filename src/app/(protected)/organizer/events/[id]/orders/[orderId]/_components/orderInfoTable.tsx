@@ -19,6 +19,10 @@ export default function OrderInfoTable({ order }: { order: IUserTicketById }) {
           <td className="p-2 text-gray-600">{order.id}</td>
         </tr>
         <tr className="border-b">
+          <td className="py-2 pr-3 pl-1 font-semibold text-gray-700 w-40">{transWithFallback('customer', 'Khách hàng')}</td>
+          <td className="p-2 text-gray-600">{order.ownerId}</td>
+        </tr>
+        <tr className="border-b">
           <td className="py-2 pr-3 pl-1 font-semibold text-gray-700">{transWithFallback('orderStatus', 'Tình trạng')}</td>
           <td className="p-2 text-gray-600 font-bold">
             {order.status}
@@ -35,6 +39,10 @@ export default function OrderInfoTable({ order }: { order: IUserTicketById }) {
         <tr className="border-b">
           <td className="py-2 pr-3 pl-1 font-semibold text-gray-700">{transWithFallback('paymentMethod', 'Phương thức thanh toán')}</td>
           <td className="p-2 text-gray-600 font-bold">{order.PaymentInfo?.method}</td>
+        </tr>
+        <tr className="border-b">
+          <td className="py-2 pr-3 pl-1 font-semibold text-gray-700">{transWithFallback('total', 'Tổng cộng')}</td>
+          <td className="p-2 text-gray-600 font-bold">{order.price}</td>
         </tr>
       </tbody>
     </table>
