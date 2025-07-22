@@ -17,11 +17,13 @@ showtimeId: string, startDate: Date | null, endDate: Date | null,
              showtime.endDate?.toISOString() !== endDate?.toISOString())
         )
     );
-    toast.success(`Deleting showtime with ID: ${showtimeId}`);
+    toast.success(`Deleting showtime successfully`);
      
     try {
-    await deleteShowing(showtimeId); 
-    console.log(`Showtime ${showtimeId} deleted successfully!`);
+      if (showtimeId && showtimeId!=""){
+         await deleteShowing(showtimeId); 
+      }
+       console.log(`Showtime ${showtimeId} deleted successfully!`);
   } catch (error: any) {
     toast.error(`Error deleting showtime: ${error.message}`);
   }

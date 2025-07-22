@@ -16,7 +16,7 @@ export const handleDeleteTicket = async (
             if (showtime.id === showtimeId) {
                 const ticketToDelete = showtime.tickets[ticketIndex];
 
-                 if (ticketToDelete?.id) {
+                 if (ticketToDelete?.id && ticketToDelete?.id!="") {
           // Use shared deleteTicketType service
           deleteTicketType(ticketToDelete.id)
             .then(() => {
