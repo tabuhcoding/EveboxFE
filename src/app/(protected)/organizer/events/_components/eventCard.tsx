@@ -78,11 +78,11 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
       const fetchMember = async () => {
         const member = await getEventMembers(event.id, session?.user?.email);
         if (!member[0]) return;
-        if (index === 2 && (member[0].role === 1 || member[0].role === 2 || member[0].role === 6)) {
+            if (index === 2 && !(member[0].role===1 || member[0].role===2 || member[0].role===6)){
           toast.error("You don't have permission to access this page");
           return;
         }
-        else if (index === 4 && (member[0].role === 1 || member[0].role === 2 || member[0].role === 6 || member[0].role === 4)) {
+        else if (index === 4 && !(member[0].role === 1 || member[0].role === 2 || member[0].role === 6 || member[0].role === 4)) {
           toast.error("You don't have permission to access this page");
           return;
         }

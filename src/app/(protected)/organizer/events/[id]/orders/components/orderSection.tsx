@@ -145,14 +145,6 @@ const itemsPerPage = 10;
     }
   };
 
-  const getQuantity = (order: TicketOrderData): number => {
-    let quantity = 0;
-    order?.Ticket?.forEach(ticket => {
-      quantity += ticket.tickets.length;
-    });
-    return quantity;
-  };
-
   const safeOrdersData = Array.isArray(ordersData) ? ordersData : [];
 
   const toggleCheckbox = (orderId: number) => {
@@ -240,7 +232,7 @@ const itemsPerPage = 10;
                   <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.userId}</td>
                   <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.ownerId}</td>
                   <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.type}</td>
-                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{getQuantity(order)}</td>
+                  <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.totalTicket}</td>
                   <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>{order.paymentInfo?.method}</td>
                   <td className="py-2 px-4" onClick={() => handleRowClick(order.id)}>
                     <span className={`px-2 py-1 rounded-full text-sm ${status.className}`}>{status.text}</span>

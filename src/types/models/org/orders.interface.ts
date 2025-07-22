@@ -94,6 +94,7 @@ export interface TicketOrderData {
   formResponse?: FormResponse;
   paymentInfo?: PaymentInfo;
   Ticket?: TicketTypeInfo[];
+  totalTicket: number;
 }
 
 export interface GetOrdersResponse{
