@@ -62,7 +62,7 @@ export default function MyFavoritePage({
                 )
                     : events.length > 0 ? (
                         <>
-                            {events.map((event, index) => (
+                            {events.map((event, _index) => (
                                 <div key={event.id}>
                                     <div
                                         className="flex items-center gap-4 p-2 mb-4 bg-white border border-[#0C4762] rounded-xl shadow-sm hover:shadow-md hover:border-teal-500 transition cursor-pointer"
