@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 /* Package Application */
 import { useAuth } from "@/contexts/auth.context";
-import { getAppRevenue, getRevenueByOrgId, getOrgRevenueList } from "@/services/event.service";
+import { getAppRevenue, getRevenueByOrgId, getOrgRevenueList, getEventsRevenue } from "@/services/event.service";
 import { AppRevenue, ShowingRevenueInEventTable, EventRevenueInEventTable, TicketTypeRevenueData, Organization } from "@/types/models/admin/revenueManagement.interface";
 
 import AlertDialog from "@/components/common/alertDialog";
@@ -71,6 +71,76 @@ export default function RevenueManagementPage() {
       setSearch(undefined);
     }
   }, [activeTab]);
+
+
+  useEffect(() => {
+    if (activeTab === "event" && search === undefined) {
+      fetchEventsRevenue();
+    }
+  }, [currentPage, itemsPerPage, fromDate, toDate, search, activeTab]);
+
+  const fetchEventsRevenue = useCallback(async () => {
+    console.log('call fetch')
+    if (!session?.user?.accessToken) return;
+
+    try {
+      const response = await getEventsRevenue(session?.user?.accessToken || "", currentPage, itemsPerPage, fromDate, toDate, search);
+
+      if (response?.statusCode === HttpStatusCode.Ok) {
+        const events: EventRevenueInEventTable[] = response.data.map((event) => ({
+          id: event.eventId,
+          name: event.eventName,
+          totalRevenue: event.totalRevenue * 1000,
+          platformFee: event.platformFeePercent,
+          actualRevenue: event.actualRevenue * 1000,
+          isExpanded: false,
+          showings: event.showings.map((show): ShowingRevenueInEventTable => ({
+            showingId: show.showingId,
+            startDate: show.startDate,
+            endDate: show.endDate,
+            revenue: show.revenue * 1000,
+            isExpanded: false,
+            ticketTypes: show.ticketTypes.map((ticket): TicketTypeRevenueData => ({
+              ticketTypeId: ticket.ticketTypeId,
+              name: ticket.name,
+              price: ticket.price,
+              sold: ticket.sold,
+              revenue: ticket.revenue * 1000,
+            })),
+          })),
+        }));
+
+        const app: AppRevenue = {
+          id: 1,
+          totalRevenue: response.data.reduce((sum, ev) => sum + ev.totalRevenue, 0) * 1000,
+          actualRevenue: response.data.reduce((sum, ev) => sum + ev.actualRevenue, 0) * 1000,
+          systemDiscount: response.data[0]?.platformFeePercent ?? 10,
+          isExpanded: true,
+          organizations: [
+            {
+              id: "event-tab",
+              name: "Events",
+              actualRevenue: response.data.reduce((sum, ev) => sum + ev.actualRevenue, 0) * 1000,
+              isExpanded: true,
+              events,
+            },
+          ],
+        };
+
+
+        setAppRevenues([app]);
+        setTotalItems(response.pagination?.totalItems || 0);
+        setTotalPages(response.pagination?.totalPages || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch app revenue", error);
+      setAppRevenues([]);
+      setAlertMessage(`${transWithFallback('errorWhenFetchRevenue', 'Lỗi xảy ra khi lấy dữ liệu doanh thu')}: ${error}`);
+      setAlertOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, itemsPerPage, fromDate, toDate, search]);
 
   const fetchOrgRevenue = useCallback(async () => {
     if (!session?.user?.accessToken) return;

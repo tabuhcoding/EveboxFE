@@ -87,6 +87,7 @@ export class END_POINT_LIST {
     GET_REVENUE: "/api/admin/revenue",
     GET_APP_REVENUE: "/api/admin/app-revenue",
     GET_ORG_REVENUE: "/api/admin/revenue-org",
+    GET_EVENT_REVENUE: "/api/admin/revenue-event",
     GET_REVENUE_V2: "/api/admin/revenue-v2",
     GET_REVENUE_CHART: "/api/admin/revenue-chart",
     GET_REVENUE_CHART_V2: "/api/admin/revenue-chart-v2",
