@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TextAlign from '@tiptap/extension-text-align'
@@ -12,6 +12,7 @@ import { Color } from '@tiptap/extension-color'
 import TextStyle from '@tiptap/extension-text-style';
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
+import { useTranslations } from "next-intl";
 
 /* Package Application */
 import MenuBar from "./menu-bar";
@@ -27,6 +28,14 @@ interface TextEditorProps {
 }
 
 export default function TextEditor({ content, onChange, isValidDescription, eventDetails }: TextEditorProps) {
+    const [isLoadingAI, setIsLoadingAI] = useState(false);
+
+    const t = useTranslations('common');
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        return msg.startsWith('common.') ? fallback : msg;
+    };
+
     const CustomImage = Image.extend({
         addAttributes() {
             return {
@@ -104,7 +113,23 @@ export default function TextEditor({ content, onChange, isValidDescription, even
 
             <div className="relative">
                 <EditorContent editor={editor} className="w-full" />
-                <DescriptionWithAI onChange={onChange} isValid={isValidDescription} eventDetails={eventDetails} currentDescription={content} />
+
+                {isLoadingAI && (
+                    <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center rounded-md">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0C4762] mx-auto"></div>
+                            <p className="mt-4 text-[#0C4762]">{transWithFallback("loadingData", "Đang tải dữ liệu...")}</p>
+                        </div>
+                    </div>
+                )}
+                <DescriptionWithAI
+                    onChange={onChange}
+                    isValid={isValidDescription}
+                    eventDetails={eventDetails}
+                    currentDescription={content}
+                    setIsLoading={setIsLoadingAI}
+                    isLoading={isLoadingAI}
+                />
             </div>
         </div>
     )

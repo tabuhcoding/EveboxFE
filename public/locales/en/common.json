@@ -954,5 +954,6 @@
     "section": "Section",
     "confirmMapping": "Confirm mapping",
     "mapping": "Mapping...",
-    "notFindTicket": "No matching ticket found."
+    "notFindTicket": "No matching ticket found.",
+    "errorLoadingAnalysis": "Error loading analysis"
 }
