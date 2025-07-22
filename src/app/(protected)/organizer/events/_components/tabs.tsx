@@ -61,55 +61,60 @@ export default function Tabs({ events }: TabsProps) {
   );
 
   return (
-    <div>
-      {/* Search bar and tabs */}
-      <div className="mt-6 flex justify-between items-center">
-        <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
-          <input
-            type="text"
-            className="w-full px-3 py-2 outline-none"
-            placeholder={transWithFallback("searchEvent", "Tìm kiếm sự kiện")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]">
-            <Search size={24} color="white" />
-          </button>
-        </div>
-        <div className="flex space-x-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`px-6 py-2 rounded-full ${activeTab === tab.id
-                ? "bg-[#0C4762] text-[#9EF5CF]"
-                : "bg-[#9EF5CF] text-gray-700"
-                }`}
-              onClick={() => handleTabClick(tab.id)}
-              disabled={loadingTab === tab.id}
-            >
-              {loadingTab === tab.id ? (
-                <CircularProgress size={16} sx={{ color: "[#51DACF]" }} className="mr-1" />
-              ) : (
-                null
-              )}
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
+    <>
+      <h1 className="text-2xl font-bold text-[#0C4762]">{transWithFallback("myEvents", "Sự kiện của tôi")}</h1>
+      <div className="border-t-2 border-[#0C4762] mt-2"></div>
 
-      {/* Events List */}
-      <div className="mt-6 space-y-6">
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))
-        ) : (
-          <p className="text-center text-gray-500">
-            {transWithFallback("noEvents", "Không có sự kiện nào.")}
-          </p>
-        )}
+      <div>
+        {/* Search bar and tabs */}
+        <div className="mt-6 flex justify-between items-center">
+          <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-1/3 bg-white">
+            <input
+              type="text"
+              className="w-full px-3 py-2 outline-none"
+              placeholder={transWithFallback("searchEvent", "Tìm kiếm sự kiện")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button className="bg-[#51DACF] px-3 py-2 border-l border-gray-300 transition duration-200 hover:bg-[#3AB5A3]">
+              <Search size={24} color="white" />
+            </button>
+          </div>
+          <div className="flex space-x-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`px-6 py-2 rounded-full ${activeTab === tab.id
+                  ? "bg-[#0C4762] text-[#9EF5CF]"
+                  : "bg-[#9EF5CF] text-gray-700"
+                  }`}
+                onClick={() => handleTabClick(tab.id)}
+                disabled={loadingTab === tab.id}
+              >
+                {loadingTab === tab.id ? (
+                  <CircularProgress size={16} sx={{ color: "[#51DACF]" }} className="mr-1" />
+                ) : (
+                  null
+                )}
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Events List */}
+        <div className="mt-6 space-y-6">
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))
+          ) : (
+            <p className="text-center text-gray-500">
+              {transWithFallback("noEvents", "Không có sự kiện nào.")}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
