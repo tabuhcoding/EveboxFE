@@ -535,27 +535,7 @@ export default function FormInformationEventClient({ onNextStep, btnValidate }: 
           }
         }
 
-        if (btnValidate === "Save") {
-          toast.success(transWithFallback('formValid', 'Form hợp lệ! Đã lưu thông tin sự kiện!'), { duration: 5000 });
-          onNextStep({
-            title: eventName,
-            description: post,
-            isOnline: eventTypeSelected === "online" || eventTypeSelected === "Online",
-            venue: eventAddress,
-            orgName: nameOrg,
-            orgDescription: infoOrg,
-            categoryIds: selectedCategory ? [selectedCategory.id] : [],
-            imgLogoUrl: logoOrg || "",            // use default image URL if needed
-            imgPosterUrl: background || "",       // use default image URL if needed
-            wardString: ward,
-            streetString: street,
-            districtId:
-              allProvinces
-                .find((p) => p.name.vi === province)
-                ?.districts.find((d) => d.name.vi === district)?.id ?? undefined,
-          });
-          toast.success(transWithFallback("savedInfo", "Đã lưu thông tin sự kiện!"), { duration: 5000 });
-        } else if (btnValidate === "Continue") {
+        if (btnValidate === "Continue") {
           toast.success(transWithFallback("formValid", "Form hợp lệ! Sẽ chuyển sang bước tiếp theo!"), { duration: 5000 });
           onNextStep({
             title: eventName,
