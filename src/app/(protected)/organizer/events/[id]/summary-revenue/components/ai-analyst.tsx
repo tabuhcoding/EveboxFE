@@ -43,8 +43,6 @@ export function AIAnalyst({ showingId }: AIAnalystProps) {
           params: { page, limit }
         });
 
-        console.log("Stored Responses:", storedResponses.data);
-
         if (storedResponses.data && storedResponses.data.data) {
           const responses = storedResponses.data.data.map((item: any) => ({
             query: item.query,
