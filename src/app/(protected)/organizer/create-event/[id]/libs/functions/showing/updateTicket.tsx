@@ -4,25 +4,26 @@ import { TicketProps } from "../../../libs/interface/dialog.interface";
 import { Showtime } from "../../../libs/interface/idevent.interface";
 
 export const updateTicket = (
-    showtimeId: string, 
-    ticketIndex: number, 
+    showtimeIndex: number,
+    ticketIndex: number,
     updatedTicket: TicketProps,
     setShowtimes: React.Dispatch<React.SetStateAction<Showtime[]>>,
     setEditShowtimeId: React.Dispatch<React.SetStateAction<string | null>>,
     setEditTicketIndex: React.Dispatch<React.SetStateAction<number | null>>
 ) => {
-    setShowtimes((prevShowtimes) =>
-        prevShowtimes.map((showtime) =>
-            showtime.id === showtimeId
-                ? {
-                    ...showtime,
-                    tickets: showtime.tickets.map((ticket, index) =>
-                        index === ticketIndex ? updatedTicket : ticket
-                    )
-                }
-                : showtime
-        )
-    );
-    setEditShowtimeId("");
+    setShowtimes((prevShowtimes) => {
+        const updatedShowtimes = [...prevShowtimes];
+        const updatedTickets = [...updatedShowtimes[showtimeIndex].tickets];
+        updatedTickets[ticketIndex] = updatedTicket;
+
+        updatedShowtimes[showtimeIndex] = {
+            ...updatedShowtimes[showtimeIndex],
+            tickets: updatedTickets
+        };
+
+        return updatedShowtimes;
+    });
+
+    setEditShowtimeId(null);
     setEditTicketIndex(null);
 };
