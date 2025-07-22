@@ -13,6 +13,8 @@ export default function RevenueAppTable({
   appRevenues,
   setAppRevenues,
   loading,
+  toggleOrganization,
+  orgLoadingId,
 }: RevenueAppTableProps) {
   const t = useTranslations("common");
 
@@ -35,26 +37,6 @@ export default function RevenueAppTable({
       }),
     )
   }
-
-  const toggleOrganization = (appId: number, orgId: string) => {
-    setAppRevenues((prev) =>
-      prev.map((app): AppRevenue => {
-        if (app.id === appId) {
-          return {
-            ...app,
-            selectedOrgId: orgId,
-            organizations: app.organizations.map((org) =>
-              org.id === orgId
-                ? { ...org, isExpanded: !org.isExpanded }
-                : org
-            ),
-          };
-        }
-        return app;
-      })
-    );
-  };
-
 
   const toggleEvent = (appId: number, orgId: string, eventId: number) => {
     setAppRevenues((prev) =>
@@ -181,6 +163,7 @@ export default function RevenueAppTable({
                           toggleEvent={toggleEvent}
                           toggleEventDetail={toggleEventDetail}
                           formatCurrency={formatCurrency}
+                          orgLoadingId={orgLoadingId}
                         />
                       </div>
                     </td>

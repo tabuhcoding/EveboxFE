@@ -36,7 +36,8 @@ import {
   ProvinceRevenueData,
   RevenueByTicketPriceData,
   OrganizerRevenueData,
-  EventRevenueV2Data
+  EventRevenueV2Data,
+  AppRevenueData
 } from "@/types/models/admin/revenueManagement.interface";
 
 import { CreatedLocationData } from "@/app/(protected)/organizer/create-event/[id]/libs/interface/infoevent.interface";
@@ -577,14 +578,11 @@ export async function getOrgRevenueByTicketPrice(accessToken: string): Promise<B
   }
 }
 
-export async function getOrganizerRevenue(accessToken: string, page: number, limit: number, fromDate?: string, toDate?: string, search?: string): Promise<BaseApiResponse<OrganizerRevenueData[]>> {
+export async function getAppRevenue(accessToken: string, fromDate?: string, toDate?: string): Promise<BaseApiResponse<AppRevenueData>> {
   try {
     const params = new URLSearchParams();
-    params.append("page", page.toString());
-    params.append("limit", limit.toString());
     if (fromDate) params.append("fromDate", fromDate);
     if (toDate) params.append("toDate", toDate);
-    if (search) params.append("search", search);
 
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -594,7 +592,7 @@ export async function getOrganizerRevenue(accessToken: string, page: number, lim
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_V2}?${params.toString()}`, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_APP_REVENUE}?${params.toString()}`, {
       headers: headers
     });
 
@@ -602,7 +600,7 @@ export async function getOrganizerRevenue(accessToken: string, page: number, lim
       throw new Error("Failed to fetch organizer revenue");
     }
 
-    return res.data as BaseApiResponse<OrganizerRevenueData[]>;
+    return res.data as BaseApiResponse<AppRevenueData>;
   } catch (error: any) {
     console.error("Error get organizer revenue:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
@@ -651,8 +649,7 @@ export async function getRevenueByOrgId(orgId: string, accessToken: string): Pro
     if (!res || res.status !== 200) {
       throw new Error("Failed to fetch event revenue detail");
     }
-
-    console.log("🚀 ~ getRevenueByOrgId ~ res.data:", res.data)
+    
     return res.data as BaseApiResponse<OrganizerRevenueData>;
   } catch (error: any) {
     console.error("Error get revenue by org id:", error?.response?.data?.message);

@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import { RevenueOrgTableProps } from "@/types/models/admin/revenueManagement.interface";
@@ -20,6 +21,7 @@ export default function RevenueOrgTable({
   toggleEventDetail: propToggleEventDetail,
   formatCurrency,
   className = "",
+  orgLoadingId,
 }: RevenueOrgTableProps) {
   const t = useTranslations("common");
   const router = useRouter();
@@ -27,17 +29,18 @@ export default function RevenueOrgTable({
   const organizations = propOrganizations;
 
   const handleToggleOrganization = (orgId: string) => {
+    if (orgLoadingId === orgId) return;
     if (propToggleOrganization) {
       propToggleOrganization(appId, orgId);
     }
   };
-  
+
   const handleToggleEvent = (orgId: string, eventId: number) => {
     if (propToggleEvent) {
       propToggleEvent(appId, orgId, eventId);
     }
   };
-  
+
   const handleToggleEventDetail = (orgId: string, eventId: number, detailId: string) => {
     if (propToggleEventDetail) {
       propToggleEventDetail(appId, orgId, eventId, detailId);
@@ -86,14 +89,12 @@ export default function RevenueOrgTable({
               <Fragment key={`org-${appId}-${org.id}`}>
                 <tr className="cursor-pointer hover:bg-[#E3FEF7]" onClick={() => handleToggleOrganization(org.id)}>
                   <td className="py-2 px-4 border-t flex items-center">
-                    {org.events.length > 0 && (
-                      <>
-                        {org.isExpanded ? (
-                          <ChevronDown className="w-4 h-4 mr-1" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 mr-1" />
-                        )}
-                      </>
+                    {orgLoadingId === org.id ? (
+                      <CircularProgress size={16} className="mr-1 text-blue-600" />
+                    ) : org.isExpanded ? (
+                      <ChevronDown className="w-4 h-4 mr-1" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 mr-1" />
                     )}
                     {index + 1}
                   </td>
@@ -114,20 +115,33 @@ export default function RevenueOrgTable({
                   </td>
                 </tr>
 
-                {org.isExpanded && org.events.length > 0 && (
+                {org.isExpanded && (
                   <tr>
                     <td colSpan={5} className="p-0">
-                      <div className="ml-4">
-                        <EventRevenueTable
-                          loading={propLoading}
-                          events={org.events}
-                          orgId={org.id}
-                          toggleEvent={handleToggleEvent}
-                          toggleEventDetail={handleToggleEventDetail}
-                          formatCurrency={formatCurrency}
-                          className="mt-0"
-                        />
-                      </div>
+                      {orgLoadingId === org.id ? (
+                        <div className="flex p-4 items-center justify-center">
+                          <div className="text-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0C4762] mx-auto" />
+                            <p className="mt-2 text-[#0C4762] text-sm">
+                              {transWithFallback("loadingData", "Đang tải dữ liệu...")}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        org.events.length > 0 && (
+                          <div className="ml-4">
+                            <EventRevenueTable
+                              loading={propLoading}
+                              events={org.events}
+                              orgId={org.id}
+                              toggleEvent={handleToggleEvent}
+                              toggleEventDetail={handleToggleEventDetail}
+                              formatCurrency={formatCurrency}
+                              className="mt-0"
+                            />
+                          </div>
+                        )
+                      )}
                     </td>
                   </tr>
                 )}

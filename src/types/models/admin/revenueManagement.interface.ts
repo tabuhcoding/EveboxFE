@@ -60,6 +60,13 @@ export interface OrganizerRevenueData {
   events: EventRevenueData[];
 }
 
+export interface AppRevenueData {
+  totalRevenue: number;
+  actualRevenue: number;
+  platformFeePercent: number;
+  organizers: OrganizerRevenueData[];
+}
+
 export interface ShowingRevenueInEventTable {
   showingId: string;
   startDate: string;
@@ -105,6 +112,7 @@ export type Organization = {
 
 export interface RevenueOrgTableProps {
   loading: boolean;
+  orgLoadingId?: string;
   organizations?: Organization[];
   appId?: number;
   toggleOrganization?: (appId: number, orgId: string) => void;
@@ -128,10 +136,13 @@ export type AppRevenue = {
 export interface RevenueAppTableProps {
   fromDate?: string
   toDate?: string
+  orgLoadingId?: string;
+  setOrgLoadingId?: (id: string | undefined) => void;
   appRevenues: AppRevenue[]
   setAppRevenues: Dispatch<SetStateAction<AppRevenue[]>>
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
+  toggleOrganization?: (appId: number, orgId: string) => void;
 }
 
 export interface RawRevenueChartData {
