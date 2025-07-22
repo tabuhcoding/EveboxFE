@@ -69,7 +69,6 @@ export function AIAnalyst({ showingId }: AIAnalystProps) {
     setLoading(true);
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/org/statistics/summary-ai/${showingId}`, { query });
-      setResult(res.data.data || transWithFallback('noResult', 'Không có kết quả.'));
       if (res?.data?.data){
         setAIAnalystResponse([
           {
