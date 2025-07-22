@@ -96,7 +96,7 @@ export default function AvatarUpload({ initAvatarId, onChange }: { initAvatarId?
                                     <button
                                         type="button"
                                         onClick={() => cameraInputRef.current?.click()}
-                                        className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                                        className="w-full px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-sky-800 transition-colors"
                                     >
                                         {transWithFallback('uploadImage', 'Tải ảnh lên')}
                                     </button>
@@ -156,9 +156,13 @@ export default function AvatarUpload({ initAvatarId, onChange }: { initAvatarId?
                                                 className="relative aspect-square cursor-pointer"
                                                 role="button"
                                                 tabIndex={0}
-                                                onClick={() => handleImageSelection(img.imageUrl, img.id, false)}
+                                                onClick={() => {
+                                                    setIsDialogOpen(false);
+                                                    handleImageSelection(img.imageUrl, img.id, false);
+                                                }}
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter' || e.key === ' ') {
+                                                        setIsDialogOpen(false);
                                                         handleImageSelection(img.imageUrl, img.id, false);
                                                     }
                                                 }}
@@ -181,33 +185,34 @@ export default function AvatarUpload({ initAvatarId, onChange }: { initAvatarId?
             {/* Preview Dialog */}
             {isPreviewOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-2xl w-[90%]">
-                        <div className="relative aspect-square">
+                    <div className="bg-white rounded-xl p-6 w-[400px] shadow-xl flex flex-col items-center">
+                        {/* Hình tròn preview có viền rõ */}
+                        <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-gray-300">
                             <img
                                 src={previewImage}
                                 alt="Preview"
-                                className="w-full h-full object-contain rounded-lg"
+                                className="w-full h-full object-cover"
                             />
 
-                            {/* Loading overlay cho preview */}
                             {(isUploading || isLoading) && (
-                                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                                    <CircularProgress size={48} className="text-white" />
+                                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                    <CircularProgress size={32} className="text-white" />
                                 </div>
                             )}
                         </div>
 
-                        <div className="flex justify-end gap-4 mt-6">
+                        {/* Nút xác nhận và đóng */}
+                        <div className="flex justify-end gap-3 mt-4 w-full">
                             <button
                                 onClick={() => setIsPreviewOpen(false)}
-                                className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md flex-1"
                                 disabled={isUploading || isLoading}
                             >
                                 {transWithFallback('cancel', 'Đóng')}
                             </button>
                             <button
                                 onClick={confirmImage}
-                                className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md disabled:opacity-50"
+                                className="px-4 py-2 bg-[#0C4762] text-white hover:bg-sky-800 rounded-md flex-1 disabled:opacity-50"
                                 disabled={isUploading || isLoading}
                             >
                                 {isUploading ? transWithFallback('uploading', 'Đang tải...') : transWithFallback('confirm', 'Xác nhận')}
@@ -216,6 +221,7 @@ export default function AvatarUpload({ initAvatarId, onChange }: { initAvatarId?
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

@@ -63,6 +63,7 @@ export const useImageUpload = (onChange?: (avatarId: number) => void) => {
         if (file) {
             handleImageSelection(file, 0 ,true);
         }
+        setIsDialogOpen(false);
     };
 
     useEffect(() => {
