@@ -927,5 +927,14 @@
     "updateAreaSuccess": "Update account status successfully!",
     "errorWhenUpdateAccountArea": "Error when update account area",
     "active": "Active",
-    "blocked": "Blocked"
+    "blocked": "Blocked",
+    "seatmapGuide": "Seatmap Guide",
+    "zoomInOut": "Zoom in/out",
+    "scrollToZoom": "Scroll your mouse or touchpad",
+    "moveSeatmap": "Move seat map",
+    "clickAndDrag": "Click drag or use two fingers on touchpad",
+    "selectSeat": "Select seat/section",
+    "clickToSelect": "Click to select",
+    "tip": "Tip",
+    "zoomTip": "Zoom in to see seat number and position clearly"
 }

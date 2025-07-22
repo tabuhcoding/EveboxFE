@@ -12,19 +12,19 @@ export default function LanguageSwitcher() {
         <button
           onClick={() => changeLanguage("en")}
           disabled={locale === "en"}
-          className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 w-full disabled:opacity-50"
+          className={`flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white hover:bg-teal-600 w-full disabled:bg-teal-600 disabled:text-white`}
         >
           <Image src="/images/dashboard/english-icon.png" alt="English" width={28} height={28} />
-          <span className="text-gray-700">English</span>
+          <span className="">English</span>
         </button>
 
         <button
           onClick={() => changeLanguage("vi")}
           disabled={locale === "vi"}
-          className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 w-full disabled:opacity-50"
+          className={`flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white hover:bg-teal-600 disabled:bg-teal-600 disabled:text-white w-full`}
         >
           <Image src="/images/dashboard/vietnam-icon.png" alt="Vietnamese" width={28} height={28} />
-          <span className="text-gray-700">Tiếng Việt</span>
+          <span className="">Tiếng Việt</span>
         </button>
       </div>
     </div>

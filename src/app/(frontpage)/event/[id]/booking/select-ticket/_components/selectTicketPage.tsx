@@ -23,6 +23,7 @@ import SeatMapComponent from './seatmap';
 import SeatMapSectionComponent from './seatmapSection';
 import SelectTicket from './selectTicket';
 import TicketInfor from './ticketInfo';
+import SeatmapGuide from './seatmapGuide';
 
 export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: SelectTicketPageProps) {
   const t = useTranslations('common');
@@ -299,6 +300,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                     ))}
                   </div>
                 )}
+
+                <SeatmapGuide />
               </div>
             </>
           ) :
@@ -328,6 +331,8 @@ export default function SelectTicketPage({ showingId, serverEvent, seatMapId }: 
                       ))}
                     </div>
                   )}
+
+                  <SeatmapGuide />
                 </div>
               </>
             )}
