@@ -15,7 +15,7 @@ import InputNumberField from "../../../common/form/inputNumberField";
 import { EditTypeTicketDailogProps } from "../../../../libs/interface/dialog.interface";
 import { useEventImageUpload } from "../../../../libs/hooks/useEventImageUpload";
 
-export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, updateTicket }: EditTypeTicketDailogProps) {
+export default function EditTicketDailog({ open, onClose, startDateEvent, endDateEvent, ticket, updateTicket }: EditTypeTicketDailogProps) {
     const [startDate, setStartDate] = useState<Date | null>(ticket.startDate || null);
     const [endDate, setEndDate] = useState<Date | null>(ticket.endDate || null);
     const [dateErrors, setDateErrors] = useState<{ startDate?: string, endDate?: string }>({});
@@ -41,17 +41,23 @@ export default function EditTicketDailog({ open, onClose, endDateEvent, ticket, 
     };
 
     const validateEndDate = (date: Date | null) => {
+        console.log(startDateEvent);
+                console.log(endDateEvent);
         if (!date || !startDate) return true;
 
         if (date < startDate) {
             setEndDate(null);
-            setDateErrors((prev) => ({ ...prev, startDate: transWithFallback("conditionStart", "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé") }));
-            setDateErrors((prev) => ({ ...prev, endDate: transWithFallback("conditionEnd", "Hạn cuối bán vé phải lớn hơn thời gian sự kiện bắt đầu") }));
+            setDateErrors((prev) => ({ ...prev, startDate: transWithFallback("conditionStart", "Thời gian bắt đầu bán vé phải trước hạn cuối bán vé") }));
             return false;
         }
 
-        if (endDateEvent && date > endDateEvent) {
-            setDateErrors((prev) => ({ ...prev, endDate: transWithFallback("conditionStartEnd", "Hạn cuối bán vé phải nhỏ hơn thời gian sự kiện kết thúc") }));
+        if (startDateEvent && date >= startDateEvent){
+            setDateErrors((prev) => ({ ...prev, endDate: transWithFallback("conditionEnd", "Hạn cuối bán vé phải trước thời gian sự kiện bắt đầu") }));
+            return false;
+        }
+
+        if (endDateEvent && date >= endDateEvent) {
+            setDateErrors((prev) => ({ ...prev, endDate: transWithFallback("conditionStartEnd", "Hạn cuối bán vé phải trước thời gian sự kiện kết thúc") }));
             return false;
         }
 

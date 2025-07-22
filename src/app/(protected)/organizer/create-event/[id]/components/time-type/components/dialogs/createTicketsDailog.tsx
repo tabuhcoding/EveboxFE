@@ -28,8 +28,9 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
     const [ticketPrice, setTicketPrice] = useState(isRegisterPayment ? "0" : "");
     const [isFree, setIsFree] = useState(isRegisterPayment);
     const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(new Date());
-    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(startDate);
-
+const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
+    startDate ? new Date(startDate.getTime() - 60 * 1000) : null
+);
     const [dateErrors, setDateErrors] = useState<{ selectedStartDate?: string, selectedEndDate?: string }>({});
 
     const t = useTranslations('common');
@@ -51,24 +52,34 @@ export default function CreateTypeTicketDailog({ open, onClose, startDate, endDa
     };
 
     const validateEndDate = (date: Date | null) => {
-        if (!date || !selectedStartDate) return true;
+    if (!date || !selectedStartDate) return true;
 
-        if (date < selectedStartDate) {
-            setDateErrors((prev) => ({ ...prev, selectedStartDate: transWithFallback("conditionStart", "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé") }));
-            setDateErrors((prev) => ({ ...prev, selectedEndDate: transWithFallback("conditionEnd", "Hạn cuối bán vé phải lớn hơn thời gian sự kiện bắt đầu") }));
-            return false;
-        }
+    // Must be after selectedStartDate
+    if (date < selectedStartDate) {
+        setDateErrors((prev) => ({
+            ...prev,
+            selectedStartDate: transWithFallback("conditionStart", "Thời gian bắt đầu bán vé phải nhỏ hơn hạn cuối bán vé"),
+        }));
+        return false;
+    }
 
-        if (startDate && endDate && date >= startDate && date >= endDate) {
-            setDateErrors((prev) => ({ ...prev, selectedEndDate: transWithFallback("conditionEndStart", "Hạn cuối bán vé phải trước thời gian sự kiện bắt đầu") }));
-            return false;
-        }
+    // Must be strictly before event startDate
+    if (startDate && date >= startDate) {
+        setDateErrors((prev) => ({
+            ...prev,
+            selectedEndDate: transWithFallback("conditionEndStart", "Hạn cuối bán vé phải trước thời gian sự kiện bắt đầu"),
+        }));
+        return false;
+    }
 
-        setDateErrors((prev) => ({ ...prev, selectedStartDate: undefined }));
-        setDateErrors((prev) => ({ ...prev, selectedEndDate: undefined }));
+    setDateErrors((prev) => ({
+        ...prev,
+        selectedStartDate: undefined,
+        selectedEndDate: undefined,
+    }));
+    return true;
+};
 
-        return true;
-    };
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {

@@ -47,6 +47,7 @@ export interface CreateTypeTicketDailogProps {
 export interface EditTypeTicketDailogProps {
     open: boolean;
     onClose: () => void;
+    startDateEvent: Date | null;
     endDateEvent: Date | null;
     updateTicket: (ticket: TicketProps) => void; 
     ticket: TicketProps;
