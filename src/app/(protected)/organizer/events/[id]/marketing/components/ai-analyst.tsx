@@ -184,6 +184,13 @@ export function AIAnalyst({ eventId }: AIAnalystProps) {
         </div>
       )}
 
+      {loading && (
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0C4762] mx-auto"></div>
+          <p className="mt-4 text-[#0C4762]">{transWithFallback("loadingData", "Đang tải dữ liệu...")}</p>
+        </div>
+      )}
+
       {result && (
         <div className="overflow-x-auto border border-gray-300 shadow rounded-lg p-4">
           <div className="prose max-w-none">
