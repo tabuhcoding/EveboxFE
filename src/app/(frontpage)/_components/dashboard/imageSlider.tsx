@@ -38,16 +38,10 @@ const ImageSlider = ({ events }: ImageSliderProps) => {
              <Image
                src={event.imgPosterUrl ||  '/images/dashboard/card_pic.png'}
                alt={event.title}
-               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+               className="w-full h-full object-cover"
                layout="fill"
 
              />
-             {/* Overlay with Title */}
-             <div className="absolute inset-0 bg-opacity-40 flex flex-col items-center justify-center text-white transition-opacity duration-300 group-hover:bg-opacity-60">
-               <h2 className="text-3xl md:text-5xl font-bold mb-2 md:mb-4 text-center">
-                 {event.title}
-               </h2>
-             </div>
            </div>
          </Link>
         ))}

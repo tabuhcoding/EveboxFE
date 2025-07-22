@@ -24,12 +24,12 @@ export default function MyFavoritePage({
     const [isOn, setIsOn] = useState(false);
 
     const t = useTranslations('common');
-    
-        const transWithFallback = (key: string, fallback: string) => {
-            const msg = t(key);
-            if (!msg || msg.startsWith('common.')) return fallback;
-            return msg;
-        };
+
+    const transWithFallback = (key: string, fallback: string) => {
+        const msg = t(key);
+        if (!msg || msg.startsWith('common.')) return fallback;
+        return msg;
+    };
 
     return (
         <div className="favorite-page max-w-3xl mx-auto mb-10">
@@ -38,9 +38,9 @@ export default function MyFavoritePage({
                 <div className="notify-btn">
                     <button onClick={() => setIsOn(!isOn)}
                         className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-black rounded-full shadow-sm transition-all">
-                        <Bell size={18} className={isOn ? "fill-black text-black" : "text-black"}/>
+                        <Bell size={18} className={isOn ? "fill-black text-black" : "text-black"} />
                         <span className="text-sm font-medium">
-                        {isOn ? transWithFallback('subscribed', 'Đã đăng ký') : transWithFallback('unsubscribed', 'Chưa đăng ký')}
+                            {isOn ? transWithFallback('subscribed', 'Đã đăng ký') : transWithFallback('unsubscribed', 'Chưa đăng ký')}
                         </span>
                     </button>
                 </div>
@@ -60,37 +60,40 @@ export default function MyFavoritePage({
                         <span className="ml-2 text-gray-600">{transWithFallback('loading', 'Đang tải...')}</span>
                     </div>
                 )
-                : events.length > 0 ? (
-                    <>
-                        {events.map((event) => (
-                            <div key={event.id} 
-                                className="flex items-center cursor-pointer"
-                                onClick={() => window.location.href = `/event/${event.id}`}>
-                                <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center text-base">
-                                    <Image
-                                        width={200}
-                                        height={160}
-                                        src={event.imageUrl || 'https://res.cloudinary.com/de66mx8mw/image/upload/v1744458011/defaultImgEvent_spjrst.png'}
-                                        alt={event.title}
-                                        className="object-cover rounded-md"
-                                    />
+                    : events.length > 0 ? (
+                        <>
+                            {events.map((event, index) => (
+                                <div key={event.id}>
+                                    <div
+                                        className="flex items-center gap-4 p-2 mb-4 bg-white border border-[#0C4762] rounded-xl shadow-sm hover:shadow-md hover:border-teal-500 transition cursor-pointer"
+                                        onClick={() => window.location.href = `/event/${event.id}`}>
+                                        <div className="w-24 h-24 flex-shrink-0">
+                                            <Image
+                                                width={200}
+                                                height={160}
+                                                src={event.imageUrl || 'https://res.cloudinary.com/de66mx8mw/image/upload/v1744458011/defaultImgEvent_spjrst.png'}
+                                                alt={event.title}
+                                                className="object-cover rounded-lg w-full h-full"
+                                            />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold text-[#0C4762]">{event.title}</h3>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="ml-4">
-                                    <h2 className="text-base px-2 md:text-base font-bold">{event.title}</h2>
-                                </div>
-                            </div>
-                        ))}
-                        <Pagination
-                            currentPage={currentPage}
-                            totalItems={totalItems}
-                            totalPages={totalPages}
-                            itemsPerPage={itemsPerPage}
-                            onPrevious={onPrevious}
-                            onNext={onNext} />
-                    </>
-                ) : (
-                    <p className="text-base">{transWithFallback('noLoveOrg', 'Bạn chưa có Nhà tổ chức yêu thích nào!')}</p>
-                )}
+                            ))}
+
+                            <Pagination
+                                currentPage={currentPage}
+                                totalItems={totalItems}
+                                totalPages={totalPages}
+                                itemsPerPage={itemsPerPage}
+                                onPrevious={onPrevious}
+                                onNext={onNext} />
+                        </>
+                    ) : (
+                        <p className="text-base">{transWithFallback('noLoveOrg', 'Bạn chưa có Nhà tổ chức yêu thích nào!')}</p>
+                    )}
             </div>
         </div>
     )
