@@ -62,6 +62,7 @@ const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
         }));
         return false;
     }
+    console.log(endDate);
 
     // Must be strictly before event startDate
     if (startDate && date >= startDate) {

@@ -36,7 +36,7 @@ export default function TimeAndTypeTickets() {
         try {
             let showtimeId = showing.id; // Use existing ID or new one
             // Handle Showtime creation or update
-            if (!newShowId || newShowId=="") {
+            if (!newShowId || newShowId==="") {
                 const result = await createShowing(eventId, {
                     startTime: showing.startDate?.toISOString() || "",
                     endTime: showing.endDate?.toISOString() || "",
