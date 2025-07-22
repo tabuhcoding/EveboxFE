@@ -1,4 +1,9 @@
 {
+  "query": "Truy vấn: ",
+  "askQuestion": "Nhập câu hỏi",
+  "DontAskAgain": "Không hỏi lại lần sau",
+  "AIConfirm": "Dữ liệu sự kiện và doanh thu của bạn sẽ được chia sẻ với nhà cung cấp AI. Bạn có đồng ý tiếp tục không?",
+  "note": "Lưu ý",
   "reset": "Thiết lập lại",
   "signInToAddNoti": "Đăng nhập để thêm thông báo cho sự kiện!",
   "signInToAddFavNoti": "Đăng nhập để thêm sự kiện vào danh sách yêu thích!",

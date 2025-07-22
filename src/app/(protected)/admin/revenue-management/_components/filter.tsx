@@ -93,9 +93,9 @@ export default function Filter({ onFilterChange, isLoading }: FilterProps) {
                       : prev.toDate,
                 }));
               }}
-              className="border-0 outline-none px-2 py-2"
+              className="border-0 outline-none px-4 py-2"
             />
-            <div className="flex items-center px-4 py-2">
+            <div className="flex items-center px-4 py-2 ">
               <span className="text-sm text-gray-600">{transWithFallback('toDate', 'Đến ngày')}:</span>
             </div>
             <input
@@ -105,7 +105,7 @@ export default function Filter({ onFilterChange, isLoading }: FilterProps) {
               onChange={(e) =>
                 setDateRange((prev) => ({ ...prev, toDate: e.target.value }))
               }
-              className="border-0 outline-none px-2 py-2"
+              className="border-0 outline-none px-2 py-2 rounded-r-md"
             />
           </div>
 

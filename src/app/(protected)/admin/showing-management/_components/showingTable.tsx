@@ -109,7 +109,7 @@ export default function ShowingTable({ searchKeyword, dateFrom, dateTo }: Showin
             <thead>
               <tr className="bg-[#0C4762] text-center text-white text-xs rounded-t-lg">
                 <th className="px-4 py-3 cursor-pointer min-w-[64px]" onClick={() => handleSort("id")}>
-                  ID<SortIcon field="id" sortConfig={sortConfig} />
+                  ID <SortIcon field="id" sortConfig={sortConfig} />
                 </th >
                 <th className="px-4 py-3 cursor-pointer min-w-[160px]" onClick={() => handleSort("eventTitle")}>
                   {transWithFallback('eventName', 'Tên sự kiện')} <SortIcon field="eventTitle" sortConfig={sortConfig} />

@@ -24,6 +24,8 @@ export function AIAnalyst({ type }: AIAnalystProps) {
   const [aiAnalystResponse, setAIAnalystResponse] = useState<AIAnalystResponse[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [dontAskAgain, setDontAskAgain] = useState(false);
   const limit = 5;
 
   const transWithFallback = (key: string, fallback: string) => {
@@ -98,6 +100,20 @@ export function AIAnalyst({ type }: AIAnalystProps) {
       setLoading(false);
     }
   };
+  const handleAnalyzeClick = () => {
+    if (dontAskAgain) {
+      handleSearch();
+    } else {
+      setShowConfirmModal(true);
+    }
+  };
+  const handleConfirm = () => {
+    if (dontAskAgain) {
+      localStorage.setItem("ai_confirmed", "true");
+    }
+    setShowConfirmModal(false);
+    handleSearch();
+  };
 
   return (
     <div className="mt-8">
@@ -108,19 +124,54 @@ export function AIAnalyst({ type }: AIAnalystProps) {
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
           type="text"
-          placeholder="Nhập câu hỏi"
+          placeholder={transWithFallback('askQuestion', 'Nhập câu hỏi')}
           className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <button
-          onClick={handleSearch}
-          disabled={loading}
+          onClick={handleAnalyzeClick}
+          disabled={loading || !query.trim()}
           className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
-          {loading ? transWithFallback('analyzing', 'Đang phân tích...') : transWithFallback('analysis', 'Phân tích')}        
+          {loading ? transWithFallback('analyzing', 'Đang phân tích...') : transWithFallback('analysis', 'Phân tích')}
         </button>
       </div>
+
+      {/* Modal Xác Nhận */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h4 className="text-lg font-bold text-red-800 mb-4">{transWithFallback('note','Lưu ý')}</h4>
+            <p className="text-gray-700 mb-4">
+              {transWithFallback('AIConfirm', 'Dữ liệu sự kiện và doanh thu của bạn sẽ được chia sẻ với nhà cung cấp AI. Bạn có đồng ý tiếp tục không?')}
+            </p>
+            <label className="flex items-center space-x-2 mb-4">
+              <input
+                type="checkbox"
+                checked={dontAskAgain}
+                onChange={() => setDontAskAgain(!dontAskAgain)}
+                className="form-checkbox h-4 w-4 text-blue-600"
+              />
+              <span className="text-sm text-gray-600">{transWithFallback('dontAskAgain','Không hỏi lại lần sau')}</span>
+            </label>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+              >
+                {transWithFallback('cancel', 'Hủy')}
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f]"
+              >
+                {transWithFallback('iAgree', 'Đồng ý')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {result && (
         <div className="overflow-x-auto border border-gray-300 shadow rounded-lg p-4">
@@ -147,7 +198,7 @@ export function AIAnalyst({ type }: AIAnalystProps) {
                 className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-t-md font-medium text-[#0C4762]"
               >
                 <div className="flex justify-between items-center">
-                  <span>Query: {item.query}</span>
+                  <span>{transWithFallback('query:','Truy vấn: ')} {item.query}</span>
                   <span className="text-sm text-gray-500">
                     {new Date(item.created_at).toLocaleString("vi-VN")}
                   </span>

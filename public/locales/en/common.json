@@ -1,4 +1,9 @@
 {
+    "query": "Query: ",
+    "askQuestion": "Enter your question",
+    "dontAskAgain": "Don't ask again",
+    "AIConfirm": "Your event and revenue data will be shared with the AI provider. Do you agree to continue?",
+    "note": "Note",
     "reset": "Reset filter",
     "signInToAddNoti": "Please sign in to add notification for event!",
     "signInToAddFavNoti": "Please sign in to add favorist event!",
@@ -114,7 +119,7 @@
     "notOpenTicket": "Not open",
     "registerClosed": "Register closed",
     "registerClosedTicket": "Register closed",
-    "saleClosed": "Sale closed",
+    "saleClosed": "Ticket sales closed",
     "saleClosedTicket": "Closed",
     "special": "Special",
     "trending": "Trending",

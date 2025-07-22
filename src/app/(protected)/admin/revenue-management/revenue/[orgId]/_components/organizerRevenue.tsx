@@ -388,7 +388,7 @@ export default function OrganizerRevenuePage({ orgId }: { orgId: string }) {
                     onChange={(e) =>
                       setDateRange({ ...dateRange, toDate: e.target.value })
                     }
-                    className="border-0 outline-none px-2 py-2"
+                    className="border-0 outline-none px-2 py-2 rounded-r-md"
                   />
                 </div>
               </div>
