@@ -72,51 +72,34 @@ export default function RevenueManagementPage() {
     if (!session?.user?.accessToken) return;
 
     try {
-      const response = await getOrgRevenueList(session?.user?.accessToken || "", currentPage, itemsPerPage, fromDate, toDate, search);
+      setLoading(true);
+      const response = await getAppRevenue(session.user.accessToken, fromDate, toDate);
 
-      if (response?.statusCode === HttpStatusCode.Ok) {
-        if (response.data.length > 0) {
-          const organizations = response.data.map((org): AppRevenue["organizations"][0] => ({
-            id: org.orgId,
-            name: org.organizerName,
-            actualRevenue: org.actualRevenue * 1000,
-            events: org.events.map((event): EventRevenueInEventTable => ({
-              id: event.eventId,
-              name: event.eventName,
-              totalRevenue: event.totalRevenue * 1000,
-              platformFee: event.platformFeePercent,
-              actualRevenue: event.actualRevenue * 1000,
-              isExpanded: false,
-              showings: event.showings.map((show): ShowingRevenueInEventTable => ({
-                showingId: show.showingId,
-                startDate: show.startDate,
-                endDate: show.endDate,
-                revenue: show.revenue * 1000,
-                isExpanded: false,
-                ticketTypes: show.ticketTypes.map((ticket): TicketTypeRevenueData => ({
-                  ticketTypeId: ticket.ticketTypeId,
-                  name: ticket.name,
-                  price: ticket.price,
-                  sold: ticket.sold,
-                  revenue: ticket.revenue * 1000,
-                })),
-              })),
-            })),
-          }));
+      if (response.statusCode === HttpStatusCode.Ok) {
+        const organizations = response.data.organizers.map((org) => ({
+          id: org.orgId,
+          name: org.organizerName,
+          actualRevenue: org.actualRevenue * 1000,
+          isExpanded: false,
+          events: [],
+        }))
 
-          const app: AppRevenue = {
-            id: 1,
-            totalRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0) * 1000,
-            systemDiscount: response.data[0].platformFeePercent ?? 10,
-            actualRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0) * 1000 * response.data[0].platformFeePercent || 10,
-            isExpanded: true,
-            organizations,
-          };
+        const app: AppRevenue = {
+          id: 1,
+          totalRevenue: response.data.totalRevenue * 1000,
+          actualRevenue: response.data.actualRevenue * 1000,
+          systemDiscount: response.data.platformFeePercent ?? 10,
+          isExpanded: true,
+          organizations,
+        };
 
-          setAppRevenues([app]);
-          setTotalItems(response.pagination?.totalItems || 0);
-          setTotalPages(response.pagination?.totalPages || 0);
-        }
+        setAppRevenues([app]);
+        setTotalItems(response.pagination?.totalItems || 0);
+        setTotalPages(response.pagination?.totalPages || 0);
+      } else {
+        setAppRevenues([]);
+        setAlertMessage(`${transWithFallback('errorWhenFetchRevenue', 'Lỗi xảy ra khi lấy dữ liệu doanh thu')}`);
+        setAlertOpen(true);
       }
     } catch (error) {
       console.error("Failed to fetch app revenue", error);

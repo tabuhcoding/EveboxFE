@@ -681,7 +681,6 @@ export async function getRevenueByOrgId(orgId: string, accessToken: string): Pro
     if (!res || res.status !== 200) {
       throw new Error("Failed to fetch event revenue detail");
     }
-
     return res.data as BaseApiResponse<OrganizerRevenueData>;
   } catch (error: any) {
     console.error("Error get revenue by org id:", error?.response?.data?.message);
