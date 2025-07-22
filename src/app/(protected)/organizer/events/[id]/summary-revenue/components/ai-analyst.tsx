@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Markdown from "react-markdown";
 import { useTranslations } from "next-intl";
+import { CircularProgress } from "@mui/material";
 
 interface AIAnalystProps {
   showingId: string;
@@ -123,11 +124,18 @@ export function AIAnalyst({ showingId }: AIAnalystProps) {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button
-          onClick={handleAnalyzeClick}
-          disabled={loading || !query.trim()}
-          className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
+          onClick={handleSearch}
+          disabled={loading}
+          className=" flex items-center justify-center gap-1 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
-          {loading ? transWithFallback('analyzing', 'Đang phân tích...') : transWithFallback('analysis', 'Phân tích')}
+          {loading ? (
+            <>
+              <CircularProgress size={16} color="inherit" />
+              {transWithFallback('analyzing', 'Đang phân tích...')}
+            </>
+          ) : (
+            transWithFallback('analysis', 'Phân tích')
+          )}
         </button>
       </div>
       {/* Modal Xác Nhận */}

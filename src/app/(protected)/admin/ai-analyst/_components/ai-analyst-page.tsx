@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
 import Markdown from "react-markdown";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 
@@ -52,9 +53,16 @@ export default function AIAnalystPage() {
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
+            className=" flex items-center justify-center gap-1 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
           >
-            {loading ? transWithFallback('analyzing', 'Đang phân tích...') : transWithFallback('analysis', 'Phân tích')}
+            {loading ? (
+              <>
+                <CircularProgress size={16} color="inherit" />
+                {transWithFallback('analyzing', 'Đang phân tích...')}
+              </>
+            ) : (
+              transWithFallback('analysis', 'Phân tích')
+            )}
           </button>
         </div>
 
