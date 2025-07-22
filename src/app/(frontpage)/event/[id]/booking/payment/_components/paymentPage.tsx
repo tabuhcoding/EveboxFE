@@ -88,7 +88,9 @@ export default function PaymentPage({ showingId, seatMapId }: { showingId: strin
         <Navigation title={transWithFallback("checkout", "Thanh toán")} />
 
         <div className="fixed top-10 right-10 mt-4">
-          <CountdownTimer expiredTime={redisSeatInfo?.expiredTime ? redisSeatInfo?.expiredTime : 15} />
+          {redisSeatInfo?.expiredTime && (
+            <CountdownTimer expiredTime={redisSeatInfo?.expiredTime} />
+          )}
         </div>
 
         <div className="px-4 sm:px-6 lg:px-12 xl:px-24">
