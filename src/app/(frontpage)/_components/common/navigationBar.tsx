@@ -5,7 +5,7 @@ import { Menu, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 /* Package Application */
 import useAvatar from "app/(protected)/(user)/my-profile/_components/libs/hooks/useAvatar";
@@ -21,9 +21,30 @@ const NavigationBar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { locale } = useI18n();
   const t = useTranslations("common");
+  const langSwitcherRef = useRef<HTMLDivElement>(null);
   
   const { userInfo, isLoading, userInfoFetched } = useUserInfo();
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        langSwitcherRef.current &&
+        !langSwitcherRef.current.contains(event.target as Node)
+      ) {
+        setIsLangOpen(false);
+      }
+    };
+
+    if (isLangOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isLangOpen]);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -66,7 +87,7 @@ const NavigationBar = () => {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
-            <div className="relative z-50">
+            <div className="relative z-50" ref={langSwitcherRef}>
               <button
                 className="flex items-center gap-1 sm:gap-2 text-white p-2 hover:bg-teal-700 rounded-md"
                 onClick={() => setIsLangOpen(!isLangOpen)}
