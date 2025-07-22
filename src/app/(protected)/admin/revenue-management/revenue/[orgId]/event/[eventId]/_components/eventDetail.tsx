@@ -8,16 +8,15 @@ import { ChevronDown, RefreshCw } from "lucide-react";
 
 /* Package Application */
 import { useAuth } from "@/contexts/auth.context";
+import { ShowingInOrgEvent } from "@/types/models/admin/revenueManagement.interface";
 import { OverviewCard } from "@/app/(protected)/organizer/events/[id]/summary-revenue/components/overviewCard";
-import { getEventRevenueDetail } from "@/services/event.service";
+import { getEventRevenueDetail, getRevenueByShowingId } from "@/services/event.service";
 
 type TicketType = {
   id: number
   type: string
   price: number
   sold: number
-  locked: number
-  total: number
   revenue: number
 }
 
@@ -41,7 +40,7 @@ type Event = {
   organizerName: string
   location: string
   address: string
-  showings: Showing[]
+  showings: ShowingInOrgEvent[]
 }
 
 type EventOption = { id: number; name: string; organizerId: string }
@@ -52,9 +51,12 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
 
   const [event, setEvent] = useState<Event | null>(null);
   const [selectedShowingId, setSelectedShowingId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingDetailShowing, setIsLoadingDetailShowing] = useState<boolean>(false);
   const [selectedFilter, setSelectedFilter] = useState(event?.name)
   const [orgId, setOrgId] = useState("");
+  const [selectedShowingDetail, setSelectedShowingDetail] = useState<Showing | null>(null);
+
 
   useEffect(() => {
     const fetchRevenueDetail = async () => {
@@ -68,32 +70,21 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
           setEvent(null);
         }
 
-        const showings = response.data.map((s): Showing => ({
-          id: s.showingId,
-          startDate: new Date(s.startTime).toLocaleDateString("vi-VN"),
-          endDate: new Date(s.endTime).toLocaleDateString("vi-VN"),
-          startTime: new Date(s.startTime).toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          endTime: new Date(s.endTime).toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+        const showings = response.data.showings.map((s): ShowingInOrgEvent => ({
+          showingId: s.showingId,
+          startDate: new Date(s.startDate).toLocaleDateString("vi-VN"),
+          endDate: new Date(s.endDate).toLocaleDateString("vi-VN"),
           revenue: s.revenue * 1000,
-          totalTickets: 0,      // Placeholder
-          soldTickets: 0,       // Placeholder
-          percentageSold: 0,    // Placeholder
-          ticketTypes: [],      // Placeholder
+          ticketTypes: [],
         }));
 
         const mappedEvent: Event = {
           id: parsedEvent.id,
-          name: parsedEvent.name,
+          name: response.data.title,
           organizerId: parsedEvent.organizerId,
           organizerName: parsedEvent.organizerName,
-          location: parsedEvent.location ?? "Không rõ",
-          address: parsedEvent.address ?? "Không rõ",
+          location: response.data.locationsString,
+          address: response.data.venue,
           showings,
         };
 
@@ -109,8 +100,6 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
 
     fetchRevenueDetail();
   }, [eventId]);
-
-  const selectedShowing = event?.showings.find((s) => s.id === selectedShowingId);
 
   const [eventOptions, setEventOptions] = useState<EventOption[]>([]);
 
@@ -159,18 +148,53 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
   }
 
   // // Handle row click
-  const handleRowClick = (showingId: string) => {
+  const handleRowClick = async (showingId: string) => {
     if (selectedShowingId === showingId) {
-      setSelectedShowingId(null) // Toggle off if already selected
-    } else {
-      setSelectedShowingId(showingId)
-      // Simulate loading data for the selected showing
-      setIsLoading(true)
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
+      setSelectedShowingId(null);
+      setSelectedShowingDetail(null);
+      return;
     }
-  }
+
+    setSelectedShowingId(showingId);
+    setIsLoadingDetailShowing(true);
+
+    try {
+      const eventData = localStorage.getItem("selectedEvent");
+      const parsedEvent = eventData ? JSON.parse(eventData) : null;
+
+      const response = await getRevenueByShowingId(session?.user?.accessToken || "", parsedEvent.organizerId, parsedEvent.id, showingId);
+
+      if (response.statusCode === 200) {
+        const detail = response.data;
+
+        const newShowing: Showing = {
+          id: detail.showingId,
+          startDate: new Date(detail.startTime).toLocaleDateString("vi-VN"),
+          endDate: new Date(detail.endTime).toLocaleDateString("vi-VN"),
+          startTime: detail.startTime,
+          endTime: detail.endTime,
+          revenue: detail.totalRevenue,
+          totalTickets: detail.totalTickets,
+          soldTickets: detail.ticketsSold,
+          percentageSold: detail.percentageSold,
+          ticketTypes: detail.byTicketType.map((t, i) => ({
+            id: i,
+            type: t.typeName,
+            price: t.price,
+            sold: t.sold,
+            revenue: t.price * t.sold,
+          }))
+        };
+
+        setSelectedShowingDetail(newShowing);
+      }
+    } catch (err) {
+      console.error("Error fetching showing detail:", err);
+      setSelectedShowingDetail(null);
+    } finally {
+      setIsLoadingDetailShowing(false);
+    }
+  };
 
   return (
     event ? (
@@ -262,12 +286,12 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
               ) : (
                 event.showings.map((showing) => (
                   <tr
-                    key={`showing-${showing.id}`}
-                    className={`cursor-pointer hover:bg-[#EAFDFC] ${selectedShowingId === showing.id ? "bg-[#A6F6F1]" : "bg-white"
+                    key={`showing-${showing.showingId}`}
+                    className={`cursor-pointer hover:bg-[#EAFDFC] ${selectedShowingId === showing.showingId ? "bg-[#A6F6F1]" : "bg-white"
                       }`}
-                    onClick={() => handleRowClick(showing.id)}
+                    onClick={() => handleRowClick(showing.showingId)}
                   >
-                    <td className="py-2 px-4 border-t">{showing.id}</td>
+                    <td className="py-2 px-4 border-t">{showing.showingId}</td>
                     <td className="py-2 px-4 border-t">{showing.startDate}</td>
                     <td className="py-2 px-4 border-t">{showing.endDate}</td>
                     <td className="py-2 px-4 border-t">{formatCurrency(showing.revenue)}</td>
@@ -279,37 +303,56 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
         </div>
 
         {/* Showing Details using reused components */}
-        {selectedShowing && (
-          <div className="mb-6">
-            <hr className="border-gray-300 mb-6" />
-
-            <div className="text-center mb-6">
-              <h3 className="text-lg font-semibold">
-                Showing: {selectedShowing.startTime}, {selectedShowing.startDate} - {selectedShowing.endTime},{" "}
-                {selectedShowing.endDate}
-              </h3>
+        {isLoadingDetailShowing ? (
+          <div className="flex-1 p-6 md-64 w-full flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0C4762] mx-auto"></div>
+              <p className="mt-4 text-[#0C4762]">{transWithFallback("loadingData", "Đang tải dữ liệu...")}</p>
             </div>
-
-            {isLoading ? (
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0C4762] mx-auto"></div>
-                <p className="mt-4 text-[#0C4762]">{transWithFallback("loadingData", "Đang tải dữ liệu...")}</p>
-              </div>
-            ) : (
-              <>
-                {/* Sử dụng OverviewCard component */}
-                <OverviewCard
-                  totalRevenue={selectedShowing.revenue}
-                  ticketsSold={selectedShowing.soldTickets}
-                  totalTickets={selectedShowing.totalTickets}
-                  percentageSold={selectedShowing.percentageSold}
-                />
-
-                {/* Sử dụng TicketTable component */}
-                {/* <TicketTable ticketTypes={selectedShowing.ticketTypes} /> */}
-              </>
-            )}
           </div>
+        ) : (
+          selectedShowingDetail && (
+            <div className="mb-6">
+              <hr className="border-gray-300 mb-6" />
+
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-semibold">
+                  Showing: {selectedShowingDetail.startDate} - {selectedShowingDetail.endDate}
+                </h3>
+              </div>
+
+              <OverviewCard
+                totalRevenue={selectedShowingDetail.revenue}
+                ticketsSold={selectedShowingDetail.soldTickets}
+                totalTickets={selectedShowingDetail.totalTickets}
+                percentageSold={selectedShowingDetail.percentageSold}
+              />
+
+              <div className="mt-4">
+                <h4 className="font-semibold text-[#0C4762] mb-2">{transWithFallback('ticketType', 'Chi tiết vé')}</h4>
+                <table className="w-full text-sm border">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="py-2 px-4">{transWithFallback('ticketType', 'Chi tiết vé')}</th>
+                      <th className="py-2 px-4">{transWithFallback('ticketPrice', 'Giá vé')}</th>
+                      <th className="py-2 px-4">{transWithFallback('soldTickets', 'Vé đã bán')}</th>
+                      <th className="py-2 px-4">{transWithFallback('revenue', 'Doanh thu')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedShowingDetail.ticketTypes.map(ticket => (
+                      <tr key={ticket.type}>
+                        <td className="py-2 px-4">{ticket.type}</td>
+                        <td className="py-2 px-4">{formatCurrency(ticket.price)}</td>
+                        <td className="py-2 px-4">{ticket.sold}</td>
+                        <td className="py-2 px-4">{formatCurrency(ticket.revenue)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
         )}
       </div>
     ) : (

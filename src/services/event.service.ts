@@ -37,7 +37,9 @@ import {
   RevenueByTicketPriceData,
   OrganizerRevenueData,
   EventRevenueV2Data,
-  AppRevenueData
+  AppRevenueData,
+  EventRevenueData,
+  ShowingDetailRevenueData
 } from "@/types/models/admin/revenueManagement.interface";
 
 import { CreatedLocationData } from "@/app/(protected)/organizer/create-event/[id]/libs/interface/infoevent.interface";
@@ -639,7 +641,7 @@ export async function getAppRevenue(accessToken: string, fromDate?: string, toDa
   }
 }
 
-export async function getEventRevenueDetail(orgId: string, eventId: number, accessToken: string): Promise<BaseApiResponse<EventRevenueV2Data[]>> {
+export async function getEventRevenueDetail(orgId: string, eventId: number, accessToken: string): Promise<BaseApiResponse<EventRevenueV2Data>> {
   try {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -657,9 +659,64 @@ export async function getEventRevenueDetail(orgId: string, eventId: number, acce
       throw new Error("Failed to fetch event revenue detail");
     }
 
-    return res.data as BaseApiResponse<EventRevenueV2Data[]>;
+    return res.data as BaseApiResponse<EventRevenueV2Data>;
   } catch (error: any) {
     console.error("Error get event revenue detail:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getEventsRevenue(accessToken: string, page: number, limit: number, fromDate?: string, toDate?: string, search?: string): Promise<BaseApiResponse<EventRevenueData[]>> {
+  try {
+    const params = new URLSearchParams();
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+    if (fromDate) params.append("fromDate", fromDate);
+    if (toDate) params.append("toDate", toDate);
+    if (search) params.append("search", search);
+
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_EVENT_REVENUE}?${params.toString()}`, {
+      headers: headers
+    });
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+
+    return res.data as BaseApiResponse<EventRevenueData[]>;
+  } catch (error: any) {
+    console.error("Error get event revenue:", error?.response?.data?.message);
+    throw new Error(`${error?.response?.data?.message}`);
+  }
+}
+
+export async function getRevenueByShowingId(accessToken: string, orgId: string, eventId: number, showingId: string): Promise<BaseApiResponse<ShowingDetailRevenueData>> {
+  try {
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken && accessToken !== "") {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE}/${orgId}/${eventId}/${showingId}`);
+
+    if (!res || res.status !== 200) {
+      throw new Error("Failed to fetch event revenue detail");
+    }
+
+    return res.data as BaseApiResponse<ShowingDetailRevenueData>;
+  } catch (error: any) {
+    console.error("Error get revenue by showing id:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);
   }
 }

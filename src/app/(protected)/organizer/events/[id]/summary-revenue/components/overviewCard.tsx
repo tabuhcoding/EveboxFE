@@ -61,10 +61,10 @@ export const OverviewCard = ({
   percentageSold,
 }: OverviewCardProps) => {
   const t = useTranslations("common");
-    const transWithFallback = (key: string, fallback: string) => {
-      const msg = t(key);
-      return msg.startsWith("common.") ? fallback : msg;
-    };
+  const transWithFallback = (key: string, fallback: string) => {
+    const msg = t(key);
+    return msg.startsWith("common.") ? fallback : msg;
+  };
   return (
     <div className="mt-4">
       <h3 className="text-lg font-bold text-[#0C4762] mb-2"> {transWithFallback("overview", "Tổng quan")}</h3>
@@ -83,13 +83,13 @@ export const OverviewCard = ({
         <div className="bg-[#387478] text-white p-6 flex-1 flex items-center gap-4 rounded-lg -ml-4 justify-end">
           <div>
             <p className="text-sm text-white text-right">{transWithFallback("soldTickets", "Số vé đã bán")}</p>
-            <h2 className="text-2xl font-bold text-white text-right">{ticketsSold} vé</h2>
-            <p className="text-xs text-white text-right">{transWithFallback("total", "Tổng")}: {totalTickets} vé</p>
+            <h2 className="text-2xl font-bold text-white text-right">{ticketsSold} {transWithFallback("ticket", "vé")}</h2>
+            <p className="text-xs text-white text-right">{transWithFallback("total", "Tổng")}: {totalTickets} {transWithFallback("ticket", "vé")}</p>
           </div>
           <div className="flex flex-col items-center">
-  <PercentageCircle percentage={percentageSold} />
-  <p className="text-sm mt-2 text-light-600">Đã bán</p>
-</div>
+            <PercentageCircle percentage={percentageSold} />
+            <p className="text-sm mt-2 text-light-600">{transWithFallback("sold", "Đã bán")}</p>
+          </div>
         </div>
 
       </div>

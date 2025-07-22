@@ -180,10 +180,37 @@ export interface RevenueByTicketPriceData {
   revenue: number;
 }
 
-// Revenue [orderId, eventId]
+// Revenue [orgId, eventId]
+export interface ShowingInOrgEvent {
+  showingId: string;
+  startDate: string;
+  endDate: string;
+  revenue: number;
+  ticketTypes: TicketTypeRevenueData[]
+}
 export interface EventRevenueV2Data {
+  title: string;
+  venue: string;
+  locationsString: string;
+  showings: ShowingInOrgEvent[];
+}
+
+export interface ByTicketTypeData {
+  typeName: string;
+  price: number;
+  sold: number;
+  ratio: number;
+}
+
+export interface ShowingDetailRevenueData {
+  eventId: number;
+  eventTitle: string;
   showingId: string;
   startTime: string;
   endTime: string;
-  revenue: number;
+  totalRevenue: number;
+  ticketsSold: number;
+  totalTickets: number;
+  percentageSold: number;
+  byTicketType: ByTicketTypeData[];
 }
