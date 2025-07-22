@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 /* Package Application */
 import RevenueOrgTable from "../org/revenueOrgTable";
-import { RevenueAppTableProps, AppRevenue } from "@/types/models/admin/revenueManagement.interface";
+import { RevenueAppTableProps } from "@/types/models/admin/revenueManagement.interface";
 
 export default function RevenueAppTable({
   appRevenues,
