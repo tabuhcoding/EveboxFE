@@ -72,7 +72,7 @@ const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
         }));
         return false;
     }
-
+    console.log(endDate);
     setDateErrors((prev) => ({
         ...prev,
         selectedStartDate: undefined,
