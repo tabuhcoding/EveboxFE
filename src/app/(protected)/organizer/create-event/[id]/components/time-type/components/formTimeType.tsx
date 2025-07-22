@@ -108,7 +108,6 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
             }
         };
 
-
         fetchShowtimes();
     }, [eventId]);
 
@@ -148,12 +147,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
             return;
         }
 
-        // Nếu nút là "Save"
-        if (btnValidate2 === "Save") {
-            toast.success(transWithFallback("validForm", "Form hợp lệ"));
-        }
-        // Nếu nút là "Continue"
-        else if (btnValidate2 === "Continue") {
+        if (btnValidate2 === "Continue") {
             toast.success(transWithFallback("continueForm", "Form hợp lệ! Chuyển sang bước tiếp theo..."));
             onNextStep();
         }
@@ -303,9 +297,11 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                                     <EditTicketDailog
                                                         open={true}
                                                         onClose={() => setEditShowtimeId("")}
+                                                        startDateEvent={showtime.startDate}
                                                         endDateEvent={showtime.endDate}
                                                         ticket={showtime.tickets[editTicketIndex]}
-                                                        updateTicket={(updatedTicket) => updateTicket(showtime.id, editTicketIndex, updatedTicket, setShowtimes, setEditShowtimeId, setEditTicketIndex)}
+                                                        updateTicket={(updatedTicket) => updateTicket(index, editTicketIndex, updatedTicket, setShowtimes, setEditShowtimeId, setEditTicketIndex)
+}
                                                     />)}
 
                                                 <Trash2 className="p-2 bg-red-500 text-white rounded w-8 h-8 cursor-pointer"
@@ -348,7 +344,7 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
                                                 toggleDialog(showtime.id, setShowtimes)}
                                             startDate={showtime.startDate}
                                             endDate={showtime.endDate}
-                                            addTicket={(newTicket) => addTicket(showtime.id, newTicket, setShowtimes)}
+                                            addTicket={(newTicket) => addTicket(index, newTicket, setShowtimes)}
                                         />}
                                     {showtime.showCopyTicketDialog &&
                                         <CopyTicketDailog

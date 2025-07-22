@@ -25,10 +25,6 @@ export default function QuestionsPage() {
     const [open, setOpen] = useState(false); //Notification Dialog 
     const [shouldProceed, setShouldProceed] = useState(false); // Trạng thái kiểm tra khi đóng Dialog
 
-    const handleSave = () => {
-        setBtnValidte4("Save");
-    }
-
     const handleContinue = () => {
         setBtnValidte4("Continue");
         setOpen(true);
@@ -63,13 +59,6 @@ export default function QuestionsPage() {
                 <div className="w-full flex justify-center">
                     <ol className="flex space-x-6">
                         <Navigation step={step} />
-                        <div className="flex gap-4 mt-4 mb-6">
-                            <button className="text-xs w-18 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
-                                type="submit" form="ques-form" onClick={handleSave}
-                            >
-                                {transWithFallback("save", "Lưu")}
-                            </button>
-                        </div>
 
                         <div className="flex gap-4 mt-4 mb-6">
                             <button className="text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"

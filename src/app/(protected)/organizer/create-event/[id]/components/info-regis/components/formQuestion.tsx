@@ -33,6 +33,7 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
     const [forms, setForms] = useState<Form[]>([]);
     const [selectedForm, setSelectedForm] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const fixFormIds = [1208,1242,12404,12518,12500]
 
     const t = useTranslations('common');
 
@@ -47,9 +48,9 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
 
         try {
             const fetchedForms = await getAllFormForOrg(); // ← Replaces fetch()
-
-            const sampleFormsData = fetchedForms.filter((form) => form.createdBy === null);
-            const createdFormsData = fetchedForms.filter((form) => form.createdBy !== null);
+  
+            const sampleFormsData = fetchedForms.filter((form) => fixFormIds.includes(form.id) );
+            const createdFormsData = fetchedForms.filter((form) =>  !fixFormIds.includes(form.id));
 
             setSampleForms(sampleFormsData);
             setCreatedForms(createdFormsData);
@@ -129,14 +130,8 @@ export default function FormQuestionClient({ onNextStep, btnValidate4, showingId
         const newErrors: { [key: string]: boolean } = {};
 
         if (Object.keys(newErrors).length === 0) {
-            // Nếu nút là "Save"
-            if (btnValidate4 === "Save") {
-                toast.success(transWithFallback("saveFormSuccess", "Biểu mẫu hợp lệ, đã tạo và lưu thông tin biểu mẫu"));
-                await handleConnectFormToShowing();
-
-            }
             // Nếu nút là "Continue"
-            else if (btnValidate4 === "Continue") {
+            if (btnValidate4 === "Continue") {
                 // onNextStep();
                 toast.success(transWithFallback("validForm!", "Biểu mẫu hợp lệ!"))
                 await handleConnectFormToShowing();

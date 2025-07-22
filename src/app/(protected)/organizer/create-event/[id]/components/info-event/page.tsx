@@ -27,7 +27,6 @@ export default function InformationEventClientPage() {
     const t = useTranslations('common');
     const params = useParams();
     const currentEventId = params?.id;
-    const [isSaving, setIsSaving] = useState(false);
     const [isContinuing, setIsContinuing] = useState(false);
     const pathname = usePathname();
     const [isRedirecting, setIsRedirecting] = useState(false);
@@ -46,10 +45,6 @@ export default function InformationEventClientPage() {
         }
     }, [searchParams, router]);
 
-    const handleSave = () => {
-        setBtnValidate("Save");
-    }
-
     const handleContinue = () => {
         setBtnValidate("Continue");
     }
@@ -57,13 +52,8 @@ export default function InformationEventClientPage() {
     const handleNextStep = async (payload: CreateEventDto) => {
         const access_token = user?.accessToken;
         if (!access_token) return;
-
-        if (btnValidate === "Save") {
-            setIsSaving(true);
-            setIsContinuing(false);
-        } else if (btnValidate === "Continue") {
+        if (btnValidate === "Continue") {
             setIsContinuing(true);
-            setIsSaving(false);
         }
 
         try {
@@ -77,12 +67,10 @@ export default function InformationEventClientPage() {
                 router.push(`/organizer/create-event/${newEventId}?step=showing`);
             } else {
                 toast.success(transWithFallback('createEventSuccess', 'Tạo sự kiện thành công!'));
-                setIsSaving(false);
             }
         } catch (error: any) {
             toast.error(error.message || transWithFallback('createEventError', 'Có lỗi xảy ra trong quá trình tạo sự kiện.'));
             console.error("Error creating event:", error);
-            setIsSaving(false);
             setIsContinuing(false);
         }
     };
@@ -103,18 +91,8 @@ export default function InformationEventClientPage() {
                         <Navigation step={step} />
 
                         <div className="flex gap-4 mt-4 mb-6">
-                            <button className="flex items-center justify-center gap-1 text-xs w-18 border-2 border-[#0C4762] text-[#0C4762] font-bold py-2 px-4 rounded bg-white hover:bg-[#0C4762] hover:text-white transition-all"
-                                type="submit" form="event-form" onClick={handleSave} disabled={isSaving || isContinuing}>
-                                {isSaving && btnValidate === 'Save' && (
-                                    <CircularProgress size={16} color="inherit" aria-label="Loading" />
-                                )}
-                                {transWithFallback('save', 'Lưu')}
-                            </button>
-                        </div>
-
-                        <div className="flex gap-4 mt-4 mb-6">
                             <button className="flex items-center justify-center gap-1 text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
-                                type="submit" form="event-form" onClick={handleContinue} disabled={isSaving || isContinuing}>
+                                type="submit" form="event-form" onClick={handleContinue} disabled={isContinuing}>
                                 {isContinuing && (
                                     <CircularProgress size={16} color="inherit" aria-label="Loading" />
                                 )}
