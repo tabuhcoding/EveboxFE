@@ -20,13 +20,12 @@ showtimeId: string, startDate: Date | null, endDate: Date | null,
     toast.success(`Deleting showtime successfully`);
      
     try {
-      if (showtimeId && showtimeId!==""){
-         await deleteShowing(showtimeId); 
-      }
-       console.log(`Showtime ${showtimeId} deleted successfully!`);
-  } catch (error: any) {
-    toast.error(`Error deleting showtime: ${error.message}`);
-  }
+        if (showtimeId && showtimeId!==""){
+            await deleteShowing(showtimeId); 
+        }
+    } catch (error: any) {
+        toast.error(`Error deleting showtime: ${error.message}`);
+    }
     setDelShowtimeId(null);
     console.log("Deleted showtime:", showtimeId);
 };
