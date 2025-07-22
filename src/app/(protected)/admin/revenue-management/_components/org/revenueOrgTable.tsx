@@ -89,7 +89,7 @@ export default function RevenueOrgTable({
               <Fragment key={`org-${appId}-${org.id}`}>
                 <tr className="cursor-pointer hover:bg-[#E3FEF7]" onClick={() => handleToggleOrganization(org.id)}>
                   <td className="py-2 px-4 border-t flex items-center">
-                    {orgLoadingId === org.id ? (
+                    {orgLoadingId !== "" && orgLoadingId === org.id ? (
                       <CircularProgress size={16} className="mr-1 text-blue-600" />
                     ) : org.isExpanded ? (
                       <ChevronDown className="w-4 h-4 mr-1" />
@@ -98,7 +98,7 @@ export default function RevenueOrgTable({
                     )}
                     {index + 1}
                   </td>
-                  <td className="py-2 px-4 border-t">{org.name}</td>
+                  <td className="py-2 px-4 border-t">{org.id}</td>
                   <td className="py-2 px-4 border-t" colSpan={2}>{formatCurrency(org.actualRevenue)}</td>
                   <td className="py-2 px-4 border-t text-center">
                     <button
