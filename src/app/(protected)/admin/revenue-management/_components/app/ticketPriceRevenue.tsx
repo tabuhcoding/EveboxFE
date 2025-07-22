@@ -58,7 +58,7 @@ export default function TicketPriceRevenueView() {
 
   const chartData = data.map((item, index) => ({
     label: `${index + 1}`,
-    revenue: item.revenue / 1_000_000,
+    revenue: Math.floor((item.revenue / 1_000)),
     conversion: item.conversionRate * 100,
   }));
 
@@ -177,7 +177,7 @@ export default function TicketPriceRevenueView() {
                 <td className="py-3 px-4">
                   {(row.conversionRate * 100).toFixed(0)}%
                 </td>
-                <td className="py-3 px-4">{formatCurrency(row.revenue)}₫</td>
+                <td className="py-3 px-4">{formatCurrency(row.revenue*1000)}₫</td>
               </tr>
             ))}
           </tbody>

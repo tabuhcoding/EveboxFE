@@ -152,7 +152,9 @@ export interface RevenueChartProps {
 }
 
 export interface ProvinceRevenueData {
+  area_code: string;
   provinceName: string;
+  provinceEnName: string;
   eventCount: number;
   showingCount: number;
   totalRevenue: number;

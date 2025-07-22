@@ -537,7 +537,7 @@ export async function getOrgRevenueByProvince(accessToken: string): Promise<Base
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_BY_PROVINCE, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_BY_PROVINCE}-V2`, {
       headers: headers
     });
 
@@ -562,7 +562,7 @@ export async function getOrgRevenueByTicketPrice(accessToken: string): Promise<B
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const res = await eventService.get(END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_BY_TICKETPRICE, {
+    const res = await eventService.get(`${END_POINT_LIST.ADMIN_STATISTICS.GET_REVENUE_BY_TICKETPRICE}-V2`, {
       headers: headers
     });
 
