@@ -97,8 +97,7 @@ export default function AnalyticsContent() {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center py-12"><h2 className="text-red-500">Không thể tải thông tin phân tích</h2></div>
-          
+          <div className="flex justify-center items-center py-12"><h2 className="text-red-500">{transWithFallback("errorLoadingAnalysis", "Không thể tải thông tin phân tích")}</h2></div>
         )}
       </div>
     </div>

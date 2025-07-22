@@ -947,5 +947,6 @@
     "defaultProfileTabInstruction": "Mặc định là sẽ ở tab “Thông tin cá nhân”, có thể xem và chỉnh sửa họ tên, số điện thoại cùng ảnh đại diện.",
   "payment": "Thanh toán",
   "success": "Thành công",
-  "notFindTicket": "Không tìm thấy vé phù hợp."
+  "notFindTicket": "Không tìm thấy vé phù hợp.",
+  "errorLoadingAnalysis": "Không thể tải thông tin phân tích"
 }

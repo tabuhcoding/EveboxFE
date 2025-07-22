@@ -7,24 +7,25 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import { generateDescription } from '../../../libs/functions/info-event/generateDescription';
 import { DescriptionWithAIProps } from '../../../../../../../../types/models/event/createEvent.dto';
 // import '@/styles/admin/chatbox.css';
 
-export default function DescriptionWithAI({ isValid, eventDetails, onChange, currentDescription = '' }: DescriptionWithAIProps) {
+export default function DescriptionWithAI({ isValid, eventDetails, onChange, currentDescription = '', setIsLoading, isLoading }: DescriptionWithAIProps) {
   const t = useTranslations('common');
   const { data: session } = useSession();
 
   const [showPopup, setShowPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [userRequest, setUserRequest] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState<'vi' | 'en'>('vi');
 
   const handleGenerate = async () => {
     if (!isValid) return;
-    setIsLoading(true);
+    setIsLoading?.(true);
     try {
       const payload = {
         privatekey: process.env.NEXT_PUBLIC_OPENAI_USAGE_PRIVATE_KEY || '',
@@ -46,7 +47,7 @@ export default function DescriptionWithAI({ isValid, eventDetails, onChange, cur
       onChange(transWithFallback('errorGenerateDescription', 'Lỗi khi tạo mô tả'));
       console.error('Error generating description', error);
     } finally {
-      setIsLoading(false);
+      setIsLoading?.(false); 
       setShowPopup(false);
     }
   }
@@ -131,14 +132,17 @@ export default function DescriptionWithAI({ isValid, eventDetails, onChange, cur
           </div>
 
           {/* Button Đồng ý */}
-          <button className={`w-full rounded-full py-2 font-semibold transition-colors 
+          <button className={`w-full rounded-full py-2 flex items-center justify-center gap-1 font-semibold transition-colors 
               ${(isValid && !isLoading) ? 'bg-sky-600 text-white hover:bg-sky-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
             onClick={handleGenerate}
             disabled={!isValid || isLoading}
           >
             {isLoading ? (
-              transWithFallback('generating', 'Đang tạo nội dung')
+              <>
+                <CircularProgress size={16} color='inherit'/>
+                {transWithFallback('generating', 'Đang tạo nội dung')}
+              </>
             ) : transWithFallback('iAgree', 'Đồng ý')}
           </button>
         </div>

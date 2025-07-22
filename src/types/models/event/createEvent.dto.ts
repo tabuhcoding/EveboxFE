@@ -44,4 +44,6 @@ export interface DescriptionWithAIProps {
   eventDetails: EventDescriptionGenDto;
   currentDescription?: string;
   onChange: (content: string) => void;
+  setIsLoading?: (val: boolean) => void; 
+  isLoading?: boolean;
 }
