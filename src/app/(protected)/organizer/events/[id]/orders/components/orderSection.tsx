@@ -260,7 +260,7 @@ const itemsPerPage = 10;
           })
         ) : (
           <tr>
-            <td colSpan={9} className="text-center py-4 text-gray-500">
+            <td colSpan={8} className="text-center py-4 text-gray-500">
               {safeOrdersData.length === 0
                 ? transWithFallback("noOrderData", "Không có dữ liệu đơn hàng.")
                 : transWithFallback("noOrderSearchResult", "Không tìm thấy đơn hàng nào phù hợp với tìm kiếm.")}

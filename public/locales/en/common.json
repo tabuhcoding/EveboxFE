@@ -953,5 +953,6 @@
     "notFoundSection": "Not found section",
     "section": "Section",
     "confirmMapping": "Confirm mapping",
-    "mapping": "Mapping..."
+    "mapping": "Mapping...",
+    "notFindTicket": "No matching ticket found."
 }
