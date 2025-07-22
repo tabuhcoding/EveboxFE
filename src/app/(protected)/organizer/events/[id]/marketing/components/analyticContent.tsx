@@ -57,7 +57,7 @@ export default function AnalyticsContent() {
       </div>
 
       <div className="flex-1 p-6">
-        <p className="text-sm text-[#51DACF] pt-2">{analytics?.eventTitle}</p>
+        <p className="text-2xl font-bold text-[#0C4762]">{analytics?.eventTitle}</p>
         <div className="border-t-2 border-[#0C4762] mt-2"></div>
 
         <h3 className="mt-4 text-xl font-bold text-[#0C4762] mb-6">
