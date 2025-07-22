@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 /* Package Application */
 import { useAuth } from "@/contexts/auth.context";
-import { getOrganizerRevenue } from "@/services/event.service";
+import { getAppRevenue, getRevenueByOrgId } from "@/services/event.service";
 import { AppRevenue, ShowingRevenueInEventTable, EventRevenueInEventTable, TicketTypeRevenueData, Organization } from "@/types/models/admin/revenueManagement.interface";
 
 import AlertDialog from "@/components/common/alertDialog";
@@ -42,6 +42,7 @@ export default function RevenueManagementPage() {
 
   const [appRevenues, setAppRevenues] = useState<AppRevenue[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [orgLoadingId, setOrgLoadingId] = useState<string>("");
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -65,55 +66,29 @@ export default function RevenueManagementPage() {
 
     try {
       setLoading(true);
-      const response = await getOrganizerRevenue(session.user.accessToken, currentPage, itemsPerPage, fromDate, toDate, search);
+      const response = await getAppRevenue(session.user.accessToken, fromDate, toDate);
 
       if (response.statusCode === HttpStatusCode.Ok) {
-        if (response.data.length > 0) {
-          const organizations = response.data.map((org): AppRevenue["organizations"][0] => ({
-            id: org.orgId,
-            name: org.organizerName,
-            actualRevenue: org.actualRevenue * 1000,
-            events: org.events.map((event): EventRevenueInEventTable => ({
-              id: event.eventId,
-              name: event.eventName,
-              totalRevenue: event.totalRevenue * 1000,
-              platformFee: event.platformFeePercent,
-              actualRevenue: event.actualRevenue * 1000,
-              isExpanded: false,
-              showings: event.showings.map((show): ShowingRevenueInEventTable => ({
-                showingId: show.showingId,
-                startDate: show.startDate,
-                endDate: show.endDate,
-                revenue: show.revenue * 1000,
-                isExpanded: false,
-                ticketTypes: show.ticketTypes.map((ticket): TicketTypeRevenueData => ({
-                  ticketTypeId: ticket.ticketTypeId,
-                  name: ticket.name,
-                  price: ticket.price,
-                  sold: ticket.sold,
-                  revenue: ticket.revenue * 1000,
-                })),
-              })),
-            })),
-          }));
+        const organizations = response.data.organizers.map((org) => ({
+          id: org.orgId,
+          name: org.organizerName,
+          actualRevenue: org.actualRevenue * 1000,
+          isExpanded: false,
+          events: [],
+        }))
 
-          const app: AppRevenue = {
-            id: 1,
-            totalRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0) * 1000,
-            systemDiscount: response.data[0].platformFeePercent ?? 10,
-            actualRevenue: response.data.reduce((sum, org) => sum + org.totalRevenue, 0) * 1000 * response.data[0].platformFeePercent || 10,
-            isExpanded: true,
-            organizations,
-          };
+        const app: AppRevenue = {
+          id: 1,
+          totalRevenue: response.data.totalRevenue * 1000,
+          actualRevenue: response.data.actualRevenue * 1000,
+          systemDiscount: response.data.platformFeePercent ?? 10,
+          isExpanded: true,
+          organizations,
+        };
 
-          setAppRevenues([app]);
-          setTotalItems(response.pagination?.totalItems || 0);
-          setTotalPages(response.pagination?.totalPages || 0);
-        } else {
-          setAppRevenues([]);
-          setTotalItems(response.pagination?.totalItems || 0);
-          setTotalPages(response.pagination?.totalPages || 0);
-        }
+        setAppRevenues([app]);
+        setTotalItems(response.pagination?.totalItems || 0);
+        setTotalPages(response.pagination?.totalPages || 0);
       } else {
         setAppRevenues([]);
         setAlertMessage(`${transWithFallback('errorWhenFetchRevenue', 'Lỗi xảy ra khi lấy dữ liệu doanh thu')}`);
@@ -193,6 +168,8 @@ export default function RevenueManagementPage() {
               setAppRevenues={setAppRevenues}
               loading={loading}
               setLoading={setLoading}
+              orgLoadingId={orgLoadingId}
+              toggleOrganization={toggleOrganization}
             />
             <div className="mb-6">
               <AIAnalyst type = {"day"}/>
@@ -217,23 +194,108 @@ export default function RevenueManagementPage() {
     }
   }
 
-  const toggleOrganization = (appId: number, orgId: string) => {
-    setAppRevenues((prev) =>
-      prev.map((app): AppRevenue => {
-        if (app.id === appId) {
-          return {
-            ...app,
-            selectedOrgId: orgId,
-            organizations: app.organizations.map((org) =>
-              org.id === orgId
-                ? { ...org, isExpanded: !org.isExpanded }
-                : org
-            ),
-          };
-        }
-        return app;
-      })
-    );
+  const toggleOrganization = async (appId: number, orgId: string) => {
+    setOrgLoadingId(orgId);
+    const app = appRevenues.find((a) => a.id === appId);
+    const org = app?.organizations.find((o) => o.id === orgId);
+
+    // Nếu đã expanded và có dữ liệu -> chỉ toggle
+    if (org?.isExpanded && org.events.length > 0) {
+      setAppRevenues((prev) =>
+        prev.map((app) =>
+          app.id === appId
+            ? {
+              ...app,
+              organizations: app.organizations.map((o) =>
+                o.id === orgId ? { ...o, isExpanded: false } : o
+              ),
+            }
+            : app
+        )
+      );
+
+      return;
+    }
+
+    try {
+      const response = await getRevenueByOrgId(orgId, session?.user?.accessToken || "");
+
+      if (response.statusCode === HttpStatusCode.Ok) {
+        const updatedOrg: Organization = {
+          id: response.data.orgId,
+          name: response.data.organizerName,
+          actualRevenue: response.data.actualRevenue * 1000,
+          isExpanded: true,
+          events: response.data.events.map((event): EventRevenueInEventTable => ({
+            id: event.eventId,
+            name: event.eventName,
+            totalRevenue: event.totalRevenue * 1000,
+            platformFee: event.platformFeePercent,
+            actualRevenue: event.actualRevenue * 1000,
+            isExpanded: false,
+            showings: event.showings.map((show): ShowingRevenueInEventTable => ({
+              showingId: show.showingId,
+              startDate: show.startDate,
+              endDate: show.endDate,
+              revenue: show.revenue * 1000,
+              isExpanded: false,
+              ticketTypes: show.ticketTypes.map((ticket): TicketTypeRevenueData => ({
+                ticketTypeId: ticket.ticketTypeId,
+                name: ticket.name,
+                price: ticket.price,
+                sold: ticket.sold,
+                revenue: ticket.revenue * 1000,
+              })),
+            })),
+          })),
+        };
+
+        // Cập nhật lại org trong state
+        setAppRevenues((prev) =>
+          prev.map((app) =>
+            app.id === appId
+              ? {
+                ...app,
+                organizations: app.organizations.map((org) =>
+                  org.id === orgId ? updatedOrg : org
+                ),
+              }
+              : app
+          )
+        );
+      } else {
+        setAppRevenues((prev) =>
+          prev.map((app): AppRevenue => {
+            if (app.id === appId) {
+              return {
+                ...app,
+                selectedOrgId: orgId,
+                organizations: app.organizations.map((org) =>
+                  org.id === orgId
+                    ? {
+                      ...org,
+                      isExpanded: !org.isExpanded,
+                      events: [],
+                    }
+                    : org
+                ),
+              };
+            }
+            return app;
+          })
+        );
+      }
+    } catch (error: any) {
+      setAlertMessage(
+        `${transWithFallback(
+          "errorWhenFetchRevenue",
+          "Lỗi xảy ra khi lấy dữ liệu doanh thu"
+        )}: ${error?.message}`
+      );
+      setAlertOpen(true);
+    } finally {
+      setOrgLoadingId("");
+    }
   };
 
 
@@ -350,7 +412,7 @@ export default function RevenueManagementPage() {
                 setToDate(f.toDate);
                 setSearch(f.search);
               }}
-              isLoading = {loading} />
+              isLoading={loading} />
             <RevenueOrgTable
               loading={loading}
               organizations={allOrgs}
@@ -359,6 +421,7 @@ export default function RevenueManagementPage() {
               toggleEvent={toggleEvent}
               toggleEventDetail={toggleEventDetail}
               formatCurrency={formatCurrency}
+              orgLoadingId={orgLoadingId}
             />
 
             <EventPagination
@@ -381,8 +444,8 @@ export default function RevenueManagementPage() {
                 setFromDate(f.fromDate);
                 setToDate(f.toDate);
                 setSearch(f.search);
-              }} 
-              isLoading = {loading} />
+              }}
+              isLoading={loading} />
             <EventRevenueTable
               loading={loading}
               formatCurrency={formatCurrency}
