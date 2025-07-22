@@ -930,5 +930,14 @@
   "totalAccounts": "Tổng số tài khoản",
   "totalShowings": "Tổng số suất diễn",
   "active": "Đang hoạt động",
-  "blocked": "Bị khóa"
+  "blocked": "Bị khóa",
+  "seatmapGuide": "Hướng dẫn sử dụng seatmap",
+  "zoomInOut": "Phóng to/thu nhỏ",
+  "scrollToZoom": "Cuộn chuột hoặc touchpad",
+  "moveSeatmap": "Di chuyển sơ đồ",
+  "clickAndDrag": "Nhấn giữ chuột và kéo hoặc dùng 2 ngón tay trên touchpad",
+  "selectSeat": "Chọn ghế/khu vực",
+  "clickToSelect": "Nhấp chuột để chọn",
+  "tip": "Mẹo",
+  "zoomTip": "Phóng to để xem rõ hơn số ghế và vị trí"
 }
