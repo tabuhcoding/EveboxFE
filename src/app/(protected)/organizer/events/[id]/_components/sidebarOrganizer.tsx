@@ -85,11 +85,12 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
         href: `/organizer/events/${eventId}/check-in`,
         icon: <User size={18} />,
       },
-      // rolePermission?.isEdited && {
-      //   text: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
-      //   href: `/organizer/events/${eventId}/seatmap`,
-      //   icon: <Armchair size={18} />
-      // },
+      rolePermission?.isEdited && {
+        text: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
+        // href: `/organizer/events/${eventId}/seatmap`,
+        href: `#`,
+        icon: <Armchair size={18} />
+      },
     ].filter(Boolean) as MenuItem[],
   },
   {
