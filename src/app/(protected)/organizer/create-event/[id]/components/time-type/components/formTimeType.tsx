@@ -2,7 +2,7 @@
 
 /* Package System */
 import { ChevronDown, ChevronUp, CirclePlus, X, PencilLine, Ticket, Trash2 } from "lucide-react";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Toaster, toast } from "react-hot-toast";
 import { useTranslations } from 'next-intl';
@@ -23,7 +23,14 @@ import CopyTicketDailog from "./dialogs/copyTicket";
 import { handleDeleteShow } from "../../../libs/functions/showing/deleteShow";
 import { getAllShowingDetailOfEvent } from "services/org.service";
 
-export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, setShowingList, eventId }: { onNextStep: () => void, btnValidate2: string, setShowingList: (showtimes: Showtime[]) => void, eventId: number }) {
+interface Props {
+    onNextStep: () => void;
+    btnValidate2: string;
+    setShowingList: (showtimes: Showtime[]) => void;
+    eventId: number;
+};
+
+const FormTimeTypeTicketClient = forwardRef(function FormTimeTypeTicketClient({ onNextStep, btnValidate2, setShowingList, eventId }: Props, ref) {
     const t = useTranslations('common');
 
     const transWithFallback = (key: string, fallback: string) => {
@@ -152,6 +159,21 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
             onNextStep();
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        validateAndSubmit: () => {
+            const totalTickets = showtimes.reduce((count, showtime) => count + showtime.tickets.length, 0);
+
+            if (totalTickets === 0) {
+                toast.error(transWithFallback("pleaseChoseTicket", "Vui lòng tạo ít nhất một loại vé trước khi tiếp tục!"));
+                return false;
+            }
+
+            toast.success(transWithFallback("continueForm", "Form hợp lệ! Chuyển sang bước tiếp theo..."));
+            return true;
+        }
+    }));
+
 
     return (
         <>
@@ -390,4 +412,6 @@ export default function FormTimeTypeTicketClient({ onNextStep, btnValidate2, set
             </div>
         </>
     );
-}
+})
+
+export default FormTimeTypeTicketClient;
