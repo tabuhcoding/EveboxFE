@@ -128,7 +128,7 @@ export function AIAnalyst({ eventId }: AIAnalystProps) {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button
-          onClick={handleSearch}
+          onClick={handleAnalyzeClick}
           disabled={loading}
           className=" flex items-center justify-center gap-1 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
