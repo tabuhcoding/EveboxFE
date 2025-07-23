@@ -206,7 +206,7 @@ export function AIAnalyst({ type }: AIAnalystProps) {
                 className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-t-md font-medium text-[#0C4762]"
               >
                 <div className="flex justify-between items-center">
-                  <span>{transWithFallback('query:','Truy vấn: ')} {item.query}</span>
+                  <span>{transWithFallback('query','Truy vấn: ')} {item.query}</span>
                   <span className="text-sm text-gray-500">
                     {new Date(item.created_at).toLocaleString("vi-VN")}
                   </span>

@@ -1,7 +1,7 @@
 'use client';
 
 /* Package System */
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
@@ -27,6 +27,7 @@ export default function RevenueOrgTable({
   const router = useRouter();
 
   const organizations = propOrganizations;
+  const [loadingOrgId, setLoadingOrgId] = useState<string | null>(null);
 
   const handleToggleOrganization = (orgId: string) => {
     if (orgLoadingId === orgId) return;
@@ -105,12 +106,18 @@ export default function RevenueOrgTable({
                       className="inline-flex items-center justify-center"
                       onClick={(e) => {
                         e.stopPropagation();
+                        setLoadingOrgId(org.id);
                         localStorage.setItem("selectedOrg", JSON.stringify(org));
                         localStorage.setItem("appRevenue", JSON.stringify(organizations));
                         router.push(`/admin/revenue-management/revenue/${org.id}`);
                       }}
+                      disabled={loadingOrgId === org.id}
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      {loadingOrgId === org.id ? (
+                        <CircularProgress size={16} color="inherit" />
+                      ) : (
+                        <ExternalLink className="w-5 h-5" />
+                      )}
                     </button>
                   </td>
                 </tr>

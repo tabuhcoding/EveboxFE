@@ -83,6 +83,8 @@ export default function RevenueManagementPage() {
     console.log('call fetch')
     if (!session?.user?.accessToken) return;
 
+    setLoading(true);
+
     try {
       const response = await getEventsRevenue(session?.user?.accessToken || "", currentPage, itemsPerPage, fromDate, toDate, search);
 
@@ -144,6 +146,8 @@ export default function RevenueManagementPage() {
 
   const fetchOrgRevenue = useCallback(async () => {
     if (!session?.user?.accessToken) return;
+
+    setLoading(true); 
 
     try {
       const response = await getOrgRevenueList(session?.user?.accessToken || "", currentPage, itemsPerPage, fromDate, toDate, search);

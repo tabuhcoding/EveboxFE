@@ -955,5 +955,6 @@
     "confirmMapping": "Save Seatmap",
     "mapping": "Mapping...",
     "notFindTicket": "No matching ticket found.",
-    "errorLoadingAnalysis": "Error loading analysis"
+    "errorLoadingAnalysis": "Error loading analysis",
+    "loadingDataPage": "Loading data page..."
 }
