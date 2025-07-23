@@ -31,6 +31,9 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
   const [href, setHref] = useState("");
   const [continueHref, setContinueHref] = useState("");
 
+  const [ownEventDialogOpen, setOwnEventDialogOpen] = useState(false);
+  const [ownEventContinueAction, setOwnEventContinueAction] = useState<() => void>(() => () => {});
+
   useEffect(() => {
     const showingStatus = localStorage.getItem('showingStatus');
     if (showingStatus) {
@@ -141,8 +144,15 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                             <button type="button" className="btn-buy flex items-center justify-center gap-1"
                               onClick={() => {
                                 localStorage.setItem('showingStatus', 'REGISTER_NOW')
-                                handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id)
-                              }}
+const isOwnEvent = event.organizerId === session?.user?.email;
+if (isOwnEvent) {
+  setOwnEventDialogOpen(true);
+  setOwnEventContinueAction(() => () =>
+    handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id)
+  );
+} else {
+  handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id);
+}                              }}
                               disabled={loadingButtonId === showing.id}
                             >
                               {loadingButtonId === showing.id ? (
@@ -162,7 +172,15 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
                               className="btn-buy flex items-center justify-center gap-1"
                               onClick={() => {
                                 localStorage.setItem('showingStatus', 'BOOK_NOW')
-                                handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id)
+                                const isOwnEvent = event.organizerId === session?.user?.email;
+if (isOwnEvent) {
+  setOwnEventDialogOpen(true);
+  setOwnEventContinueAction(() => () =>
+    handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id)
+  );
+} else {
+  handleBuyButton(showing.eventId, showing.id, showing.seatMapId, showing.id);
+}          
                               }}
                             >
                               {loadingButtonId === showing.id ? (
@@ -398,6 +416,17 @@ const TicketDetails = ({ showings, event }: { showings: Showing[], event: EventD
         open={continueOpen}
         href={continueHref}
       />
+
+      <ContinueDialog
+  message={transWithFallback("ownEventWarning", "Bạn đang đăng ký sự kiện của chính mình. Bạn có muốn tiếp tục không?")}
+  onClose={() => setOwnEventDialogOpen(false)}
+  open={ownEventDialogOpen}
+  href=""
+  onConfirm={() => {
+    setOwnEventDialogOpen(false);
+    ownEventContinueAction();
+  }}
+/>
     </>
   )
 };
