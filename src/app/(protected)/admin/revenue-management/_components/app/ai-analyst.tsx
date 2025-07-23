@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Markdown from "react-markdown";
 import { useTranslations } from "next-intl";
+import { CircularProgress } from "@mui/material";
 
 interface AIAnalystProps {
   type: string;
@@ -45,8 +46,8 @@ export function AIAnalyst({ type }: AIAnalystProps) {
   useEffect(() => {
     const fetchStoredResponses = async () => {
       setLoading(true);
-        try {
-          const storedResponses = await axios.get(`${process.env.NEXT_PUBLIC_API_URL!}/api/admin/revenue-${type}-ai`,{
+      try {
+        const storedResponses = await axios.get(`${process.env.NEXT_PUBLIC_API_URL!}/api/admin/revenue-${type}-ai`, {
           params: { page, limit }
         });
 
@@ -77,7 +78,7 @@ export function AIAnalyst({ type }: AIAnalystProps) {
     setLoading(true);
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/admin/revenue-${type}-ai`, { query });
-      if (res?.data?.data){
+      if (res?.data?.data) {
         setAIAnalystResponse([
           {
             query: query,
@@ -134,7 +135,14 @@ export function AIAnalyst({ type }: AIAnalystProps) {
           disabled={loading || !query.trim()}
           className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
-          {loading ? transWithFallback('analyzing', 'Đang phân tích...') : transWithFallback('analysis', 'Phân tích')}
+          {loading ? (
+            <>
+              <CircularProgress size={16} color="inherit" />
+              {transWithFallback('analyzing', 'Đang phân tích...')}
+            </>
+          ) : (
+            transWithFallback('analysis', 'Phân tích')
+          )}
         </button>
       </div>
 
@@ -219,7 +227,7 @@ export function AIAnalyst({ type }: AIAnalystProps) {
               className="mt-4 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition"
               disabled={loading}
             >
-              {loading ? 'Đang tải thêm...' :  'Tải thêm'}
+              {loading ? 'Đang tải thêm...' : 'Tải thêm'}
             </button>
           )}
         </div>
