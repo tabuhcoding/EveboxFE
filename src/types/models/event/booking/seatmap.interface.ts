@@ -1,3 +1,4 @@
+import { TicketTypeSectionsProps } from "@/app/(protected)/organizer/events/[id]/seatmap/_components/editSeatmapPage";
 import { JsonValue } from "type-fest";
 
 import { BaseApiResponse } from "types/baseApiResponse";
@@ -43,6 +44,7 @@ export interface SeatMapProps {
   ) => void;
   selectedSeatIds?: number[];
   selectedTickets?: SelectedTicketsState;
+  ticketTypeSections?: TicketTypeSectionsProps[]; // Thông tin về các section của loại vé
 }
 
 export interface SeatMapElement {
@@ -73,6 +75,10 @@ export interface Section {
   element?: SeatMapElement[];
   attribute: JsonValue;
   ticketTypeId?: string;
+  ticketTypeName?: string; // Tên loại vé nếu có
+  quantity?: number;
+  sold?: number;
+  color?: string;
   Row?: Row[];
 }
 

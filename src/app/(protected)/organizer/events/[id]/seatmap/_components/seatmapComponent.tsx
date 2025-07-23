@@ -7,14 +7,17 @@ import React, { useState, useEffect, useRef } from "react";
 /* Package Application */
 import { SeatMapProps, SelectedSeatsMap } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
+import { TicketTypeSectionsProps } from "./editSeatmapPage";
 
-export default function SeatMapComponent({ seatMap, selectedSeatIds }: SeatMapProps) {
+export default function SeatMapComponent({ seatMap, selectedSeatIds, ticketTypeSections }: SeatMapProps) {
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeatsMap>({});
   const [zoom, setZoom] = useState<number>(1);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const lastMousePosition = useRef({ x: 0, y: 0 });
 
+  const stageSections = seatMap.Section?.filter(s => s.isStage);
+  const normalSections = seatMap.Section?.filter(s => !s.isStage);
 
   const t = useTranslations("common");
 
@@ -52,9 +55,6 @@ export default function SeatMapComponent({ seatMap, selectedSeatIds }: SeatMapPr
       });
     });
   }
-
-  const stageSections = seatMap.Section?.filter(s => s.isStage);
-  const normalSections = seatMap.Section?.filter(s => !s.isStage);
 
   const seatmapRef = useRef<HTMLDivElement>(null);
 

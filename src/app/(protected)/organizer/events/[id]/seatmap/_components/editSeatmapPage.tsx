@@ -23,25 +23,38 @@ interface SeatMapPageProps {
   eventId: number
 }
 
+export interface TicketTypeSectionsProps {
+  ticketTypeId?: string
+  ticketTypeName?: string
+  sectionId: number
+  quantity?: number
+  color?: string
+  sold?: number
+  name: string
+}
+
 export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   const t = useTranslations("common");
   const { session } = useAuth();
 
   // State for dropdown and selection
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isShDropdownOpen, setIsShDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
 
   // State for seat map data
   const [allSeatmaps, setAllSeatmaps] = useState<SeatmapResponse[]>([])
   const [selectedSeatMapId, setSelectedSeatMapId] = useState<number>(0);
+  const [allShowings, setAllShowings] = useState<Showing[]>([])
+  const [selectedShowingId, setSelectedShowingId] = useState<string>("");
   const [seatMapData, setSeatMapData] = useState<SeatMap | null>(null);
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
   const [seatmapType, setSeatmapType] = useState<SeatmapType>(SeatmapType.NOT_A_SEATMAP);
 
   // Thêm các state này sau các state hiện có
   const [selectedTicketTypeId, setSelectedTicketTypeId] = useState<string>("")
-  const [ticketTypeSectionMap, setTicketTypeSectionMap] = useState<{ [ticketTypeId: string]: number[] }>({})
+  const [ticketTypeSectionMap, setTicketTypeSectionMap] = useState<TicketTypeSectionsProps[]>([])
   const [sections, setSections] = useState<any[]>([])
   const [isLoadingMapping, setIsLoadingMapping] = useState<boolean>(false);
   const [showingData, setShowingData] = useState<Showing | null>(null)
@@ -58,81 +71,25 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
       try {
         setIsLoading(true)
 
-        const response = await getAllSeatmaps();
-
-        if (response?.statusCode === 200) {
-          setAllSeatmaps(response.data);
-          if (response.data.length > 0) {
-            setSelectedSeatMapId(response.data[0].id)
-          }
-        }
-
         const showingsResponse = await getShowingsOfEvent(eventId, session?.user?.accessToken || "")
         if (showingsResponse?.statusCode === 200 && showingsResponse.data.length > 0) {
-          const firstShowing = showingsResponse.data[0]
-          setShowingData(firstShowing)
+          // const firstShowing = showingsResponse.data[0]
+          setAllShowings(showingsResponse.data)
+          // setShowingData(firstShowing)
 
-          // Set ticket types from the first showing
-          const sortedTicketTypes = [...firstShowing.TicketType].sort((a, b) => a.position - b.position)
-          setTicketTypes(
-            sortedTicketTypes.map((tt: any) => ({
-              ...tt,
-              effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
-              effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
-            })),
-          )
+          // // Set ticket types from the first showing
+          // const sortedTicketTypes = [...firstShowing.TicketType].sort((a, b) => a.position - b.position)
+          // setTicketTypes(
+          //   sortedTicketTypes.map((tt: any) => ({
+          //     ...tt,
+          //     effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
+          //     effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
+          //   })),
+          // )
         }
-
-        if (response.data.length === 0) {
-          setError(transWithFallback("notFoundSeatmap", "Không tìm thấy sơ đồ chỗ ngồi nào"))
-        }
-
-        // if (response?.statusCode === 200) {
-        //   const showings = response.data;
-
-        //   const seatMapPromises = showings
-        //     .filter((showing) => showing.seatMapId > 0)
-        //     .map(async (showing) => {
-        //       try {
-        //         const seatMapResponse = await getSeatMap(showing.id)
-        //         if (seatMapResponse?.data) {
-        //           return {
-        //             ...seatMapResponse.data,
-        //             showingId: showing.id,
-        //             ticketTypes: showing.TicketType,
-        //           }
-        //         }
-        //       } catch (error) {
-        //         console.error(`Error fetching seatmap for showing ${showing.id}:`, error)
-        //         return null
-        //       }
-        //     });
-        //   const seatMapsResults = await Promise.all(seatMapPromises)
-        //   const validSeatMaps = seatMapsResults
-        //     .filter(Boolean)
-        //     .map((seatMap: any) => ({
-        //       ...seatMap,
-        //       ticketTypes: seatMap.ticketTypes.map((tt: any) => ({
-        //         ...tt,
-        //         effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
-        //         effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
-        //       })),
-        //     })) as (SeatMap & {
-        //       showingId: string
-        //       ticketTypes: TicketType[]
-        //     })[]
-
-        //   setSeatMaps(validSeatMaps)
-
-        //   if (validSeatMaps.length > 0) {
-        //     setSelectedSeatMapId(Number(validSeatMaps[0].id))
-        //   } else {
-        //     setError(transWithFallback("notFoundSeatmap", "Không tìm thấy sơ đồ chỗ ngồi nào"))
-        //   }
-        // }
       } catch (error) {
         console.error("Error fetching seatmaps:", error)
-        setError(transWithFallback("errorFoundSeatmap", "Lỗi khi tải sơ đồ chỗ ngồi"))
+        setError("Không tìm thấy suất diễn nào, đảm bảo sự kiện của bạn đã có suất diễn.")
       } finally {
         setIsLoading(false)
       }
@@ -144,15 +101,63 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   }, [eventId]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+
+        const response = await getAllSeatmaps(selectedShowingId);
+
+        if (response?.statusCode === 200) {
+          setAllSeatmaps(response.data);
+          if (response.data.length > 0) {
+            setSelectedSeatMapId(response.data[0].id)
+          }
+        }
+
+        if (response.data.length === 0) {
+          setError("Không tìm thấy sơ đồ chỗ ngồi nào, đảm bảo showing của bạn chưa bắt đầu bán vé.")
+        }
+      } catch (error) {
+        console.error("Error fetching seatmaps:", error)
+        setError(transWithFallback("errorFoundSeatmap", "Lỗi khi tải sơ đồ chỗ ngồi"))
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (selectedShowingId) {
+      fetchData()
+      setShowingData(allShowings.find(sh => sh.id === selectedShowingId) || null)
+      setTicketTypes(allShowings.find(sh => sh.id === selectedShowingId)?.TicketType || [])
+    }
+  }, [selectedShowingId]);
+
+  useEffect(() => {
     const fetchSeatmapDetails = async () => {
       if (!selectedSeatMapId) return
 
       try {
-        const response = await getSeatmapDetail(Number(selectedSeatMapId));
-
+        const response = await getSeatmapDetail(Number(selectedSeatMapId), selectedShowingId);
+        console.log("Seatmap details response:", response)
         if (response.statusCode === 200) {
           setSeatMapData(response.data)
           setSeatmapType(response.data.seatMapType || SeatmapType.NOT_A_SEATMAP)
+          const normalSections = response.data?.Section?.filter((s) => !s.isStage) || []
+          setSections(normalSections)
+          const ticketTypeSectionsMapResponse = normalSections.map((section) => {
+            return {
+              sectionId: section.id,
+              name: section.name,
+              quantity: section.quantity || 0,
+              sold: section.sold || 0,
+              color: section.color || "#000000",
+              ticketTypeId: section.ticketTypeId || "",
+              ticketTypeName: section.ticketTypeName || "",
+            }
+          })
+
+          console.log("Ticket type sections map response:", ticketTypeSectionsMapResponse)
+          setTicketTypeSectionMap(ticketTypeSectionsMapResponse)
         }
       } catch (error) {
         console.error("Error fetching seatmap details:", error)
@@ -163,18 +168,21 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
     fetchSeatmapDetails()
   }, [selectedSeatMapId])
 
-  useEffect(() => {
-    if (seatMapData?.Section) {
-      const normalSections = seatMapData.Section.filter((s) => !s.isStage)
-      setSections(normalSections)
-    }
-  }, [seatMapData])
-
   const handleSeatMapChange = (seatMapId: string | number) => {
     setSelectedSeatMapId(Number(seatMapId))
     setIsDropdownOpen(false)
+    setIsShDropdownOpen(false)
     // Reset mapping when changing seatmap
-    setTicketTypeSectionMap({})
+    setTicketTypeSectionMap([])
+    setSelectedTicketTypeId("")
+  }
+
+  const handleShowingChange = (showingId: string) => {
+    setSelectedShowingId(showingId)
+    setIsShDropdownOpen(false)
+    setIsDropdownOpen(false)
+    // Reset mapping when changing seatmap
+    setTicketTypeSectionMap([])
     setSelectedTicketTypeId("")
   }
 
@@ -185,22 +193,22 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   const handleAddTicketTypeToSection = (sectionId: number) => {
     if (!selectedTicketTypeId) return
 
-    setTicketTypeSectionMap((prev) => {
-      const current = prev[selectedTicketTypeId] || []
-      if (current.includes(sectionId)) {
-        // Remove if already exists
-        return {
-          ...prev,
-          [selectedTicketTypeId.toString()]: current.filter((id) => id !== sectionId),
-        }
-      } else {
-        // Add if not exists
-        return {
-          ...prev,
-          [selectedTicketTypeId.toString()]: [...current, sectionId],
-        }
-      }
-    })
+    // setTicketTypeSectionMap((prev) => {
+    //   const current = prev[selectedTicketTypeId] || []
+    //   if (current.includes(sectionId)) {
+    //     // Remove if already exists
+    //     return {
+    //       ...prev,
+    //       [selectedTicketTypeId.toString()]: current.filter((id) => id !== sectionId),
+    //     }
+    //   } else {
+    //     // Add if not exists
+    //     return {
+    //       ...prev,
+    //       [selectedTicketTypeId.toString()]: [...current, sectionId],
+    //     }
+    //   }
+    // })
   }
 
   const handleConfirmMapping = async () => {
@@ -214,16 +222,16 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
         ticketTypeSectionMap,
       }
 
-      const res = await connectShowingToSeatmap(payload, session?.user?.accessToken || "");
+      // const res = await connectShowingToSeatmap(payload, session?.user?.accessToken || "");
 
-      if (res?.statusCode !== 200) {
-        toast.error(`${transWithFallback('errorConnectShowingToSeatmap', 'Có lỗi khi kết nối suất diễn với sơ đồ chỗ ngồi')}: ${res.message}`);
-      }
-      else {
-        toast.success(`${transWithFallback('connectSeatmap', 'Kết nối suất diễn với sơ đồ chỗ ngồi thành công')}`)
-      }
+      // if (res?.statusCode !== 200) {
+      //   toast.error(`${transWithFallback('errorConnectShowingToSeatmap', 'Có lỗi khi kết nối suất diễn với sơ đồ chỗ ngồi')}: ${res.message}`);
+      // }
+      // else {
+      //   toast.success(`${transWithFallback('connectSeatmap', 'Kết nối suất diễn với sơ đồ chỗ ngồi thành công')}`)
+      // }
 
-      setTicketTypeSectionMap({})
+      // setTicketTypeSectionMap({})
       setSelectedTicketTypeId("")
     } catch (error) {
       toast.error(`${transWithFallback('errorConnectShowingToSeatmap', 'Có lỗi khi kết nối suất diễn với sơ đồ chỗ ngồi')}: ${error}`);
@@ -232,11 +240,25 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
     }
   }
 
-  const isTicketTypeInSection = (ticketTypeId: string, sectionId: number) => {
-    return ticketTypeSectionMap[ticketTypeId]?.includes(sectionId) || false
-  }
-
   const selectedSeatMapName = allSeatmaps.find((seatMap) => seatMap.id === selectedSeatMapId)?.name || ""
+
+  // const handleChangeQuantity = (
+  //   entry: TicketTypeSectionsProps,
+  //   delta: number
+  // ) => {
+  //   setTicketTypeSectionMap((prev) =>
+  //     prev.map((item) =>
+  //       item.sectionId === entry.sectionId &&
+  //       item.ticketTypeId === entry.ticketTypeId
+  //         ? {
+  //             ...item,
+  //             quantity: Math.max(1, item.quantity + delta) // Không cho nhỏ hơn 1
+  //           }
+  //         : item
+  //     )
+  //   );
+  // };
+
 
   if (isLoading) {
     return (
@@ -278,9 +300,9 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <div className="inset-y-0 left-0 w-64 bg-gray-900 md:relative md:flex-shrink-0">
+      {/* <div className="inset-y-0 left-0 w-64 bg-gray-900 md:relative md:flex-shrink-0">
         <SidebarOrganizer />
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-100">
@@ -294,9 +316,45 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
         <div className="flex gap-6 h-[calc(100vh-140px)]">
           {/* Left Side - Seat Map */}
           <div className="flex-1 flex flex-col">
+            {/* Showing Dropdown */}
+            <div className="mb-4">
+              <div className="relative">
+                <div>
+                  Suất diễn:
+                </div>
+                <button
+                  onClick={() => setIsShDropdownOpen(!isShDropdownOpen)}
+                  className="w-full max-w-md bg-white border border-gray-300 rounded-lg px-4 py-3 text-left flex items-center justify-between hover:border-[#51DACF] transition-colors"
+                >
+                  <span className="text-gray-700">
+                    { selectedShowingId ||"Chọn suất diễn" }
+                  </span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-gray-400 transition-transform ${isShDropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {isShDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-w-md max-h-60 overflow-y-auto">
+                    {allShowings.map((showing) => (
+                      <button
+                        key={showing.id}
+                        onClick={() => handleShowingChange(showing.id)}
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                      >
+                        <div className="font-medium">{new Date(showing.startTime).toLocaleDateString("vi-VN")} - {new Date(showing.endTime).toLocaleDateString("vi-VN")}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
             {/* SeatMap Dropdown */}
             <div className="mb-4">
               <div className="relative">
+                <div>
+                  Sơ đồ chỗ ngồi:
+                </div>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="w-full max-w-md bg-white border border-gray-300 rounded-lg px-4 py-3 text-left flex items-center justify-between hover:border-[#51DACF] transition-colors"
@@ -370,7 +428,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
           </div>
 
           {/* Right Side - Controls */}
-          <div className="w-80 bg-white rounded-lg border border-gray-300 p-6 overflow-y-auto max-h-[calc(100vh-140px)]">
+          <div className="w-200 bg-white rounded-lg border border-gray-300 p-6 overflow-y-auto max-h-[calc(100vh-140px)]">
             {/* Ticket Types */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-[#0C4762] mb-4">
@@ -402,48 +460,68 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
 
             {/* Sections */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-[#0C4762] mb-4">{transWithFallback("section", "Khu vực")}</h3>
+              <h3 className="text-lg font-semibold text-[#0C4762] mb-4">
+                {transWithFallback("section", "Khu vực")}
+              </h3>
               <div className="bg-gray-50 rounded-lg p-4 border max-h-60 overflow-y-auto">
-                {sections.length > 0 ? (
-                  sections.map((section) => (
-                    <div
-                      key={section.id}
-                      className="flex items-center justify-between py-2 px-2 mb-2 bg-white rounded border"
-                    >
-                      <div className="flex-1 min-w-0 mr-2">
-                        <span className="text-sm font-medium break-words">{section.name}</span>
-                        {ticketTypeSectionMap &&
-                          Object.entries(ticketTypeSectionMap).map(
-                            ([ttId, sectionIds]) =>
-                              sectionIds.includes(section.id) && (
-                                <div key={ttId} className="text-xs text-gray-600 mt-1 truncate">
-                                  {ticketTypes.find((tt) => tt.id === ttId)?.name}
-                                </div>
-                              )
-                          )}
-                      </div>
-                      <button
-                        onClick={() => handleAddTicketTypeToSection(section.id)}
-                        disabled={!selectedTicketTypeId}
-                        className={`w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center text-lg font-bold transition-colors ${selectedTicketTypeId && isTicketTypeInSection(selectedTicketTypeId, section.id)
-                          ? "bg-green-500 text-white border-green-500"
-                          : selectedTicketTypeId
-                            ? "bg-[#51DACF] text-white border-[#51DACF] hover:bg-[#0C4762]"
-                            : "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
-                          }`}
+                {ticketTypeSectionMap.length > 0 ? (
+                  ticketTypeSectionMap.map((section) => {
+                    return (
+                      <div
+                        key={section.sectionId}
+                        className="flex items-center justify-between py-2 px-2 mb-2 bg-white rounded border"
                       >
-                        {selectedTicketTypeId && isTicketTypeInSection(selectedTicketTypeId, section.id) ? "✓" : "+"}
-                      </button>
-                    </div>
-                  ))
+                        <div
+                          className={`flex-1 min-w-0 mr-2 p-2 rounded-md transition-all
+                            ${selectedTicketTypeId
+                              ? "border-2 border-dashed border-animate border-blue-400"
+                              : `border-2 ${section.color ? "" : "border-black"}`}
+                          `}
+                          style={{
+                            borderColor: !selectedTicketTypeId ? section.color || "black" : undefined,
+                          }}
+                        >
+                          <div className="text-sm font-medium break-words mb-1">
+                            Khu: {section.name}
+                          </div>
+                          <div className="text-sm font-medium break-words mb-1">
+                            Vé: {section.ticketTypeName}
+                          </div>
+                          <div className="text-sm font-medium break-words flex items-center gap-2">
+                            Số lượng:
+                            <input
+                              type="number"
+                              min={1}
+                              value={section.quantity}
+                              // onChange={(e) => handleChangeQuantity(section.id, Number(e.target.value))}
+                              className="w-16 px-2 py-1 border rounded text-sm"
+                            />
+                          </div>
+                        </div>
+
+
+                        {selectedTicketTypeId && (
+                          <button
+                            onClick={() => handleAddTicketTypeToSection(section.sectionId)}
+                            className="w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center text-lg font-bold transition-colors bg-[#51DACF] text-white border-[#51DACF] hover:bg-[#0C4762]"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })
                 ) : (
-                  <p className="text-gray-500 text-sm">{transWithFallback("notFoundSection", "Chưa có khu vực")}</p>
+                  <p className="text-gray-500 text-sm">
+                    {transWithFallback("notFoundSection", "Chưa có khu vực")}
+                  </p>
                 )}
               </div>
             </div>
 
+
             {/* Confirm Button */}
-            {Object.keys(ticketTypeSectionMap).length > 0 && (
+            {/* {Object.keys(ticketTypeSectionMap).length > 0 && ( */}
               <div className="mt-6">
                 <button
                   onClick={handleConfirmMapping}
@@ -459,7 +537,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                   )}
                 </button>
               </div>
-            )}
+            {/* )} */}
           </div>
         </div>
       </div>
