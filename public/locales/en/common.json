@@ -952,7 +952,7 @@
     "connectSeatmap": "Connect showing to seatmap successfully",
     "notFoundSection": "Not found section",
     "section": "Section",
-    "confirmMapping": "Confirm mapping",
+    "confirmMapping": "Save Seatmap",
     "mapping": "Mapping...",
     "notFindTicket": "No matching ticket found.",
     "errorLoadingAnalysis": "Error loading analysis"

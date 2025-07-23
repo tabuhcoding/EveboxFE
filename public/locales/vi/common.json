@@ -920,7 +920,7 @@
   "connectSeatmap": "Kết nối suất diễn với sơ đồ chỗ ngồi thành công",
   "notFoundSection": "Không có dữ liệu khu vực",
   "section": "Khu vực",
-  "confirmMapping": "Xác nhận ánh xạ",
+  "confirmMapping": "Lưu thông tin",
   "mapping": "Đang ánh xạ...",
   "updateAreaSuccess": "Cập nhật khu vực quản lý của tài khoản thành công!",
   "errorWhenUpdateAccountArea": "Lỗi khi cập nhật khu vực quản lý của tài khoản",
