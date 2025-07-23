@@ -6,7 +6,7 @@ import 'tailwindcss/tailwind.css';
 import { Divider } from '@nextui-org/react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { CircularProgress } from '@mui/material';
+// import { CircularProgress } from '@mui/material';
 
 /* Package Application */
 import Navigation from '../common/navigation';
@@ -22,7 +22,7 @@ export default function TimeAndTypeTickets() {
     const router = useRouter();
     const [step] = useState(2);
     const [btnValidate2, setBtnValidte2] = useState("");
-    const [isContinuing, setIsContinuing] = useState(false);
+    // const [isContinuing, setIsContinuing] = useState(false);
     const formRef = useRef<any>(null);
     const t = useTranslations('common');
 
@@ -110,17 +110,17 @@ export default function TimeAndTypeTickets() {
 
     const handleContinue = async () => {
         setBtnValidte2("Continue");
-        setIsContinuing(true);
+        // setIsContinuing(true);
 
         const isValid = await formRef.current?.validateAndSubmit();
         if (!isValid) {
-            setIsContinuing(false);
+            // setIsContinuing(false);
             return;
         }
 
         if (!showingList.length) {
             console.log("No showtimes to save!");
-            setIsContinuing(false);
+            // setIsContinuing(false);
             return;
         }
 
@@ -140,7 +140,7 @@ export default function TimeAndTypeTickets() {
             alert("Unexpected error occurred. Please try again.");
             return false;  // Indicate failure
         } finally {
-            setIsContinuing(false);
+            // setIsContinuing(false);
         }
     };
 
