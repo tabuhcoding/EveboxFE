@@ -54,7 +54,8 @@ export default function EventCard({ event }: { event: EventOrgFrontDisplayDto })
       label: transWithFallback("checkIn", "Checkin"),
     },
     {
-      href: `/organizer/events/${event.id}/seatmap`,
+      // href: `/organizer/events/${event.id}/seatmap`,
+      href: `#`,
       icon: <Armchair size={18} />,
       label: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
     }
