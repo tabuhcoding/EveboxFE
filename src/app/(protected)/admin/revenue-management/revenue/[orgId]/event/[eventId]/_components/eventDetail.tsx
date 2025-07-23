@@ -1,7 +1,7 @@
 'use client';
 
 /* Package System */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ChevronDown, RefreshCw } from "lucide-react";
@@ -56,7 +56,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
   const [selectedFilter, setSelectedFilter] = useState(event?.name)
   const [orgId, setOrgId] = useState("");
   const [selectedShowingDetail, setSelectedShowingDetail] = useState<Showing | null>(null);
-
+  const detailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchRevenueDetail = async () => {
@@ -193,6 +193,10 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
       setSelectedShowingDetail(null);
     } finally {
       setIsLoadingDetailShowing(false);
+
+      setTimeout(() => {
+        detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 0);
     }
   };
 
@@ -270,7 +274,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[#0C4762] text-white">
-                <th className="py-2 px-4 text-left w-40">Showing ID</th>
+                <th className="py-2 px-4 text-left w-40">{transWithFallback("showingID", "ID suất diễn")}</th>
                 <th className="py-2 px-4 text-left">{transWithFallback('startDate', 'Ngày bắt đầu')}</th>
                 <th className="py-2 px-4 text-left">{transWithFallback('endDate', 'Ngày kết thúc')}</th>
                 <th className="py-2 px-4 text-left">{transWithFallback('totalRevenue', 'Tổng doanh thu')}</th>
@@ -304,7 +308,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
 
         {/* Showing Details using reused components */}
         {isLoadingDetailShowing ? (
-          <div className="flex-1 p-6 md-64 w-full flex items-center justify-center">
+          <div className="flex-1 p-6 md-64 w-full flex items-center justify-center" ref={detailRef}>
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0C4762] mx-auto"></div>
               <p className="mt-4 text-[#0C4762]">{transWithFallback("loadingData", "Đang tải dữ liệu...")}</p>
