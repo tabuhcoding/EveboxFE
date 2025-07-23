@@ -118,12 +118,6 @@ export default function RevenueAppTable({
 
   return (
     <div className="mt-6">
-      <div className="flex justify-end mb-4">
-        <button className="bg-[#0C4762] text-white px-4 py-2 rounded-md hover:bg-[#51DACF] transition-colors">
-          {transWithFallback('exportReport', 'Xuất báo cáo')}
-        </button>
-      </div>
-
       <div className="overflow-hidden rounded-lg border border-gray-200">
         <table className="w-full text-sm">
           <thead>
