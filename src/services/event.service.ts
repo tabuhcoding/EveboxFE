@@ -821,9 +821,9 @@ export async function connectShowingToSeatmap(payload: ConnectShowingToSeatMapPa
   }
 }
 
-export async function getAllSeatmaps(): Promise<BaseApiResponse<SeatmapResponse[]>> {
+export async function getAllSeatmaps(showingId: string): Promise<BaseApiResponse<SeatmapResponse[]>> {
   try {
-    const res = await eventService.get(END_POINT_LIST.SHOWING.GET_ALL_SEATMAP);
+    const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_ALL_SEATMAP}/${showingId}`);
 
     if (!res || res.status !== 200) {
       throw new Error("Failed to fetch all seatmaps");
@@ -836,9 +836,9 @@ export async function getAllSeatmaps(): Promise<BaseApiResponse<SeatmapResponse[
   }
 }
 
-export async function getSeatmapDetail(id: number): Promise<BaseApiResponse<SeatMap>> {
+export async function getSeatmapDetail(id: number, showingId: string): Promise<BaseApiResponse<SeatMap>> {
   try {
-    const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_SEATMAP_DETAIL}/${id}`);
+    const res = await eventService.get(`${END_POINT_LIST.SHOWING.GET_SEATMAP_DETAIL}/${id}?showingId=${showingId}`);
 
     if (!res || res.status !== 200) {
       throw new Error("Failed to fetch all seatmaps");
