@@ -6,6 +6,7 @@ import 'tailwindcss/tailwind.css';
 import { Divider } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { CircularProgress } from '@mui/material';
 
 /* Package Application */
 import Navigation from '../../common/navigation';
@@ -24,9 +25,11 @@ export default function QuestionsPage() {
     const [btnValidate4, setBtnValidte4] = useState("");
     const [open, setOpen] = useState(false); //Notification Dialog 
     const [shouldProceed, setShouldProceed] = useState(false); // Trạng thái kiểm tra khi đóng Dialog
+    const [isContinuing, setIsContinuing] = useState(false);
 
     const handleContinue = () => {
         setBtnValidte4("Continue");
+        setIsContinuing(true);
         setOpen(true);
         setShouldProceed(true);
     }
@@ -37,10 +40,13 @@ export default function QuestionsPage() {
 
     const handleCloseDialog = () => {
         setOpen(false);
+
         if (shouldProceed) {
             console.log("-------Here")
             router.push(`/organizer/events`);
             setShouldProceed(false);
+        } else {
+            setIsContinuing(false); 
         }
     };
 
@@ -61,9 +67,12 @@ export default function QuestionsPage() {
                         <Navigation step={step} />
 
                         <div className="flex gap-4 mt-4 mb-6">
-                            <button className="text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
-                                type="submit" form="ques-form" onClick={handleContinue}>
-                                {transWithFallback("continue", "Tiếp tục")}
+                            <button className="flex items-center justify-center gap-1 text-xs w-30 border-2 border-[#51DACF] text-[#0C4762] font-bold py-2 px-4 rounded bg-[#51DACF] hover:bg-[#0C4762] hover:border-[#0C4762] hover:text-white transition-all"
+                                type="submit" form="ques-form" onClick={handleContinue} disabled={isContinuing}>
+                                {isContinuing && (
+                                    <CircularProgress size={16} color="inherit" aria-label="Loading" />
+                                )}
+                                {transWithFallback('continue', 'Tiếp tục')}
                             </button>
                         </div>
                     </ol>
@@ -71,6 +80,15 @@ export default function QuestionsPage() {
 
                 <Divider />
             </div>
+
+            {isContinuing && (
+                <div className="fixed inset-0 bg-white/80 z-50 flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0C4762] mx-auto"></div>
+                        <p className="mt-4 text-[#0C4762]">{transWithFallback("loadingData", "Đang tải dữ liệu...")}</p>
+                    </div>
+                </div>
+            )}
 
             <div className="flex justify-center">
                 <FormQuestionClient onNextStep={handleNextStep} btnValidate4={btnValidate4} showingIds={showtimeIds} />
