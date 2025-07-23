@@ -119,8 +119,7 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
         setCheckLoading(false);
         setUserExists(null);
         setTimeout(() => {
-          setAlertMsg(null);
-          onClose();
+          handleClose();
         }, 1500);
       } else {
         const { message } = await res.json();
@@ -139,6 +138,7 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
     setReceiver(null);
     setCheckLoading(false);
     setUserExists(null);
+    setHasGiftedSuccess(false);
     onClose();
   }
 

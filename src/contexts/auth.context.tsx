@@ -4,6 +4,7 @@ import { Loader } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSession, signOut, signIn } from 'next-auth/react'
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react'
+import { mutate } from 'swr'
 
 
 /* Package Application */
@@ -151,6 +152,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       clearSessionCache();
       localStorage.clear();
 
+      mutate("/api/user/me", null, false);
+
       await signOut({
         redirect: false,
       });
@@ -172,7 +175,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           throw new Error("Login failed with token");
         }
 
-        // NextAuth sẽ tự cập nhật session, useEffect phía trên sẽ chạy lại
+        mutate("/api/user/me");
       } catch (error) {
         console.error("loginWithToken error:", error);
         setUser(null);
