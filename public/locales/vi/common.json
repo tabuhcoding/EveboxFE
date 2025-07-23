@@ -949,5 +949,5 @@
   "success": "Thành công",
   "notFindTicket": "Không tìm thấy vé phù hợp.",
   "errorLoadingAnalysis": "Không thể tải thông tin phân tích",
-  "loadingDataPage": "Đang chuyển trang..."
+  "showingID": "ID suất diễn"
 }
