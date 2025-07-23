@@ -7,9 +7,12 @@ import Link from 'next/link';
 
 /* Package Application */
 import { receiveTicket } from '@/services/booking.service';
+import { useAuth } from '@/contexts/auth.context';
 
 export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
   const [status, setStatus] = useState<'loading' | 'success' | 'fail'>('loading');
+
+  const { session, loginWithToken, logoutWithoutToLogin } = useAuth();
 
   const t = useTranslations('common');
   const transWithFallback = (key: string, fallback: string) => {
@@ -24,14 +27,28 @@ export default function ReceiveTicket({ sendKey }: { sendKey?: string }) {
         setStatus('loading');
         const res = await receiveTicket(sendKey || "");
 
-        if (res?.statusCode !== 200) {
+        if (res?.statusCode !== 200 || !res?.data) {
           setStatus('fail');
+          return;
         }
-        else if (!res?.data) {
-          setStatus('fail');
-        } else {
-          setStatus('success');
+
+        const { access_token, refresh_token, email: receiveEmail} = res.data;
+
+        if (!session?.user) {
+          await loginWithToken(access_token, refresh_token);
         }
+        else {
+          const currentEmail = session?.user?.email;
+          if (currentEmail !== receiveEmail) {
+            await logoutWithoutToLogin();
+
+            await new Promise((r) => setTimeout(r, 1500));
+
+            await loginWithToken(access_token, refresh_token);
+          }
+        }
+
+        setStatus('success');
       } catch (error) {
         console.error('Error during fetch:', error);
         setStatus('fail');

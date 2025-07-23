@@ -19,12 +19,15 @@ type ReceiverInfo = {
 export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicketModalProps) {
   const { session } = useAuth();
   const accessToken = session?.user?.accessToken;
+  const t = useTranslations('common');
+
   const [giftEmail, setGiftEmail] = useState('');
   const [giftLoading, setGiftLoading] = useState(false);
   const [checkLoading, setCheckLoading] = useState(false);
   const [receiver, setReceiver] = useState<ReceiverInfo | null>(null);
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
-  const t = useTranslations('common');
+  const [userExists, setUserExists] = useState<boolean | null>(null);
+  const [hasGiftedSuccess, setHasGiftedSuccess] = useState(false);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -70,14 +73,17 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
           email: result.data.email,
           phone: result.data.phone,
         });
+        setUserExists(true);
         setAlertMsg(null);
       } else {
-        setAlertMsg(`${transWithFallback('userNotFound', 'Không tìm thấy người dùng')}`);
         setReceiver(null);
+        setUserExists(false);
+        setAlertMsg(null);
       }
     } catch {
       setAlertMsg(transWithFallback('checkFailed', 'Kiểm tra thất bại!'));
       setReceiver(null);
+      setUserExists(null);
     } finally {
       setCheckLoading(false);
     }
@@ -106,8 +112,12 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
       });
 
       if (res.ok) {
-        setAlertMsg(transWithFallback('giftSuccess', '🎉 Tặng vé thành công!'));
+        setHasGiftedSuccess(true);
+        setAlertMsg(null);
         setGiftEmail('');
+        setReceiver(null);
+        setCheckLoading(false);
+        setUserExists(null);
         setTimeout(() => {
           setAlertMsg(null);
           onClose();
@@ -123,8 +133,17 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
     }
   };
 
+  const handleClose = () => {
+    setAlertMsg(null);
+    setGiftLoading(false);
+    setReceiver(null);
+    setCheckLoading(false);
+    setUserExists(null);
+    onClose();
+  }
+
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
+    <Dialog open={isOpen} onClose={handleClose} maxWidth="xs" fullWidth>
       <div
         className="text-white dialog-header px-6 py-4 justify-center items-center flex relative"
         style={{ background: '#0C4762' }}
@@ -133,7 +152,7 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
           {transWithFallback('giftTicketEmail', 'Tặng vé qua email')}
         </DialogTitle>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute right-2 top-2 px-1 py-1 close-btn"
           aria-label="Close modal"
           disabled={giftLoading || checkLoading}
@@ -150,7 +169,15 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
         <input
           type="email"
           value={giftEmail}
-          onChange={(e) => setGiftEmail(e.target.value)}
+          onChange={(e) => {
+            const newEmail = e.target.value;
+            setGiftEmail(newEmail);
+            setAlertMsg(null);
+            setGiftLoading(false);
+            setReceiver(null);
+            setCheckLoading(false);
+            setUserExists(null);
+          }}
           placeholder="example@email.com"
           className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#51DACF] ${alertMsg && !giftLoading && !isValidEmail(giftEmail) ? 'border-red-600' : ''
             }`}
@@ -171,29 +198,41 @@ export default function GiftTicketModal({ isOpen, onClose, ticketId }: GiftTicke
           </div>
         )}
 
-        {alertMsg && (
-          <p className={`mt-2 text-sm select-none ${alertMsg.includes('🎉') ? 'text-green-600' : 'text-red-600'}`}>
-            {alertMsg}
+        {hasGiftedSuccess && (
+          <p className="mt-4 text-green-600 font-semibold">
+            {transWithFallback('giftSuccess', 'Vé đã được gửi thành công!')}
+          </p>
+        )}
+
+        {userExists === false && (
+          <p className="mt-4 text-sm text-black">
+            {transWithFallback('userNotFoundMsg', 'Hiện chưa có thông tin người dùng')} <strong>{giftEmail}</strong> {transWithFallback('userNotFoundConfirm', 'này trong hệ thống, bạn có đồng ý tiếp tục gửi vé?')}
           </p>
         )}
 
         {/* Buttons */}
         <div className="flex flex-col justify-center gap-4 mt-6 w-full mb-2">
-          <button
-            onClick={onClose}
-            disabled={giftLoading}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 w-full"
-          >
-            {transWithFallback('btnCancel', 'Hủy')}
-          </button>
-          {receiver && (
-            <button
-              disabled={giftLoading}
-              onClick={handleSendGift}
-              className="px-4 py-2 bg-[#51DACF] text-[#0C4762] font-bold rounded hover:bg-[#3ec8bd] disabled:opacity-50"
-            >
-              {giftLoading ? transWithFallback('sending', 'Đang gửi...') : transWithFallback('sendGift', 'Gửi tặng')}
-            </button>
+          {(userExists !== null && giftEmail.trim() !== '') && (
+            <>
+              <button
+                onClick={handleClose}
+                disabled={giftLoading}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 w-full"
+              >
+                {transWithFallback('btnCancel', 'Hủy')}
+              </button>
+              <button
+                disabled={giftLoading}
+                onClick={handleSendGift}
+                className="px-4 py-2 bg-[#51DACF] text-[#0C4762] font-bold rounded hover:bg-[#3ec8bd] disabled:opacity-50"
+              >
+                {giftLoading
+                  ? transWithFallback('sending', 'Đang gửi...')
+                  : userExists
+                    ? transWithFallback('giftTicket', 'Gửi tặng')
+                    : transWithFallback('sendAnyway', 'Tiếp tục gửi vé')}
+              </button>
+            </>
           )}
         </div>
       </DialogContent>
