@@ -15,6 +15,7 @@ export default async function Page({ params }: {
   const session = await getServerSession(authOptions);
   const { id } = await params;
   const dataEvent = await fetchEventDetail(id, session?.user?.accessToken);
+  console.log("Event detail:",dataEvent);
   const event = dataEvent.data || {};
   const dataRecommendedEvents = await fetchRecommendEventDetail(id);
   const recommendedEvents = dataRecommendedEvents.data || [];

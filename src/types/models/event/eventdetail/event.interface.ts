@@ -101,4 +101,5 @@ export interface EventDetail {
   status:string;
   totalClicks?: number;
   lastScore?: number;
+  organizerId: string;
 }

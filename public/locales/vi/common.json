@@ -949,5 +949,6 @@
   "success": "Thành công",
   "notFindTicket": "Không tìm thấy vé phù hợp.",
   "errorLoadingAnalysis": "Không thể tải thông tin phân tích",
-  "showingID": "ID suất diễn"
+  "showingID": "ID suất diễn",
+  "ownEventWarning":"This is your own event. Do you want to continue this process to order ticket?"
 }
