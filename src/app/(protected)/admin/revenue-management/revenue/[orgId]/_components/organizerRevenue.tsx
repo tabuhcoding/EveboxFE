@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ChevronDown, ChevronRight, ExternalLink, RefreshCw } from "lucide-react"
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { CircularProgress } from "@mui/material";
 
 /* Package Application */
 import { EventRevenueData, ShowingRevenueData, TicketTypeRevenueData } from "@/types/models/admin/revenueManagement.interface";
@@ -64,6 +65,8 @@ export default function OrganizerRevenuePage({ orgId }: { orgId: string }) {
   const [orgOptions, setOrgOptions] = useState<Organization[]>([]);
   const [selectedFilter, setSelectedFilter] = useState(organization?.name ?? '');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loadingEventId, setLoadingEventId] = useState<number | null>(null);
+  const [loadingToggleEventId, setLoadingToggleEventId] = useState<number | null>(null);
 
   useEffect(() => {
     const storedAppRevenue = localStorage.getItem("appRevenue");
@@ -426,12 +429,24 @@ export default function OrganizerRevenuePage({ orgId }: { orgId: string }) {
                   <Fragment key={`event-${event.id}`}>
                     <tr
                       className={`cursor-pointer hover:bg-[#EAFDFC] ${event.isExpanded ? "bg-[#EAFDFC]" : "bg-white"}`}
-                      onClick={() => toggleEvent(event.id)}
+                      onClick={() => {
+                        if (loadingToggleEventId !== null) return;
+
+                        if (event.isExpanded) {
+                          toggleEvent(event.id);
+                        } else {
+                          setLoadingToggleEventId(event.id);
+                          toggleEvent(event.id);
+                          setTimeout(() => setLoadingToggleEventId(null), 250);
+                        }
+                      }}
                     >
                       <td className="py-2 px-4 border-t flex items-center">
                         {event.details.length > 0 && (
                           <>
-                            {event.isExpanded ? (
+                            {loadingToggleEventId === event.id ? (
+                              <CircularProgress size={16} className="mr-1 text-blue-600" />
+                            ) : event.isExpanded ? (
                               <ChevronDown className="w-4 h-4 mr-1" />
                             ) : (
                               <ChevronRight className="w-4 h-4 mr-1" />
@@ -447,6 +462,7 @@ export default function OrganizerRevenuePage({ orgId }: { orgId: string }) {
                           className="inline-flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation()
+                            setLoadingEventId(event.id);
                             localStorage.setItem("selectedEvent", JSON.stringify({
                               id: event.id,
                               name: event.name,
@@ -456,7 +472,11 @@ export default function OrganizerRevenuePage({ orgId }: { orgId: string }) {
                             router.push(`/admin/revenue-management/revenue/${orgId}/event/${event.id}`);
                           }}
                         >
-                          <ExternalLink className="w-5 h-5" />
+                          {loadingEventId === event.id ? (
+                            <CircularProgress size={16} color="inherit" />
+                          ) : (
+                            <ExternalLink className="w-5 h-5" />
+                          )}
                         </button>
                       </td>
                     </tr>
