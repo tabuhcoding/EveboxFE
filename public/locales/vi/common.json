@@ -952,5 +952,8 @@
   "notFindTicket": "Không tìm thấy vé phù hợp.",
   "errorLoadingAnalysis": "Không thể tải thông tin phân tích",
   "showingID": "ID suất diễn",
-  "ownEventWarning":"This is your own event. Do you want to continue this process to order ticket?"
+  "ownEventWarning":"This is your own event. Do you want to continue this process to order ticket?",
+  "userNotFoundMsg": "Hiện chưa có thông tin người dùng",
+  "userNotFoundConfirm": "này trong hệ thống, bạn có đồng ý tiếp tục gửi vé?",
+  "sendAnyway": "Tiếp tục gửi vé"
 }

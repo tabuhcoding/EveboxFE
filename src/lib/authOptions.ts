@@ -16,7 +16,7 @@ async function refreshAccessToken(token: any) {
       ...token,
       accessToken: access_token,
       // refreshToken: refresh_token,
-      accessTokenExpires: process.env.JWT_EXPIRES_IN, 
+      accessTokenExpires: process.env.JWT_EXPIRES_IN,
     };
   } catch (error) {
     console.error("🚨 Refresh token error:", error);
@@ -51,9 +51,21 @@ export const authOptions: AuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        accessToken: { label: "Access Token", type: "text" },
+        refreshToken: { label: "Refresh Token", type: "text" },
       },
       async authorize(credentials) {
         if (!credentials) return null;
+
+        if (credentials.accessToken && credentials.refreshToken) {
+          // 👉 Cho phép login bằng token (không gọi API backend)
+          return {
+            id: "custom-token-login",
+            email: "", // nếu cần
+            accessToken: credentials.accessToken,
+            refreshToken: credentials.refreshToken,
+          };
+        }
 
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/login`, {
@@ -98,19 +110,19 @@ export const authOptions: AuthOptions = {
           });
 
           const userData = res.data.data;
-          
+
           // Add custom tokens to user object for JWT callback
           user.accessToken = userData.access_token;
           user.refreshToken = userData.refresh_token;
           user.id = userData.id || user.id;
-          
+
           return true;
         } catch (error) {
           console.error("Error during Google OAuth with backend:", error);
           return false;
         }
       }
-      
+
       // Handle credentials signin (existing flow)
       return true;
     },
@@ -124,18 +136,18 @@ export const authOptions: AuthOptions = {
         token.accessTokenExpires = process.env.JWT_EXPIRES_IN
         return token;
       }
-      
+
       // Chỉ check expiry khi có trigger từ SessionProvider
       if (trigger === 'update' || !token.accessTokenExpires) {
         return token;
       }
-      
+
       // Check if access token is expired (with 5s buffer thay vì 10s)
       if (token.accessTokenExpires && Date.now() > (token.accessTokenExpires as number) - 5000) {
         console.log("🔄 JWT callback: Access token expired, attempting refresh...");
         return await refreshAccessToken(token);
       }
-      
+
       return token;
     },
     async session({ session, token }) {

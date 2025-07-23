@@ -958,5 +958,8 @@
     "mapping": "Mapping...",
     "notFindTicket": "No matching ticket found.",
     "errorLoadingAnalysis": "Error loading analysis",
-    "showingID": "Showing ID"
+    "showingID": "Showing ID",
+    "userNotFoundMsg": "Currently not found user",
+    "userNotFoundConfirm": "in system, do you want to continue gift ticket?",
+    "sendAnyway": "Send anyway"
 }

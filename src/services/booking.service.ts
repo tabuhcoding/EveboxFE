@@ -6,7 +6,7 @@ import { IGetUserTicketByIdResponse } from "@/types/models/ticket/ticketInfoById
 
 import { END_POINT_LIST } from "./endpoint";
 import { bookingService } from "./instance.service";
-import { IGetUserTicketResponse } from "@/types/models/ticket/ticketInfo";
+import { IGetUserTicketResponse, IReceiveTicketResponse } from "@/types/models/ticket/ticketInfo";
 
 export async function selectSeat(payload: SelectSeatPayload, accessToken: string): Promise<BaseApiResponse<boolean>> {
   try {
@@ -129,7 +129,7 @@ export async function getUserTicketResponse(params: string, accessToken: string)
   }
 }
 
-export async function receiveTicket(key: string): Promise<BaseApiResponse<boolean>> {
+export async function receiveTicket(key: string): Promise<BaseApiResponse<IReceiveTicketResponse>> {
   try {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export async function receiveTicket(key: string): Promise<BaseApiResponse<boolea
 
     if (!res) throw new Error('Failed to receive ticket');
 
-    return res.data as BaseApiResponse<boolean>;
+    return res.data as BaseApiResponse<IReceiveTicketResponse>;
   } catch (error: any) {
     console.error("Error get ticket by id:", error?.response?.data?.message);
     throw new Error(`${error?.response?.data?.message}`);

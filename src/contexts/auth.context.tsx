@@ -2,7 +2,7 @@
 import { jwtDecode } from 'jwt-decode'
 import { Loader } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession, signOut, signIn } from 'next-auth/react'
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react'
 
 
@@ -32,6 +32,8 @@ interface AuthContextProps {
   session: any;
   getUserInfo: () => Promise<UserInfo | null>;
   logout: () => Promise<void>;
+  loginWithToken: (accessToken: string, refreshToken: string) => Promise<void>;
+  logoutWithoutToLogin: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -40,6 +42,8 @@ export const AuthContext = createContext<AuthContextProps>({
   session: null,
   logout: async () => { },
   getUserInfo: async () => null,
+  loginWithToken: async () => { },
+  logoutWithoutToLogin: async () => { }
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -52,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (status === 'loading') return; // Đợi NextAuth load xong
-    
+
     // Check for refresh token errors
     if ((session as any)?.error === "RefreshAccessTokenError") {
       console.log("🚨 Refresh token failed, showing dialog...");
@@ -62,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       return;
     }
-    
+
     if (status === 'authenticated' && session?.user?.accessToken) {
       try {
         const decoded = jwtDecode<JwtPayload>(session.user.accessToken);
@@ -85,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(false);
       }
     }
-    
+
     setIsLoading(false);
   }, [status, session?.user?.accessToken]); // Chỉ theo dõi những giá trị thực sự cần thiết
 
@@ -100,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (typeof window !== 'undefined') {
       window.addEventListener('refresh-token-failed', handleRefreshTokenFailure);
-      
+
       return () => {
         window.removeEventListener('refresh-token-failed', handleRefreshTokenFailure);
       };
@@ -127,7 +131,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       clearSessionCache();
       localStorage.clear();
 
-      await signOut({ 
+      await signOut({
         redirect: true,
         callbackUrl: '/login'
       });
@@ -137,6 +141,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       router.push('/login');
     }
   }, [router]);
+
+  const logoutWithoutToLogin = useCallback(async (): Promise<void> => {
+    try {
+      setIsAuthenticated(false);
+      setUser(null);
+      setShowSessionExpiredDialog(false);
+
+      clearSessionCache();
+      localStorage.clear();
+
+      await signOut({
+        redirect: false,
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }, [router]);
+
+  const loginWithToken = useCallback(
+    async (accessToken: string, refreshToken: string) => {
+      try {
+        const result = await signIn("credentials", {
+          redirect: false,
+          accessToken,
+          refreshToken,
+        });
+
+        if (!result?.ok) {
+          throw new Error("Login failed with token");
+        }
+
+        // NextAuth sẽ tự cập nhật session, useEffect phía trên sẽ chạy lại
+      } catch (error) {
+        console.error("loginWithToken error:", error);
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    },
+    []
+  );
 
   const handleSessionExpiredLogin = useCallback(async (): Promise<void> => {
     setShowSessionExpiredDialog(false);
@@ -148,8 +192,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     session,
     logout,
-    getUserInfo
-  }), [isAuthenticated, user, session, logout]);
+    getUserInfo,
+    loginWithToken,
+    logoutWithoutToLogin
+  }), [isAuthenticated, user, session, logout, loginWithToken]);
 
   if (isLoading) {
     return (
@@ -165,9 +211,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       <AuthContext.Provider value={contextValue}>
         {children}
       </AuthContext.Provider>
-      
+
       {/* Session Expired Dialog */}
-      <SessionExpiredDialog 
+      <SessionExpiredDialog
         open={showSessionExpiredDialog}
         onLogin={handleSessionExpiredLogin}
       />

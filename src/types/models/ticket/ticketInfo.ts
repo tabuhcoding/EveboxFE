@@ -72,3 +72,10 @@ export interface TicketPaginationProps {
 
 // Response cho API /ticket/getUserTicket
 export type TicketInfoResponse = BaseApiResponse<IGetUserTicketResponse>;
+
+export interface IReceiveTicketResponse {
+  id: string;
+  access_token: string;
+  refresh_token: string;
+  email: string;
+}
