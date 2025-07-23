@@ -2,7 +2,7 @@
 
 /* Package System */
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 /* Package Application */
@@ -39,6 +39,7 @@ export default function LocationRevenueView() {
   const [provinceData, setProvinceData] = useState<ProvinceRevenueData[]>([]);
   const [provinceDataMap, setProvinceDataMap] = useState<ProvinceGroupedData[]>([]);
   const [loading, setLoading] = useState(true);
+  const locale = useLocale();
 
   useEffect(() => {
     const fetchProvinceRevenue = async () => {
@@ -47,7 +48,7 @@ export default function LocationRevenueView() {
         setProvinceData(res.data);
 
         const groupedData = Object.values(
-          res.data.reduce((acc: Record<string, { area_code: string; [provinceName: string]: number | string }>, curr) => {
+          res.data.reduce((acc: Record<string, { area_code: string;[provinceName: string]: number | string }>, curr) => {
             if (!acc[curr.area_code]) acc[curr.area_code] = { area_code: curr.area_code, area: curr.area_code };
             acc[curr.area_code][curr.provinceName] = curr.totalRevenue / 1_000_000;
             return acc;
@@ -57,7 +58,7 @@ export default function LocationRevenueView() {
         setProvinceDataMap([
           ...provinceDataMap,
           ...groupedData,
-          ]
+        ]
         );
 
         console.log("Province Data Map:", groupedData);
@@ -120,7 +121,7 @@ export default function LocationRevenueView() {
       </div>
 
       <div className="mb-6">
-        <AIAnalyst type = {"location"}/>
+        <AIAnalyst type={"location"} />
       </div>
 
       {/* Table */}
@@ -128,24 +129,24 @@ export default function LocationRevenueView() {
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-[#0C4762] text-white">
-              <th className="py-3 px-4 text-left font-medium">STT</th>
-              <th className="py-3 px-4 text-left font-medium">Tỉnh thành</th>
-              <th className="py-3 px-4 text-left font-medium">Province</th>
-              <th className="py-3 px-4 text-left font-medium">Số lượng sự kiện</th>
-              <th className="py-3 px-4 text-left font-medium">Số lượng showing</th>
-              <th className="py-3 px-4 text-left font-medium">Tổng doanh thu</th>
-              <th className="py-3 px-4 text-left font-medium">Khu vực</th>
+              <th className="py-3 px-4 text-left font-medium">{transWithFallback("noStt","STT")}</th>
+              <th className="py-3 px-4 text-left font-medium">{transWithFallback("province", "Tỉnh thành")}</th>
+              <th className="py-3 px-4 text-left font-medium">{transWithFallback("numberOfEvents","Số lượng sự kiện")}</th>
+              <th className="py-3 px-4 text-left font-medium">{transWithFallback("numberOfShowings","Số lượng suất diễn")}</th>
+              <th className="py-3 px-4 text-left font-medium">{transWithFallback("totalRevenue","Tổng doanh thu")}</th>
+              <th className="py-3 px-4 text-left font-medium">{transWithFallback("area","Khu vực")}</th>
             </tr>
           </thead>
           <tbody>
             {provinceData.map((row, index) => (
               <tr key={index} className="border-b border-gray-200 hover:bg-[#E8FFFF]">
                 <td className="py-3 px-4">{index + 1}</td>
-                <td className="py-3 px-4">{row.provinceName}</td>
-                <td className="py-3 px-4">{row.provinceEnName}</td>
+                <td className="py-3 px-4">
+                  {locale === "en" ? row.provinceEnName : row.provinceName}
+                </td>
                 <td className="py-3 px-4">{row.eventCount}</td>
                 <td className="py-3 px-4">{row.showingCount}</td>
-                <td className="py-3 px-4">{new Intl.NumberFormat("vi-VN").format(row.totalRevenue*1000)}</td>
+                <td className="py-3 px-4">{new Intl.NumberFormat("vi-VN").format(row.totalRevenue * 1000)}</td>
                 <td className="py-3 px-4">{row.area_code}</td>
               </tr>
             ))}

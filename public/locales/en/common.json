@@ -1,4 +1,6 @@
 {
+    "numberOfShowings": "Number of showings",
+    "numberOfEvents": "Number of events",
     "query": "Query: ",
     "askQuestion": "Enter your question",
     "dontAskAgain": "Don't ask again",

@@ -1,4 +1,6 @@
 {
+  "numberOfShowings": "Số lượng suất diễn",
+  "numberOfEvents": "Số lượng sự kiện",
   "query": "Truy vấn: ",
   "askQuestion": "Nhập câu hỏi",
   "DontAskAgain": "Không hỏi lại lần sau",
@@ -787,7 +789,7 @@
   "actualRevenue": "Doanh thu thực nhận",
   "exportReport": "Xuất báo cáo",
   "year": "Năm",
-  "searchByEventOrOrg": "Tìm kiếm theo tên sự kiện hoặc tên nhà tổ chức",
+  "searchByEventOrOrg": "Tìm kiếm theo tên sự kiện, tên nhà tổ chức, ...",
   "byDate": "Theo ngày",
   "byProvince": "Theo tỉnh thành",
   "byTicketPrice": "Theo giá vé",
