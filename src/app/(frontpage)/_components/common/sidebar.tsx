@@ -162,11 +162,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                     onClick={async () => {
                       setLoadingIndex(index);
                       try {
-                        if (item.href) {
+                        if (item.href && item.href !== '/instruction') {
                           await handleProtectedClick(item.href, setLoadingIndex, index);
                         } else if (item.text === t("logout")) {
                           await handleLogout(index);
-                        } else if (item.onClick) {
+                        } else if (item.href === '/instruction') {
+                          window.location.href = item.href;
+                        }
+                        else if (item.onClick) {
                           await item.onClick();
                         }
                       } catch (e) {
