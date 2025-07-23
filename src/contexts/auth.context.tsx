@@ -7,7 +7,7 @@ import { createContext, useContext, useState, useEffect, ReactNode, useMemo, use
 
 
 /* Package Application */
-import createApiClient from 'services/apiClient'
+import createApiClient, { clearSessionCache } from 'services/apiClient'
 import { SessionExpiredDialog } from 'components/common/sessionExpiredDialog'
 
 interface JwtPayload {
@@ -123,6 +123,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAuthenticated(false);
       setUser(null);
       setShowSessionExpiredDialog(false); // Đóng dialog nếu đang mở
+
+      clearSessionCache();
+      localStorage.clear();
+
       await signOut({ 
         redirect: true,
         callbackUrl: '/login'

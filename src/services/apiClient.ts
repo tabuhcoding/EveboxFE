@@ -52,6 +52,11 @@ const getOptimizedSession = async (): Promise<
     return sessionPromise;
   }
 
+  if (!cachedSession && sessionPromise === null) {
+    clearSessionCache();
+  }
+
+
   // Tạo mới session request
   sessionPromise = (async () => {
     try {
