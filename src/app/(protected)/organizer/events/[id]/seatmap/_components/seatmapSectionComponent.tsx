@@ -8,7 +8,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { SeatMapProps } from "types/models/event/booking/seatmap.interface";
 import '@/styles/event/seatmap.css';
 
-export default function SeatMapSectionComponent({ seatMap }: SeatMapProps) {
+export default function SeatMapSectionComponent({ seatMap, ticketTypeSections, selectedSectionId }: SeatMapProps) {
 
   const [zoom, setZoom] = useState<number>(1);
   const [isDragging, setIsDragging] = useState(false);
@@ -150,9 +150,35 @@ export default function SeatMapSectionComponent({ seatMap }: SeatMapProps) {
                   key={section.id}
                 >
                   {section.element?.map((el, index) => {
-                    const commonProps = {
+                    let commonProps: { style: React.CSSProperties } = {
                       style: { fill: el.fill },
                     };
+
+                  if (index === 0) {
+                    const color = ticketTypeSections?.find(
+                      (t) => t.ticketTypeId === section.ticketTypeId
+                    )?.color;
+                    if (color) {
+                      commonProps = {
+                        ...commonProps,
+                        style: { fill: color },
+                      };
+                    } else {
+                      commonProps = {
+                        ...commonProps,
+                        style: { fill: '#B0B0B5' },
+                      };
+                    }
+                    if (selectedSectionId === section.id) {
+                      commonProps = {
+                        ...commonProps,
+                        style: { fill: 'rgba(72, 72, 72, 1)',
+                          stroke: 'white',
+                          strokeWidth: 2,
+                         },
+                      };
+                    }
+                  }
 
                     if (el.type === 'path') {
                       return (
@@ -177,11 +203,11 @@ export default function SeatMapSectionComponent({ seatMap }: SeatMapProps) {
                           y={el.y}
                           width={el.width}
                           height={el.height}
-                          style={{
-                            fill: el.fill,
-                            stroke: 'white',
-                            strokeWidth: 1
-                          }}
+                          // style={{
+                          //   fill: el.fill,
+                          //   stroke: 'white',
+                          //   strokeWidth: 1
+                          // }}
                         />
                       );
                     }
@@ -198,3 +224,10 @@ export default function SeatMapSectionComponent({ seatMap }: SeatMapProps) {
     </div>
   );
 }
+
+// function hexToRgba(hex: string, alpha = 1) {
+//   const r = parseInt(hex.slice(1, 3), 16);
+//   const g = parseInt(hex.slice(3, 5), 16);
+//   const b = parseInt(hex.slice(5, 7), 16);
+//   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+// }
