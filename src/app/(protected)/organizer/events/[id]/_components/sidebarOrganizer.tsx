@@ -87,8 +87,7 @@ const SidebarOrganizer: React.FC<SidebarProps> = ({ onClose }) => {
       },
       rolePermission?.isEdited && {
         text: transWithFallback("seatmap", "Sơ đồ chỗ ngồi"),
-        // href: `/organizer/events/${eventId}/seatmap`,
-        href: `#`,
+        href: `/organizer/events/${eventId}/seatmap`,
         icon: <Armchair size={18} />
       },
     ].filter(Boolean) as MenuItem[],
