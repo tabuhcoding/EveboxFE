@@ -42,8 +42,11 @@ export interface SeatMapProps {
     quantity?: number,
     sectionId?: number
   ) => void;
+  seatStatusRecord?: Record<number, string>; // Trạng thái ghế, key là seatId
+  onSetSeatStatus?: (seatId: number[]) => void
   selectedSeatIds?: number[];
   selectedTickets?: SelectedTicketsState;
+  selectedSectionId?: number;
   ticketTypeSections?: TicketTypeSectionsProps[]; // Thông tin về các section của loại vé
 }
 

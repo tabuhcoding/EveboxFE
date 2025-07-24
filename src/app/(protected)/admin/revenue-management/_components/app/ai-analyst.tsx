@@ -132,7 +132,7 @@ export function AIAnalyst({ type }: AIAnalystProps) {
         />
         <button
           onClick={handleAnalyzeClick}
-          disabled={loading || !query.trim()}
+          disabled={loading}
           className="px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
           {loading ? (

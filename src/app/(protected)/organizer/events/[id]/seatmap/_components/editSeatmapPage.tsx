@@ -16,8 +16,9 @@ import {
 } from "@/types/models/event/booking/seatmap.interface"
 import { SeatmapResponse, Showing } from "@/types/models/org/editSeatmap.interface"
 import SeatMapComponent from "./seatmapComponent"
-import SeatMapSectionComponent from "./seatmapSectionComponent"
-import { getShowingsOfEvent, connectShowingToSeatmap, getAllSeatmaps, getSeatmapDetail } from "@/services/event.service"
+import { getShowingsOfEvent, getAllSeatmaps, getSeatmapDetail } from "@/services/event.service"
+import axios from "axios"
+import { cn } from "@nextui-org/react"
 
 interface SeatMapPageProps {
   eventId: number
@@ -55,9 +56,11 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   // Thêm các state này sau các state hiện có
   const [selectedTicketTypeId, setSelectedTicketTypeId] = useState<string>("")
   const [ticketTypeSectionMap, setTicketTypeSectionMap] = useState<TicketTypeSectionsProps[]>([])
-  const [sections, setSections] = useState<any[]>([])
+  // const [sections, setSections] = useState<any[]>([])
   const [isLoadingMapping, setIsLoadingMapping] = useState<boolean>(false);
   const [showingData, setShowingData] = useState<Showing | null>(null)
+  const [sectionId, setSectionId] = useState<number | null>(null);
+  const [seatSeatus, setSeatSeatus] = useState<Record<number, string>>({});
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);
@@ -77,15 +80,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
           setAllShowings(showingsResponse.data)
           // setShowingData(firstShowing)
 
-          // // Set ticket types from the first showing
-          // const sortedTicketTypes = [...firstShowing.TicketType].sort((a, b) => a.position - b.position)
-          // setTicketTypes(
-          //   sortedTicketTypes.map((tt: any) => ({
-          //     ...tt,
-          //     effectiveFrom: tt.effectiveFrom ?? tt.startTime ?? "",
-          //     effectiveTo: tt.effectiveTo ?? tt.endTime ?? "",
-          //   })),
-          // )
+          console.log("Showings fetched:", showingsResponse.data);
         }
       } catch (error) {
         console.error("Error fetching seatmaps:", error)
@@ -143,21 +138,29 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
           setSeatMapData(response.data)
           setSeatmapType(response.data.seatMapType || SeatmapType.NOT_A_SEATMAP)
           const normalSections = response.data?.Section?.filter((s) => !s.isStage) || []
-          setSections(normalSections)
+          // setSections(normalSections)
           const ticketTypeSectionsMapResponse = normalSections.map((section) => {
             return {
               sectionId: section.id,
               name: section.name,
               quantity: section.quantity || 0,
               sold: section.sold || 0,
-              color: section.color || "#000000",
+              color: section.color || "#707078",
               ticketTypeId: section.ticketTypeId || "",
               ticketTypeName: section.ticketTypeName || "",
             }
           })
 
-          console.log("Ticket type sections map response:", ticketTypeSectionsMapResponse)
+          const seatStatusResponse = response.data?.Section?.reduce((acc, section) => {
+            section.Row?.forEach((row) => {
+              row.Seat.forEach((seat) => {
+                acc[seat.id] = seat.status;
+              });
+            });
+            return acc;
+          }, {} as Record<number, string>);
           setTicketTypeSectionMap(ticketTypeSectionsMapResponse)
+          setSeatSeatus(seatStatusResponse || {})
         }
       } catch (error) {
         console.error("Error fetching seatmap details:", error)
@@ -169,21 +172,22 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
   }, [selectedSeatMapId])
 
   const handleSeatMapChange = (seatMapId: string | number) => {
-    setSelectedSeatMapId(Number(seatMapId))
     setIsDropdownOpen(false)
     setIsShDropdownOpen(false)
     // Reset mapping when changing seatmap
     setTicketTypeSectionMap([])
     setSelectedTicketTypeId("")
+    setSelectedSeatMapId(Number(seatMapId))
   }
 
   const handleShowingChange = (showingId: string) => {
-    setSelectedShowingId(showingId)
     setIsShDropdownOpen(false)
     setIsDropdownOpen(false)
     // Reset mapping when changing seatmap
     setTicketTypeSectionMap([])
     setSelectedTicketTypeId("")
+    setSelectedSeatMapId(0)
+    setSelectedShowingId(showingId)
   }
 
   const handleTicketTypeSelect = (ticketTypeId: string) => {
@@ -192,23 +196,36 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
 
   const handleAddTicketTypeToSection = (sectionId: number) => {
     if (!selectedTicketTypeId) return
+    const ticketType = ticketTypes.find((tt) => tt.id === selectedTicketTypeId);
+    setTicketTypeSectionMap((prev) => {
+      return prev.map((item) => item.sectionId === sectionId
+       && (item.sold === 0 || item.sold === undefined)
+        ? {
+          ...item,
+          ticketTypeId: selectedTicketTypeId,
+          ticketTypeName: ticketType?.name || "",
+          color: ticketType?.color && ticketType.color !== "" && ticketType.color !== "Default Color" ? ticketType.color : `#707078`,
+        }
+        : item
+      )
+    })
+  }
 
-    // setTicketTypeSectionMap((prev) => {
-    //   const current = prev[selectedTicketTypeId] || []
-    //   if (current.includes(sectionId)) {
-    //     // Remove if already exists
-    //     return {
-    //       ...prev,
-    //       [selectedTicketTypeId.toString()]: current.filter((id) => id !== sectionId),
-    //     }
-    //   } else {
-    //     // Add if not exists
-    //     return {
-    //       ...prev,
-    //       [selectedTicketTypeId.toString()]: [...current, sectionId],
-    //     }
-    //   }
-    // })
+  const seatStatusChange = (seatId: number[]) => {
+    if (!seatId || seatId.length === 0) return
+    let newSeatStatus = { ...seatSeatus }
+    let currentStatus = newSeatStatus[seatId[0]] || "AVAILABLE";
+    let i=0
+    while (currentStatus === "ESOLD" && seatId.length > i) {
+      currentStatus = newSeatStatus[seatId[i]] || "AVAILABLE";
+      i++;
+    }
+    seatId.forEach(id => {
+      newSeatStatus[id] = newSeatStatus[id] === "ESOLD" ? "ESOLD" 
+      : currentStatus === "AVAILABLE" ? "NOTSALE" : "AVAILABLE";
+    })
+    console.log("Updated seat status:", newSeatStatus);
+    setSeatSeatus(newSeatStatus)
   }
 
   const handleConfirmMapping = async () => {
@@ -220,18 +237,17 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
         showingId: showingData?.id || "",
         seatmapId: selectedSeatMapId,
         ticketTypeSectionMap,
+        seatStatusMap: seatSeatus,
       }
 
-      // const res = await connectShowingToSeatmap(payload, session?.user?.accessToken || "");
+      console.log("Payload for mapping:", payload);
 
-      // if (res?.statusCode !== 200) {
-      //   toast.error(`${transWithFallback('errorConnectShowingToSeatmap', 'Có lỗi khi kết nối suất diễn với sơ đồ chỗ ngồi')}: ${res.message}`);
-      // }
-      // else {
-      //   toast.success(`${transWithFallback('connectSeatmap', 'Kết nối suất diễn với sơ đồ chỗ ngồi thành công')}`)
-      // }
-
-      // setTicketTypeSectionMap({})
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL!}/api/showing/connect-showing-seatmap`, payload)
+      if (response.status === 200) {
+        toast.success(transWithFallback("connectShowingToSeatmapSuccess", "Kết nối suất diễn với sơ đồ chỗ ngồi thành công!"));
+      } else {
+        toast.error(transWithFallback("connectShowingToSeatmapError", "Kết nối suất diễn với sơ đồ chỗ ngồi thất bại!"));
+      }
       setSelectedTicketTypeId("")
     } catch (error) {
       toast.error(`${transWithFallback('errorConnectShowingToSeatmap', 'Có lỗi khi kết nối suất diễn với sơ đồ chỗ ngồi')}: ${error}`);
@@ -242,23 +258,20 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
 
   const selectedSeatMapName = allSeatmaps.find((seatMap) => seatMap.id === selectedSeatMapId)?.name || ""
 
-  // const handleChangeQuantity = (
-  //   entry: TicketTypeSectionsProps,
-  //   delta: number
-  // ) => {
-  //   setTicketTypeSectionMap((prev) =>
-  //     prev.map((item) =>
-  //       item.sectionId === entry.sectionId &&
-  //       item.ticketTypeId === entry.ticketTypeId
-  //         ? {
-  //             ...item,
-  //             quantity: Math.max(1, item.quantity + delta) // Không cho nhỏ hơn 1
-  //           }
-  //         : item
-  //     )
-  //   );
-  // };
-
+  const handleChangeQuantity = (
+    entry: TicketTypeSectionsProps,
+    newQuantity: number
+  ) => {
+    const clamped = entry.sold || 0
+    setTicketTypeSectionMap((prev) =>
+      prev.map((item) =>
+        item.sectionId === entry.sectionId &&
+        item.ticketTypeId === entry.ticketTypeId
+          ? { ...item, quantity: newQuantity < clamped ? clamped : newQuantity }
+          : item
+      )
+    );
+  };
 
   if (isLoading) {
     return (
@@ -373,7 +386,10 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                       <button
                         key={seatMap.id}
                         onClick={() => handleSeatMapChange(seatMap.id)}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                        className={cn(
+                          "w-full px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors",
+                          seatMap.id === showingData?.seatMapId ? "border border-blue-500 bg-blue-50" : ""
+                        )}
                       >
                         <div className="font-medium">{seatMap.name}</div>
                         <div className="text-sm text-gray-500">
@@ -404,15 +420,21 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                     seatMap={seatMapData}
                     ticketType={ticketTypes}
                     selectedSeatIds={[]}
+                    ticketTypeSections={ticketTypeSectionMap}
+                    selectedSectionId={sectionId || undefined}
+                    seatStatusRecord={seatSeatus}
+                    onSetSeatStatus={seatStatusChange}
                     onSeatSelectionChange={() => { }} // Empty function to disable interaction
                   />
                 </div>
               ) : seatmapType === SeatmapType.SELECT_SECTION && seatMapData ? (
                 <div className="h-full overflow-hidden">
-                  <SeatMapSectionComponent
+                  <SeatMapComponent
                     seatMap={seatMapData}
                     ticketType={ticketTypes}
                     selectedTickets={{}}
+                    ticketTypeSections={ticketTypeSectionMap}
+                    selectedSectionId={sectionId || undefined}
                     onSeatSelectionChange={() => { }} // Empty function to disable interaction
                   />
                 </div>
@@ -436,7 +458,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
               </h3>
               <div className="bg-gray-50 rounded-lg p-4 border">
                 {ticketTypes.length > 0 ? (
-                  ticketTypes.map((ticketType) => (
+                  ticketTypes.map((ticketType, index) => (
                     <button
                       key={ticketType.id}
                       onClick={() => handleTicketTypeSelect(ticketType.id)}
@@ -446,7 +468,7 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                         }`}
                     >
                       <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full mr-3" style={{ backgroundColor: ticketType.color }}></div>
+                        <div className="w-4 h-4 rounded-full mr-3" style={{ backgroundColor: ticketType.color && ticketType.color !== "" && ticketType.color !== "Default Color" ? ticketType.color : `#${index}${index}${index}${index}${index}${index}` }}></div>
                         <span className="text-sm font-medium">{ticketType.name}</span>
                       </div>
                       <span className="text-sm">{ticketType.originalPrice.toLocaleString("vi-VN")}đ</span>
@@ -469,13 +491,22 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                     return (
                       <div
                         key={section.sectionId}
-                        className="flex items-center justify-between py-2 px-2 mb-2 bg-white rounded border"
+                        className={`flex items-center justify-between py-2 px-2 mb-2 bg-white rounded border
+                          ${
+                            sectionId === section.sectionId
+                              ? "border-blue-400 bg-blue-50"
+                              : "border-gray-200 hover:bg-gray-100"
+                          }`}
+                        onClick={() => {
+                          if (section.sectionId === sectionId) setSectionId(null)
+                          else setSectionId(section.sectionId)}
+                        }
                       >
                         <div
                           className={`flex-1 min-w-0 mr-2 p-2 rounded-md transition-all
                             ${selectedTicketTypeId
                               ? "border-2 border-dashed border-animate border-blue-400"
-                              : `border-2 ${section.color ? "" : "border-black"}`}
+                              : `border-2 ${section.color ? "" : "border-gray-300"}`}
                           `}
                           style={{
                             borderColor: !selectedTicketTypeId ? section.color || "black" : undefined,
@@ -487,22 +518,29 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
                           <div className="text-sm font-medium break-words mb-1">
                             Vé: {section.ticketTypeName}
                           </div>
-                          <div className="text-sm font-medium break-words flex items-center gap-2">
-                            Số lượng:
-                            <input
-                              type="number"
-                              min={1}
-                              value={section.quantity}
-                              // onChange={(e) => handleChangeQuantity(section.id, Number(e.target.value))}
-                              className="w-16 px-2 py-1 border rounded text-sm"
-                            />
-                          </div>
+                          {seatmapType === SeatmapType.SELECT_SECTION && (
+                            <div className="text-sm font-medium break-words flex items-center gap-2">
+                              Số lượng:
+                              <input
+                                type="number"
+                                min={1}
+                                value={section.quantity}
+                                onChange={(e) =>
+                                  handleChangeQuantity(section, Number(e.target.value))
+                                }
+                                className="w-16 px-2 py-1 border rounded text-sm appearance-none" // appearance-none để loại bỏ nút tăng/giảm
+                              />
+                            </div>
+                          )}
                         </div>
 
 
                         {selectedTicketTypeId && (
                           <button
-                            onClick={() => handleAddTicketTypeToSection(section.sectionId)}
+                            onClick={(e) => {
+                              e.stopPropagation(); // Ngăn click vào section khi nhấn nút +
+                              handleAddTicketTypeToSection(section.sectionId);
+                            }}
                             className="w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center text-lg font-bold transition-colors bg-[#51DACF] text-white border-[#51DACF] hover:bg-[#0C4762]"
                           >
                             +
