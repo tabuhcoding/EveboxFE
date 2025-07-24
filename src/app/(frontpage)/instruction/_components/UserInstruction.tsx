@@ -225,7 +225,27 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
 
       {activeDetail === "buy-ticket" && (
         <>
-          <h2 className="text-xl font-semibold mb-2 mt-2">{transWithFallback("buyTicketTitle", "Mua vé")}</h2>
+          <h2 className="text-xl font-semibold mb-2 mt-4">{transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên di động")}</h2>
+            <div className="w-full aspect-video mb-4">
+              <iframe
+                className="w-full h-full rounded-md"
+                src="https://www.youtube.com/embed/6O6gjDVpNMQ"
+                title={transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên di động")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <h2 className="text-xl font-semibold mb-2 mt-4">{transWithFallback("user-booking-web", "Hướng dẫn mua vé sự kiện trên web")}</h2>
+            <div className="w-full aspect-video mb-4">
+              <iframe
+                className="w-full h-full rounded-md"
+                src="https://www.youtube.com/embed/vMHNCix1fj8"
+                title={transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên web")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+           <h2 className="text-xl font-semibold mb-2 mt-2">{transWithFallback("buyTicketTitle", "Mua vé")}</h2>
           <ul className="list-disc list-inside text-sm space-y-1 text-gray-700">
             <li>
               {transWithFallback(
@@ -284,26 +304,7 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
             <div className="flex justify-center my-2">
               <Image src="/images/instruction/user/buy8.png" alt="Payment Success" width={500} height={400} />
             </div>
-            <h2 className="text-xl font-semibold mb-2 mt-4">{transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên di động")}</h2>
-            <div className="w-full aspect-video mb-4">
-              <iframe
-                className="w-full h-full rounded-md"
-                src="https://www.youtube.com/embed/6O6gjDVpNMQ"
-                title={transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên di động")}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-            <h2 className="text-xl font-semibold mb-2 mt-4">{transWithFallback("user-booking-web", "Hướng dẫn mua vé sự kiện trên web")}</h2>
-            <div className="w-full aspect-video mb-4">
-              <iframe
-                className="w-full h-full rounded-md"
-                src="https://www.youtube.com/embed/vMHNCix1fj8"
-                title={transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên web")}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+    
           </ul>
         </>
       )}
