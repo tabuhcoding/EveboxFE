@@ -224,8 +224,8 @@ export const SeatMapPage = ({ eventId }: SeatMapPageProps) => {
       newSeatStatus[id] = newSeatStatus[id] === "ESOLD" ? "ESOLD" 
       : currentStatus === "AVAILABLE" ? "NOTSALE" : "AVAILABLE";
     })
-    console.log("Updated seat status:", newSeatStatus);
     setSeatSeatus(newSeatStatus)
+    newSeatStatus = {}
   }
 
   const handleConfirmMapping = async () => {
