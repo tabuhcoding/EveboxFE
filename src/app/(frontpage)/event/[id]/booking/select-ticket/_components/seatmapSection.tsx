@@ -224,20 +224,30 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                   }}
                 >
                   {section.element?.map((el, index) => {
-                    const commonProps = {
-                      style: { fill: el.fill },
-                    };
+                     let commonProps = {
+                        style: { fill: el.fill },
+                      };
+
+                      if (index === 0) {
+                        const color = section.color
+                        if (color && color !== 'Default Color') {
+                          commonProps = {
+                            ...commonProps,
+                            style: { fill: color },
+                          };
+                        }
+                      }
 
                     if (el.type === 'path') {
                       return (
                         <path
                           key={index}
                           {...commonProps}
-                          style={{
-                            fill: el.fill,
+                          // style={{
+                            // fill: el.fill,
                             // stroke: 'white',
                             // strokeWidth: 1
-                          }}
+                          // }}
                           d={el.data}
                           transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
                         />
@@ -246,13 +256,13 @@ export default function SeatMapSectionComponent({ seatMap, onSeatSelectionChange
                       return (
                         <rect
                           key={index}
-                          {...commonProps}
+                          // {...commonProps}
                           x={el.x}
                           y={el.y}
                           width={el.width}
                           height={el.height}
                           style={{
-                            fill: el.fill,
+                            fill: commonProps.style.fill,
                             stroke: 'white',
                             strokeWidth: 1
                           }}

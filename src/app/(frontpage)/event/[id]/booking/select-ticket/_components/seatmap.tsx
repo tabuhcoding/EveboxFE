@@ -258,9 +258,19 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
             {normalSections?.map((section) => (
               <g key={section.id}>
                 {section.element?.map((el, index) => {
-                  const commonProps = {
+                  let commonProps = {
                     style: { fill: el.fill },
                   };
+
+                  if (index === 0) {
+                    const color = section.color
+                    if (color && color !== 'Default Color') {
+                      commonProps = {
+                        ...commonProps,
+                        style: { fill: color },
+                      };
+                    }
+                  }
 
                   if (el.type === 'path') {
                     return (
@@ -268,11 +278,11 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                         key={index}
                         {...commonProps}
                         d={el.data}
-                        style={{
-                          fill: el.fill,
-                          // stroke: 'white',
-                          // strokeWidth: 1
-                        }}
+                        // style={{
+                        //   fill: el.fill,
+                        //   // stroke: 'white',
+                        //   // strokeWidth: 1
+                        // }}
                         transform={(el.x !== 0 || el.y !== 0) ? `translate(${el.x}, ${el.y})` : undefined}
                       />
                     );
@@ -286,7 +296,7 @@ export default function SeatMapComponent({ seatMap, onSeatSelectionChange, ticke
                         width={el.width}
                         height={el.height}
                         style={{
-                          fill: el.fill,
+                          fill: commonProps.style.fill,
                           stroke: 'white',     
                           strokeWidth: 1          
                         }}
