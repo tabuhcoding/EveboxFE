@@ -961,5 +961,6 @@
     "showingID": "Showing ID",
     "userNotFoundMsg": "Currently not found user",
     "userNotFoundConfirm": "in system, do you want to continue gift ticket?",
-    "sendAnyway": "Send anyway"
+    "sendAnyway": "Send anyway",
+    "user-booking-web":"Booking ticket on Website"
 }

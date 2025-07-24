@@ -284,12 +284,22 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
             <div className="flex justify-center my-2">
               <Image src="/images/instruction/user/buy8.png" alt="Payment Success" width={500} height={400} />
             </div>
-            <h2 className="text-xl font-semibold mb-2 mt-2">{transWithFallback("buyTicketTitle", "Mua vé")}</h2>
+            <h2 className="text-xl font-semibold mb-2 mt-4">{transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên di động")}</h2>
             <div className="w-full aspect-video mb-4">
               <iframe
                 className="w-full h-full rounded-md"
-                src="https://www.youtube.com/embed/7WYNCYs4-5M"
+                src="https://www.youtube.com/embed/6O6gjDVpNMQ"
                 title={transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên di động")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <h2 className="text-xl font-semibold mb-2 mt-4">{transWithFallback("user-booking-web", "Hướng dẫn mua vé sự kiện trên web")}</h2>
+            <div className="w-full aspect-video mb-4">
+              <iframe
+                className="w-full h-full rounded-md"
+                src="https://www.youtube.com/embed/vMHNCix1fj8"
+                title={transWithFallback("user-booking", "Hướng dẫn mua vé sự kiện trên web")}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
@@ -354,7 +364,7 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
           <div className="w-full aspect-video mb-4">
             <iframe
               className="w-full h-full rounded-md"
-              src="https://www.youtube.com/embed/mzEw-JrKGts"
+              src="https://www.youtube.com/embed/aV4o6WlOu6M"
               title={transWithFallback("eventCreationGuide", "Hướng dẫn tạo sự kiện")}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -379,7 +389,210 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
             <div className="flex justify-center my-2">
               <Image src="/images/instruction/org/cr2.png" alt="Organizer Info Popup" width={500} height={400} />
             </div>
-            {/* Continue with rest of create-event content... */}
+            <li>Nếu chọn “Đăng ký tổ chức” sẽ hiển thị form “Đăng ký làm Nhà Tổ chức” với các thông tin thanh toán (Chủ tài khoản, số tài khoản…).</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr3.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr4.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Khi điền đầy đủ thông tin và bấm “Xác nhận” người dùng sẽ được điều hướng sang trang “Tạo sự kiện” và tại đây họ có thể tạo vé bán có giá hoặc vé miễn phí, tùy theo mục đích tổ chức. </p>
+                    <li>Nếu chọn “Tiếp tục tạo sự kiện” người dùng sẽ được điều hướng sang trang “Tạo sự kiện”, popup “Lưu ý khi đăng tải sự kiện” sẽ hiển thị mặc định lúc vào (có thể đóng) và tại đây họ chỉ được phép tạo vé vé miễn phí</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr5.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr6.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Khi người dùng nhập đầy đủ thông tin bắt buộc tại bước 1 - “Thông tin sự kiện” nút “Đồng ý” của Gợi ý mô tả sự kiện (AI hỗ trợ) sẽ được bật lên. Người dùng có thể nhập thêm “Yêu cầu của bạn (nếu có) và bấm “Đồng ý” để sinh tự động “Thông tin sự kiện”</li>
+                  <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr7.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>  
+                    <li>Khi đã điền đủ thông tin bắt buộc ở bước 1, người dùng có thể “Tiếp tục” sang bước 2 hoặc “Lưu” để tạm thời lưu lại và chỉnh sửa sau</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr8.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Màn hình chuyển tiếp qua bước 2</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr9.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Người dùng phải chọn “Thời gian bắt đầu” và “Thời gian kết thúc” của sự kiện để “Tạo loại vé”. Bấm “Tạo loại vé mới” sẽ hiển thị popup “Tạo vé mới”</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr10.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr11.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p> Nhập đầy đủ thông tin và bấm “Lưu” </p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr12.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Vé vừa tạo sẽ được hiển thị, đồng thời người dùng cũng có thể lọc thời gian diễn ra sự kiện theo “Tháng”</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr13.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Với vé đã tạo người dùng có thể chỉnh sửa bằng cách nhấn vào icon “Bút” hoặc xóa bằng cách nhấn vào icon “Thùng rác”</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr14.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Đối với thao tác “Xóa” sẽ hiển thị popup xác nhận bạn có muốn “Xóa vé” hay không, tại đây người dùng bấm “OK” để thực hiện xóa vé</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr15.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Bấm “Tạo suất diễn” để tạo suất diễn khác cho sự kiện</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr16.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Suất diễn mới được tạo và tại đây khi nhập “Thời gian bắt đầu” và “Thời gian kết thúc” hợp lệ thì người dùng sẽ sử dụng được tính năng “Copy loại vé”</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr17.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Popup “Copy loại vé” hiển thị khi bấm nút “Copy loại vé”</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr18.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Tương tự như bước 1, khi đã nhập các thông tin hợp lệ bấm nút “Tiếp tục” để chuyển tiếp sang bước 3</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr19.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Trang “Thông tin đăng ký” để người dùng tạo biểu mẫu / chọn các mẫu biểu mẫu (hoặc biểu mẫu đã tạo) hiển thị sau khi bấm “Tiếp tục” ở bước 2 </li>
+                   <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr20.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Người dùng có thể lọc ra các “Biểu mẫu đã tạo”, sau đó tick chọn và ấn nút “Tiếp tục” để hoàn tất flow tạo sự kiện</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr21.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Hoặc có thể tạo biểu mẫu mới bằng cách bấm nút “Tạo biểu mẫu mới”</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr22.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr23.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Sau khi bấm “Tiếp tục” popup thông báo sự kiện đã tạo thành công và đang chờ duyệt sẽ hiển thị</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr24.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Người dùng sẽ được điều hướng qua trang “Sự kiện của tôi” sau khi bấm nút “Đã hiểu”</p>
+                     <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/cr25.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
           </ul>
         </>
       )}
@@ -390,7 +603,7 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
           <div className="w-full aspect-video mb-4">
             <iframe
               className="w-full h-full rounded-md"
-              src="https://youtube.com/embed/BMiloThu5Ng?si=_ZIeLiv_qhh3mSF6"
+              src="https://youtube.com/embed/DEPS8b6gD4E"
               title={transWithFallback("org-checkin", "Checkin QR code")}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -407,15 +620,97 @@ export default function UserInstruction({ activeDetail }: UserInstructionProps) 
           <ul className="list-disc list-inside text-sm space-y-1 text-gray-700">
             <li>{transWithFallback("manageEvents", "Quản lý sự kiện")}</li>
             <p>
-              {transWithFallback(
-                "manageEventsByStatus",
-                'Người dùng có thể quản lý các sự kiện của mình với 3 trạng thái tương ứng 3 tab "Sắp tới / Đã qua / Chờ duyệt"',
-              )}
+             Người dùng có thể quản lý các sự kiện của mình với 3 trạng thái tương ứng 3 tab "Sắp tới / Đã qua / Chờ duyệt"
             </p>
             <div className="flex justify-center my-2">
               <Image src="/images/instruction/org/mn1.png" alt="Manage Events by Status" width={500} height={400} />
             </div>
-            {/* Continue with rest of org-management content... */}
+           <p>Hoặc thực hiện tìm kiếm sự kiện</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn2.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Bấm “Chỉnh sửa” để thực hiện điều chỉnh thông tin sự kiện</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn3.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <p>Người dùng được điều hướng về trang “Tạo sự kiện” để tiến hành chỉnh sửa sự kiện</p>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn4.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Bấm “Tổng quan” để xem báo cáo Tổng kết của sự kiện</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn5.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn6.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Bấm “Thành viên” để xem chi tiết thành viên trong ban tổ chức của sự kiện</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn7.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn8.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+                    <li>Bấm “Đơn hàng” để xem các vé đã thanh toán thành công hoặc đã hủy của sự kiện</li>
+                    <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn9.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn10.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
+        <div className="flex justify-center my-2">
+          <Image
+            src="/images/instruction/org/mn11.png"
+            alt="EveBox"
+            width={500}
+            height={400}
+          />
+        </div>
           </ul>
         </>
       )}
