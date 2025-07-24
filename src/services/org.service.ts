@@ -368,9 +368,15 @@ return res.data.data;
   }
 }
 
-export async function getEventOfOrg(): Promise<EventOrgFrontDisplayDto[]> {
-    const res = await orgService.get<BaseApiResponse<EventOrgFrontDisplayDto[]>>(
-      END_POINT_LIST.ORG_EVENT.EVENT
+export async function getEventOfOrg(accessToken: string): Promise<EventOrgFrontDisplayDto[]> {
+  console.log("Fetching events of organizer with access token:", accessToken);  
+  const res = await orgService.get<BaseApiResponse<EventOrgFrontDisplayDto[]>>(
+      END_POINT_LIST.ORG_EVENT.EVENT,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
     if (!res || res.status !== 200) {

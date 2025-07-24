@@ -1,7 +1,7 @@
 "use client";
 
 /* Package System */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CircularProgress } from "@mui/material";
@@ -9,16 +9,35 @@ import { CircularProgress } from "@mui/material";
 /* Package Application */
 import EventCard from "./eventCard";
 import { EventOrgFrontDisplayDto } from "@/types/models/org/orgEvent.interface";
+import { useAuth } from "@/contexts/auth.context";
+import { getEventOfOrg } from "@/services/org.service";
 
 interface TabsProps {
-  events: EventOrgFrontDisplayDto[];
+  eventss: EventOrgFrontDisplayDto[];
 }
 
-export default function Tabs({ events }: TabsProps) {
+export default function Tabs({ eventss }: TabsProps) {
   const t = useTranslations("common");
   const [activeTab, setActiveTab] = useState("sap-toi");
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingTab, setLoadingTab] = useState<string | null>(null);
+  const [events, setEvents] = useState<EventOrgFrontDisplayDto[]>(eventss || []);
+  const { session, user } = useAuth();
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      console.log("Fetching events with access token:", session.accessToken);
+      console.log("User info:", user);
+      const eventData = await getEventOfOrg(session.accessToken);
+
+      if (eventData) {
+        setEvents(eventData);
+      } else {
+        console.error("Failed to fetch events");
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const transWithFallback = (key: string, fallback: string) => {
     const msg = t(key);

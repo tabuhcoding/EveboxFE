@@ -6,12 +6,12 @@ import 'tailwindcss/tailwind.css';
 /* Package Application */
 import Sidebar from "../create-event/_components/sidebar";
 import Tabs from "./_components/tabs";
-import { getEventOfOrg } from '@/services/org.service';
 
 export default async function Event() {
-    const eventData = await getEventOfOrg();
+    // const { session } = useAuth();
+    // const eventData = await getEventOfOrg(session.accessToken);
 
-    const events = eventData;
+    // const events = eventData;
     
     return (
         <main>
@@ -20,7 +20,7 @@ export default async function Event() {
                     <Sidebar />
                 </div>
                 <div className="flex-1 p-6">
-                    <Tabs events={events} />
+                    <Tabs eventss={[]} />
                 </div>
             </div>
         </main>

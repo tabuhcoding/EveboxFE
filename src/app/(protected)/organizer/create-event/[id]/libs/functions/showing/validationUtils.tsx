@@ -3,11 +3,11 @@
 import { toast } from "react-hot-toast";
 
 export const validateStartDate = (date: Date | null, endDate: Date | null) => {
-    return !date || !endDate || date <= endDate; // Thời gian bắt đầu không được lớn hơn thời gian kết thúc
+    return !date || !endDate || date < endDate; // Thời gian bắt đầu không được lớn hơn thời gian kết thúc
 };
 
 export const validateEndDate = (date: Date | null, startDate: Date | null) => {
-    return !date || !startDate || date >= startDate; // Thời gian kết thúc không được nhỏ hơn thời gian bắt đầu
+    return !date || !startDate || date > startDate; // Thời gian kết thúc không được nhỏ hơn thời gian bắt đầu
 };
 
 export const validateTimeSelection = (
