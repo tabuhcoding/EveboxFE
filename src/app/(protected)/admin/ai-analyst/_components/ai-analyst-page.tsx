@@ -55,15 +55,15 @@ export default function AIAnalystPage() {
             disabled={true}
             className=" flex items-center justify-center gap-1 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
           >
-            {/* {loading ? (
+            {loading ? (
               <>
                 <CircularProgress size={16} color="inherit" />
                 {transWithFallback('analyzing', 'Đang phân tích...')}
               </>
             ) : (
               transWithFallback('analysis', 'Phân tích')
-            )} */}
-            Not available
+            )}
+            {/* Not available */}
           </button>
         </div>
 
