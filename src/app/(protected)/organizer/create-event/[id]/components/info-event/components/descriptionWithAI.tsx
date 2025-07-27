@@ -122,7 +122,8 @@ export default function DescriptionWithAI({ isValid, eventDetails, onChange, cur
               id="ai-request"
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              placeholder={transWithFallback('requestPlaceholder', 'Ví dụ: Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh')}
+              // placeholder={transWithFallback('requestPlaceholder', 'Ví dụ: Tạo mô tả HTML hấp dẫn với ít nhất 2 ảnh')}
+              placeholder="Disable now because OpenAI key is exprired"
               value={userRequest}
               onChange={(e) => setUserRequest(e.target.value)}
             />
@@ -136,7 +137,8 @@ export default function DescriptionWithAI({ isValid, eventDetails, onChange, cur
               ${(isValid && !isLoading) ? 'bg-sky-600 text-white hover:bg-sky-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
             onClick={handleGenerate}
-            disabled={!isValid || isLoading}
+            // disabled={!isValid || isLoading}
+            disabled={true} // Temporarily disable the button
           >
             {isLoading ? (
               <>

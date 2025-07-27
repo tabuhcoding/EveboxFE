@@ -309,7 +309,7 @@ export default function ChatBoxWrapper({ handleOpen }: ChatBoxWrapperProps) {
             <textarea
               id="chatTextArea"
               className="textarea-auto-resize w-[88.5%] max-h-[4rem] min-h-16 p-[15px_10px_10px_10px] text-[13px] text-[#667085] bg-transparent border-none resize-none overflow-y-auto box-border outline-none font-sans font-medium"
-              placeholder={transWithFallback('enterYourMessage', 'Nhập tin nhắn của bạn')}
+              placeholder="Disable now because OpenAI key is exprired"
               rows={1}
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
@@ -325,7 +325,8 @@ export default function ChatBoxWrapper({ handleOpen }: ChatBoxWrapperProps) {
                 : 'bg-transparent text-[#98A2B3]'
                 }`}
               onClick={handleSendChat}
-              disabled={!chatContent || isLoading}
+              // disabled={!chatContent || isLoading}
+              disabled={true} // Temporarily disable the button
             >
               <Icon icon="lucide:send" className="w-[19.52px] h-[19.21px] mt-[3px] mr-[2px]" />
             </button>

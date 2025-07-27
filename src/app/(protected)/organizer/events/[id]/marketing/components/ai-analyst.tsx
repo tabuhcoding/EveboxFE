@@ -122,14 +122,16 @@ export function AIAnalyst({ eventId }: AIAnalystProps) {
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
           type="text"
-          placeholder={transWithFallback('askQuestion', 'Nhập câu hỏi')}
+          placeholder="Disable now because OpenAI key is exprired"
+          // placeholder={transWithFallback('askQuestion', 'Nhập câu hỏi')}
           className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <button
           onClick={handleAnalyzeClick}
-          disabled={loading}
+          // disabled={loading}
+          disabled={true} // Temporarily disable the button
           className=" flex items-center justify-center gap-1 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
         >
           {loading ? (

@@ -45,24 +45,25 @@ export default function AIAnalystPage() {
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <input
             type="text"
-            placeholder={transWithFallback("inputQues", "Nhập câu hỏi")}
+            placeholder="Disable now because OpenAI key is exprired"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <button
             onClick={handleSearch}
-            disabled={loading}
+            disabled={true}
             className=" flex items-center justify-center gap-1 px-4 py-2 bg-[#0C4762] text-white rounded-md hover:bg-[#09394f] transition disabled:opacity-50"
           >
-            {loading ? (
+            {/* {loading ? (
               <>
                 <CircularProgress size={16} color="inherit" />
                 {transWithFallback('analyzing', 'Đang phân tích...')}
               </>
             ) : (
               transWithFallback('analysis', 'Phân tích')
-            )}
+            )} */}
+            Not available
           </button>
         </div>
 
